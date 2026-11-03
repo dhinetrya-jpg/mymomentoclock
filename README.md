@@ -1,14 +1,14 @@
-# 🪔 AstroDiwali · AstroEngine & Prosperity Platform
+# 🪔 MymomentOclock · Vedic Precision & Prosperity Platform
 
-[![CI - Lint & Build](https://github.com/your-username/astrodiwali/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/astrodiwali/actions/workflows/ci.yml)
-[![Deploy to GitHub Pages](https://github.com/your-username/astrodiwali/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/your-username/astrodiwali/actions/workflows/deploy-pages.yml)
+[![CI - Lint & Build](https://github.com/your-username/mymomentoclock/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/mymomentoclock/actions/workflows/ci.yml)
+[![Deploy to GitHub Pages](https://github.com/your-username/mymomentoclock/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/your-username/mymomentoclock/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-purple.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4.svg)](https://tailwindcss.com/)
 
-An enterprise-grade, high-performance Vedic AstroEngine and Festival Prosperity Platform. Features high-precision planetary calculations, symbolic contradiction resolution, Birth Time Rectification (BTR), Remedial Vector Matrix (RVM), and real-time Diwali Panchang countdown in an imperial dark maroon and antique gold aesthetic.
+An enterprise-grade, high-performance Vedic MymomentOclock and Festival Prosperity Platform. Features high-precision planetary calculations, symbolic contradiction resolution, Birth Time Rectification (BTR), Remedial Vector Matrix (RVM), and real-time Diwali Panchang countdown in an imperial dark maroon and antique gold aesthetic.
 
 ---
 
@@ -34,7 +34,7 @@ An enterprise-grade, high-performance Vedic AstroEngine and Festival Prosperity 
   - **C5: Sensory Remedial Suite**: Acoustic 432 Hz frequencies, Kinetic yantras, Temporal timings, and Behavioral actions.
   - **C6: Calibration Metadata**: Julian Day calculations, execution benchmarks (<12ms), and cryptographic transaction verification.
 
-### 3. 🪐 AstroEngine Computational Core
+### 3. 🪐 MymomentOclock Computational Core
 - **Divisional Charts**: High-precision calculations for D-1 (Rasi), D-2 (Hora), D-9 (Navamsa), and D-60 (Shashtiamsa).
 - **Vimshottari Dasha Engine**: Maha-dasha and Antar-dasha progression calculations.
 - **Symbolic Contradiction Resolver**: Resolves conflicting astrological yogas (e.g., Kemadruma vs. Gajakesari) via weighted graph synthesis.
@@ -46,8 +46,9 @@ An enterprise-grade, high-performance Vedic AstroEngine and Festival Prosperity 
 - **Interactive Aarti**: Real-time bell, conch, and diya animations with synchronized audio.
 - **Vedic Housie / Tambola**: Interactive multiplayer family game for festival gatherings.
 
-### 5. 🔒 Transactional Backend & Webhooks
+### 5. 🔒 Transactional Backend, Prometheus Telemetry & Webhooks
 - `server.ts` Express tier with crypto HMAC SHA-256 webhook verification.
+- Prometheus text-format `/metrics` endpoint streaming stage duration histograms (`ephemeris_ffi`, `btr_search`, `neo4j_subgraph`, `llm_sse_first_token`).
 - Server-Sent Events (SSE) `/api/payment/sse/:token` for instant zero-latency dashboard paywall unlock.
 - Ready-to-deploy SQL schemas (`schema.sql`) and Go microservice blueprints (`normalization_engine.go`, `btr_processor.go`, `graph_hydrator.go`, `conflict_resolver.go`, `rvm_engine.go`, `transactional_webhook.go`).
 
@@ -59,7 +60,8 @@ An enterprise-grade, high-performance Vedic AstroEngine and Festival Prosperity 
 - **Backend**: Node.js, Express, TypeScript (`tsx`)
 - **Build Tool**: Vite 6+
 - **Containerization**: Multi-stage Dockerfile, Docker Compose
-- **CI/CD**: GitHub Actions (Lint, Build, Automated GitHub Pages Deployment, Docker verification)
+- **Orchestration**: Kubernetes manifests under `deploy/kubernetes/`
+- **CI/CD**: GitHub Actions (Lint, Build, Automated GitHub Pages Deployment, Docker verification, Matrix Load Tests)
 
 ---
 
@@ -72,14 +74,14 @@ An enterprise-grade, high-performance Vedic AstroEngine and Festival Prosperity 
 ### Installation
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/your-username/astrodiwali.git
-cd astrodiwali
+# 1. Clone repository from GitHub
+git clone https://github.com/your-username/mymomentoclock.git
+cd mymomentoclock
 
 # 2. Install dependencies
 npm install
 
-# 3. Setup environment variables (optional for AI features)
+# 3. Setup environment variables from GitHub Secrets
 cp .env.example .env
 
 # 4. Start the full-stack development server
@@ -90,38 +92,40 @@ Open your browser at **`http://localhost:3000`**.
 
 ---
 
-## 🚢 Deployment Guides
+## 🚢 GitHub Deployment Guides
 
 ### Option 1: GitHub Pages (Automated Zero-Config)
 This repository includes a pre-configured GitHub Actions workflow (`.github/workflows/deploy-pages.yml`):
-1. Push this repository to GitHub.
+1. Push this repository to GitHub:
+   ```bash
+   git remote add origin https://github.com/your-username/mymomentoclock.git
+   git push -u origin main
+   ```
 2. In your GitHub repository, navigate to **Settings** → **Pages**.
 3. Under **Build and deployment** → **Source**, select **GitHub Actions**.
-4. Every push to `main` will automatically build and deploy your live site!
+4. Every push to `main` automatically triggers the build and deploys your live site to GitHub Pages!
 
-### Option 2: Docker & Docker Compose
-Run the entire production containerized application with a single command:
+### Option 2: Docker Container via GitHub Packages / Docker Hub
+Run the complete production containerized application:
 
 ```bash
 # Build and run container
 docker compose up --build
 
 # Or with Docker directly:
-docker build -t astrodiwali .
-docker run -p 3000:3000 -e PORT=3000 astrodiwali
+docker build -t mymomentoclock .
+docker run -p 3000:3000 -e PORT=3000 mymomentoclock
 ```
 
-### Option 3: Google Cloud Run / AWS ECS / VPS
-Build the Docker image and deploy to any container platform:
+### Option 3: Kubernetes Multi-Node Cluster
+Deploy to any production Kubernetes cluster using manifests from `deploy/kubernetes/`:
 ```bash
-docker build -t gcr.io/<PROJECT_ID>/astrodiwali:latest .
-docker push gcr.io/<PROJECT_ID>/astrodiwali:latest
+kubectl apply -f deploy/kubernetes/01-config.yaml
+kubectl apply -f deploy/kubernetes/02-storage.yaml
+kubectl apply -f deploy/kubernetes/03-databases.yaml
+kubectl apply -f deploy/kubernetes/04-api-ingress.yaml
+kubectl apply -f deploy/kubernetes/05-hpa.yaml
 ```
-
-### Option 4: Vercel / Netlify / Render
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Install Command**: `npm install`
 
 ---
 
@@ -131,52 +135,66 @@ docker push gcr.io/<PROJECT_ID>/astrodiwali:latest
 .
 ├── .github/
 │   └── workflows/
-│       ├── ci.yml                 # Automated CI: Lint & build test
-│       ├── deploy-pages.yml       # Automated GitHub Pages deployment
-│       └── docker-build.yml       # Docker build verification
+│       ├── ci.yml                           # Automated CI: Lint & build test
+│       ├── deploy-pages.yml                 # Automated GitHub Pages deployment
+│       ├── docker-build.yml                 # Docker build verification
+│       ├── payment-audit-pipeline.yml       # DevSecOps security audit pipeline
+│       └── mymomentoclock-matrix-pipeline.yml # K6 10,000 VU load test pipeline
+├── deploy/
+│   └── kubernetes/                          # Production Kubernetes manifests
+│       ├── 01-config.yaml                   # ConfigMaps & Secrets
+│       ├── 02-storage.yaml                  # Persistent Volume Claims
+│       ├── 03-databases.yaml                # PostgreSQL & Neo4j StatefulSets
+│       ├── 04-api-ingress.yaml              # API Deployment, Service & Ingress
+│       └── 05-hpa.yaml                      # Horizontal Pod Autoscaler
+├── monitoring/                              # Prometheus & Alertmanager configs
+│   ├── alert.rules.yml                      # p99 latency evaluation rules
+│   ├── alertmanager.yml                     # Slack & PagerDuty incident routing
+│   └── prometheus.yml                       # Metrics scraper configuration
+├── tests/
+│   └── stress/
+│       └── load_profile.js                  # K6 10,000 VU stress test
 ├── src/
 │   ├── components/
-│   │   ├── DiwaliCountdown.tsx     # 🪔 Live Diwali Countdown & Panchang clock
-│   │   ├── ConversionFunnelView.tsx# ⚡ 5-Screen Acquisition & Neuro-Design
-│   │   ├── DashboardView.tsx       # 🪐 Astronomical Dashboard (C1-C6)
-│   │   ├── Navigation.tsx          # Top navigation bar
-│   │   ├── DiwaliProsperityKit.tsx # ₹99 Festive Prosperity kit
-│   │   ├── RemediationView.tsx     # RVM Remedial suite
-│   │   ├── LivingRoomTvDashboard.tsx# 10-foot TV ambient dashboard
-│   │   ├── FamilyGameNight.tsx     # Aarti & Vedic Housie
-│   │   ├── UatAndStressSuite.tsx   # DevOps benchmark suite
-│   │   ├── ConflictResolverModal.tsx# Graph contradiction modal
-│   │   ├── BtrModal.tsx            # Birth Time Rectification modal
-│   │   └── CheckoutModal.tsx       # 1-Click payment modal
+│   │   ├── DiwaliCountdown.tsx              # 🪔 Live Diwali Countdown & Panchang clock
+│   │   ├── ConversionFunnelView.tsx         # ⚡ 5-Screen Acquisition & Neuro-Design
+│   │   ├── DashboardView.tsx                # 🪐 Astronomical Dashboard (C1-C6)
+│   │   ├── Navigation.tsx                   # Top navigation bar
+│   │   ├── DiwaliProsperityKit.tsx          # ₹99 Festive Prosperity kit
+│   │   ├── RemediationView.tsx              # RVM Remedial suite
+│   │   ├── LivingRoomTvDashboard.tsx        # 10-foot TV ambient dashboard
+│   │   ├── FamilyGameNight.tsx              # Aarti & Vedic Housie
+│   │   ├── UatAndStressSuite.tsx            # DevOps benchmark suite
+│   │   ├── ConflictResolverModal.tsx        # Graph contradiction modal
+│   │   ├── BtrModal.tsx                     # Birth Time Rectification modal
+│   │   └── CheckoutModal.tsx                # 1-Click payment modal
 │   ├── engine/
-│   │   ├── astroMath.ts            # Swiss Ephemeris & astronomical math
-│   │   ├── conflictResolver.ts     # Graph conflict resolver
-│   │   └── rvmEngine.ts            # Remedial Vector Matrix engine
-│   ├── App.tsx                     # Root application container
-│   ├── main.tsx                    # React DOM entry
-│   └── index.css                   # Global styles & Dark Maroon theme
-├── server.ts                       # Express backend & payment webhook SSE tier
-├── schema.sql                      # PostgreSQL schema & payment transactions
-├── Dockerfile                      # Production multi-stage Docker build
-├── docker-compose.yml              # Local container orchestration
-├── .dockerignore                   # Docker build exclusions
-├── .gitignore                      # Git exclusions
-├── vite.config.ts                  # Vite configuration with relative base support
-├── package.json                    # Dependencies & scripts
-└── LICENSE                         # MIT License
+│   │   ├── astroMath.ts                     # Swiss Ephemeris & astronomical math
+│   │   ├── conflictResolver.ts              # Graph conflict resolver
+│   │   └── rvmEngine.ts                     # Remedial Vector Matrix engine
+│   ├── App.tsx                              # Root application container
+│   ├── main.tsx                             # React DOM entry
+│   └── index.css                            # Global styles & Dark Maroon theme
+├── server.ts                                # Express backend & payment webhook SSE tier
+├── schema.sql                               # PostgreSQL schema & payment transactions
+├── Dockerfile                               # Production multi-stage Docker build
+├── docker-compose.yml                       # Multi-container orchestration
+├── package.json                             # Dependencies & scripts
+└── LICENSE                                  # MIT License
 ```
 
 ---
 
-## 🔑 Environment Variables
+## 🔑 Environment Variables & GitHub Secrets
 
-Refer to `.env.example`:
+Configure in your GitHub repository via **Settings** → **Secrets and variables** → **Actions**:
 
 | Variable | Description | Default / Example |
 |---|---|---|
 | `PORT` | Backend server port | `3000` |
-| `GEMINI_API_KEY` | Optional Google Gemini API key for Desha-Kala-Patra AI | `""` |
+| `GEMINI_API_KEY` | Google Gemini API key for Desha-Kala-Patra AI | `Configure in GitHub Secrets` |
 | `APP_URL` | Base host URL | `http://localhost:3000` |
+| `PAYMENT_WEBHOOK_SECRET` | Webhook HMAC verification secret | `whsec_mymomentoclock_production_key_9981` |
 
 ---
 

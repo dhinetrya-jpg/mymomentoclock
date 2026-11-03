@@ -1,5 +1,5 @@
 // ============================================================================
-// ASTROENGINE NEO4J GRAPH SCHEMA & CYPHER QUERIES (graph_hydrator.cypher)
+// MYMOMENTOCLOCK NEO4J GRAPH SCHEMA & CYPHER QUERIES (graph_hydrator.cypher)
 // Implements Symbolic Reasoning Engine nodes, relations, and conflict resolution
 // ============================================================================
 

@@ -11,6 +11,6 @@ alerting:
         - targets: ['alertmanager:9093']
 
 scrape_configs:
-  - job_name: 'astroengine-core-metrics'
+  - job_name: 'mymomentoclock-core-metrics'
     static_configs:
       - targets: ['api:8080']

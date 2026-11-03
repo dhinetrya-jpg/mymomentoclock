@@ -1,5 +1,5 @@
 /**
- * AstroEngine Remedial Vector Matrix (RVM) Action Engine
+ * MymomentOclock Remedial Vector Matrix (RVM) Action Engine
  * Based on Tamil Chozhia Prasanam & classical non-commercial Upayas.
  * Protects users by strictly filtering out commercial merchandise (gemstones, rings)
  * and delivering pure Acoustic, Behavioral, Kinetic, and Temporal micro-habits.

@@ -51,7 +51,7 @@ export const UatAndStressSuite: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-serif text-xl font-bold text-rose-100">
-              AstroEngine Verification & Production Runbooks
+              MymomentOclock Verification & Production Runbooks
             </h1>
             <span className="text-xs text-rose-300/60">·</span>
             <span className="text-xs text-emerald-400 font-mono">100% Automated CI/CD</span>
@@ -470,7 +470,7 @@ func (so *StreamOrchestrator) StreamContextualProse(ctx context.Context, payload
 {activeCodeViewer === 'DOCKER' && `# docker-compose.yml
 version: '3.8'
 services:
-  astroengine-app:
+  mymomentoclock-app:
     build: .
     ports: ["3000:3000"]
     environment:
@@ -484,7 +484,7 @@ services:
 
 {activeCodeViewer === 'POSTMAN' && `{
   "info": {
-    "name": "AstroEngine Platform API",
+    "name": "MymomentOclock Platform API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

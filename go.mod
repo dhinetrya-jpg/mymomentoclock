@@ -1,4 +1,4 @@
-module astroengine
+module mymomentoclock
 
 go 1.22
 

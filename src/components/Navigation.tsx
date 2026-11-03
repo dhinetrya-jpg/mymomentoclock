@@ -26,7 +26,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           onClick={() => onTabChange('funnel')}
           className="font-serif text-lg font-semibold tracking-wide text-amber-300 hover:text-amber-200 transition-colors whitespace-nowrap shrink-0 text-left"
         >
-          AstroEngine · Platform
+          MymomentOclock · Platform
         </button>
 
         {/* Zone 2: Clean single-line text links */}

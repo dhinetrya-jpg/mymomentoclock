@@ -1,5 +1,5 @@
 -- ============================================================================
--- ASTROENGINE ENTERPRISE DATABASE SCHEMA (schema.sql)
+-- MYMOMENTOCLOCK ENTERPRISE DATABASE SCHEMA (schema.sql)
 -- Target: PostgreSQL 16+ with PostGIS / Temporal Extensions
 -- ============================================================================
 

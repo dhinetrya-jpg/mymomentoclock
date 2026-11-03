@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: astroengine-api-hpa
+  name: mymomentoclock-api-hpa
   namespace: astro-production
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: astroengine-api
+    name: mymomentoclock-api
   minReplicas: 3
   maxReplicas: 10
   metrics:

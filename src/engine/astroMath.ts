@@ -1,5 +1,5 @@
 /**
- * AstroEngine Mathematical & Astronomical Specification Core
+ * MymomentOclock Mathematical & Astronomical Specification Core
  * Supports True Lahiri (Chitrapaksha), KP, and Raman Ayanamsas.
  * Calculates Julian Day, Ephemeris Delta-T, Ascendant (Lagna),
  * Planetary Sidereal Positions, and Micro-Divisional Vargas (D-1, D-2, D-9, D-60).

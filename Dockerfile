@@ -1,5 +1,5 @@
 # ============================================================================
-# ASTROENGINE PRODUCTION MULTI-STAGE DOCKERFILE
+# MYMOMENTOCLOCK PRODUCTION MULTI-STAGE DOCKERFILE
 # Links Go orchestration tier with native C++ Ephemeris Bridge
 # ============================================================================
 

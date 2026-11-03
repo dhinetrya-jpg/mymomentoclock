@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: astroengine-api
+  name: mymomentoclock-api
   namespace: astro-production
 spec:
   replicas: 3
@@ -12,18 +12,18 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: astroengine-api
+      app: mymomentoclock-api
   template:
     metadata:
       labels:
-        app: astroengine-api
+        app: mymomentoclock-api
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
     spec:
       containers:
         - name: api-container
-          image: YOUR_CONTAINER_REGISTRY/astroengine-core:latest
+          image: YOUR_CONTAINER_REGISTRY/mymomentoclock-core:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -36,17 +36,17 @@ spec:
               cpu: "500m"
           envFrom:
             - configMapRef:
-                name: astroengine-config
+                name: mymomentoclock-config
           env:
             - name: GEMINI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: astroengine-secrets
+                  name: mymomentoclock-secrets
                   key: GEMINI_API_KEY
             - name: WEBHOOK_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: astroengine-secrets
+                  name: mymomentoclock-secrets
                   key: WEBHOOK_SECRET_KEY
           readinessProbe:
             httpGet:
@@ -64,7 +64,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: astroengine-api-service
+  name: mymomentoclock-api-service
   namespace: astro-production
 spec:
   type: ClusterIP
@@ -72,12 +72,12 @@ spec:
     - port: 8080
       targetPort: 8080
   selector:
-    app: astroengine-api
+    app: mymomentoclock-api
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: astroengine-ingress
+  name: mymomentoclock-ingress
   namespace: astro-production
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -85,13 +85,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.astroengine.production
+    - host: api.mymomentoclock.production
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: astroengine-api-service
+                name: mymomentoclock-api-service
                 port:
                   number: 8080

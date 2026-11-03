@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: astroengine-config
+  name: mymomentoclock-config
   namespace: astro-production
 data:
   PORT: "8080"
@@ -13,7 +13,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: astroengine-secrets
+  name: mymomentoclock-secrets
   namespace: astro-production
 type: Opaque
 data:

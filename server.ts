@@ -1,5 +1,5 @@
 /**
- * AstroEngine Full-Stack Server
+ * MymomentOclock Full-Stack Server
  * Hosts astronomical calculation endpoints, UAT & stress testing endpoints,
  * and Module 6: Desha-Kala-Patra Contextual Streaming API powered by @google/genai (gemini-3.8-flash).
  * Mounts Vite middlewares in dev on port 3000.
@@ -37,7 +37,7 @@ interface PaymentSessionRecord {
 
 const paymentSessions = new Map<string, PaymentSessionRecord>();
 const sseSubscribers = new Map<string, Set<Response>>();
-const WEBHOOK_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || 'whsec_astroengine_production_key_9981';
+const WEBHOOK_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || 'whsec_mymomentoclock_production_key_9981';
 
 // Seed default baseline session
 paymentSessions.set('cs_live_a1b2c3d4', {
@@ -386,67 +386,67 @@ app.get('/api/payment/sse/:token', (req: Request, res: Response) => {
 app.get('/metrics', (_req: Request, res: Response) => {
   res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
   const metrics = [
-    '# HELP astroengine_pipeline_requests_total The total number of processed spatiotemporal computation requests.',
-    '# TYPE astroengine_pipeline_requests_total counter',
-    'astroengine_pipeline_requests_total{status="success",pillar="Wealth"} 428',
-    'astroengine_pipeline_requests_total{status="success",pillar="Career"} 312',
-    'astroengine_pipeline_requests_total{status="success",pillar="Health"} 195',
-    'astroengine_pipeline_requests_total{status="success",pillar="Relationship"} 246',
-    'astroengine_pipeline_requests_total{status="error",pillar="Wealth"} 2',
+    '# HELP mymomentoclock_pipeline_requests_total The total number of processed spatiotemporal computation requests.',
+    '# TYPE mymomentoclock_pipeline_requests_total counter',
+    'mymomentoclock_pipeline_requests_total{status="success",pillar="Wealth"} 428',
+    'mymomentoclock_pipeline_requests_total{status="success",pillar="Career"} 312',
+    'mymomentoclock_pipeline_requests_total{status="success",pillar="Health"} 195',
+    'mymomentoclock_pipeline_requests_total{status="success",pillar="Relationship"} 246',
+    'mymomentoclock_pipeline_requests_total{status="error",pillar="Wealth"} 2',
     '',
-    '# HELP astroengine_stage_duration_seconds High-precision latency profiling per execution subsystem layer.',
-    '# TYPE astroengine_stage_duration_seconds histogram',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.005"} 8540',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.010"} 9720',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.025"} 9980',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.050"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.100"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.200"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.500"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="1.000"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="2.000"} 10000',
-    'astroengine_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="+Inf"} 10000',
-    'astroengine_stage_duration_seconds_sum{stage_name="ephemeris_ffi"} 28.4',
-    'astroengine_stage_duration_seconds_count{stage_name="ephemeris_ffi"} 10000',
+    '# HELP mymomentoclock_stage_duration_seconds High-precision latency profiling per execution subsystem layer.',
+    '# TYPE mymomentoclock_stage_duration_seconds histogram',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.005"} 8540',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.010"} 9720',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.025"} 9980',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.050"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.100"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.200"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="0.500"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="1.000"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="2.000"} 10000',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="ephemeris_ffi",le="+Inf"} 10000',
+    'mymomentoclock_stage_duration_seconds_sum{stage_name="ephemeris_ffi"} 28.4',
+    'mymomentoclock_stage_duration_seconds_count{stage_name="ephemeris_ffi"} 10000',
     '',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.005"} 120',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.010"} 840',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.025"} 2100',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.050"} 2450',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.100"} 2490',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.200"} 2500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="0.500"} 2500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="1.000"} 2500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="2.000"} 2500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="btr_search",le="+Inf"} 2500',
-    'astroengine_stage_duration_seconds_sum{stage_name="btr_search"} 42.1',
-    'astroengine_stage_duration_seconds_count{stage_name="btr_search"} 2500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.005"} 120',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.010"} 840',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.025"} 2100',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.050"} 2450',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.100"} 2490',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.200"} 2500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="0.500"} 2500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="1.000"} 2500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="2.000"} 2500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="btr_search",le="+Inf"} 2500',
+    'mymomentoclock_stage_duration_seconds_sum{stage_name="btr_search"} 42.1',
+    'mymomentoclock_stage_duration_seconds_count{stage_name="btr_search"} 2500',
     '',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.005"} 340',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.010"} 1820',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.025"} 3200',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.050"} 3450',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.100"} 3495',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.200"} 3500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.500"} 3500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="1.000"} 3500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="2.000"} 3500',
-    'astroengine_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="+Inf"} 3500',
-    'astroengine_stage_duration_seconds_sum{stage_name="neo4j_subgraph"} 45.6',
-    'astroengine_stage_duration_seconds_count{stage_name="neo4j_subgraph"} 3500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.005"} 340',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.010"} 1820',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.025"} 3200',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.050"} 3450',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.100"} 3495',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.200"} 3500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="0.500"} 3500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="1.000"} 3500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="2.000"} 3500',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="neo4j_subgraph",le="+Inf"} 3500',
+    'mymomentoclock_stage_duration_seconds_sum{stage_name="neo4j_subgraph"} 45.6',
+    'mymomentoclock_stage_duration_seconds_count{stage_name="neo4j_subgraph"} 3500',
     '',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.005"} 15',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.010"} 80',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.025"} 240',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.050"} 410',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.100"} 920',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.200"} 1140',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.500"} 1195',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="1.000"} 1200',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="2.000"} 1200',
-    'astroengine_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="+Inf"} 1200',
-    'astroengine_stage_duration_seconds_sum{stage_name="llm_sse_first_token"} 112.5',
-    'astroengine_stage_duration_seconds_count{stage_name="llm_sse_first_token"} 1200',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.005"} 15',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.010"} 80',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.025"} 240',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.050"} 410',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.100"} 920',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.200"} 1140',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="0.500"} 1195',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="1.000"} 1200',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="2.000"} 1200',
+    'mymomentoclock_stage_duration_seconds_bucket{stage_name="llm_sse_first_token",le="+Inf"} 1200',
+    'mymomentoclock_stage_duration_seconds_sum{stage_name="llm_sse_first_token"} 112.5',
+    'mymomentoclock_stage_duration_seconds_count{stage_name="llm_sse_first_token"} 1200',
   ].join('\n');
   res.send(metrics);
 });
@@ -522,7 +522,7 @@ app.post('/api/astro/stream-reading', async (req: Request, res: Response) => {
     res.write(`data: ${JSON.stringify({ text: data })}\n\n`);
   };
 
-  const systemInstruction = `You are the AstroEngine Desha-Kala-Patra Contextual Synthesis Engine.
+  const systemInstruction = `You are the MymomentOclock Desha-Kala-Patra Contextual Synthesis Engine.
 You receive a mathematically pre-calculated, verified astrological vector payload from the Symbolic Reasoning Engine.
 YOUR CORE MANDATES:
 1. NEVER guess or calculate planetary degrees, transits, or dashas yourself. You must strictly obey the pre-calculated numbers provided in the payload.
@@ -534,7 +534,7 @@ YOUR CORE MANDATES:
 4. REMEDIAL VECTOR INTEGRATION: Frame remedies as practical, zero-cost, non-commercial behavioral and acoustic micro-habits (such as 147Hz audio focus windows and automated 8% locked savings vaults). Never mention buying gemstones or paid pujas.
 5. Tone: Dignified, empowering, lucid, culturally authentic yet sharply modern.`;
 
-  const promptContent = `Here is the verified AstroEngine technical system payload:
+  const promptContent = `Here is the verified MymomentOclock technical system payload:
 ${JSON.stringify(structuredPayload || {}, null, 2)}
 
 User Profile & Context:
@@ -618,7 +618,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`AstroEngine Platform server listening on http://0.0.0.0:${PORT}`);
+    console.log(`MymomentOclock Platform server listening on http://0.0.0.0:${PORT}`);
   });
 }
 

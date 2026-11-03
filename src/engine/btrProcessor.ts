@@ -1,5 +1,5 @@
 /**
- * AstroEngine Automated Birth Time Rectification (BTR) Processor
+ * MymomentOclock Automated Birth Time Rectification (BTR) Processor
  * Evaluates candidate charts using 15-second discrete steps across a ±15-minute window
  * (120 candidate time evaluations) to align micro-divisional charts (D-9, D-60)
  * and Vimshottari Dasha sub-periods against verified real-world lifecycle milestones.

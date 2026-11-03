@@ -1,5 +1,5 @@
 /**
- * AstroEngine Algebraic Conflict Resolution & Symbolic Graph Engine
+ * MymomentOclock Algebraic Conflict Resolution & Symbolic Graph Engine
  * Resolves the Contradictory Logic Loop (e.g. Dhana Yoga vs Daridra Yoga)
  * using the production-ready mathematical weighting framework and
  * Cypher-compatible graph traversal logic described in the SRS specification.

@@ -1,4 +1,4 @@
-name: AstroEngine Matrix Performance & Load Validation Pipeline
+name: MymomentOclock Matrix Performance & Load Validation Pipeline
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - 'backend/**'
       - 'server.ts'
       - 'src/engine/**'
-      - '.github/workflows/astroengine-matrix-pipeline.yml'
+      - '.github/workflows/mymomentoclock-matrix-pipeline.yml'
   pull_request:
     branches: [ main, master ]
     paths:
@@ -70,7 +70,7 @@ jobs:
           sudo apt-get install -y postgresql-client
           psql -h localhost -U astro_user -d astro_db -f schema.sql
 
-      - name: Start AstroEngine Background Server Instance
+      - name: Start MymomentOclock Background Server Instance
         env:
           PORT: 8080
           NODE_ENV: production

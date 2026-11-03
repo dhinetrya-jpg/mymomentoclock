@@ -180,7 +180,7 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
       `Nakshatra: ${activeEvent.nakshatra}\n` +
       `Fixed Lagna: ${activeEvent.lagna}\n` +
       `Deity: ${activeEvent.deity}\n` +
-      `Calculated via Swiss Ephemeris AstroEngine`;
+      `Calculated via Swiss Ephemeris MymomentOclock`;
     navigator.clipboard.writeText(text);
     setCopiedSuccess(true);
     setTimeout(() => setCopiedSuccess(false), 2500);

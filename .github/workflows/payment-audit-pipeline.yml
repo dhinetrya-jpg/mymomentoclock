@@ -1,4 +1,4 @@
-name: AstroEngine Payment Security Validation Pipeline
+name: MymomentOclock Payment Security Validation Pipeline
 
 on:
   push:

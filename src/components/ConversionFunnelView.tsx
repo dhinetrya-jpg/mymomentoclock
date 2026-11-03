@@ -1,5 +1,5 @@
 /**
- * AstroEngine Complete 5-Screen Conversion Life Cycle & Neuro-Design Architecture
+ * MymomentOclock Complete 5-Screen Conversion Life Cycle & Neuro-Design Architecture
  * Directly implements:
  * Screen 1: The Social Acquisition Hook (Instagram Ad Layout & Kinetic Terminal)
  * Screen 2: The Conversion Landing Page & Smart Onboarding Input Form (GIS, HH:MM:SS Wheel, Julian Day Counter, Milestone Tree)
@@ -270,7 +270,7 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
               <span className="h-2 w-2 rounded-full bg-rose-500/80" />
               <span className="h-2 w-2 rounded-full bg-amber-500/80" />
               <span className="h-2 w-2 rounded-full bg-emerald-500/80" />
-              <span className="ml-2 text-rose-300/60">astroengine-daemon: v2.1-sidereal</span>
+              <span className="ml-2 text-rose-300/60">mymomentoclock-daemon: v2.1-sidereal</span>
             </div>
             <div className="space-y-1 text-emerald-400/90 text-[11px] leading-relaxed">
               <p>&gt; sys.spatiotemporal.sync(&quot;DEL_28.6139N&quot;)</p>
@@ -326,7 +326,7 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
               High-Precision Calibration Matrix
             </h1>
             <p className="mt-1 text-xs text-rose-300/70 leading-relaxed">
-              Standard time registers round to the nearest five minutes. AstroEngine operates to the exact second to evaluate high-sensitivity micro-charts.
+              Standard time registers round to the nearest five minutes. MymomentOclock operates to the exact second to evaluate high-sensitivity micro-charts.
             </p>
           </div>
 
@@ -692,7 +692,7 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
                 onClick={onNavigateToFullApp}
                 className="text-amber-400 hover:text-amber-300 underline underline-offset-2 font-mono whitespace-nowrap"
               >
-                Open Main AstroEngine Tabs →
+                Open Main MymomentOclock Tabs →
               </button>
             )}
           </div>

@@ -1,5 +1,5 @@
 /**
- * AstroEngine User Acceptance Tests (UAT) & High-Concurrency Stress Profiler
+ * MymomentOclock User Acceptance Tests (UAT) & High-Concurrency Stress Profiler
  * Matches the specifications of engine_uat_test.go and stress_profile_test.go:
  * - Validates baseline Kolkata spatiotemporal normalization and BTR calibration
  * - Verifies algebraic conflict resolution matrix against mathematical ground-truth
