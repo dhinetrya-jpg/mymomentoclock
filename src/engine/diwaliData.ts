@@ -1,5 +1,5 @@
 /**
- * AstroDiwali Festival & Panchang Engine (Samvat 2083 / Diwali 2026)
+ * MymomentOclock Festival & Panchang Engine (Samvat 2083 / Diwali 2026)
  * City-specific Pradosh Kaal, Vrishabha Lagna, and Golden 24-Minute Muhurat Trading windows.
  * Complete Lakshmi Vidhi, Om Jai Lakshmi Mata Aarti lyrics with synchronized cues,
  * Digital Housie/Tambola Cultural Caller with 90 authentic calls, and Family Trivia.

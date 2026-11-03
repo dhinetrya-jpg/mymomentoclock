@@ -3,7 +3,7 @@ Final Engineering Architecture & Code Synthesis Prompt
 
 Copy and paste the entire block below directly into Google AI Studio (configured with Gemini 1.5/2.5 Pro, setting the output temperature parameters to 0.0 for maximum precision, block-by-block code synthesis, and full architectural alignment).
 text
-You are an expert principal full-stack developer, cryptographer, and high-performance systems architect. You are directed to refactor, harden, and complete the "AstroEngine Platform" repository infrastructure to eliminate all structural gaps, uncompiled wrappers, and interface vulnerabilities while preserving the existing core functionality. 
+You are an expert principal full-stack developer, cryptographer, and high-performance systems architect. You are directed to refactor, harden, and complete the "MymomentOclock Platform" repository infrastructure to eliminate all structural gaps, uncompiled wrappers, and interface vulnerabilities while preserving the existing core functionality. 
 
 You must generate every file completely, including all core libraries, configurations, schemas, and front-end interface controllers. Do not write placeholders, ellipses (...), partial arrays, mock comments, or shorthand definitions. Output a complete, self-contained deployment ready for immediate live execution.
 
@@ -545,11 +545,11 @@ File 9: index.html (The Input & Calibration Hub UI Layer)
 
 
 
-AstroEngine - Precision Calibration Matrix
+MymomentOclock - Precision Calibration Matrix
 ⚙️ Physics Engine: Active
 v2.1.0-sidereal
 High-Precision Calibration Matrix
-Clocks round to the nearest five minutes. AstroEngine operates to the exact second to evaluate high-sensitivity micro-charts.
+Clocks round to the nearest five minutes. MymomentOclock operates to the exact second to evaluate high-sensitivity micro-charts.
 [ INPUT BLOCK A: SPATIAL ORIGIN ]
 * GIS Longitude Index mapped automatically via coordinates core.
 [ INPUT BLOCK B: TEMPORAL INTERSECT ]
@@ -713,13 +713,13 @@ FROM golang:1.22-alpine AS builder
 RUN apk add --no-cache gcc musl-dev g++ make
 WORKDIR /app
 COPY . .
-RUN go build -o astroengine .
+RUN go build -o mymomentoclock .
 FROM alpine:latest
 RUN apk add --no-cache libc6-compat
 WORKDIR /root/
-COPY --from=builder /app/astroengine .
+COPY --from=builder /app/mymomentoclock .
 EXPOSE 8080
-CMD ["./astroengine"]
+CMD ["./mymomentoclock"]
 ```
 
 File 13: docker-compose.yml
