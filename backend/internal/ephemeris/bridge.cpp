@@ -14,27 +14,26 @@ extern "C" {
 
     PlanetCoordinate compute_celestial_position_safe(double julian_day, int32_t planet_id) {
         std::lock_guard<std::mutex> lock(ephemeris_mutex);
-        PlanetCoordinate coord;
-        double x[6];
-        char serr[256];
-        int32_t iflag = SEFLG_SIDEREAL | SEFLG_SPEED;
+        PlanetCoordinate result;
+        double xx[6];
+        char err_msg[256];
+        int32_t calculation_flags = SEFLG_SIDEREAL | SEFLG_SPEED;
 
         swe_set_sid_mode(SE_SIDM_LAHIRI, 0, 0);
-        int32_t ret = swe_calc_ut(julian_day, planet_id, iflag, x, serr);
+        int32_t call_status = swe_calc_ut(julian_day, planet_id, calculation_flags, xx, err_msg);
 
-        if (ret < 0) {
-            coord.longitude = 0.0;
-            coord.latitude = 0.0;
-            coord.speed = 0.0;
-            coord.error_code = ret;
-            return coord;
+        if (call_status >= 0) {
+            result.longitude = xx[0];
+            result.latitude = xx[1];
+            result.speed = xx[3];
+            result.error_code = 0;
+        } else {
+            result.longitude = 0.0;
+            result.latitude = 0.0;
+            result.speed = 0.0;
+            result.error_code = call_status;
         }
-
-        coord.longitude = x[0];
-        coord.latitude = x[1];
-        coord.speed = x[2];
-        coord.error_code = 0;
-        return coord;
+        return result;
     }
 
     PlanetCoordinate compute_celestial_position(double julian_day, int32_t planet_id) {

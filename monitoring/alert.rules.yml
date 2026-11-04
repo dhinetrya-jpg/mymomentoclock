@@ -1,8 +1,8 @@
 groups:
-  - name: mymomentoclock-latency-alerts
+  - name: astroengine-latency-alerts
     rules:
       - alert: SubsystemLatencyViolationP99
-        expr: histogram_quantile(0.99, sum(rate(mymomentoclock_stage_duration_seconds_bucket[2m])) by (le, stage_name)) > 0.50
+        expr: histogram_quantile(0.99, sum(rate(astroengine_stage_duration_seconds_bucket[2m])) by (le, stage_name)) > 0.50
         for: 2m
         labels:
           severity: critical

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"mymomentoclock/backend/internal/ephemeris"
+	"astroengine-core/backend/internal/ephemeris"
 )
 
 type MilestoneEvent struct {

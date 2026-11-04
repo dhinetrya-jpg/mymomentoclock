@@ -12,13 +12,13 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"mymomentoclock/backend/internal/calibration"
-	"mymomentoclock/backend/internal/ephemeris"
-	"mymomentoclock/backend/internal/graph"
-	"mymomentoclock/backend/internal/metrics"
-	"mymomentoclock/backend/internal/resolver"
-	"mymomentoclock/backend/internal/rvm"
-	"mymomentoclock/backend/internal/webhook"
+	"astroengine-core/backend/internal/calibration"
+	"astroengine-core/backend/internal/ephemeris"
+	"astroengine-core/backend/internal/graph"
+	"astroengine-core/backend/internal/metrics"
+	"astroengine-core/backend/internal/resolver"
+	"astroengine-core/backend/internal/rvm"
+	"astroengine-core/backend/internal/webhook"
 )
 
 type Server struct {

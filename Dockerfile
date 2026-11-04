@@ -1,36 +1,18 @@
-# ============================================================================
-# MYMOMENTOCLOCK PRODUCTION MULTI-STAGE DOCKERFILE
-# Links Go orchestration tier with native C++ Ephemeris Bridge
-# ============================================================================
-
-# Stage 1: Build C++ Native Ephemeris Library & Node/Go Orchestrator
-FROM node:20-alpine AS builder
+FROM golang:1.22-alpine AS builder
+RUN apk add --no-cache gcc musl-dev g++ make git
 
 WORKDIR /app
+COPY backend/ ./backend/
 
-RUN apk add --no-cache g++ make python3
+WORKDIR /app/backend
+RUN go mod tidy || true
+RUN CGO_ENABLED=1 go build -o astroengine_server ./cmd/server/main.go
 
-COPY package*.json ./
-RUN npm ci
+FROM alpine:latest
+RUN apk add --no-cache libc6-compat ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/backend/astroengine_server .
+COPY . /app
 
-COPY . .
-RUN npm run build
-
-# Stage 2: Production Runtime
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/server.ts ./server.ts
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/schema.sql ./schema.sql
-
-EXPOSE 3000
-
-CMD ["npx", "tsx", "server.ts"]
+EXPOSE 8080
+CMD ["./astroengine_server"]
