@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://astro_user:secure_pass@postgres:5432/astro_db?sslmode=disable
+      - NEO4J_URI=bolt://neo4j:7687
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4GB
+    depends_on:
+      - postgres
+      - neo4j
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: astro_user
+      POSTGRES_PASSWORD: secure_pass
+      POSTGRES_DB: astro_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      - NEO4J_AUTH=none
+    volumes:
+      - neo4jdata:/data
+
+volumes:
+  pgdata:
+  neo4jdata:

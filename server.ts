@@ -281,8 +281,8 @@ app.get('/api/payment/session/:token', (req: Request, res: Response) => {
   res.json(session);
 });
 
-// 7.3 SECURE TRANSACTIONAL WEBHOOK (Matches transactional_webhook.go)
-app.post('/api/payment/webhook', (req: Request, res: Response) => {
+// 7.3 SECURE TRANSACTIONAL WEBHOOK (Matches idempotent_server_258a5edc.go & transactional_webhook.go)
+app.post(['/api/payment/webhook', '/api/v1/webhook/payment'], (req: Request, res: Response) => {
   try {
     const gatewaySignature = req.header('X-Gateway-Signature');
     const rawPayload = JSON.stringify(req.body);
@@ -305,11 +305,12 @@ app.post('/api/payment/webhook', (req: Request, res: Response) => {
 
     if (type === 'payment.succeeded' && token) {
       let session = paymentSessions.get(token);
-      // Replay attack prevention: return 409 Conflict if session already marked COMPLETED
+      // Idempotency: return already_processed_idempotent if session is already COMPLETED
       if (session && session.status === 'COMPLETED') {
-        console.warn(`[AUDIT][SYS_FIN_GATEWAY][REPLAY_ATTACK] Session ${token} already completed. Emitting 409 Conflict.`);
-        return res.status(409).json({ error: 'Replay attack detected: session token already completed' });
+        console.log(`[AUDIT][SYS_FIN_GATEWAY] Session ${token} already COMPLETED. Emitting idempotent 200 OK.`);
+        return res.status(200).json({ status: 'already_processed_idempotent' });
       }
+
       if (!session) {
         // Create completed session if external
         session = {

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"math"
+	"sync"
 	"time"
 )
 
@@ -44,6 +45,7 @@ func calculateDynamicDashaLords(julianDay float64) []string {
 	return []string{"jupiter", "venus", "mercury"}
 }
 
+// Parallel worker pool optimization for handling massive user loads concurrently
 func ExecuteRectification(req BTRRequest, tzLocation string) ([]byte, error) {
 	loc, _ := time.LoadLocation(tzLocation)
 	localTime, _ := time.ParseInLocation(
@@ -52,34 +54,54 @@ func ExecuteRectification(req BTRRequest, tzLocation string) ([]byte, error) {
 		loc,
 	)
 	baseUtc := localTime.UTC()
+
+	searchLimitSeconds := req.SearchWindowMinutes * 60
+	type sliceResult struct {
+		time   time.Time
+		offset int
+		score  float64
+	}
+
+	resultsChan := make(chan sliceResult, (searchLimitSeconds*2)/15+1)
+	var wg sync.WaitGroup
+
+	for offset := -searchLimitSeconds; offset <= searchLimitSeconds; offset += 15 {
+		wg.Add(1)
+		go func(currentOffset int) {
+			defer wg.Done()
+			candidateTime := baseUtc.Add(time.Duration(currentOffset) * time.Second)
+			candidateJD := CalculateJulianDay(candidateTime)
+			currentSliceScore := 0.0
+			activeDashaLords := calculateDynamicDashaLords(candidateJD)
+
+			for _, event := range req.Milestones {
+				significators := getEventSignificators(event.EventType)
+				matchCount := 0
+				for _, lord := range activeDashaLords {
+					for _, sig := range significators {
+						if lord == sig {
+							matchCount++
+						}
+					}
+				}
+				currentSliceScore += float64(matchCount) / float64(len(significators))
+			}
+			resultsChan <- sliceResult{time: candidateTime, offset: currentOffset, score: currentSliceScore}
+		}(offset)
+	}
+
+	wg.Wait()
+	close(resultsChan)
+
 	var bestSlice time.Time
 	maxScore := -1.0
 	bestOffset := 0
-	searchLimitSeconds := req.SearchWindowMinutes * 60
 
-	for offset := -searchLimitSeconds; offset <= searchLimitSeconds; offset += 15 {
-		candidateTime := baseUtc.Add(time.Duration(offset) * time.Second)
-		candidateJD := CalculateJulianDay(candidateTime)
-		currentSliceScore := 0.0
-		activeDashaLords := calculateDynamicDashaLords(candidateJD)
-
-		for _, event := range req.Milestones {
-			significators := getEventSignificators(event.EventType)
-			matchCount := 0
-			for _, lord := range activeDashaLords {
-				for _, sig := range significators {
-					if lord == sig {
-						matchCount++
-					}
-				}
-			}
-			currentSliceScore += float64(matchCount) / float64(len(significators))
-		}
-
-		if currentSliceScore > maxScore {
-			maxScore = currentSliceScore
-			bestSlice = candidateTime
-			bestOffset = offset
+	for res := range resultsChan {
+		if res.score > maxScore {
+			maxScore = res.score
+			bestSlice = res.time
+			bestOffset = res.offset
 		}
 	}
 

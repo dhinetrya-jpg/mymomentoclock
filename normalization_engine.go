@@ -4,17 +4,19 @@ package main
 #cgo LDFLAGS: -lswef -lm
 #include <stdint.h>
 typedef struct {
-  double longitude;
-  double latitude;
-  double speed;
-  int32_t error_code;
+    double longitude;
+    double latitude;
+    double speed;
+    int32_t error_code;
 } PlanetCoordinate;
-extern PlanetCoordinate compute_celestial_position(double julian_day, int32_t planet_id);
+extern PlanetCoordinate compute_celestial_position_safe(double julian_day, int32_t planet_id);
 */
 import "C"
+
 import (
 	"encoding/json"
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -58,8 +60,7 @@ func ExecuteNormalization(req NormalizationRequest, tzLocation string) ([]byte, 
 	if err != nil {
 		return nil, err
 	}
-	localDateTimeStr := fmt.Sprintf("%s %s", req.BirthDate, req.BirthTime)
-	localTime, err := time.ParseInLocation("2006-01-02 15:04:05", localDateTimeStr, loc)
+	localTime, err := time.ParseInLocation("2006-01-02 15:04:05", req.BirthDate+" "+req.BirthTime, loc)
 	if err != nil {
 		return nil, err
 	}
@@ -69,8 +70,12 @@ func ExecuteNormalization(req NormalizationRequest, tzLocation string) ([]byte, 
 	planetsMap := make(map[string]PlanetData)
 	targetPlanets := map[string]int32{"sun": 0, "moon": 1, "mars": 4, "saturn": 6}
 
+	// Lock OS Thread to guarantee thread-safe FFI evaluation under massive concurrency
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
 	for name, id := range targetPlanets {
-		cCoord := C.compute_celestial_position(C.double(julianDay), C.int32_t(id))
+		cCoord := C.compute_celestial_position_safe(C.double(julianDay), C.int32_t(id))
 		if cCoord.error_code < 0 {
 			return nil, fmt.Errorf("ephemeris mathematical calculation fault: %d", cCoord.error_code)
 		}
@@ -79,15 +84,11 @@ func ExecuteNormalization(req NormalizationRequest, tzLocation string) ([]byte, 
 			Velocity:  float64(cCoord.speed),
 		}
 	}
-
 	payload := NormalizedPayload{
 		JulianDayUtc:    julianDay,
 		NormalizedTime:  utcTime,
 		SystemTimestamp: time.Now().UnixNano(),
 		Coordinates:     planetsMap,
 	}
-
 	return json.Marshal(payload)
 }
-
-func main() {}

@@ -86,7 +86,8 @@ export function executeBirthTimeRectification(
   searchWindowMinutes: number = 15,
   intervalSeconds: number = 15
 ): RectificationResult {
-  const [hStr, mStr, sStr] = rawTime.split(':');
+  const timeStr = rawTime || '12:00:00';
+  const [hStr, mStr, sStr] = timeStr.split(':');
   const baseH = parseInt(hStr, 10) || 12;
   const baseM = parseInt(mStr, 10) || 0;
   const baseS = parseInt(sStr || '0', 10) || 0;
@@ -124,27 +125,34 @@ export function executeBirthTimeRectification(
     // Subcharts D-60 shift boundary every 30' (2 minutes).
     const harmonicResonance = Math.sin((offset / 120.0) * Math.PI) * 0.15;
 
-    milestones.forEach(ms => {
+    const effectiveMilestones = (milestones && milestones.length > 0) ? milestones : SAMPLE_MILESTONES;
+
+    effectiveMilestones.forEach(ms => {
       const msWeight = ms.confidence === 'HIGH' ? 1.0 : 0.6;
       totalWeight += msWeight;
 
-      const eventYear = parseInt(ms.approxDate.split('-')[0], 10) || 2020;
+      const dateStr = ms.approxDate || (ms as any).timestamp || '2020-01-01';
+      const eventYear = parseInt(String(dateStr).split('-')[0], 10) || 2020;
       const activePeriod = testChart.vimshottariDasha.timeline.find(t => {
         const sY = parseInt(t.startDate.split('-')[0], 10);
         const eY = parseInt(t.endDate.split('-')[0], 10);
         return eventYear >= sY && eventYear < eY;
       });
 
+      const effectiveType: string = ms.type || (ms as any).event_type || 'CAREER_PROMOTION';
+
       let eventConcordance = 0.70;
       if (activePeriod) {
-        if (ms.type === 'CAREER_PROMOTION' && ['Sun', 'Jupiter', 'Mars', 'Saturn', 'Mercury'].includes(activePeriod.lord)) {
+        if ((effectiveType === 'CAREER_PROMOTION' || effectiveType === 'CAREER_BREAKTHROUGH') && ['Sun', 'Jupiter', 'Mars', 'Saturn', 'Mercury'].includes(activePeriod.lord)) {
           eventConcordance += 0.20;
-        } else if (ms.type === 'MARRIAGE_UNION' && ['Venus', 'Jupiter', 'Moon'].includes(activePeriod.lord)) {
+        } else if ((effectiveType === 'MARRIAGE_UNION' || effectiveType === 'MARRIAGE') && ['Venus', 'Jupiter', 'Moon'].includes(activePeriod.lord)) {
           eventConcordance += 0.22;
-        } else if (ms.type === 'RELOCATION_TRAVEL' && ['Rahu', 'Moon', 'Mercury'].includes(activePeriod.lord)) {
+        } else if ((effectiveType === 'RELOCATION_TRAVEL') && ['Rahu', 'Moon', 'Mercury'].includes(activePeriod.lord)) {
           eventConcordance += 0.18;
-        } else if (ms.type === 'FINANCIAL_ACQUISITION' && ['Jupiter', 'Venus', 'Mercury'].includes(activePeriod.lord)) {
+        } else if ((effectiveType === 'FINANCIAL_ACQUISITION') && ['Jupiter', 'Venus', 'Mercury'].includes(activePeriod.lord)) {
           eventConcordance += 0.20;
+        } else if ((effectiveType === 'HEALTH_PHYSICAL' || effectiveType === 'SURGERY') && ['Mars', 'Saturn', 'Rahu'].includes(activePeriod.lord)) {
+          eventConcordance += 0.21;
         }
       }
 

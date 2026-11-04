@@ -1,6 +1,6 @@
 {
-  "name": "AstroDiwali · AstroEngine & Prosperity Platform",
-  "description": "Enterprise-grade AstroEngine combining Swiss-grade planetary calculations, symbolic contradiction resolution, Birth Time Rectification (BTR), Remedial Vector Matrix (RVM), and Diwali Prosperity Kit with Desha-Kala-Patra AI.",
+  "name": "MymomentOclock · Vedic Precision & Prosperity Platform",
+  "description": "Enterprise-grade MymomentOclock platform combining Swiss-grade planetary calculations, symbolic contradiction resolution, Birth Time Rectification (BTR), Remedial Vector Matrix (RVM), and Diwali Prosperity Kit with Desha-Kala-Patra AI.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
