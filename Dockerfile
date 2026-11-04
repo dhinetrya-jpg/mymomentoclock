@@ -12,7 +12,7 @@ FROM alpine:latest
 RUN apk add --no-cache libc6-compat ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/backend/astroengine_server .
-COPY . /app
+COPY frontend/ ../frontend/
 
 EXPOSE 8080
 CMD ["./astroengine_server"]
