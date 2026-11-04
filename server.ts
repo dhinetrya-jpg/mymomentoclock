@@ -551,7 +551,7 @@ Please provide a structured, cohesive Desha-Kala-Patra reading synthesizing:
 4. Targeted Daily Acoustic & Behavioral Micro-Remedies (RVM Protocol)`;
 
   try {
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'MY_GEMINI_API_KEY') {
       throw new Error('GEMINI_API_KEY environment variable not configured');
     }
 

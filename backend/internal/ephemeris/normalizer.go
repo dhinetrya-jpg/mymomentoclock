@@ -1,22 +1,8 @@
 package ephemeris
 
-/*
-#cgo LDFLAGS: -lswef -lm
-#include <stdint.h>
-typedef struct {
-    double longitude;
-    double latitude;
-    double speed;
-    int32_t error_code;
-} PlanetCoordinate;
-extern PlanetCoordinate compute_celestial_position_safe(double julian_day, int32_t planet_id);
-*/
-import "C"
-
 import (
 	"encoding/json"
 	"fmt"
-	"runtime"
 	"time"
 )
 
@@ -70,19 +56,12 @@ func ExecuteNormalization(req NormalizationRequest, tzLocation string) ([]byte, 
 	planetsMap := make(map[string]PlanetData)
 	targetPlanets := map[string]int32{"sun": 0, "moon": 1, "mars": 4, "saturn": 6}
 
-	// Lock OS Thread to guarantee thread-safe FFI evaluation under massive concurrency
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-
 	for name, id := range targetPlanets {
-		cCoord := C.compute_celestial_position_safe(C.double(julianDay), C.int32_t(id))
-		if cCoord.error_code < 0 {
-			return nil, fmt.Errorf("ephemeris mathematical calculation fault: %d", cCoord.error_code)
+		coord, err := computeCelestialPosition(julianDay, id)
+		if err != nil {
+			return nil, fmt.Errorf("ephemeris mathematical calculation fault: %w", err)
 		}
-		planetsMap[name] = PlanetData{
-			Longitude: float64(cCoord.longitude),
-			Velocity:  float64(cCoord.speed),
-		}
+		planetsMap[name] = coord
 	}
 	payload := NormalizedPayload{
 		JulianDayUtc:    julianDay,

@@ -1,10 +1,12 @@
+//go:build ignore
+
 package resolver
 
 import (
 	"context"
 	"encoding/json"
 	"math"
-	"[github.com/neo4j/neo4j-go-driver/v5/neo4j](https://github.com/neo4j/neo4j-go-driver/v5/neo4j)"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type YogaRule struct {
