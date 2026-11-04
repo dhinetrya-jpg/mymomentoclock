@@ -1,7 +1,7 @@
 # 🪔 MymomentOclock · Vedic Precision & Prosperity Platform
 
-[![CI - Lint & Build](https://github.com/your-username/mymomentoclock/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/mymomentoclock/actions/workflows/ci.yml)
-[![Deploy to GitHub Pages](https://github.com/your-username/mymomentoclock/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/your-username/mymomentoclock/actions/workflows/deploy-pages.yml)
+[![CI - Lint & Build](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/ci.yml/badge.svg)](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/ci.yml)
+[![Deploy to GitHub Pages](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
@@ -75,7 +75,7 @@ An enterprise-grade, high-performance Vedic MymomentOclock and Festival Prosperi
 
 ```bash
 # 1. Clone repository from GitHub
-git clone https://github.com/your-username/mymomentoclock.git
+git clone https://github.com/dhinetrya-jpg/mymomentoclock.git
 cd mymomentoclock
 
 # 2. Install dependencies
@@ -98,7 +98,7 @@ Open your browser at **`http://localhost:3000`**.
 This repository includes a pre-configured GitHub Actions workflow (`.github/workflows/deploy-pages.yml`):
 1. Push this repository to GitHub:
    ```bash
-   git remote add origin https://github.com/your-username/mymomentoclock.git
+   git remote add origin https://github.com/dhinetrya-jpg/mymomentoclock.git
    git push -u origin main
    ```
 2. In your GitHub repository, navigate to **Settings** → **Pages**.
