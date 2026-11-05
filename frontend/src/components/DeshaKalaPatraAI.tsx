@@ -35,10 +35,11 @@ export const DeshaKalaPatraAI: React.FC<DeshaKalaPatraAIProps> = ({
         ayanamsa_applied: chart.systemMetadata.ayanamsaApplied,
         calculation_timestamp: chart.systemMetadata.calculationTimestamp,
       },
-      rectified_birth_profile: {
-        original_input_time: `${chart.inputProfile.birthDate}T${chart.inputProfile.birthTime}+05:30`,
-        rectified_true_time: `${chart.inputProfile.birthDate}T${chart.inputProfile.birthTime}+05:30`,
-        concordance_rating: 0.88,
+      birth_profile: {
+        birth_date: chart.inputProfile.birthDate,
+        local_birth_time: chart.inputProfile.birthTime,
+        utc_offset_hours: chart.inputProfile.timezoneOffset,
+        independent_validation_status: 'NOT_PERFORMED',
       },
       pillar_metrics: {
         wealth_status: {

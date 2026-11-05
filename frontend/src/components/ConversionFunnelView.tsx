@@ -100,11 +100,11 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
     setTelemetryProgress(0);
 
     const logSteps = [
-      { msg: '[INITIALIZING] Spatiotemporal Engine linking Swiss Ephemeris FFI Core (v2.1-sidereal)...', p: 15, delay: 250 },
-      { msg: `[PROCESSING] Querying IANA Database for Historical DST Offset... Applied Delta: +05:30. Resolved Julian Day: ${calculatedJd}`, p: 35, delay: 650 },
+      { msg: '[INITIALIZING] Spatiotemporal Engine linking illustrative calculation sequence (v2.1-sidereal)...', p: 15, delay: 250 },
+      { msg: `[PROCESSING] Demo offset illustration; no IANA lookup... Applied Delta: +05:30. Resolved Julian Day: ${calculatedJd}`, p: 35, delay: 650 },
       { msg: `[CALIBRATING] Running 120 candidate time-slice iterations across ±15-minute search window against milestones [${milestone1}, ${milestone2}]...`, p: 60, delay: 1100 },
-      { msg: '[CALIBRATING] Optimal time slice localized at -165 seconds. Micro-divisional concordance: 88% verified.', p: 80, delay: 1550 },
-      { msg: '[RESOLVING] Neo4j Symbolic Knowledge Graph executing structural subtraction matrix: Dhana Yoga vs. Daridra Yoga...', p: 95, delay: 2050 },
+      { msg: '[CALIBRATING] Optimal time slice localized at -165 seconds. Micro-divisional concordance: 88% example fit (not validated).', p: 80, delay: 1550 },
+      { msg: '[RESOLVING] Illustrative symbolic graph sequence: structural subtraction matrix: Dhana Yoga vs. Daridra Yoga...', p: 95, delay: 2050 },
       { msg: '[SUCCESS] Net Auspiciousness Vector compiled (A_net = 0.5476). Asymmetric paywall cache token sealed.', p: 100, delay: 2550 },
     ];
 
@@ -194,6 +194,7 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
 
   return (
     <div className="space-y-6">
+      <p role="status" className="border border-amber-800 rounded p-3 text-amber-200">Demonstration only: this funnel uses synthetic example profiles, timing and telemetry. It does not calculate or certify your birth profile. Use Edit Birth Details for actual input calculations.</p>
       {/* Funnel Stage Navigator Bar (Allows testing each stage of the lifecycle) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-rose-950/70 bg-[#1c050b] p-3 text-xs">
         <div className="flex items-center gap-2">
@@ -973,7 +974,7 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
               </div>
               <div>
                 <span className="text-rose-400/60 block">Data Source:</span>
-                <span className="text-rose-100 font-semibold">Swiss Ephemeris FFI Core</span>
+                <span className="text-rose-100 font-semibold">illustrative calculation sequence</span>
               </div>
               <div>
                 <span className="text-rose-400/60 block">Baseline Ayanamsa:</span>

@@ -9,6 +9,7 @@
 
 import React, { useState } from 'react';
 import { AyanamsaType } from '../engine/astroMath';
+import { validateBirthInput } from '../engine/calculationValidation';
 import { MAJOR_CITIES_MUHURAT } from '../engine/diwaliData';
 
 interface OnboardingWizardProps {
@@ -19,6 +20,7 @@ interface OnboardingWizardProps {
     longitude: number;
     cityName: string;
     ayanamsaType: AyanamsaType;
+    timezoneOffset: number;
   }) => void;
   onOpenQuickFestival: () => void;
 }
@@ -27,10 +29,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   onCalculate,
   onOpenQuickFestival,
 }) => {
-  const [cityName, setCityName] = useState('Kolkata');
-  const [birthDate, setBirthDate] = useState('1989-11-23');
-  const [birthTime, setBirthTime] = useState('04:30:00');
+  const [cityName, setCityName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [birthTime, setBirthTime] = useState('');
   const [ayanamsa, setAyanamsa] = useState<AyanamsaType>(AyanamsaType.TRUE_LAHIRI);
+
+  const [offset, setOffset] = useState('');
+  const [error, setError] = useState('');
 
   const handleCityChange = (newCity: string) => {
     setCityName(newCity);
@@ -38,7 +43,9 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const cityMeta = MAJOR_CITIES_MUHURAT[cityName] || MAJOR_CITIES_MUHURAT['Kolkata'];
+    const cityMeta = MAJOR_CITIES_MUHURAT[cityName];
+    if (!cityMeta) { setError('Select your birth city.'); return; }
+    try { validateBirthInput({birthDate, birthTime, latitude: cityMeta.lat, longitude: cityMeta.lon, timezoneOffset: offset === '' ? undefined : Number(offset), ayanamsaType: ayanamsa}); } catch (e) { setError((e as Error).message); return; }
     onCalculate({
       birthDate,
       birthTime,
@@ -46,6 +53,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       longitude: cityMeta.lon,
       cityName,
       ayanamsaType: ayanamsa,
+      timezoneOffset: Number(offset),
     });
   };
 
@@ -87,7 +95,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none font-mono"
             />
             <span className="text-[10px] text-rose-300/50 mt-1 block">
-              Unsure of seconds? Automated BTR will calibrate afterwards.
+              Unknown birth time cannot produce an exact chart. BTR offers heuristic candidates only.
             </span>
           </div>
         </div>
@@ -100,6 +108,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               onChange={(e) => handleCityChange(e.target.value)}
               className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
             >
+              <option value="">Select birth city</option>
               {Object.keys(MAJOR_CITIES_MUHURAT).map((c) => (
                 <option key={c} value={c}>{c} ({MAJOR_CITIES_MUHURAT[c].stateCountry})</option>
               ))}
@@ -120,6 +129,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           </div>
         </div>
 
+        <label className="block text-xs">UTC offset at birth (hours)
+          <input aria-label="UTC offset at birth" type="number" min="-12" max="14" step="any" required value={offset} onChange={e => setOffset(e.target.value)} className="m-2 bg-rose-950 p-2" />
+          Historical timezone/DST conversion is unavailable. Supply the offset applicable at birth.
+        </label>
+        {error && <p role="alert">{error}</p>}
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
           <button
             type="submit"

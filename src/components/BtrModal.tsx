@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { executeBirthTimeRectification, LifeMilestone, SAMPLE_MILESTONES, RectificationResult } from '../engine/btrProcessor';
+import { executeBirthTimeRectification, LifeMilestone, RectificationResult } from '../engine/btrProcessor';
 import { ChartCalculationResult } from '../engine/astroMath';
 
 interface BtrModalProps {
@@ -22,25 +22,30 @@ export const BtrModal: React.FC<BtrModalProps> = ({
   chart,
   onApplyRectifiedChart,
 }) => {
-  const [milestones] = useState<LifeMilestone[]>(SAMPLE_MILESTONES);
+  const [milestones, setMilestones] = useState<LifeMilestone[]>([]);
   const [btrResult, setBtrResult] = useState<RectificationResult | null>(null);
   const [isCalibrating, setIsCalibrating] = useState(false);
+
+  const [eventDate, setEventDate] = useState('');
+  const [eventType, setEventType] = useState<LifeMilestone['type']>('CAREER_PROMOTION');
+  const [error, setError] = useState('');
 
   if (!isOpen) return null;
 
   const handleRunCalibration = () => {
     setIsCalibrating(true);
     setTimeout(() => {
+      try {
       const res = executeBirthTimeRectification(
         chart.inputProfile.birthDate,
         chart.inputProfile.birthTime,
         chart.inputProfile.latitude,
         chart.inputProfile.longitude,
         chart.inputProfile.cityName,
-        milestones
+        milestones, 15, 15, chart.inputProfile.timezoneOffset, chart.systemMetadata.ayanamsaApplied
       );
       setBtrResult(res);
-      setIsCalibrating(false);
+      } catch (e) { setError((e as Error).message); } finally { setIsCalibrating(false); }
     }, 500);
   };
 
@@ -60,7 +65,7 @@ export const BtrModal: React.FC<BtrModalProps> = ({
               Janma Lagna Shodhana (Birth Time Rectification)
             </h2>
             <p className="mt-1 text-xs text-rose-300/60">
-              Calibrating ±15-minute window in 15-second discrete steps to eliminate D-60 micro-timing errors.
+              Heuristic candidate search only; no independent birth-time or D-60 validation.
             </p>
           </div>
           <button
@@ -75,10 +80,19 @@ export const BtrModal: React.FC<BtrModalProps> = ({
           {/* Milestone Checkpoints */}
           <div className="rounded-lg border border-rose-950/70 bg-[#25070f] p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-rose-100">Verified Past Life Milestones</span>
-              <span className="text-[11px] text-rose-300/60 font-mono">4 Lifecycle Checkpoints</span>
+              <span className="text-xs font-semibold text-rose-100">Actual Lifecycle Milestones Required</span>
+              <span className="text-[11px] text-rose-300/60 font-mono">{milestones.length} supplied milestones</span>
             </div>
 
+            <p className="mt-3">Add only events that actually occurred. No sample events are substituted. Fit scores are internal heuristics, not probabilities.</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <input aria-label="Milestone date" type="date" value={eventDate} onChange={e => setEventDate(e.target.value)} className="bg-rose-950 p-2" />
+              <select aria-label="Milestone type" value={eventType} onChange={e => setEventType(e.target.value as LifeMilestone['type'])} className="bg-rose-950 p-2">
+                <option value="CAREER_PROMOTION">Career promotion</option><option value="MARRIAGE_UNION">Marriage</option><option value="RELOCATION_TRAVEL">Relocation</option><option value="HEALTH_PHYSICAL">Health event</option><option value="FINANCIAL_ACQUISITION">Asset acquisition</option>
+              </select>
+              <button disabled={!eventDate || milestones.length >= 100} onClick={() => { setMilestones([...milestones, {id: String(milestones.length), type: eventType, title: eventType, approxDate: eventDate, description: 'User supplied event', confidence: 'MEDIUM'}]); setBtrResult(null); }} className="text-amber-300">Add event</button>
+            </div>
+            {error && <p role="alert">{error}</p>}
             <div className="mt-3 space-y-2.5">
               {milestones.map((ms) => (
                 <div key={ms.id} className="rounded border border-rose-950/70 bg-[#1c050b] p-3 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -99,7 +113,7 @@ export const BtrModal: React.FC<BtrModalProps> = ({
             <div className="mt-4 flex justify-end">
               <button
                 onClick={handleRunCalibration}
-                disabled={isCalibrating}
+                disabled={isCalibrating || milestones.length === 0}
                 className="rounded-lg bg-amber-500 px-5 py-2 text-xs font-bold text-neutral-950 hover:bg-amber-400 transition-colors disabled:opacity-50 shadow-md shadow-amber-950/40"
               >
                 {isCalibrating ? 'Evaluating 120 Candidate Charts...' : 'Execute 15-Second Calibration Search'}
@@ -115,19 +129,19 @@ export const BtrModal: React.FC<BtrModalProps> = ({
                   Rectification Results & Concordance
                 </span>
                 <span className="font-mono font-bold text-emerald-400 text-sm">
-                  {(btrResult.concordanceRating * 100).toFixed(1)}% Match
+                  {(btrResult.concordanceRating * 100).toFixed(1)} / 100 internal fit
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="rounded bg-[#160408] p-3 border border-rose-950/60">
-                  <div className="text-rose-300/60 text-[11px]">Unverified Input Time</div>
+                  <div className="text-rose-300/60 text-[11px]">Original Input Time</div>
                   <div className="font-mono text-base font-bold text-rose-100 mt-1">
                     {btrResult.originalInputTime}
                   </div>
                 </div>
                 <div className="rounded bg-[#160408] p-3 border border-rose-950/60">
-                  <div className="text-emerald-400 text-[11px] font-semibold">Calibrated True Time</div>
+                  <div className="text-emerald-400 text-[11px] font-semibold">Candidate Birth Time</div>
                   <div className="font-mono text-base font-bold text-amber-300 mt-1">
                     {btrResult.rectifiedTrueTime}
                   </div>
@@ -172,7 +186,7 @@ export const BtrModal: React.FC<BtrModalProps> = ({
               onClick={handleApply}
               className="rounded-lg bg-emerald-600 px-5 py-2 text-xs font-bold text-white hover:bg-emerald-500 shadow-md shadow-emerald-950/50"
             >
-              Apply Calibrated Time ({btrResult.rectifiedTrueTime})
+              Apply Candidate Time ({btrResult.rectifiedTrueTime})
             </button>
           )}
         </div>

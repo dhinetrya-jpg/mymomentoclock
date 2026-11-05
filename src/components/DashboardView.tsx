@@ -38,6 +38,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="space-y-8 animate-fade-in">
+      <p role="status" className="text-xs text-amber-200">Chart scores are internal traditional-rule heuristics, not calibrated outcome probabilities. Timing, transit displays and calendar heatmaps are unverified illustrations; personal timing is unavailable.</p>
       {/* 0. Prominent Centerpiece: Diwali Cosmic Countdown & Panchang Clock */}
       <DiwaliCountdown
         chart={chart}
@@ -221,7 +222,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="flex items-center gap-3 text-xs text-rose-200/70">
             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Auspicious (Shubha)</span>
-            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-400" /> Golden Window (24m)</span>
+            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-400" /> Timing illustration (unverified)</span>
             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-rose-800" /> Rahu Kaal (Pause)</span>
           </div>
         </div>
@@ -248,9 +249,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-[10px] text-rose-300/60 mt-1">Sacred Lakshmi Puja</div>
           </div>
           <div className="rounded-lg border border-amber-500/40 bg-amber-950/30 p-3 ring-1 ring-amber-500/30">
-            <div className="text-[11px] text-amber-300 font-semibold">Golden 24-Min Window</div>
-            <div className="font-mono text-xs font-bold text-amber-200 mt-1">06:24 - 06:48 PM</div>
-            <div className="text-[10px] text-amber-200/80 mt-1">Personal Wealth Trigger</div>
+            <div className="text-[11px] text-amber-300 font-semibold">Personal timing unavailable</div>
+            <div className="font-mono text-xs font-bold text-amber-200 mt-1">Unavailable</div>
+            <div className="text-[10px] text-amber-200/80 mt-1">No natal timing engine</div>
           </div>
           <div className="rounded-lg border border-sky-900/40 bg-sky-950/20 p-3">
             <div className="text-[11px] text-sky-400 font-medium">Vrishabha Sthira Lagna</div>

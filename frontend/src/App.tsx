@@ -27,18 +27,9 @@ export default function App() {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
-  // Initialize with baseline Kolkata birth profile (from Part 1 of specification)
-  const [chart, setChart] = useState<ChartCalculationResult>(() =>
-    calculateFullChart('1989-11-23', '04:30:00', 22.5726, 88.3639, 'Kolkata', 5.5, AyanamsaType.TRUE_LAHIRI)
-  );
-
-  const [resolution, setResolution] = useState<ConflictResolutionResult>(() =>
-    resolvePillarConflict(chart, 'Wealth')
-  );
-
-  const [rvmResult, setRvmResult] = useState<RvmEvaluationResult>(() =>
-    evaluateRemedialVectors(resolution.netAuspiciousnessVector, 'Wealth', 'SATURN')
-  );
+  const [chart, setChart] = useState<ChartCalculationResult | null>(null);
+  const [resolution, setResolution] = useState<ConflictResolutionResult | null>(null);
+  const [rvmResult, setRvmResult] = useState<RvmEvaluationResult | null>(null);
 
   const handleUpdateChart = (newChart: ChartCalculationResult) => {
     setChart(newChart);
@@ -54,6 +45,7 @@ export default function App() {
     longitude: number;
     cityName: string;
     ayanamsaType: AyanamsaType;
+    timezoneOffset: number;
   }) => {
     const newChart = calculateFullChart(
       params.birthDate,
@@ -61,7 +53,7 @@ export default function App() {
       params.latitude,
       params.longitude,
       params.cityName,
-      5.5,
+      params.timezoneOffset,
       params.ayanamsaType
     );
     handleUpdateChart(newChart);
@@ -86,11 +78,11 @@ export default function App() {
         <div className="mx-auto flex max-w-7xl items-center justify-between text-rose-200/70">
           <div className="flex items-center gap-2">
             <span className="text-amber-400 font-mono font-medium">Native Profile:</span>
-            <span>{chart.inputProfile.cityName}</span>
+            <span>{chart?.inputProfile.cityName || "No birth profile supplied"}</span>
             <span aria-hidden="true">·</span>
-            <span>Lagna: <strong className="text-rose-100">{chart.ascendantSignName}</strong></span>
+            <span>Lagna: <strong className="text-rose-100">{chart?.ascendantSignName || 'Unavailable'}</strong></span>
             <span aria-hidden="true">·</span>
-            <span>A_net: <strong className="text-amber-300 font-mono">{(resolution.netAuspiciousnessVector * 100).toFixed(1)}%</strong></span>
+            <span>A_net: <strong className="text-amber-300 font-mono">{resolution ? `${(resolution.netAuspiciousnessVector * 100).toFixed(1)} / 100 heuristic` : 'Unavailable'}</strong></span>
           </div>
 
           <button
@@ -118,13 +110,14 @@ export default function App() {
         ) : null}
 
         {/* Dynamic View Routing */}
+        {!chart && ['dashboard','remediation'].includes(activeTab) && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
         {activeTab === 'funnel' && (
           <ConversionFunnelView
             onNavigateToFullApp={() => setActiveTab('dashboard')}
           />
         )}
 
-        {activeTab === 'dashboard' && (
+        {activeTab === 'dashboard' && chart && resolution && (
           <DashboardView
             chart={chart}
             resolution={resolution}
@@ -141,7 +134,7 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'remediation' && (
+        {activeTab === 'remediation' && rvmResult && (
           <RemediationView rvmResult={rvmResult} />
         )}
 
@@ -158,18 +151,18 @@ export default function App() {
       </main>
 
       {/* Modals */}
-      <ConflictResolverModal
+      {resolution && <ConflictResolverModal
         isOpen={isConflictModalOpen}
         onClose={() => setIsConflictModalOpen(false)}
         resolution={resolution}
-      />
+      />}
 
-      <BtrModal
+      {chart && <BtrModal
         isOpen={isBtrModalOpen}
         onClose={() => setIsBtrModalOpen(false)}
         chart={chart}
         onApplyRectifiedChart={handleUpdateChart}
-      />
+      />}
 
       <CheckoutModal
         isOpen={isCheckoutModalOpen}

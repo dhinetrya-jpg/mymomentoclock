@@ -37,3 +37,6 @@ jobs:
         run: |
           npm --prefix frontend run lint
           npm --prefix frontend run build
+
+      - name: Calculation integrity regression tests
+        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx

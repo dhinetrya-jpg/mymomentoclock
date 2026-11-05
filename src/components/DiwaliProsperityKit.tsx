@@ -1,3 +1,4 @@
+import { TimingScopeNotice } from './TimingScopeNotice';
 import blessingImage from '../assets/images/diwali_blessing_card_art_1791900494610.jpg';
 import envelopeImage from '../assets/images/diwali_sealed_wax_envelope_1791900494959.jpg';
 /**
@@ -16,7 +17,7 @@ import { MAJOR_CITIES_MUHURAT, calculatePersonalGoldenWindow, CityMuhurat } from
 import { ChartCalculationResult } from '../engine/astroMath';
 
 interface DiwaliProsperityKitProps {
-  chart: ChartCalculationResult;
+  chart: ChartCalculationResult | null;
   onOpenQuickCheckout: () => void;
 }
 
@@ -24,7 +25,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
   chart,
   onOpenQuickCheckout,
 }) => {
-  const [selectedCity, setSelectedCity] = useState<string>('New Delhi');
+  const [selectedCity, setSelectedCity] = useState<string>('');
   const [isSealBroken, setIsSealBroken] = useState(false);
   const [activeEdition, setActiveEdition] = useState<'ASTROLOGY' | 'FESTIVAL'>('ASTROLOGY');
   const [familyName, setFamilyName] = useState('Sharma');
@@ -51,7 +52,13 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  const cityData: CityMuhurat = MAJOR_CITIES_MUHURAT[selectedCity] || MAJOR_CITIES_MUHURAT['New Delhi'];
+  const cityData: CityMuhurat = MAJOR_CITIES_MUHURAT[selectedCity];
+  if (!cityData) return <div className="rounded-xl border border-rose-900 p-6 space-y-3">
+    <p role="status">Personal Timing Unavailable. Select an explicit event city to view the unverified Diwali 2026 preview. Birthplace is not used automatically.</p>
+    <select aria-label="Event city" value={selectedCity} onChange={e => setSelectedCity(e.target.value)} className="bg-rose-950 p-2">
+      <option value="">Select event city</option>{Object.keys(MAJOR_CITIES_MUHURAT).map(city => <option key={city} value={city}>{city}</option>)}
+    </select>
+  </div>;
   const goldenWindow = calculatePersonalGoldenWindow(familyName, cityData);
 
   const handleBreakSeal = () => {
@@ -121,7 +128,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
               </h1>
               <p className="mt-2 text-xs sm:text-sm text-rose-200/70 leading-relaxed">
                 A festival-specific digital keepsake engineered for the Indian living room.
-                Bypasses generic astrology with verified city-specific timings, personal Lakshmi windows,
+                Explore the unverified Diwali 2026 city preview, cultural reflections,
                 and shareable family keepsakes.
               </p>
             </div>
@@ -178,6 +185,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
         </div>
       </div>
 
+      <p role="status" className="text-amber-200 text-xs">Unverified static festival preview for 8 November 2026. Select the event city independently of birthplace. Not a current or natal recommendation.</p>
       {/* 2. Personalized Muhurat & Golden 24-Minute Window */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* City Panchang Timings */}
@@ -221,34 +229,34 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
           <div className="flex items-center justify-between border-b border-rose-950/60 pb-3">
             <div>
               <h2 className="font-serif text-base font-semibold text-amber-300">
-                Your Personal Golden 24-Minute Window
+                Personal Timing Unavailable
               </h2>
               <p className="text-xs text-rose-300/60 mt-0.5">
-                Calculated for family: &quot;{familyName}&quot; in {cityData.cityName}
+                Festival preview for: &quot;{familyName}&quot; in {cityData.cityName}
               </p>
             </div>
             <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[11px] font-mono font-semibold text-amber-300">
-              Personalized
+              Preview only
             </span>
           </div>
 
           <div className="mt-4">
             <div className="rounded-lg bg-[#160408] p-4 border border-amber-900/40">
               <div className="text-[11px] text-rose-300/60 uppercase font-mono">
-                Exact Golden Trigger Window (Diwali Evening)
+                No natal timing calculated
               </div>
               <div className="font-mono text-2xl font-bold text-amber-300 mt-1">
-                {goldenWindow.startTime} - {goldenWindow.endTime}
+                {goldenWindow.startTime && goldenWindow.endTime ? `${goldenWindow.startTime} - ${goldenWindow.endTime}` : 'Unavailable'}
               </div>
               <div className="mt-2 text-xs text-rose-200">
-                Governed by: <span className="font-medium text-amber-200">{goldenWindow.planetaryRuler}</span>
+                Calculation scope: <span className="font-medium text-amber-200">{goldenWindow.scope_metadata.scope}</span>
               </div>
             </div>
 
             <div className="mt-4 text-xs text-rose-200">
-              <span className="font-semibold text-rose-100">Recommended Prosperity Action:</span>
+              <span className="font-semibold text-rose-100">Timing limitation:</span>
               <p className="mt-1 leading-relaxed text-rose-300/70">
-                {goldenWindow.recommendedAction}
+                <TimingScopeNotice scope={goldenWindow.scope_metadata.scope} />{goldenWindow.scope_metadata.disclaimer}
               </p>
             </div>
           </div>

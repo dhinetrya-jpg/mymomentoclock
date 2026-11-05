@@ -230,76 +230,33 @@ export const MAJOR_CITIES_MUHURAT: Record<string, CityMuhurat> = {
   }
 };
 
-/**
- * Calculates a name-hash-derived 24-Minute Auspicious Window anchored to the
- * city's Pradosh Kaal.
- *
- * CFR-001 SCOPE DISCLOSURE:
- * This function uses ONLY the user's name string and the city Pradosh window
- * as inputs. It does NOT use a natal birth chart, lagna, dasha period, or any
- * individual astronomical ephemeris data. The window offset is deterministic
- * from a polynomial hash of the name characters. It is a city-level scheduling
- * convenience, not a personalised astrological calculation.
- */
-export function calculatePersonalGoldenWindow(userName: string, city: CityMuhurat): {
-  startTime: string;
-  endTime: string;
-  durationMinutes: number;
-  planetaryRuler: string;
+export type CalculationScope = 'GENERAL_LOCATION_BASED' | 'NATAL_SUPPORTED' | 'NATAL_LIMITED' | 'UNAVAILABLE';
+export interface GoldenWindowResult {
+  startTime: string | null;
+  endTime: string | null;
+  durationMinutes: number | null;
+  planetaryRuler: string | null;
   recommendedAction: string;
   scope_metadata: {
+    scope: CalculationScope;
+    status: 'PREVIEW' | 'UNAVAILABLE';
     calculation_basis: string;
     natal_chart_used: boolean;
-    input_fields: string[];
+    dataset_date: string;
+    source_status: 'UNVERIFIED';
     disclaimer: string;
   };
-} {
-  // Deterministic hash from name
-  let hash = 0;
-  for (let i = 0; i < userName.length; i++) {
-    hash = (hash << 5) - hash + userName.charCodeAt(i);
-    hash |= 0;
-  }
-  const positiveHash = Math.abs(hash);
-
-  // Offset within Pradosh window (e.g. 15 to 45 mins in)
-  const minuteOffset = (positiveHash % 30) + 10;
-  const startHour = 18; // 6 PM
-  const startMin = minuteOffset;
-  const endMin = (startMin + 24) % 60;
-  const endHour = startMin + 24 >= 60 ? startHour + 1 : startHour;
-
-  const rulers = ['Jupiter (Expansion & Divine Grace)', 'Venus (Opulence & Beauty)', 'Mercury (Trade & Liquidity)', 'Sun (Authority & Vitality)'];
-  const ruler = rulers[positiveHash % rulers.length];
-
-  const actions = [
-    'Execute a strategic micro-investment, donate to an educational trust, or set your financial target ledger.',
-    'Place your newly purchased silver coin or account register beside the sacred brass diya and recite the Lakshmi Gayatri.',
-    'Log your Samvat 2083 core family intention in writing and distribute sweets to neighbors.',
-    'Light the primary 5-wick brass lamp in the northeast Ishanya corner and activate acoustic 432Hz harmonic sound.'
-  ];
-
-  const formatH = (h: number) => (h > 12 ? h - 12 : h);
-  const startStr = `0${formatH(startHour)}:${String(startMin).padStart(2, '0')} PM`;
-  const endStr = `0${formatH(endHour)}:${String(endMin).padStart(2, '0')} PM`;
-
+}
+/** Compatibility entry point. A display name never participates in timing. */
+export function calculatePersonalGoldenWindow(_displayName: string, _city: CityMuhurat): GoldenWindowResult {
   return {
-    startTime: startStr,
-    endTime: endStr,
-    durationMinutes: 24,
-    planetaryRuler: ruler,
-    recommendedAction: actions[positiveHash % actions.length],
-    // CFR-001: Explicit scope metadata — consumers must not present this as natal-chart personalisation
+    startTime: null, endTime: null, durationMinutes: null, planetaryRuler: null,
+    recommendedAction: 'No calculated personal window is available. Festival times are an unverified 2026 preview.',
     scope_metadata: {
-      calculation_basis: 'name_hash_city_pradosh_anchor',
-      natal_chart_used: false,
-      input_fields: ['userName', `city.cityName=${city.cityName}`, 'city.pradoshKaalWindow'],
-      disclaimer:
-        'This window is derived from a polynomial hash of the supplied name string '
-        + 'offset against the city Pradosh Kaal. It is NOT computed from the '
-        + "user's natal birth chart, lagna, or personal ephemeris data. "
-        + 'For a natal-chart-based muhurat, provide birthDate, birthTime, and coordinates '
-        + 'to the /api/astro/calculate endpoint.',
+      scope: 'UNAVAILABLE', status: 'UNAVAILABLE', natal_chart_used: false,
+      calculation_basis: 'unverified_static_festival_registry', dataset_date: '2026-11-08',
+      source_status: 'UNVERIFIED',
+      disclaimer: 'Natal personalization is unavailable. The static city registry has no verified source and is only a Diwali 2026 preview, not a current recommendation. No natal, activity, duration or tradition rules are applied.',
     },
   };
 }

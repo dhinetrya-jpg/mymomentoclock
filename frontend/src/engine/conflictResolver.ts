@@ -290,20 +290,6 @@ export function resolvePillarConflict(
     }
   }
 
-  // Ensure realistic scenario if no raw combination triggered
-  if (activeYogas.length === 0) {
-    activeYogas.push({
-      name: category === 'Wealth' ? 'Dhana_Yoga' : 'Gajakesari_Yoga',
-      category,
-      nature: 'Benefic',
-      basePotency: 85,
-      calculatedStrength: 65.4,
-      activePlanets: ['Jupiter'],
-      housesInvolved: [11],
-      details: 'Baseline structural expansion pattern active in natal chart',
-    });
-  }
-
   // Step 1: Calculate Net Potency (P_net)
   // P_net = sum(Positive Yogas * Strength) - sum(Negative Yogas * Strength)
   const positiveSum = activeYogas
@@ -341,7 +327,7 @@ export function resolvePillarConflict(
 
   // Step 3: Conflict Synthesis & Desha-Kala-Patra Preparation
   const hasConflict = activeYogas.some(y => y.nature === 'Benefic') && activeYogas.some(y => y.nature === 'Malefic');
-  const dominantVector = netPotencyScore >= 0
+  const dominantVector = activeYogas.length === 0 ? 'NO_TRIGGERED_YOGA' : netPotencyScore >= 0
     ? (activeYogas.find(y => y.nature === 'Benefic')?.name || 'BENEFIC_OPULENCE_DOMINANT')
     : (activeYogas.find(y => y.nature === 'Malefic')?.name || 'MALEFIC_FRICTION_DOMINANT');
 
@@ -360,7 +346,7 @@ export function resolvePillarConflict(
     category,
     netPotencyScore,
     netAuspiciousnessVector,
-    conflictResolved: hasConflict || true,
+    conflictResolved: hasConflict,
     dominantVector,
     suppressedVector,
     mathematicalContext,
@@ -377,20 +363,6 @@ export function resolvePillarConflict(
       activeMahadashaLord: activeMD,
       activeAntardashaLord: activeAD,
     },
-    verifiedGraphPayload: category === 'Wealth' ? {
-      pillar: 'Wealth',
-      is_graph_verified: true,
-      active_verified_path: 'DHANA_YOGA_SECURE_MULTIPATH_MATCH_PASSED',
-      vector_matrix: {
-        earning_capacity: 0.82,
-        retention_velocity: 0.45,
-        asset_multiplier: 0.72,
-        temporal_friction: 0.38,
-      },
-      calculatedPotency: 0.5910,
-      netAuspiciousness: 0.5733,
-      deficiencyTriggered: true, // 0.45 <= 0.60
-      deficiencyIntensity: 0.55, // 1.0 - 0.45
-    } : undefined,
+    verifiedGraphPayload: undefined, // No authenticated graph evidence exists in this browser engine.
   };
 }
