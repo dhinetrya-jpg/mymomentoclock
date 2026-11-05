@@ -1,261 +1,179 @@
+// Native normalization only; no profile, graph, payment or AI capability is activated.
 package main
 
 import (
-	"database/sql"
+	"astroengine-core/backend/internal/calibration"
+	"astroengine-core/backend/internal/ephemeris"
+	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"strings"
+	"sync"
+	"syscall"
 	"time"
-
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-
-	"astroengine-core/backend/internal/calibration"
-	"astroengine-core/backend/internal/ephemeris"
-	"astroengine-core/backend/internal/graph"
-	"astroengine-core/backend/internal/metrics"
-	"astroengine-core/backend/internal/resolver"
-	"astroengine-core/backend/internal/rvm"
-	"astroengine-core/backend/internal/webhook"
 )
 
-type Server struct {
-	db            *sql.DB
-	neo4jDriver   neo4j.DriverWithContext
-	webhookServer *webhook.WebhookServer
+func respond(w http.ResponseWriter, status int, body any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(body)
 }
-
-func enableCORS(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-User-ID, X-Gateway-Signature")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
+func failure(w http.ResponseWriter, status int, code, message string) {
+	respond(w, status, map[string]any{"error": code, "message": message, "request_id": w.Header().Get("X-Request-ID"), "status": "UNAVAILABLE", "is_certified": false, "is_graph_verified": false, "vector_matrix": nil, "candidate_fit_score": nil, "candidate_birth_time": nil, "independent_validation_status": "NOT_PERFORMED"})
+}
+func decode(w http.ResponseWriter, r *http.Request, target any) bool {
+	if r.Method != "POST" {
+		failure(w, 405, "METHOD_NOT_ALLOWED", "Use POST.")
+		return false
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
+	d := json.NewDecoder(r.Body)
+	d.DisallowUnknownFields()
+	if err := d.Decode(target); err != nil {
+		var large *http.MaxBytesError
+		var wrongType *json.UnmarshalTypeError
+		if errors.As(err, &large) {
+			failure(w, 413, "REQUEST_TOO_LARGE", "The request is too large.")
+		} else if errors.As(err, &wrongType) || strings.Contains(err.Error(), "unknown field") {
+			failure(w, 422, "INVALID_REQUEST", "An unsupported field was supplied.")
+		} else {
+			failure(w, 400, "INVALID_JSON", "Send valid JSON.")
+		}
+		return false
+	}
+	if err := d.Decode(new(any)); err != io.EOF {
+		failure(w, 400, "INVALID_JSON", "Send one JSON object.")
+		return false
+	}
+	return true
+}
+func domainError(w http.ResponseWriter, err error) {
+	code := err.Error()
+	status := 422
+	if strings.Contains(code, "UNAVAILABLE") || code == "NATIVE_CALCULATION_FAILED" {
+		status = 503
+	}
+	failure(w, status, code, "The input or required calculation capability is unavailable. Check birth data and the explicit timezone.")
+}
+func newHandler() http.Handler {
+	mux := http.NewServeMux()
+	health := func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/ready" && !ephemeris.NativeAvailable() {
+			failure(w, 503, "NATIVE_EPHEMERIS_UNAVAILABLE", "Native calculation is unavailable.")
 			return
 		}
-		next(w, r)
+		native := "UNAVAILABLE"
+		if ephemeris.NativeAvailable() {
+			native = "AVAILABLE_WITH_MODE_DISCLOSURE"
+		}
+		respond(w, 200, map[string]any{"status": "healthy", "capabilities": map[string]string{"native_ephemeris": native, "btr": "UNAVAILABLE", "profiles": "UNAVAILABLE", "payments": "UNAVAILABLE", "resolver": "UNAVAILABLE"}})
 	}
-}
-
-func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]any{
-		"status":            "healthy",
-		"tier":              "backend-orchestrator",
-		"cluster_namespace": "astro-production",
-		"timestamp":         time.Now().UTC().Format(time.RFC3339),
-		"engine":            "MymomentOclock Engine Core v2.0 (Golang 1.22+)",
+	for _, path := range []string{"/health", "/ready", "/api/v1/health"} {
+		mux.HandleFunc(path, health)
+	}
+	mux.HandleFunc("/api/v1/ephemeris/normalize", func(w http.ResponseWriter, r *http.Request) {
+		var req ephemeris.NormalizationRequest
+		if !decode(w, r, &req) {
+			return
+		}
+		result, err := ephemeris.ExecuteNormalization(req, req.Timezone)
+		if err != nil {
+			domainError(w, err)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		_, _ = w.Write(result)
+	})
+	mux.HandleFunc("/api/v1/btr/rectify", func(w http.ResponseWriter, r *http.Request) {
+		var req calibration.BTRRequest
+		if !decode(w, r, &req) {
+			return
+		}
+		_, err := calibration.ExecuteRectification(req, req.BasePayload.Timezone)
+		if err != nil {
+			domainError(w, err)
+			return
+		}
+		failure(w, 503, "DASHA_CALCULATION_UNAVAILABLE", "A verified birth-time method is unavailable.")
+	})
+	graph := func(w http.ResponseWriter, r *http.Request) {
+		failure(w, 503, "PROFILE_GRAPH_UNAVAILABLE", "Secure sign-in, profile ownership and graph rules are not configured.")
+	}
+	for _, p := range []string{"/api/v1/graph/hydrate", "/api/v1/resolver/evaluate"} {
+		mux.HandleFunc(p, graph)
+	}
+	payment := func(w http.ResponseWriter, r *http.Request) {
+		failure(w, 503, "PAYMENT_PROVIDER_UNAVAILABLE", "Payments are not enabled. No entitlement was granted.")
+	}
+	mux.HandleFunc("/api/v1/webhook/payment", payment)
+	mux.HandleFunc("/api/payment/", payment)
+	mux.HandleFunc("/api/v1/rvm/remedies", func(w http.ResponseWriter, r *http.Request) {
+		failure(w, 503, "REMEDIES_UNAVAILABLE", "Verified personal remedy rules are not available.")
+	})
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		failure(w, 404, "NOT_FOUND", "This operation is unavailable.")
+	})
+	slots := make(chan struct{}, 8)
+	var mu sync.Mutex
+	window := time.Now()
+	count := 0
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		id := make([]byte, 16)
+		if _, err := rand.Read(id); err != nil {
+			failure(w, 503, "SERVICE_UNAVAILABLE", "Please try again later.")
+			return
+		}
+		w.Header().Set("X-Request-ID", hex.EncodeToString(id))
+		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Referrer-Policy", "no-referrer")
+		mu.Lock()
+		if time.Since(window) > time.Minute {
+			window = time.Now()
+			count = 0
+		}
+		count++
+		limited := count > 600
+		mu.Unlock()
+		if limited {
+			failure(w, 429, "RATE_LIMITED", "Please try again shortly.")
+			return
+		}
+		select {
+		case slots <- struct{}{}:
+			defer func() { <-slots }()
+		default:
+			failure(w, 429, "RATE_LIMITED", "Please try again shortly.")
+			return
+		}
+		mux.ServeHTTP(w, r)
 	})
 }
-
-func (s *Server) btrRectifyHandler(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
-	defer metrics.TraceStageDuration(metrics.StageBTRSearch, startTime)
-
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var req calibration.BTRRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		metrics.PipelineRequestsTotal.WithLabelValues("failure", "btr").Inc()
-		http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	tzLocation := "Asia/Kolkata"
-	resultBytes, err := calibration.ExecuteRectification(req, tzLocation)
-	if err != nil {
-		metrics.PipelineRequestsTotal.WithLabelValues("failure", "btr").Inc()
-		http.Error(w, "BTR Calculation Error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	metrics.PipelineRequestsTotal.WithLabelValues("success", "btr").Inc()
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(resultBytes)
-}
-
-func (s *Server) conflictResolverHandler(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
-	defer metrics.TraceStageDuration(metrics.StageNeo4jSubgraph, startTime)
-
-	if r.Method != http.MethodGet && r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	userId := r.URL.Query().Get("user_id")
-	if userId == "" {
-		userId = "USR_KOLKATA_89"
-	}
-	category := r.URL.Query().Get("category")
-	if category == "" {
-		category = "Wealth"
-	}
-
-	if s.neo4jDriver == nil {
-		mockPayload := resolver.ResolutionPayload{
-			Pillar:            category,
-			NetPotencyScore:   37.5,
-			NetAuspiciousness: 0.36375,
-			ConflictResolved:  true,
-			DominantVector:    "BENEFIC_OPULENCE_DOMINANT",
-		}
-		metrics.PipelineRequestsTotal.WithLabelValues("success", category).Inc()
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(mockPayload)
-		return
-	}
-
-	resultBytes, err := resolver.ResolveConflictMatrix(r.Context(), s.neo4jDriver, userId, category)
-	if err != nil {
-		metrics.PipelineRequestsTotal.WithLabelValues("failure", category).Inc()
-		http.Error(w, "Conflict Resolution Error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	metrics.PipelineRequestsTotal.WithLabelValues("success", category).Inc()
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(resultBytes)
-}
-
-func (s *Server) ephemerisNormalizeHandler(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
-	defer metrics.TraceStageDuration(metrics.StageEphemerisFFI, startTime)
-
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var req ephemeris.NormalizationRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		metrics.PipelineRequestsTotal.WithLabelValues("failure", "ephemeris").Inc()
-		http.Error(w, "Invalid Payload: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	tzLocation := "Asia/Kolkata"
-	resultBytes, err := ephemeris.ExecuteNormalization(req, tzLocation)
-	if err != nil {
-		metrics.PipelineRequestsTotal.WithLabelValues("failure", "ephemeris").Inc()
-		http.Error(w, "Ephemeris Calculation Error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	metrics.PipelineRequestsTotal.WithLabelValues("success", "ephemeris").Inc()
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(resultBytes)
-}
-
-func (s *Server) rvmRemediesHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var input rvm.ResolutionMetrics
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(w, "Invalid Payload: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if s.db == nil {
-		emptyPayload := rvm.RVMOutputPayload{
-			TargetPlanet:             input.TargetPlanet,
-			CalculatedDeficiency:     1.0 - input.NetAuspiciousness,
-			GeneratedRemedialActions: []rvm.RemedialTask{},
-			SystemTimestamp:          time.Now().Unix(),
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(emptyPayload)
-		return
-	}
-
-	resultBytes, err := rvm.GenerateTargetedRemedies(r.Context(), s.db, input)
-	if err != nil {
-		http.Error(w, "RVM Generation Error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(resultBytes)
-}
-
-func (s *Server) graphHydrateHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var data graph.SubChartCoordinates
-	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-		http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if s.neo4jDriver == nil {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"status": "GRAPH_MOCK_SUCCESS", "user_id": data.UserID})
-		return
-	}
-
-	if err := graph.HydrateUserGraph(r.Context(), s.neo4jDriver, data); err != nil {
-		http.Error(w, "Graph Hydration Error: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]any{"status": "SUCCESS", "user_id": data.UserID})
-}
-
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-
-	webhookSecret := os.Getenv("WEBHOOK_SECRET_KEY")
-	if webhookSecret == "" {
-		webhookSecret = "whsec_mymomentoclock_production_key_9981"
-	}
-
-	srv := &Server{
-		webhookServer: &webhook.WebhookServer{
-			WebhookSecretKey: webhookSecret,
-		},
-	}
-
-	mux := http.NewServeMux()
-
-	// Observability & Health
-	mux.HandleFunc("/health", srv.healthHandler)
-	mux.HandleFunc("/api/v1/health", srv.healthHandler)
-	mux.Handle("/metrics", promhttp.Handler())
-
-	// Core Calculation Endpoints
-	mux.HandleFunc("/api/v1/btr/rectify", enableCORS(srv.btrRectifyHandler))
-	mux.HandleFunc("/api/v1/resolver/evaluate", enableCORS(srv.conflictResolverHandler))
-	mux.HandleFunc("/api/v1/ephemeris/normalize", enableCORS(srv.ephemerisNormalizeHandler))
-	mux.HandleFunc("/api/v1/graph/hydrate", enableCORS(srv.graphHydrateHandler))
-	mux.HandleFunc("/api/v1/rvm/remedies", enableCORS(srv.rvmRemediesHandler))
-
-	// Webhook
-	mux.HandleFunc("/api/v1/webhook/payment", func(w http.ResponseWriter, r *http.Request) {
-		srv.webhookServer.HandlePaymentCallback(w, r)
-	})
-
-	log.Printf("MymomentOclock Engine Core listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, mux); err != nil {
-		log.Fatalf("Server startup failed: %v", err)
+	server := &http.Server{Addr: ":" + port, Handler: newHandler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+	go func() {
+		<-ctx.Done()
+		shutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		_ = server.Shutdown(shutdown)
+	}()
+	log.Print("Native service ready; protected capabilities disabled")
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatal(fmt.Errorf("HTTP_STARTUP_FAILED"))
 	}
 }
