@@ -9,7 +9,7 @@ for (let i=0; i<30; i++) {
 assert.ok(ready,'Container failed readiness');
 const post = async(path,body)=>{const r=await fetch(base+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});assert.equal(r.status,200,await r.clone().text());return r.json();};
 if (kind === 'engine') {
-  const body=await post('/api/v1/ephemeris/normalize',{birth_date:'2000-01-01',birth_time:'17:30:00',latitude:22.5726,longitude:88.3639});
+  const body=await post('/api/v1/ephemeris/normalize',{birth_date:'2000-01-01',birth_time:'17:30:00',latitude:22.5726,longitude:88.3639,timezone:'Asia/Kolkata'});
   assert.equal(body.julian_day_utc,2451545);
   assert.equal(Object.keys(body.coordinates).length,4);
   for (const planet of Object.values(body.coordinates)) assert.ok(Number.isFinite(planet.longitude) && planet.longitude>=0 && planet.longitude<360 && Number.isFinite(planet.velocity));

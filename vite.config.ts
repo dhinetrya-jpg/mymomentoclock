@@ -6,6 +6,7 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     base: process.env.VITE_BASE_PATH || './',
+    publicDir: false as const, // historical implementation artifacts are not public product content
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

@@ -24,12 +24,19 @@ export function validateBirthInput(input: any) {
   if (input.birthTimeCertainty === 'UNKNOWN') fail('BIRTH_TIME_UNKNOWN', 'Exact ascendant and divisional charts are unavailable without a birth time.');
   if (input.cityName !== undefined && typeof input.cityName !== 'string') fail('INVALID_LOCATION', 'cityName must be text.');
 }
-export function validateMilestones(milestones: unknown): void {
+export function validateMilestones(milestones: unknown, birthDate?: string): void {
   if (!Array.isArray(milestones) || milestones.length > 100) fail('INVALID_MILESTONES', 'Supply an array of at most 100 actual milestones.');
+  const seen=new Set<string>();
   for (const ms of milestones as any[]) {
     if (!ms || !['CAREER_PROMOTION','MARRIAGE_UNION','RELOCATION_TRAVEL','HEALTH_PHYSICAL','FINANCIAL_ACQUISITION'].includes(ms.type)
       || !['HIGH','MEDIUM'].includes(ms.confidence) || typeof ms.approxDate !== 'string'
       || !validGregorianDate(ms.approxDate.length === 7 ? ms.approxDate+'-01' : ms.approxDate)) fail('INVALID_MILESTONES', 'Each milestone needs a supported type, HIGH/MEDIUM confidence and valid YYYY-MM[-DD] date.');
+    const key=ms.type+':'+ms.approxDate;
+    if(seen.has(key)) fail('DUPLICATE_MILESTONE','Do not submit the same event twice.');
+    seen.add(key);
+    const precision=ms.approxDate.length===7?7:10;
+    if((birthDate && ms.approxDate < birthDate.slice(0,precision)) || ms.approxDate > new Date().toISOString().slice(0,precision)) fail('INVALID_MILESTONES','Events must occur between birth and today.');
+
   }
 }
 export const TIMEZONE_LIMITATION = 'Caller-supplied UTC offset; historical IANA timezone/DST conversion is not implemented. Uncertain birth times do not establish exact ascendants or divisional charts.';

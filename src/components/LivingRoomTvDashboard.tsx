@@ -81,7 +81,7 @@ export const LivingRoomTvDashboard: React.FC = () => {
   const verse: AartiVerse = AARTI_VERSES[currentVerseIndex];
 
   return (
-    <div className="relative min-h-[580px] rounded-2xl overflow-hidden border border-rose-950/70 bg-[#180408] shadow-2xl flex flex-col justify-between p-6 sm:p-10 animate-fade-in">
+    <div className="relative min-h-[580px] rounded-2xl overflow-hidden border border-rose-950/70 bg-[#180408] shadow-2xl flex flex-col justify-between p-6 sm:p-10 animate-fade-in"><p role="status" className="text-xs text-amber-200">Unverified festival display. No personal timing or outcome recommendation is calculated.</p>
       {/* Background Altar Artwork */}
       <div className="absolute inset-0 z-0">
         <img

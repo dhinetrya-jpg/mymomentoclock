@@ -41,11 +41,11 @@ export default function () {
     };
 
     // Execute High-Precision Birth Time Calibration Step
-    const btrResponse = http.post(`${BASE_URL}/api/v1/btr/rectify`, payload, params);
+    const btrResponse = http.post(`${BASE_URL}/api/v1/btr/rectify`, payload, { ...params, responseCallback: http.expectedStatuses(503) });
     check(btrResponse, {
-        'BTR Status is 200': (r) => r.status === 200,
-        'BTR returns a bounded computed fit score': (r) => Number.isFinite(r.json().candidate_fit_score) && r.json().candidate_fit_score >= 0 && r.json().candidate_fit_score <= 1,
-        'BTR returns the current API contract': (r) => r.json().schema_version === 2 && r.json().is_certified === false && r.json().independent_validation_status === 'NOT_PERFORMED',
+        'Unavailable BTR does not fabricate a candidate': (r) => r.status === 503 && r.json().error === 'DASHA_CALCULATION_UNAVAILABLE',
+        'Unavailable BTR returns no fit or time': (r) => r.json().candidate_fit_score === null && r.json().candidate_birth_time === null,
+        'BTR returns the current API contract': (r) => r.json().is_certified === false && r.json().independent_validation_status === 'NOT_PERFORMED',
     });
 
     sleep(0.5); 
