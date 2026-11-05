@@ -231,8 +231,15 @@ export const MAJOR_CITIES_MUHURAT: Record<string, CityMuhurat> = {
 };
 
 /**
- * Calculates a unique, personalized Golden 24-Minute Window for Lakshmi action
- * based on the user's name hash, birth metrics, and local city Pradosh Kaal.
+ * Calculates a name-hash-derived 24-Minute Auspicious Window anchored to the
+ * city's Pradosh Kaal.
+ *
+ * CFR-001 SCOPE DISCLOSURE:
+ * This function uses ONLY the user's name string and the city Pradosh window
+ * as inputs. It does NOT use a natal birth chart, lagna, dasha period, or any
+ * individual astronomical ephemeris data. The window offset is deterministic
+ * from a polynomial hash of the name characters. It is a city-level scheduling
+ * convenience, not a personalised astrological calculation.
  */
 export function calculatePersonalGoldenWindow(userName: string, city: CityMuhurat): {
   startTime: string;
@@ -240,6 +247,12 @@ export function calculatePersonalGoldenWindow(userName: string, city: CityMuhura
   durationMinutes: number;
   planetaryRuler: string;
   recommendedAction: string;
+  scope_metadata: {
+    calculation_basis: string;
+    natal_chart_used: boolean;
+    input_fields: string[];
+    disclaimer: string;
+  };
 } {
   // Deterministic hash from name
   let hash = 0;
@@ -276,6 +289,18 @@ export function calculatePersonalGoldenWindow(userName: string, city: CityMuhura
     durationMinutes: 24,
     planetaryRuler: ruler,
     recommendedAction: actions[positiveHash % actions.length],
+    // CFR-001: Explicit scope metadata — consumers must not present this as natal-chart personalisation
+    scope_metadata: {
+      calculation_basis: 'name_hash_city_pradosh_anchor',
+      natal_chart_used: false,
+      input_fields: ['userName', `city.cityName=${city.cityName}`, 'city.pradoshKaalWindow'],
+      disclaimer:
+        'This window is derived from a polynomial hash of the supplied name string '
+        + 'offset against the city Pradosh Kaal. It is NOT computed from the '
+        + "user's natal birth chart, lagna, or personal ephemeris data. "
+        + 'For a natal-chart-based muhurat, provide birthDate, birthTime, and coordinates '
+        + 'to the /api/astro/calculate endpoint.',
+    },
   };
 }
 

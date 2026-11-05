@@ -76,12 +76,51 @@ app.get(['/api/v1/health', '/health'], (_req: Request, res: Response) => {
 app.post('/api/astro/calculate', (req: Request, res: Response) => {
   try {
     const { birthDate, birthTime, latitude, longitude, cityName, timezoneOffset, ayanamsaType } = req.body;
+
+    // CFR-002: Strict input validation — no silent defaults for personal birth data
+    const missingFields: string[] = [];
+    if (!birthDate) missingFields.push('birthDate');
+    if (!birthTime) missingFields.push('birthTime');
+    if (latitude === undefined || latitude === null) missingFields.push('latitude');
+    if (longitude === undefined || longitude === null) missingFields.push('longitude');
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        error: 'MISSING_REQUIRED_BIRTH_DATA',
+        message: `The following required fields are missing: ${missingFields.join(', ')}. ` +
+          'Astronomical calculations require the user\'s actual birth date, birth time, and coordinates. ' +
+          'No default values are substituted.',
+        missing_fields: missingFields,
+      });
+    }
+
+    // Validate date format YYYY-MM-DD
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+      return res.status(422).json({
+        error: 'INVALID_BIRTH_DATE_FORMAT',
+        message: 'birthDate must be in YYYY-MM-DD format.',
+      });
+    }
+    // Validate time format HH:MM:SS
+    if (!/^\d{2}:\d{2}(:\d{2})?$/.test(birthTime)) {
+      return res.status(422).json({
+        error: 'INVALID_BIRTH_TIME_FORMAT',
+        message: 'birthTime must be in HH:MM or HH:MM:SS format.',
+      });
+    }
+    // Validate coordinate ranges
+    if (typeof latitude !== 'number' || latitude < -90 || latitude > 90) {
+      return res.status(422).json({ error: 'INVALID_LATITUDE', message: 'latitude must be a number between -90 and 90.' });
+    }
+    if (typeof longitude !== 'number' || longitude < -180 || longitude > 180) {
+      return res.status(422).json({ error: 'INVALID_LONGITUDE', message: 'longitude must be a number between -180 and 180.' });
+    }
+
     const chart = calculateFullChart(
-      birthDate || '1989-11-23',
-      birthTime || '04:30:00',
-      latitude !== undefined ? latitude : 22.5726,
-      longitude !== undefined ? longitude : 88.3639,
-      cityName || 'Kolkata',
+      birthDate,
+      birthTime,
+      latitude,
+      longitude,
+      cityName || '',
       timezoneOffset !== undefined ? timezoneOffset : 5.5,
       ayanamsaType || AyanamsaType.TRUE_LAHIRI
     );
@@ -96,12 +135,42 @@ app.post('/api/astro/calculate', (req: Request, res: Response) => {
 app.post('/api/astro/rectify-btr', (req: Request, res: Response) => {
   try {
     const { birthDate, birthTime, latitude, longitude, cityName, milestones } = req.body;
+
+    // CFR-002: Strict input validation — no silent defaults for personal birth data
+    const missingFields: string[] = [];
+    if (!birthDate) missingFields.push('birthDate');
+    if (!birthTime) missingFields.push('birthTime');
+    if (latitude === undefined || latitude === null) missingFields.push('latitude');
+    if (longitude === undefined || longitude === null) missingFields.push('longitude');
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        error: 'MISSING_REQUIRED_BIRTH_DATA',
+        message: `The following required fields are missing: ${missingFields.join(', ')}. ` +
+          'BTR requires the user\'s actual birth date, birth time, and coordinates. ' +
+          'No default values are substituted.',
+        missing_fields: missingFields,
+      });
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+      return res.status(422).json({ error: 'INVALID_BIRTH_DATE_FORMAT', message: 'birthDate must be in YYYY-MM-DD format.' });
+    }
+    if (!/^\d{2}:\d{2}(:\d{2})?$/.test(birthTime)) {
+      return res.status(422).json({ error: 'INVALID_BIRTH_TIME_FORMAT', message: 'birthTime must be in HH:MM or HH:MM:SS format.' });
+    }
+    if (typeof latitude !== 'number' || latitude < -90 || latitude > 90) {
+      return res.status(422).json({ error: 'INVALID_LATITUDE', message: 'latitude must be a number between -90 and 90.' });
+    }
+    if (typeof longitude !== 'number' || longitude < -180 || longitude > 180) {
+      return res.status(422).json({ error: 'INVALID_LONGITUDE', message: 'longitude must be a number between -180 and 180.' });
+    }
+
     const result = executeBirthTimeRectification(
-      birthDate || '1989-11-23',
-      birthTime || '04:30:00',
-      latitude !== undefined ? latitude : 22.5726,
-      longitude !== undefined ? longitude : 88.3639,
-      cityName || 'Kolkata',
+      birthDate,
+      birthTime,
+      latitude,
+      longitude,
+      cityName || '',
       milestones
     );
     res.json(result);
@@ -115,33 +184,70 @@ app.post('/api/astro/rectify-btr', (req: Request, res: Response) => {
 app.post('/api/v1/btr/rectify', (req: Request, res: Response) => {
   try {
     const { base_payload, milestones } = req.body;
-    const birthDate = base_payload?.birth_date || '1989-11-23';
-    const birthTime = base_payload?.birth_time || '04:30:00';
-    const latitude = base_payload?.latitude ?? 22.572645;
-    const longitude = base_payload?.longitude ?? 88.363892;
+
+    // CFR-002: Strict input validation — reject missing birth data
+    const bp = base_payload || {};
+    const missingFields: string[] = [];
+    if (!bp.birth_date) missingFields.push('base_payload.birth_date');
+    if (!bp.birth_time) missingFields.push('base_payload.birth_time');
+    if (bp.latitude === undefined || bp.latitude === null) missingFields.push('base_payload.latitude');
+    if (bp.longitude === undefined || bp.longitude === null) missingFields.push('base_payload.longitude');
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        error: 'MISSING_REQUIRED_BIRTH_DATA',
+        message: `The following required fields are missing: ${missingFields.join(', ')}. No default values are substituted.`,
+        missing_fields: missingFields,
+      });
+    }
+
+    const birthDate = bp.birth_date;
+    const birthTime = bp.birth_time;
+    const latitude = bp.latitude;
+    const longitude = bp.longitude;
+    const cityName = bp.city_name || '';
 
     const result = executeBirthTimeRectification(
       birthDate,
       birthTime,
       latitude,
       longitude,
-      'Kolkata',
+      cityName,
       milestones
     );
 
+    // CFR-003: Use the actual computed concordance rating.
+    // Do NOT hardcode is_certified_true: true or fallback to 0.942.
+    // Certification threshold: concordance >= 0.75 AND milestones were provided.
+    const CERTIFICATION_THRESHOLD = 0.75;
+    const hasMilestones = Array.isArray(milestones) && milestones.length > 0;
+    const isCertified = hasMilestones && result.concordanceRating >= CERTIFICATION_THRESHOLD;
+
     res.status(200).json({
-      is_certified_true: true,
-      confidence_score: result.concordanceRating || 0.942,
+      // CFR-003: Real computed value only — no hardcoded certainty
+      is_certified: isCertified,
+      certification_threshold: CERTIFICATION_THRESHOLD,
+      confidence_score: result.concordanceRating,         // actual computed rating
       rectified_time: result.rectifiedTrueTime,
       rectified_seconds_delta: result.offsetSeconds,
-      lagna_d60_verified: true,
+      // CFR-003: lagna_d60_verified removed — was unconditionally true without real D-60 verification
       iterations_executed: result.testedCandidatesCount,
       status: 'SUCCESS',
       timestamp: new Date().toISOString(),
+      // CFR-001/CFR-003 scope metadata
+      scope_metadata: {
+        milestones_provided: hasMilestones,
+        milestone_count: hasMilestones ? milestones.length : 0,
+        certification_basis: hasMilestones
+          ? `concordance_rating >= ${CERTIFICATION_THRESHOLD} evaluated against ${milestones.length} lifecycle milestone(s)`
+          : 'NOT_CERTIFIED — no milestones supplied; concordance score is a search heuristic only',
+        disclaimer:
+          'BTR concordance is a heuristic estimate computed over discrete Dasha-lord and D-60 boundary alignments. ' +
+          'It is NOT a validated astronomical certainty. Results should be reviewed by a qualified Jyotisha practitioner.',
+      },
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'BTR Execution Failure';
-    res.status(500).json({ error: msg, is_certified_true: false });
+    res.status(500).json({ error: msg, is_certified: false });
   }
 });
 
