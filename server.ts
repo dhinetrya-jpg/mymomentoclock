@@ -1,4 +1,4 @@
-import {createPaymentBoundary} from './server/paymentBoundary';
+import {createPaymentBoundary,sandboxPaymentBoundaryFromEnvironment} from './server/paymentBoundary';
 /** Authoritative web boundary: anonymous stateless previews; protected capabilities fail closed. */
 import express from 'express';
 import dotenv from 'dotenv';
@@ -18,7 +18,12 @@ app.use((req,res,next)=>{
   const requestId=crypto.randomUUID(); res.locals.requestId=requestId;
   res.set({'X-Request-ID':requestId,'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'});
   if(req.path.startsWith('/api')) res.set('Cache-Control','no-store');
-  if(process.env.NODE_ENV==='production') res.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self'; frame-ancestors 'none'");
+  if(process.env.NODE_ENV==='production') {
+    const sandbox=process.env.PAYMENT_MODE==='sandbox'&&process.env.RAZORPAY_SANDBOX_APPROVED==='owner-approved';
+    const sdk=sandbox?' https://checkout.razorpay.com':'';
+    const api=sandbox?' https://api.razorpay.com':'';
+    res.set('Content-Security-Policy',`default-src 'self'; script-src 'self'${sdk}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self'${api}; frame-src 'self'${api}${sdk}; frame-ancestors 'none'`);
+  }
   if(Date.now()-windowStart>60000){windowStart=Date.now();windowCount=0;}
   if(++windowCount>600 || active>=8) return res.status(429).json({error:'RATE_LIMITED',message:'Please try again shortly.',request_id:requestId});
   active++;let released=false;const release=()=>{if(!released){active--;released=true;}};res.once('finish',release);res.once('close',release);next();
@@ -32,7 +37,8 @@ app.get(['/health','/api/v1/health','/ready'],(_req,res)=>res.json({status:'heal
 app.get('/api/capabilities',(_req,res)=>res.json(capabilities));
 // No public payment adapter or entitlement storage is activated. These boundaries cannot be toggled by a client or env flag.
 app.all('/api/payment/simulate-webhook',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This operation is not available.',request_id:res.locals.requestId}));
-app.use('/api/payment',createPaymentBoundary());
+// No approved identity adapter is registered. Sandbox env alone cannot authorize a customer.
+app.use('/api/payment',process.env.PAYMENT_MODE==='sandbox'?sandboxPaymentBoundaryFromEnvironment():createPaymentBoundary());
 app.all('/api/v1/webhook/payment',paymentUnavailable);
 app.all('/api/v1/graph/hydrate',graphUnavailable);
 app.all('/api/v1/resolver/evaluate',graphUnavailable);

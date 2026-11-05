@@ -1,6 +1,6 @@
 // UI preparation only. The current CheckoutModal never invokes order creation.
-export type PaymentStatus='CREATED'|'PENDING'|'COMPLETED'|'FAILED'|'CANCELLED'|'EXPIRED'|'REFUNDED'|'REVERSED';
-export interface PaymentOrder {order_id:string;product_id:string;product_version:string;amount_minor:number;currency:string;status:PaymentStatus}
+export type PaymentStatus='CREATED'|'PENDING'|'COMPLETED'|'FAILED'|'CANCELLED'|'EXPIRED'|'REFUNDED'|'REVERSED'|'PAYMENT_REVIEW';
+export interface PaymentOrder {order_id:string;product_id:string;product_version:string;amount_minor:number;currency:string;status:PaymentStatus;checkout?:{mode:"sandbox";key_id:string;provider_order_id:string}}
 export interface AccessGrant {capability_id:string;source_order:string;expires_at?:string}
 async function api(path:string,options:RequestInit={}){
  const response=await fetch(path,{...options,credentials:'same-origin',cache:'no-store',headers:{'content-type':'application/json'}});
@@ -20,6 +20,7 @@ export function checkoutMessage(status:PaymentStatus|'UNAVAILABLE'|'ALREADY_PURC
  case 'CANCELLED':return {message:'Payment was cancelled. No access has been granted by this checkout.',retry:true};
  case 'EXPIRED':return {message:'This order expired. Start a new checkout when the service is available.',retry:true};
  case 'REFUNDED':case 'REVERSED':return {message:'This payment was refunded or reversed. Access from this order is revoked.',retry:false};
+ case 'PAYMENT_REVIEW':return {message:'Payment requires review. Access from this order is unavailable.',retry:false};
  case 'ALREADY_PURCHASED':return {message:'The server confirms an active purchase. Access is still enforced by the server.',retry:false};
  default:return {message:'Checkout is not available yet. No payment will be taken and no delivery or paid access has been activated.',retry:false};
  }
