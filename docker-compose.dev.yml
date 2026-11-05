@@ -1,0 +1,22 @@
+# Explicit local-only tools; never apply this override as production infrastructure.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: astro_user
+      POSTGRES_DB: astro_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Supply a local database password}
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?Supply a local graph password}
+    volumes: ["neo4jdata:/data"]
+  grafana:
+    image: grafana/grafana:10.0.0
+    ports: ["127.0.0.1:3001:3000"]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Supply a local admin password}
+volumes:
+  pgdata:
+  neo4jdata:

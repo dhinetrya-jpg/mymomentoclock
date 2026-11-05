@@ -40,3 +40,15 @@ jobs:
 
       - name: Calculation integrity regression tests
         run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx
+
+      - name: Phase 1 security and privacy regression
+        run: node --import tsx --test tests/phase1/security.test.ts
+      - name: Desktop and mobile production browser regression
+        run: |
+          NODE_ENV=production PORT=3101 node --import tsx server.ts > /tmp/phase1-browser-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3101/health; then break; fi
+            sleep 1
+          done
+          export CHROMIUM_PATH="$(command -v google-chrome || command -v chromium)"
+          PHASE1_WEB_URL=http://127.0.0.1:3101 node tests/phase1/browser.mjs

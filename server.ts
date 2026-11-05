@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import http from 'node:http';
+import {access} from 'node:fs/promises';
 import { calculateFullChart, AyanamsaType } from './src/engine/astroMath';
 import { executeBirthTimeRectification } from './src/engine/btrProcessor';
 import { MAJOR_CITIES_MUHURAT, calculatePersonalGoldenWindow } from './src/engine/diwaliData';
@@ -67,20 +68,28 @@ app.get('/api/astro/muhurat',(req,res)=>{
 });
 app.use(['/assets/aistudio','/public/assets/aistudio'],(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'Historical implementation artifacts are not public content.'}));
 app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This API is not available.',request_id:res.locals.requestId}));
-app.use((err:any,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{
+const handleError=(err:any,_req:express.Request,res:express.Response,next:express.NextFunction)=>{
+  if(res.headersSent)return next(err);
   let code='INTERNAL_ERROR',message='The request could not be completed.',status=500;
   if(err instanceof CalculationInputError){code=err.code;message=err.message;status=code==='PROFILE_AUTHENTICATION_UNAVAILABLE'?401:code.endsWith('_UNAVAILABLE')?503:422;}
   else if(err?.type==='entity.too.large'){code='REQUEST_TOO_LARGE';message='The request is too large.';status=413;}
   else if(err instanceof SyntaxError || err?.status===400){code='INVALID_JSON';message='Send valid JSON.';status=400;}
+  if(status===500)console.error(JSON.stringify({event:'request_failed',code,request_id:res.locals.requestId}));
   res.status(status).json({error:code,message,request_id:res.locals.requestId,...(status===503?{schema_version:3,assessment_status:'UNAVAILABLE',is_certified:false,candidate_fit_score:null,candidate_birth_time:null,independent_validation_status:'NOT_PERFORMED'}:{})});
-});
+};
 async function startServer(){
   if(process.env.NODE_ENV==='production'){
-    app.use(express.static('dist'));app.get('*',(_req,res)=>res.sendFile('dist/index.html',{root:process.cwd()}));
+    await access('dist/index.html');
+    app.use(express.static('dist'));
+    app.use('/assets',(_req,res)=>res.status(404).json({error:'ASSET_NOT_FOUND',message:'This asset is not available.'}));
+    app.get('*',(_req,res)=>res.sendFile('dist/index.html',{root:process.cwd()}));
   }else{const {createServer}=await import('vite');app.use((await createServer({server:{middlewareMode:true},appType:'spa'})).middlewares);}
-  const port=Number(process.env.PORT||3000);const server=http.createServer(app);
+  app.use(handleError);
+  const port=Number(process.env.PORT||3000);if(!Number.isInteger(port)||port<1||port>65535)throw Error('INVALID_PORT');
+  const server=http.createServer(app);
   server.requestTimeout=15000;server.headersTimeout=10000;server.keepAliveTimeout=5000;
+  server.once('error',()=>{console.error(JSON.stringify({event:'startup_failed',code:'WEB_STARTUP_FAILED'}));process.exit(1);});
   server.listen(port,'0.0.0.0',()=>console.log('MyMomentOclock web service ready'));
   for(const signal of ['SIGTERM','SIGINT'])process.once(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),10000).unref();});
 }
-startServer().catch(()=>{console.error('WEB_STARTUP_FAILED');process.exitCode=1;});
+startServer().catch(()=>{console.error(JSON.stringify({event:'startup_failed',code:'WEB_STARTUP_FAILED'}));process.exit(1);});
