@@ -238,6 +238,10 @@ export interface GoldenWindowResult {
   planetaryRuler: string | null;
   recommendedAction: string;
   scope_metadata: {
+    location: string;
+    timezone: string;
+    activity_rules_used: false;
+    calculation_version: string;
     scope: CalculationScope;
     status: 'PREVIEW' | 'UNAVAILABLE';
     calculation_basis: string;
@@ -253,6 +257,7 @@ export function calculatePersonalGoldenWindow(_displayName: string, _city: CityM
     startTime: null, endTime: null, durationMinutes: null, planetaryRuler: null,
     recommendedAction: 'No calculated personal window is available. Festival times are an unverified 2026 preview.',
     scope_metadata: {
+      location:_city.cityName,timezone:_city.timezone,activity_rules_used:false,calculation_version:'unavailable-v1',
       scope: 'UNAVAILABLE', status: 'UNAVAILABLE', natal_chart_used: false,
       calculation_basis: 'unverified_static_festival_registry', dataset_date: '2026-11-08',
       source_status: 'UNVERIFIED',

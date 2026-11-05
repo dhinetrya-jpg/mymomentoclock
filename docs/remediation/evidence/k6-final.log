@@ -1,0 +1,88 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: -
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * default: 10 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 1 VUs  00m01.0s/10m0s  00/10 shared iters
+
+running (00m02.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+default   [  10% ] 1 VUs  00m02.0s/10m0s  01/10 shared iters
+
+running (00m03.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+default   [  20% ] 1 VUs  00m03.0s/10m0s  02/10 shared iters
+
+running (00m04.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+default   [  30% ] 1 VUs  00m04.0s/10m0s  03/10 shared iters
+
+running (00m05.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+default   [  40% ] 1 VUs  00m05.0s/10m0s  04/10 shared iters
+
+running (00m06.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+default   [  50% ] 1 VUs  00m06.0s/10m0s  05/10 shared iters
+
+running (00m07.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+default   [  60% ] 1 VUs  00m07.0s/10m0s  06/10 shared iters
+
+running (00m08.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+default   [  70% ] 1 VUs  00m08.0s/10m0s  07/10 shared iters
+
+running (00m09.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+default   [  80% ] 1 VUs  00m09.0s/10m0s  08/10 shared iters
+
+running (00m10.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+default   [  90% ] 1 VUs  00m10.0s/10m0s  09/10 shared iters
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✓ 'rate==1' rate=100.00%
+
+    http_req_failed
+    ✓ 'rate==0' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......................: 50      4.970326/s
+    checks_succeeded...................: 100.00% 50 out of 50
+    checks_failed......................: 0.00%   0 out of 50
+
+    ✓ Unavailable BTR does not fabricate a candidate
+    ✓ Unavailable BTR returns no fit or time
+    ✓ BTR returns the current API contract
+    ✓ Unavailable profile graph fails closed
+    ✓ Unavailable graph never fabricates vectors
+
+    HTTP
+    http_req_duration.......................................................: avg=1.91ms min=1.18ms med=1.58ms max=6.7ms p(90)=2.23ms p(95)=2.86ms
+      { expected_response:true }............................................: avg=1.91ms min=1.18ms med=1.58ms max=6.7ms p(90)=2.23ms p(95)=2.86ms
+    http_req_failed.........................................................: 0.00%  0 out of 20
+    http_reqs...............................................................: 20     1.988131/s
+
+    EXECUTION
+    iteration_duration......................................................: avg=1s     min=1s     med=1s     max=1.01s p(90)=1s     p(95)=1s    
+    iterations..............................................................: 10     0.994065/s
+    vus.....................................................................: 1      min=1       max=1
+    vus_max.................................................................: 1      min=1       max=1
+
+    NETWORK
+    data_received...........................................................: 19 kB  1.8 kB/s
+    data_sent...............................................................: 6.9 kB 681 B/s
+
+
+
+
+running (00m10.1s), 0/1 VUs, 10 complete and 0 interrupted iterations
+default ✓ [ 100% ] 1 VUs  00m10.1s/10m0s  10/10 shared iters

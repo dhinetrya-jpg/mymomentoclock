@@ -18,10 +18,10 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { OnboardingWizard } from './components/OnboardingWizard';
 import { calculateFullChart, AyanamsaType, ChartCalculationResult } from './engine/astroMath';
 import { resolvePillarConflict, ConflictResolutionResult } from './engine/conflictResolver';
-import { evaluateRemedialVectors, RvmEvaluationResult } from './engine/rvmEngine';
+import { RvmEvaluationResult } from './engine/rvmEngine';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('funnel');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
   const [isBtrModalOpen, setIsBtrModalOpen] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function App() {
     setChart(newChart);
     const newResolution = resolvePillarConflict(newChart, 'Wealth');
     setResolution(newResolution);
-    setRvmResult(evaluateRemedialVectors(newResolution.netAuspiciousnessVector, 'Wealth', 'SATURN'));
+    setRvmResult(null);
   };
 
   const handleRecalculateFromWizard = (params: {
@@ -82,7 +82,7 @@ export default function App() {
             <span aria-hidden="true">·</span>
             <span>Lagna: <strong className="text-rose-100">{chart?.ascendantSignName || 'Unavailable'}</strong></span>
             <span aria-hidden="true">·</span>
-            <span>A_net: <strong className="text-amber-300 font-mono">{resolution ? `${(resolution.netAuspiciousnessVector * 100).toFixed(1)} / 100 heuristic` : 'Unavailable'}</strong></span>
+            <span>A_net: <strong className="text-amber-300 font-mono">{'Unavailable'}</strong></span>
           </div>
 
           <button
@@ -94,6 +94,7 @@ export default function App() {
         </div>
       </div>
 
+      {!import.meta.env?.DEV && ['funnel','devops-uat'].includes(activeTab) && <p role="status" className="p-5 text-amber-200">This demonstration is not available in production. Use Birth Details or Festival Kit to continue.</p>}
       {/* Main Container */}
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Onboarding Wizard (Collapsible or Triggered) */}
@@ -111,7 +112,7 @@ export default function App() {
 
         {/* Dynamic View Routing */}
         {!chart && ['dashboard','remediation'].includes(activeTab) && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
-        {activeTab === 'funnel' && (
+        {activeTab === 'funnel' && import.meta.env?.DEV && (
           <ConversionFunnelView
             onNavigateToFullApp={() => setActiveTab('dashboard')}
           />
@@ -134,6 +135,7 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'remediation' && <p role="status" className="rounded-xl border border-rose-900 p-5">Personal remedy recommendations are unavailable until the rules have been verified.</p>}
         {activeTab === 'remediation' && rvmResult && (
           <RemediationView rvmResult={rvmResult} />
         )}
@@ -145,7 +147,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'devops-uat' && (
+        {activeTab === 'devops-uat' && import.meta.env?.DEV && (
           <UatAndStressSuite />
         )}
       </main>
@@ -179,9 +181,9 @@ export default function App() {
           </div>
 
           <div className="text-center sm:text-right text-[11px] space-y-1">
-            <p>Calculated via True Lahiri Sidereal Ephemeris & Symbolic Graph Reasoning.</p>
+            <p>Analytical chart previews and cultural festival content.</p>
             <p className="text-rose-400/40">
-              Guidance provided for cultural enrichment and mindful reflection under DPDP Act compliance.
+              Guidance provided for cultural enrichment and mindful reflection without a predictive guarantee.
             </p>
           </div>
         </div>

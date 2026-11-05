@@ -1,122 +1,14 @@
-name: MymomentOclock Payment Security Validation Pipeline
-
+name: Phase 1 native and durable payment security
 on:
   push:
-    paths:
-      - 'transactional_webhook.go'
-      - 'transactional_webhook_test.go'
-      - 'rvm_engine.go'
-      - 'schema.sql'
-      - 'server.ts'
-      - 'backend/internal/webhook/**'
-      - 'backend/internal/rvm/**'
-      - 'database/schema.sql'
-      - '.github/workflows/payment-audit-pipeline.yml'
+    branches: [main, master]
   pull_request:
-    paths:
-      - 'transactional_webhook.go'
-      - 'transactional_webhook_test.go'
-      - 'rvm_engine.go'
-      - 'schema.sql'
-      - 'server.ts'
-      - 'backend/internal/webhook/**'
-      - 'backend/internal/rvm/**'
-      - 'database/schema.sql'
+    branches: [main, master]
   workflow_dispatch:
-
 jobs:
-  security-and-transaction-audit:
-    name: Transaction Integrity and Webhook Hardening
-    runs-on: ubuntu-22.04
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: astro_user
-          POSTGRES_PASSWORD: secure_pass
-          POSTGRES_DB: astro_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 2s
-          --health-retries 5
-
-      neo4j:
-        image: neo4j:5.20-community
-        env:
-          NEO4J_AUTH: none
-        ports:
-          - 7687:7687
-        options: >-
-          --health-cmd "cypher-shell 'RETURN 1'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+  isolated-security-tests:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code Repository
-        uses: actions/checkout@v4
-
-      - name: Initialize Go Runtime Environment
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-          cache: true
-
-      - name: Provision PostgreSQL Schema and Seed RVM Assets
-        env:
-          PGPASSWORD: secure_pass
-        run: |
-          sudo apt-get install -y postgresql-client
-          # Locate and execute schema.sql (supporting root or database/ subfolder)
-          SCHEMA_FILE="schema.sql"
-          if [ -f "database/schema.sql" ]; then
-            SCHEMA_FILE="database/schema.sql"
-          fi
-          echo "Executing schema migration from: $SCHEMA_FILE"
-          psql -h localhost -U astro_user -d astro_db -f "$SCHEMA_FILE"
-
-      - name: Install pinned Swiss Ephemeris native library
-        run: sudo sh scripts/install-swisseph.sh
-
-      - name: Run Cryptographic Signature Fuzzing & Security Tests
-        env:
-          DATABASE_URL: postgres://astro_user:secure_pass@localhost:5432/astro_db?sslmode=disable
-          WEBHOOK_SECRET_KEY: 8f8dce9176c84d50939a20f99ca75f6e
-        run: |
-          echo "[SECURITY_AUDIT] Running HMAC-SHA256 signature fuzzing and verification tests..."
-          CGO_ENABLED=1 go test -mod=readonly -v -run '^TestVerifyWebhookSignature$' .
-
-      - name: Execute Replay Attack Vulnerability Checks
-        env:
-          DATABASE_URL: postgres://astro_user:secure_pass@localhost:5432/astro_db?sslmode=disable
-        run: |
-          echo "[SECURITY_AUDIT] Asserting replay attack prevention and HTTP 409 Conflict rejection..."
-          CGO_ENABLED=1 go test -mod=readonly -v -run '^TestReplayAttackPrevention$' .
-
-      - name: Commercial Fraud Keywords Content Audit
-        run: |
-          echo "[SECURITY_AUDIT] Auditing schema and RVM data layer for unauthorized commercial upselling..."
-          SCHEMA_FILE="schema.sql"
-          if [ -f "database/schema.sql" ]; then
-            SCHEMA_FILE="database/schema.sql"
-          fi
-          FORBIDDEN_KEYWORDS=("buy" "checkout" "discount" "purchase" "gems")
-          for kw in "${FORBIDDEN_KEYWORDS[@]}"; do
-            # Extract inserted physical_remedies_rvm records and check for forbidden commercial keywords
-            if grep -i "INSERT INTO physical_remedies_rvm" -A 10 "$SCHEMA_FILE" | grep -iq "$kw"; then
-              echo "CRITICAL FRAUD AUDIT ERROR: Forbidden commercial keyword '$kw' identified in $SCHEMA_FILE RVM seed records"
-              exit 1
-            fi
-          done
-          echo "RVM Data Layer Verified Free of Commercial Gimmicks."
-
-      - name: Enforce Code Compilation Integrity
-        run: |
-          mkdir -p bin
-          echo "[BUILD_AUDIT] Verifying compilation integrity of Go payment and webhook binaries..."
-          (cd backend && CGO_ENABLED=1 go build -mod=readonly -o ../bin/astroengine_server ./cmd/server)
-          echo "[SUCCESS] Build artifact bin/astroengine_server successfully compiled."
+      - uses: actions/checkout@v4
+      - name: Native Go tests, race detection, vet and isolated PostgreSQL recovery
+        run: scripts/test-phase1-go.sh

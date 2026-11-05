@@ -1,0 +1,107 @@
+go version go1.26.10 linux/amd64
+ok  	astroengine-core	0.004s
+ok  	astroengine-core	1.013s
+=== RUN   TestProtectedOperationsFailClosed
+--- PASS: TestProtectedOperationsFailClosed (0.00s)
+=== RUN   TestMalformedAndOversizedRequests
+--- PASS: TestMalformedAndOversizedRequests (0.00s)
+=== RUN   TestProductionDiagnosticsHidden
+--- PASS: TestProductionDiagnosticsHidden (0.00s)
+PASS
+ok  	astroengine-core/backend/cmd/server	0.005s
+=== RUN   TestNoFabricatedDashaOrCertification
+--- PASS: TestNoFabricatedDashaOrCertification (0.00s)
+=== RUN   TestMilestoneValidation
+--- PASS: TestMilestoneValidation (0.00s)
+=== RUN   TestCanonicalNodeMilestoneContract
+--- PASS: TestCanonicalNodeMilestoneContract (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/calibration	0.005s
+=== RUN   TestNativeEphemeris
+--- PASS: TestNativeEphemeris (0.00s)
+=== RUN   TestNativeNormalizationWithTimezone
+--- PASS: TestNativeNormalizationWithTimezone (0.00s)
+=== RUN   TestNativeConcurrentDeterminism
+--- PASS: TestNativeConcurrentDeterminism (0.00s)
+=== RUN   TestBirthValidation
+=== RUN   TestBirthValidation/missing_date
+=== RUN   TestBirthValidation/missing_time
+=== RUN   TestBirthValidation/missing_coordinates
+=== RUN   TestBirthValidation/invalid_leap_day
+=== RUN   TestBirthValidation/invalid_time
+=== RUN   TestBirthValidation/invalid_latitude
+=== RUN   TestBirthValidation/nan
+=== RUN   TestBirthValidation/infinity
+=== RUN   TestBirthValidation/unknown_time
+=== RUN   TestBirthValidation/missing_zone
+=== RUN   TestBirthValidation/machine-local_zone
+=== RUN   TestBirthValidation/invalid_zone
+=== RUN   TestBirthValidation/DST_gap
+=== RUN   TestBirthValidation/DST_fold
+--- PASS: TestBirthValidation (0.00s)
+    --- PASS: TestBirthValidation/missing_date (0.00s)
+    --- PASS: TestBirthValidation/missing_time (0.00s)
+    --- PASS: TestBirthValidation/missing_coordinates (0.00s)
+    --- PASS: TestBirthValidation/invalid_leap_day (0.00s)
+    --- PASS: TestBirthValidation/invalid_time (0.00s)
+    --- PASS: TestBirthValidation/invalid_latitude (0.00s)
+    --- PASS: TestBirthValidation/nan (0.00s)
+    --- PASS: TestBirthValidation/infinity (0.00s)
+    --- PASS: TestBirthValidation/unknown_time (0.00s)
+    --- PASS: TestBirthValidation/missing_zone (0.00s)
+    --- PASS: TestBirthValidation/machine-local_zone (0.00s)
+    --- PASS: TestBirthValidation/invalid_zone (0.00s)
+    --- PASS: TestBirthValidation/DST_gap (0.00s)
+    --- PASS: TestBirthValidation/DST_fold (0.00s)
+=== RUN   TestTimezoneArithmetic
+--- PASS: TestTimezoneArithmetic (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/ephemeris	0.006s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+=== RUN   TestTransactionalPayments
+=== RUN   TestTransactionalPayments/no_entitlement_before_verified_event
+=== RUN   TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing
+=== RUN   TestTransactionalPayments/unknown_order
+=== RUN   TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches
+=== RUN   TestTransactionalPayments/concurrent_duplicate_granted_once
+=== RUN   TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order
+=== RUN   TestTransactionalPayments/failed_then_successful_payment_and_refund
+=== RUN   TestTransactionalPayments/missing_provider_and_storage_fail_closed
+=== RUN   TestTransactionalPayments/reversal_removes_entitlement
+=== RUN   TestTransactionalPayments/restart_marker_persisted
+--- PASS: TestTransactionalPayments (0.13s)
+    --- PASS: TestTransactionalPayments/no_entitlement_before_verified_event (0.00s)
+    --- PASS: TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing (0.00s)
+    --- PASS: TestTransactionalPayments/unknown_order (0.00s)
+    --- PASS: TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches (0.00s)
+    --- PASS: TestTransactionalPayments/concurrent_duplicate_granted_once (0.05s)
+    --- PASS: TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order (0.00s)
+    --- PASS: TestTransactionalPayments/failed_then_successful_payment_and_refund (0.01s)
+    --- PASS: TestTransactionalPayments/missing_provider_and_storage_fail_closed (0.00s)
+    --- PASS: TestTransactionalPayments/reversal_removes_entitlement (0.00s)
+    --- PASS: TestTransactionalPayments/restart_marker_persisted (0.00s)
+=== RUN   TestRecoveryAfterRestart
+    store_test.go:219: executed only after external database restart
+--- SKIP: TestRecoveryAfterRestart (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment	0.135s
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+=== RUN   TestUnavailableProviderCannotFulfill
+--- PASS: TestUnavailableProviderCannotFulfill (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/webhook	0.004s
+ok  	astroengine-core/backend/cmd/server	1.025s
+ok  	astroengine-core/backend/internal/calibration	1.014s
+ok  	astroengine-core/backend/internal/ephemeris	1.018s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	1.186s
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/webhook	1.011s
+=== RUN   TestRecoveryAfterRestart
+--- PASS: TestRecoveryAfterRestart (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/payment	0.013s

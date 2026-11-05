@@ -6,7 +6,7 @@ import envelopeImage from '../assets/images/diwali_sealed_wax_envelope_179190049
  * Features:
  * - Sealed Vedic Wax Envelope reveal gate with countdown timer & wax fracture celebration
  * - City-specific Lakshmi Puja Muhurat & Personal Golden 24-Minute Window
- * - Dual Editions: Personal Astrology Edition vs Festival & Reflection Edition
+ * - Dual Editions: Astrology Preview (limited) vs Festival & Reflection Edition
  * - Custom Printable/Shareable Diwali Blessing Card with personalized family name
  * - 1-Click Instant UPI Checkout simulator with WhatsApp delivery hook
  */
@@ -31,27 +31,11 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
   const [familyName, setFamilyName] = useState('Sharma');
   const [customIntention, setCustomIntention] = useState('Abundance in health, righteous business growth, and family harmony');
 
-  // Countdown to Diwali 2026 Lakshmi Puja (Sun 8 Nov 2026, 17:54:00)
-  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({
-    days: 26,
-    hours: 10,
-    minutes: 47,
-    seconds: 12,
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+  // Elapsed time to a declared preview date; not an invented urgency timer or verified Puja time.
+  const [now,setNow]=useState(Date.now());
+  useEffect(()=>{const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);},[]);
+  const remaining=Math.max(0,new Date('2026-11-08T00:00:00+05:30').getTime()-now);
+  const timeLeft={days:Math.floor(remaining/86400000),hours:Math.floor(remaining/3600000)%24,minutes:Math.floor(remaining/60000)%60,seconds:Math.floor(remaining/1000)%60};
   const cityData: CityMuhurat = MAJOR_CITIES_MUHURAT[selectedCity];
   if (!cityData) return <div className="rounded-xl border border-rose-900 p-6 space-y-3">
     <p role="status">Personal Timing Unavailable. Select an explicit event city to view the unverified Diwali 2026 preview. Birthplace is not used automatically.</p>
@@ -218,7 +202,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
               <span className="font-mono font-medium text-rose-100">{cityData.chopdaPujanWindow}</span>
             </div>
             <div className="flex justify-between pb-1">
-              <span className="text-rose-300/60">NSE/BSE Muhurat Trading:</span>
+              <span className="text-rose-300/60">Trading preview (not exchange-confirmed):</span>
               <span className="font-mono font-medium text-emerald-400">{cityData.muhuratTradingWindow}</span>
             </div>
           </div>
@@ -282,7 +266,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
                 activeEdition === 'ASTROLOGY' ? 'bg-amber-500 text-neutral-950 font-semibold' : 'text-rose-200/70'
               }`}
             >
-              Personal Astrology Edition
+              Astrology Preview (limited)
             </button>
             <button
               onClick={() => setActiveEdition('FESTIVAL')}
@@ -321,7 +305,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
             </div>
 
             <div className="rounded-lg bg-[#24070e] p-3 border border-rose-950/60 text-[11px] text-rose-300/70 space-y-1">
-              <div>• Instant mobile-optimized download post-checkout</div>
+              <div>• Preview only; paid downloads are not activated</div>
               <div>• WhatsApp-native blessing format with high-resolution artwork</div>
               <div>• Complete Hindi & English dual-language text</div>
             </div>
@@ -331,7 +315,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
                 onClick={onOpenQuickCheckout}
                 className="w-full rounded-lg bg-amber-500 py-2.5 text-xs font-bold text-neutral-950 hover:bg-amber-400 transition-colors shadow-md shadow-amber-950/40"
               >
-                Instant UPI Checkout (₹99)
+                Checkout status
               </button>
             </div>
           </div>

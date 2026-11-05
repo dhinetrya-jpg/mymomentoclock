@@ -35,6 +35,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   const [ayanamsa, setAyanamsa] = useState<AyanamsaType>(AyanamsaType.TRUE_LAHIRI);
 
   const [offset, setOffset] = useState('');
+  const [certainty,setCertainty]=useState('');
   const [error, setError] = useState('');
 
   const handleCityChange = (newCity: string) => {
@@ -45,7 +46,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     e.preventDefault();
     const cityMeta = MAJOR_CITIES_MUHURAT[cityName];
     if (!cityMeta) { setError('Select your birth city.'); return; }
-    try { validateBirthInput({birthDate, birthTime, latitude: cityMeta.lat, longitude: cityMeta.lon, timezoneOffset: offset === '' ? undefined : Number(offset), ayanamsaType: ayanamsa}); } catch (e) { setError((e as Error).message); return; }
+    try { validateBirthInput({birthDate, birthTime, latitude: cityMeta.lat, longitude: cityMeta.lon, birthTimeCertainty:certainty||undefined, timezoneOffset: offset === '' ? undefined : Number(offset), ayanamsaType: ayanamsa}); } catch (e) { setError((e as Error).message); return; }
     onCalculate({
       birthDate,
       birthTime,
@@ -134,12 +135,15 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           Historical timezone/DST conversion is unavailable. Supply the offset applicable at birth.
         </label>
         {error && <p role="alert">{error}</p>}
+        <label className="block text-xs">Birth time certainty
+          <select aria-label="Birth time certainty" required value={certainty} onChange={e=>setCertainty(e.target.value)} className="m-2 bg-rose-950 p-2"><option value="">Choose certainty</option><option value="EXACT">Recorded time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time (chart unavailable)</option></select>
+        </label>
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
           <button
             type="submit"
             className="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-neutral-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-950/50"
           >
-            Compute High-Precision Chart & Sp Matrix
+            Compute chart preview
           </button>
 
           <button

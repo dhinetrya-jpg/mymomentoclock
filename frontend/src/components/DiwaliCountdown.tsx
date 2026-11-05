@@ -1,6 +1,6 @@
 /**
  * Diwali Countdown & Vedic Panchang Engine
- * Dynamically computes real-time countdown to the next upcoming Diwali (Lakshmi Puja)
+ * Shows a countdown to the explicit unverified Diwali 2026 preview
  * and the 5-Day Festival Sequence using authentic Kartik Amavasya Panchang parameters.
  */
 
@@ -27,7 +27,7 @@ interface DiwaliCountdownProps {
   onExploreProsperityKit?: () => void;
 }
 
-// Multi-year catalog of accurate astronomical Kartik Amavasya & 5-Day Festival dates
+// Unverified static cultural preview; not an astronomical calculation.
 const DIWALI_YEARS_SCHEDULE: Record<number, DiwaliEvent[]> = {
   2026: [
     {
@@ -137,14 +137,8 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
   }, []);
 
   // Determine current calendar year and select relevant festival list
-  const currentYear = now.getFullYear();
-  const festivalList = useMemo(() => {
-    if (DIWALI_YEARS_SCHEDULE[currentYear]) {
-      return DIWALI_YEARS_SCHEDULE[currentYear];
-    }
-    // Default to 2026 schedule if in 2026 or fallback
-    return DIWALI_YEARS_SCHEDULE[2026];
-  }, [currentYear]);
+  // This is explicitly the unverified 2026 cultural schedule; never substitute it as a current-year calculation.
+  const festivalList = DIWALI_YEARS_SCHEDULE[2026];
 
   // Target event selected
   const activeEvent = useMemo(() => {
@@ -378,7 +372,7 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
                 onClick={onExploreProsperityKit}
                 className="rounded-lg bg-amber-500 px-3.5 py-2 text-xs font-semibold text-neutral-950 hover:bg-amber-400 transition-colors shrink-0 shadow-md shadow-amber-950/40"
               >
-                Open ₹99 Kit
+                Open festival preview
               </button>
             )}
           </div>

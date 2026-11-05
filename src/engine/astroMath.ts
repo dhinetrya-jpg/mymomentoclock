@@ -20,12 +20,12 @@ export interface PlanetPosition {
   signName: string;
   signLord: string;
   degreeInSign: number; // 0 - 30 degrees
-  speed: number;
-  isRetrograde: boolean;
-  shadbala: number; // structural strength factor (0.8 - 1.8)
-  ashtakavargaBindus: number; // 0 - 8 points
-  functionalNature: number; // +1.0 Benefic, -1.0 Malefic, 0.0 Neutral
-  functionalScore: number; // S_p score
+  speed: null;
+  isRetrograde: null;
+  shadbala: null; // structural strength factor (0.8 - 1.8)
+  ashtakavargaBindus: null; // 0 - 8 points
+  functionalNature: null; // +1.0 Benefic, -1.0 Malefic, 0.0 Neutral
+  functionalScore: null; // S_p score
   houseNumber: number; // 1 - 12
   nakshatra: string;
   nakshatraPada: number;
@@ -36,7 +36,7 @@ export interface HouseInfo {
   signIndex: number;
   signName: string;
   signLord: string;
-  baseVibhuti: number; // House potency multiplier (0.6 - 1.2)
+  baseVibhuti: null; // House potency multiplier (0.6 - 1.2)
   planetsPresent: string[];
 }
 
@@ -51,6 +51,10 @@ export interface ShashtyamsaData {
 export interface ChartCalculationResult {
   systemMetadata: {
     engineVersion: string;
+    calculationMode: 'ANALYTICAL_APPROXIMATION';
+    independentValidationStatus: 'NOT_PERFORMED';
+    strengthMetricsStatus: 'UNAVAILABLE';
+    timezoneMode: 'CALLER_SUPPLIED_OFFSET';
     ayanamsaApplied: AyanamsaType;
     ayanamsaValue: number;
     julianDayUT: number;
@@ -77,17 +81,10 @@ export interface ChartCalculationResult {
     d60: { name: string; shashtyamsas: ShashtyamsaData[] };
   };
   vimshottariDasha: {
-    birthLord: string;
-    balanceYears: number;
-    activeMahadasha: string;
-    activeAntardasha: string;
-    activePratyantardasha: string;
-    timeline: Array<{
-      lord: string;
-      startDate: string;
-      endDate: string;
-      isCurrent: boolean;
-    }>;
+    status: 'UNAVAILABLE';
+    birthLord: null; balanceYears: null; activeMahadasha: null;
+    activeAntardasha: null; activePratyantardasha: null;
+    timeline: Array<{lord:string;startDate:string;endDate:string;isCurrent:boolean}>;
   };
 }
 
@@ -242,7 +239,7 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
   const d = jd - 2451545.0;
   const t = d / 36525.0;
 
-  // Mean orbital elements & perturbations (Keplerian approximations calibrated to Swiss Ephemeris baseline)
+  // Mean orbital elements & perturbations (Analytical approximations; no independent Swiss Ephemeris calibration fixture exists here)
   // Sun
   const lSun = (280.46646 + 36000.76983 * t) % 360;
   const mSun = (357.52911 + 35999.05029 * t) % 360;
@@ -277,15 +274,15 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
   const ketuTrop = (rahuTrop + 180) % 360;
 
   const rawPlanets = [
-    { name: 'Sun', symbol: '☉', trop: sunTrop, speed: 0.98, retro: false, baseShadbala: 1.20, baseBindus: 5 },
-    { name: 'Moon', symbol: '☽', trop: moonTrop, speed: 13.17, retro: false, baseShadbala: 1.35, baseBindus: 6 },
-    { name: 'Mars', symbol: '♂', trop: marsTrop, speed: 0.52, retro: false, baseShadbala: 1.10, baseBindus: 4 },
-    { name: 'Mercury', symbol: '☿', trop: mercTrop, speed: 1.15, retro: false, baseShadbala: 1.15, baseBindus: 5 },
-    { name: 'Jupiter', symbol: '♃', trop: jupTrop, speed: 0.08, retro: false, baseShadbala: 1.45, baseBindus: 6 },
-    { name: 'Venus', symbol: '♀', trop: venTrop, speed: 1.10, retro: false, baseShadbala: 1.30, baseBindus: 7 },
-    { name: 'Saturn', symbol: '♄', trop: satTrop, speed: 0.03, retro: true, baseShadbala: 0.95, baseBindus: 3 },
-    { name: 'Rahu', symbol: '☊', trop: rahuTrop, speed: -0.05, retro: true, baseShadbala: 1.05, baseBindus: 4 },
-    { name: 'Ketu', symbol: '☋', trop: ketuTrop, speed: -0.05, retro: true, baseShadbala: 1.00, baseBindus: 4 },
+    { name: 'Sun', symbol: '☉', trop: sunTrop },
+    { name: 'Moon', symbol: '☽', trop: moonTrop },
+    { name: 'Mars', symbol: '♂', trop: marsTrop },
+    { name: 'Mercury', symbol: '☿', trop: mercTrop },
+    { name: 'Jupiter', symbol: '♃', trop: jupTrop },
+    { name: 'Venus', symbol: '♀', trop: venTrop },
+    { name: 'Saturn', symbol: '♄', trop: satTrop },
+    { name: 'Rahu', symbol: '☊', trop: rahuTrop },
+    { name: 'Ketu', symbol: '☋', trop: ketuTrop },
   ];
 
   const ascSignIdx = Math.floor(ascendantDegree / 30);
@@ -302,37 +299,6 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
     // House calculation relative to Lagna (Whole sign / equal 30° house bounds)
     let houseNumber = ((signIndex - ascSignIdx + 12) % 12) + 1;
 
-    // Functional nature based on house lordship rules in BPHS:
-    // If planet rules Dusthana (6, 8, 12), negative modifier (-1.0)
-    // If rules Trikona (1, 5, 9) or Kendra (1, 4, 7, 10), positive modifier (+1.0)
-    let functionalNature = 0.0;
-    const ruledHouses: number[] = [];
-    SIGN_LORDS.forEach((lord, sIdx) => {
-      if (lord === p.name) {
-        const hNum = ((sIdx - ascSignIdx + 12) % 12) + 1;
-        ruledHouses.push(hNum);
-      }
-    });
-
-    const rulesTrikona = ruledHouses.some(h => [1, 5, 9].includes(h));
-    const rulesKendra = ruledHouses.some(h => [1, 4, 7, 10].includes(h));
-    const rulesDusthana = ruledHouses.some(h => [6, 8, 12].includes(h));
-
-    if (rulesTrikona || rulesKendra) {
-      functionalNature = rulesDusthana ? 0.2 : 1.0;
-    } else if (rulesDusthana) {
-      functionalNature = -1.0;
-    } else {
-      functionalNature = (p.name === 'Jupiter' || p.name === 'Venus' || p.name === 'Moon') ? 0.5 : -0.5;
-    }
-
-    // Formula Sp = (0.50 * Shadbala) + (0.35 * Bindus / 8) + (0.15 * FunctionalNature)
-    const functionalScore = Number((
-      (0.50 * p.baseShadbala) +
-      (0.35 * (p.baseBindus / 8.0)) +
-      (0.15 * functionalNature)
-    ).toFixed(4));
-
     // Nakshatra calculation (360° / 27 = 13°20' = 13.333333° per nakshatra)
     const nakshatraIndex = Math.floor(sidereal / (360.0 / 27.0));
     const nakshatra = NAKSHATRAS[nakshatraIndex % 27];
@@ -346,12 +312,12 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
       signName,
       signLord,
       degreeInSign: Number(degreeInSign.toFixed(2)),
-      speed: p.speed,
-      isRetrograde: p.retro,
-      shadbala: p.baseShadbala,
-      ashtakavargaBindus: p.baseBindus,
-      functionalNature,
-      functionalScore,
+      speed: null,
+      isRetrograde: null,
+      shadbala: null,
+      ashtakavargaBindus: null,
+      functionalNature: null,
+      functionalScore: null,
       houseNumber,
       nakshatra,
       nakshatraPada: pada,
@@ -436,62 +402,8 @@ export function calculateD60Shashtyamsa(planets: PlanetPosition[]): ShashtyamsaD
 /**
  * Calculates Vimshottari Dasha periods & active Dasha lord based on Moon longitude
  */
-export function calculateVimshottariDasha(moonLongitude: number, birthDateStr: string): ChartCalculationResult['vimshottariDasha'] {
-  const nakshatraSpan = 360.0 / 27.0; // 13.333333°
-  const nakIdx = Math.floor(moonLongitude / nakshatraSpan) % 27;
-  const passedDeg = moonLongitude % nakshatraSpan;
-  const fractionRemaining = 1.0 - (passedDeg / nakshatraSpan);
-
-  const birthLord = NAKSHATRA_LORDS[nakIdx];
-  const totalYears = DASHA_PERIODS[birthLord] || 7;
-  const balanceYears = Number((fractionRemaining * totalYears).toFixed(2));
-
-  const birthDate = new Date(birthDateStr);
-  const startYear = isNaN(birthDate.getFullYear()) ? 1990 : birthDate.getFullYear();
-
-  const timeline: Array<{ lord: string; startDate: string; endDate: string; isCurrent: boolean }> = [];
-  let currentStartYear = startYear;
-  const lordIndex = DASHA_ORDER.indexOf(birthLord);
-
-  // Current year to evaluate active Dasha
-  const currentYear = new Date().getFullYear();
-  let activeMahadasha = birthLord;
-  let activeAntardasha = 'Jupiter';
-  let activePratyantardasha = 'Mercury';
-
-  for (let i = 0; i < 9; i++) {
-    const idx = (lordIndex + i) % 9;
-    const lord = DASHA_ORDER[idx];
-    const span = i === 0 ? balanceYears : DASHA_PERIODS[lord];
-    const endYear = currentStartYear + span;
-
-    const isCurrent = currentYear >= currentStartYear && currentYear < endYear;
-    if (isCurrent) {
-      activeMahadasha = lord;
-      // Derived antardasha lord
-      const subIdx = (idx + 1) % 9;
-      activeAntardasha = DASHA_ORDER[subIdx];
-      activePratyantardasha = DASHA_ORDER[(subIdx + 2) % 9];
-    }
-
-    timeline.push({
-      lord,
-      startDate: `${Math.floor(currentStartYear)}-01-01`,
-      endDate: `${Math.floor(endYear)}-01-01`,
-      isCurrent,
-    });
-
-    currentStartYear = endYear;
-  }
-
-  return {
-    birthLord,
-    balanceYears,
-    activeMahadasha,
-    activeAntardasha,
-    activePratyantardasha,
-    timeline,
-  };
+export function calculateVimshottariDasha(_moonLongitude:number,_birthDateStr:string):ChartCalculationResult['vimshottariDasha'] {
+  return {status:'UNAVAILABLE',birthLord:null,balanceYears:null,activeMahadasha:null,activeAntardasha:null,activePratyantardasha:null,timeline:[]};
 }
 
 /**
@@ -503,34 +415,22 @@ export function calculateFullChart(
   latitude: number,
   longitude: number,
   cityName: string = '',
-  timezoneOffset: number = 5.5,
+  timezoneOffset: number = Number.NaN,
   ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI
 ): ChartCalculationResult {
   validateBirthInput({ birthDate, birthTime, latitude, longitude, timezoneOffset, ayanamsaType });
   const [yearStr, monthStr, dayStr] = birthDate.split('-');
   const [hourStr, minStr, secStr] = birthTime.split(':');
 
-  const year = parseInt(yearStr, 10) || 1990;
-  const month = parseInt(monthStr, 10) || 1;
-  const day = parseInt(dayStr, 10) || 1;
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
   const localHour = parseInt(hourStr, 10);
-  const localMin = parseInt(minStr, 10) || 0;
-  const localSec = parseInt(secStr || '0', 10) || 0;
+  const localMin = Number(minStr);
+  const localSec = secStr === undefined ? 0 : Number(secStr);
 
-  // Convert local time to Universal Time (UT)
-  let utHour = localHour - Math.floor(timezoneOffset);
-  let utMin = localMin - Math.round((timezoneOffset % 1) * 60);
-  if (utMin < 0) {
-    utMin += 60;
-    utHour -= 1;
-  }
-  let utDay = day;
-  if (utHour < 0) {
-    utHour += 24;
-    utDay -= 1;
-  }
-
-  const jdUT = calculateJulianDay(year, month, utDay, utHour, utMin, localSec);
+  // Apply the explicit offset as elapsed time, including negative fractional offsets and date boundaries.
+  const jdUT = calculateJulianDay(year, month, day, localHour, localMin, localSec) - timezoneOffset / 24;
   const deltaT = calculateDeltaT(year);
   const ayanamsaVal = getAyanamsa(jdUT, ayanamsaType);
   const ascDegree = calculateAscendant(jdUT, latitude, longitude, ayanamsaVal);
@@ -543,19 +443,12 @@ export function calculateFullChart(
     const houseNum = i + 1;
     const signIdx = (ascSignIdx + i) % 12;
     const planetsInHouse = planets.filter(p => p.houseNumber === houseNum).map(p => p.name);
-    // Base vibhuti (Kendra houses 1, 4, 7, 10 and Trikona 1, 5, 9 have higher structural potency)
-    let baseVibhuti = 0.8;
-    if ([1, 5, 9].includes(houseNum)) baseVibhuti = 1.15;
-    else if ([4, 7, 10].includes(houseNum)) baseVibhuti = 1.05;
-    else if (houseNum === 11) baseVibhuti = 1.10; // 11th is house of gains
-    else if ([6, 8, 12].includes(houseNum)) baseVibhuti = 0.70; // Dusthana
-
     return {
       number: houseNum,
       signIndex: signIdx,
       signName: ZODIAC_SIGNS[signIdx],
       signLord: SIGN_LORDS[signIdx],
-      baseVibhuti,
+      baseVibhuti: null,
       planetsPresent: planetsInHouse,
     };
   });
@@ -574,7 +467,8 @@ export function calculateFullChart(
 
   return {
     systemMetadata: {
-      engineVersion: '2.1.0-prod',
+      engineVersion: 'analytical-preview-v1',
+      calculationMode:'ANALYTICAL_APPROXIMATION',independentValidationStatus:'NOT_PERFORMED',strengthMetricsStatus:'UNAVAILABLE',timezoneMode:'CALLER_SUPPLIED_OFFSET',
       ayanamsaApplied: ayanamsaType,
       ayanamsaValue: Number(ayanamsaVal.toFixed(6)),
       julianDayUT: Number(jdUT.toFixed(6)),

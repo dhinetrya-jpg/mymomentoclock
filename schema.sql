@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS astronomical_birth_data (
   concordance_rating NUMERIC(4, 3) DEFAULT 0.000,
   latitude NUMERIC(9, 6) NOT NULL,
   longitude NUMERIC(9, 6) NOT NULL,
-  city_name VARCHAR(100) DEFAULT 'Kolkata',
+  city_name VARCHAR(100),
   ayanamsa_applied ayanamsa_enum DEFAULT 'TRUE_LAHIRI',
   occupation_context VARCHAR(100) DEFAULT 'General',
   location_context VARCHAR(100) DEFAULT 'Global_Digital',
@@ -76,17 +76,17 @@ CREATE TABLE IF NOT EXISTS calculated_pillar_vectors (
   net_auspiciousness_vector NUMERIC(5, 4) NOT NULL,
   dominant_vector VARCHAR(100) NOT NULL,
   suppressed_vector VARCHAR(100) NOT NULL,
-  conflict_resolved BOOLEAN DEFAULT true,
+  conflict_resolved BOOLEAN,
   calculation_timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 5. Seed Data for Remedial Vector Matrix
 INSERT INTO physical_remedies_rvm (planet_target, modality_type, trigger_min, trigger_max, unique_code, frequency_hz, duration_minutes, instruction_prose, scientific_rationale)
 VALUES
-('SATURN', 'ACOUSTIC', 0.40, 0.70, 'SAT_147_MID', 147, 11, 'Listen to pure 147Hz acoustic resonance fields or deep, steady drone soundscapes for exactly 11 minutes during your personal Saturn Hora window.', '147Hz tone stabilizes parasympathetic nervous response to structural delays.'),
+('SATURN', 'ACOUSTIC', 0.40, 0.70, 'SAT_147_MID', 147, 11, 'Listen to pure 147Hz acoustic resonance fields or deep, steady drone soundscapes for exactly 11 minutes during your personal Saturn Hora window.', 'Unverified cultural association; no medical effect is established.'),
 ('SATURN', 'BEHAVIORAL', 0.40, 0.70, 'SAT_DISC_FIN', NULL, 5, 'Enforce artificial friction into your wealth loop. Automate exactly 8% of your weekly earnings directly into a locked long-term retirement index or automated digital savings vault.', 'Voluntary delayed liquidity channels Saturnian discipline into tangible asset security.'),
 ('MARS', 'KINETIC', 0.50, 0.90, 'MARS_ISO_SUNRISE', NULL, 8, 'Perform high-resistance isometric holds or focused physical training at local sunrise to channel active physical energy loops.', 'Isometric exercise releases adrenergic tension and dissipates impulsive reactions.'),
-('JUPITER', 'ACOUSTIC', 0.30, 0.60, 'JUP_432_EXP', 432, 15, 'Engage with 432Hz golden harmonic resonance while reviewing strategic career and wealth objectives.', '432Hz induces cognitive coherence and expansive outlook.')
+('JUPITER', 'ACOUSTIC', 0.30, 0.60, 'JUP_432_EXP', 432, 15, 'Engage with 432Hz golden harmonic resonance while reviewing strategic career and wealth objectives.', 'Unverified cultural association; no cognitive effect is established.')
 ON CONFLICT (unique_code) DO NOTHING;
 
 -- Index Optimization

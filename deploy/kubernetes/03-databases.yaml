@@ -4,7 +4,7 @@ metadata:
   name: postgres
   namespace: astro-production
 spec:
-  serviceName: "postgres-service"
+  serviceName: postgres-service
   replicas: 1
   selector:
     matchLabels:
@@ -15,28 +15,32 @@ spec:
         app: postgres
     spec:
       containers:
-        - name: postgres
-          image: postgres:16-alpine
-          ports:
-            - containerPort: 5432
-          env:
-            - name: POSTGRES_USER
-              value: "astro_user"
-            - name: POSTGRES_PASSWORD
-              value: "secure_pass"
-            - name: POSTGRES_DB
-              value: "astro_db"
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
+      - name: postgres
+        image: postgres:16-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: astro_user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mymomentoclock-database-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: astro_db
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
-    - metadata:
-        name: postgres-storage
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 20Gi
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
 ---
 apiVersion: v1
 kind: Service
@@ -45,7 +49,7 @@ metadata:
   namespace: astro-production
 spec:
   ports:
-    - port: 5432
+  - port: 5432
   selector:
     app: postgres
 ---
@@ -55,7 +59,7 @@ metadata:
   name: neo4j
   namespace: astro-production
 spec:
-  serviceName: "neo4j-service"
+  serviceName: neo4j-service
   replicas: 1
   selector:
     matchLabels:
@@ -66,24 +70,28 @@ spec:
         app: neo4j
     spec:
       containers:
-        - name: neo4j
-          image: neo4j:5-community
-          ports:
-            - containerPort: 7687
-          env:
-            - name: NEO4J_AUTH
-              value: "none"
-          volumeMounts:
-            - name: neo4j-storage
-              mountPath: /data
+      - name: neo4j
+        image: neo4j:5-community
+        ports:
+        - containerPort: 7687
+        env:
+        - name: NEO4J_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: mymomentoclock-database-secrets
+              key: NEO4J_AUTH
+        volumeMounts:
+        - name: neo4j-storage
+          mountPath: /data
   volumeClaimTemplates:
-    - metadata:
-        name: neo4j-storage
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 50Gi
+  - metadata:
+      name: neo4j-storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
 ---
 apiVersion: v1
 kind: Service
@@ -92,6 +100,6 @@ metadata:
   namespace: astro-production
 spec:
   ports:
-    - port: 7687
+  - port: 7687
   selector:
     app: neo4j

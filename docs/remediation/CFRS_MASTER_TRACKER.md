@@ -60,3 +60,24 @@ Change set CFRS-P0-01-CODEX; branch fix/cfrs-p0-01-codex-completion; base SHA 5d
 Changed-file inventory and API transitions: CFRS_P0_01_CODEX_CHANGES.md. Exact checks/failures: CFRS_P0_01_CODEX_TEST_REPORT.md. Outstanding dependencies and next recommended phase: CFRS_P0_01_CODEX_HANDOFF.md. Only scoped behavior is verified; no whole CFR item is marked VERIFIED while alternate production paths remain open.
 
 Implementation and test evidence commit: `d706d52bd52090271c1498a41ccef406d5ecffde`; documentation is a separate following commit.
+
+
+## Phase 1 final reconciliation — 2026-11-05
+
+Current branch `fix/phase1-final-remediation`, base `b0c9af31d2df505dbcc889fff166659895aa0531`, implementation `95efe71f4906bf7e268590a8e791e440579f35f4`. Earlier entries are historical; alternate Go/Node/browser safety issues noted there are now reconciled. Overall **NO-GO**, not a completed production product.
+
+| ID | Status | Evidence / next dependency |
+|---|---|---|
+| P1-A unsafe Go paths | VERIFIED_FIXED | Root/backend guarded; native tests/race/vet; unsupported capability SAFELY_DISABLED |
+| P1-B payment/auth boundary | VERIFIED_FIXED | All public fulfillment/profile paths refuse forged/missing identity; no auth/provider claimed |
+| P1-B durable domain | VERIFIED_FIXED | Isolated real PG transactions/concurrency/restart; adapter BLOCKED_EXTERNAL_DEPENDENCY |
+| P1-C validation/native disclosure | VERIFIED_FIXED | DST/offset/zero/finite/calendar validation, actual flags/version/modes, non-CGO refusal |
+| P1-C independent accuracy | BLOCKED_EXTERNAL_DEPENDENCY | Independent numerical reference fixtures and acceptance tolerances absent |
+| P1-D unsupported calculations | SAFELY_DISABLED | Dasha/BTR/resolver/graph/personal timing/remedies require verified rules |
+| P1-E UX/privacy | VERIFIED_FIXED |375/1280 browser flows and no external transfer/storage; scoped tests |
+| P1-F local operations | VERIFIED_FIXED | Docker/Compose/config checks and protected diagnostics |
+| P1-F live operations | IMPLEMENTED_UNVERIFIED | No real cluster/registry/TLS/CNI/production-store validation |
+| P1-G evidence/handoff | VERIFIED_FIXED | Six PHASE1_FINAL reports and committed evidence |
+| Legacy CFR-005…018 definitions | NOT_STARTED | Authoritative definitions still absent; no invented whole-item completion |
+
+No known unresolved local test failure remains. Corrected transient environment/test failures and unexecuted checks are explicitly listed in PHASE1_FINAL_TEST_REPORT.md. Live provider/auth/accuracy remain BLOCKED_EXTERNAL_DEPENDENCY, not FAILED implementations or verified capabilities. PHASE1_FINAL_RELEASE_GATE.md is the current authoritative release decision.

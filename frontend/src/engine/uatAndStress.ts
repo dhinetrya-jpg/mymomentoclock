@@ -1,14 +1,14 @@
 /**
  * MymomentOclock User Acceptance Tests (UAT) & High-Concurrency Stress Profiler
- * Matches the specifications of engine_uat_test.go and stress_profile_test.go:
+ * Internal test-only fixtures; not scientific validation:
  * - Validates baseline Kolkata spatiotemporal normalization and BTR calibration
- * - Verifies algebraic conflict resolution matrix against mathematical ground-truth
+ * - Checks unavailable decision rules do not return fabricated graph evidence
  * - Simulates 10,000 profile lookups with graph operations measuring latency (< 200ms SLA)
  */
 
 import { calculateFullChart, AyanamsaType } from './astroMath';
 import { resolvePillarConflict, ConflictResolutionResult } from './conflictResolver';
-import { SAMPLE_MILESTONES, executeBirthTimeRectification, RectificationResult } from './btrProcessor';
+import { SAMPLE_MILESTONES, executeBirthTimeRectification, } from './btrProcessor';
 import { evaluateRemedialVectors } from './rvmEngine';
 
 export interface UatTestCaseResult {
@@ -72,49 +72,30 @@ export function runEngineUatSuite(): {
     durationMs: Number(t1Dur.toFixed(2)),
   });
 
-  // TEST 2: Automated Janma Lagna Shodhana (Birth Time Rectification) Window
-  const t2Start = performance.now();
-  const btrResult: RectificationResult = executeBirthTimeRectification(
-    '1989-11-23',
-    '04:30:00',
-    22.5726,
-    88.3639,
-    'Kolkata', SAMPLE_MILESTONES
-  );
-  const t2Dur = performance.now() - t2Start;
-  // Baseline specification targets offset around -165s and concordance ~0.88
-  const t2Passed = btrResult.concordanceRating >= 0.75 && btrResult.testedCandidatesCount >= 100;
-
-  results.push({
-    id: 'UAT-002',
-    name: 'AI Lifecycle Milestone Calibrator (±15min / 15s steps)',
-    category: 'BTR_CALIBRATION',
-    passed: t2Passed,
-    expected: 'Tested 120 candidates, Concordance rating >= 0.85, D-60 alignment verified',
-    actual: `Calibrated to: ${btrResult.rectifiedTrueTime} (Offset: ${btrResult.offsetSeconds}s, Concordance: ${(btrResult.concordanceRating * 100).toFixed(1)}%)`,
-    durationMs: Number(t2Dur.toFixed(2)),
-  });
+  // TEST 2: Missing source-reviewed Dasha must not manufacture a candidate.
+  let btrUnavailable=false;
+  try {executeBirthTimeRectification('1989-11-23','04:30:00',22.5726,88.3639,'Kolkata',SAMPLE_MILESTONES,15,15,5.5);} catch(error) {btrUnavailable=(error as {code?:string}).code==='DASHA_CALCULATION_UNAVAILABLE';}
+  results.push({id:'UAT-002',name:'Unavailable Dasha cannot certify a birth time',category:'BTR_CALIBRATION',passed:btrUnavailable,expected:'Explicit unavailable error; no candidate',actual:btrUnavailable?'DASHA_CALCULATION_UNAVAILABLE':'FAILED',durationMs:0});
 
   // TEST 3: Algebraic Conflict Resolution (Dhana Yoga vs Daridra Yoga)
   const t3Start = performance.now();
-  const wealthResolution: ConflictResolutionResult = resolvePillarConflict(btrResult.rectifiedChart, 'Wealth');
+  const wealthResolution: ConflictResolutionResult = resolvePillarConflict(kolkataChart, 'Wealth');
   const t3Dur = performance.now() - t3Start;
-  const actualConflict = wealthResolution.allTriggeredYogas.some(y => y.nature === 'Benefic') && wealthResolution.allTriggeredYogas.some(y => y.nature === 'Malefic');
-  const t3Passed = wealthResolution.conflictResolved === actualConflict && Number.isFinite(wealthResolution.netPotencyScore) && wealthResolution.verifiedGraphPayload === undefined;
+  const t3Passed = wealthResolution.assessment_status === 'UNAVAILABLE' && !wealthResolution.conflictResolved && wealthResolution.netAuspiciousnessVector === null && wealthResolution.verifiedGraphPayload === undefined;
 
   results.push({
     id: 'UAT-003',
     name: 'Algebraic Conflict Resolution Matrix (Contradiction Elimination)',
     category: 'CONFLICT_RESOLUTION',
     passed: t3Passed,
-    expected: 'Conflict flag matches triggered opposing yogas; finite score; no fabricated graph evidence',
+    expected: 'Unsupported rules return unavailable, null score and no fabricated graph evidence',
     actual: `P_net: ${wealthResolution.netPotencyScore}, A_net: ${wealthResolution.netAuspiciousnessVector}, Dominant: ${wealthResolution.dominantVector}`,
     durationMs: Number(t3Dur.toFixed(2)),
   });
 
   // TEST 4: Remedial Vector Matrix (RVM) Sanitization & Zero Commercial Bloat
   const t4Start = performance.now();
-  const rvmEval = evaluateRemedialVectors(wealthResolution.netAuspiciousnessVector, 'Wealth', 'SATURN');
+  const rvmEval = evaluateRemedialVectors(0.3, 'Wealth', 'SATURN');
   const t4Dur = performance.now() - t4Start;
   const t4Passed = rvmEval.sanitizationCheck.commercialKeywordsFiltered && rvmEval.actions.length > 0;
 
@@ -130,45 +111,7 @@ export function runEngineUatSuite(): {
 
   const passCount = results.filter(r => r.passed).length;
 
-  // The unified technical system output matching Part 1 of the PDF exactly
-  const baselineKolkataPayload = {
-    system_metadata: {
-      engine_version: "2.1.0-prod",
-      ayanamsa_applied: "TRUE_LAHIRI",
-      calculation_timestamp: Math.floor(Date.now() / 1000),
-    },
-    rectified_birth_profile: {
-      original_input_time: "1989-11-23T04:30:00+05:30",
-      rectified_true_time: "1989-11-23T04:27:15+05:30",
-      offset_seconds: -165,
-      concordance_rating: 0.88,
-    },
-    pillar_metrics: {
-      wealth_status: {
-        net_potency_score: 48.0,
-        net_auspiciousness_vector: 0.5476,
-        conflict_resolved: true,
-        dominant_vector: "BENEFIC_OPULENCE_DOMINANT",
-        active_influences: ["Dhana_Yoga_Active", "Daridra_Yoga_Mitigated"],
-      },
-    },
-    remedial_directives: {
-      target_planet: "SATURN",
-      deficiency_intensity: 0.4524,
-      actions: [
-        {
-          modality: "ACOUSTIC",
-          remedy_code: "SAT_FREQ_147_MID",
-          directive: "Listen to pure 147Hz acoustic resonance fields for exactly 11 minutes during your personal Saturn Hora window.",
-        },
-        {
-          modality: "BEHAVIORAL",
-          remedy_code: "SAT_DISC_FIN",
-          directive: "Enforce artificial friction into your wealth loop. Automate exactly 8% of your weekly earnings directly into a locked savings vault.",
-        },
-      ],
-    },
-  };
+  const baselineKolkataPayload={is_synthetic:true,purpose:'Explicit test fixture only; not a customer result',btr_status:'UNAVAILABLE',graph_status:'UNAVAILABLE'};
 
   return {
     allPassed: passCount === results.length,
@@ -205,7 +148,7 @@ export function executeStressBenchmark(sampleCount: number = 10000): StressBench
     const birthTime = `${hour}:${minute}:00`;
 
     const cycleStart = performance.now();
-    const chart = calculateFullChart('1992-05-18', birthTime, city.lat, city.lon, city.name);
+    const chart = calculateFullChart('1992-05-18', birthTime, city.lat, city.lon, city.name, 5.5);
     resolvePillarConflict(chart, 'Wealth');
     const cycleDur = performance.now() - cycleStart;
     latencies.push(cycleDur);
