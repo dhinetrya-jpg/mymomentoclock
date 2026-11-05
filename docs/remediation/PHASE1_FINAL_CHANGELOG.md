@@ -1,6 +1,6 @@
 # Phase 1 final changelog — 2026-11-05
 
-Implementation SHA: `40d60a3e013a94c637de2d7fa55781d615b1b74b`. Base: `b0c9af31d2df505dbcc889fff166659895aa0531`. Branch: `fix/phase1-final-remediation`. This is remediation, not a production release. Historical reports remain intact.
+Implementation SHA: `95efe71f4906bf7e268590a8e791e440579f35f4`. Base: `b0c9af31d2df505dbcc889fff166659895aa0531`. Branch: `fix/phase1-final-remediation`. This is remediation, not a production release. Historical reports remain intact.
 
 ## Requirement reconciliation
 
@@ -132,3 +132,5 @@ tests/stress/load_profile.js
 transactional_webhook.go
 vite.config.ts
 ```
+
+- `95efe71`: direct Node container entry; final rebuilt smoke and graceful stop exit0 verified.

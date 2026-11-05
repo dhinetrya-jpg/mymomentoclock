@@ -64,7 +64,7 @@ Implementation and test evidence commit: `d706d52bd52090271c1498a41ccef406d5ecff
 
 ## Phase 1 final reconciliation — 2026-11-05
 
-Current branch `fix/phase1-final-remediation`, base `b0c9af31d2df505dbcc889fff166659895aa0531`, implementation `40d60a3e013a94c637de2d7fa55781d615b1b74b`. Earlier entries are historical; alternate Go/Node/browser safety issues noted there are now reconciled. Overall **NO-GO**, not a completed production product.
+Current branch `fix/phase1-final-remediation`, base `b0c9af31d2df505dbcc889fff166659895aa0531`, implementation `95efe71f4906bf7e268590a8e791e440579f35f4`. Earlier entries are historical; alternate Go/Node/browser safety issues noted there are now reconciled. Overall **NO-GO**, not a completed production product.
 
 | ID | Status | Evidence / next dependency |
 |---|---|---|

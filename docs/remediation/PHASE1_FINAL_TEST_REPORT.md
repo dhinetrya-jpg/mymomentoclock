@@ -1,6 +1,6 @@
 # Phase 1 final test report — 2026-11-05
 
-Implementation: `40d60a3e013a94c637de2d7fa55781d615b1b74b`. Local validation only. Full raw test output is in [evidence](evidence/). No production/provider credentials were used.
+Implementation: `95efe71f4906bf7e268590a8e791e440579f35f4`. Local validation only. Full raw test output is in [evidence](evidence/). No production/provider credentials were used.
 
 | Check | Result | Evidence / limitations |
 |---|---|---|
@@ -50,3 +50,5 @@ Initial browser run exposed missing CSP blob-worker permission for confetti; all
 ## Not executed / not established
 
 Provider sandbox signature/event mapping or real checkout; sign-in/session ownership integration; production DB/TLS/Kubernetes/registry; independent astronomical accuracy datasets; Swiss .se1 file mode; certified Dasha/BTR/personal timing; AI consent integration; static Pages API hosting; 10k-user throughput. These are release blockers or explicitly unavailable features, not green tests. Browser alternate build compiled but was not separately served in the browser matrix. No claim of a comprehensive third-party dependency vulnerability audit.
+
+Final cleanup check found npm-as-PID1 made web Docker stop exit1. Dockerfile.web now invokes Node directly. Rebuilt final image, reran functional web smoke, SIGTERM stop exits0; native and non-CGO containers also exited0. See shutdown-final.log and web-shutdown-smoke.log. All task-owned containers/networks and ephemeral DB credential file were removed. This final change only affects the container entry command; no application calculation/UI code changed after the browser run.
