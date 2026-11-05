@@ -5,7 +5,7 @@
  * Cypher-compatible graph traversal logic described in the SRS specification.
  */
 
-import { ChartCalculationResult, PlanetPosition } from './astroMath';
+import { ChartCalculationResult } from './astroMath';
 
 export interface YogaDefinition {
   name: string;

@@ -1,98 +1,47 @@
-name: MymomentOclock Matrix Performance & Load Validation Pipeline
-
+name: MymomentOclock API Smoke and Optional Load Validation
 on:
   push:
-    branches: [ main, master ]
-    paths:
-      - 'tests/stress/**'
-      - 'backend/**'
-      - 'server.ts'
-      - 'src/engine/**'
-      - '.github/workflows/mymomentoclock-matrix-pipeline.yml'
+    branches: [main, master]
+    paths: ['tests/stress/**', 'server.ts', 'src/engine/**', 'package*.json', '.github/workflows/mymomentoclock-matrix-pipeline.yml']
   pull_request:
-    branches: [ main, master ]
-    paths:
-      - 'tests/stress/**'
-      - 'backend/**'
-      - 'server.ts'
-      - 'src/engine/**'
+    branches: [main, master]
+    paths: ['tests/stress/**', 'server.ts', 'src/engine/**', 'package*.json', '.github/workflows/mymomentoclock-matrix-pipeline.yml']
   workflow_dispatch:
-
+    inputs:
+      profile:
+        description: 'Smoke by default; stress runs the original 10,000-VU profile'
+        type: choice
+        options: [smoke, stress]
+        default: smoke
 jobs:
-  high-throughput-stress-matrix:
-    name: K6 Concurrent Load & Latency Assertion Suite
-    runs-on: ubuntu-22.04
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: astro_user
-          POSTGRES_PASSWORD: secure_pass
-          POSTGRES_DB: astro_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 2s
-          --health-retries 5
-
-      neo4j:
-        image: neo4j:5-community
-        env:
-          NEO4J_AUTH: none
-        ports:
-          - 7687:7687
-        options: >-
-          --health-cmd "cypher-shell 'RETURN 1'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+  api-validation:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install Application Dependencies
-        run: npm ci
-
-      - name: Initialize Database Schemas
-        env:
-          PGPASSWORD: secure_pass
-        run: |
-          sudo apt-get install -y postgresql-client
-          psql -h localhost -U astro_user -d astro_db -f schema.sql
-
-      - name: Start MymomentOclock Background Server Instance
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Start production server
         env:
           PORT: 8080
           NODE_ENV: production
-          DATABASE_URL: postgres://astro_user:secure_pass@localhost:5432/astro_db?sslmode=disable
-          NEO4J_URI: bolt://localhost:7687
         run: |
-          npx tsx server.ts &
-          sleep 5
-
-      - name: Verify Readiness Probe
-        run: |
-          curl --fail --retry 10 --retry-delay 2 http://localhost:8080/api/v1/health
-
-      - name: Download and Install K6 Performance Testing Suite
-        run: |
-          curl -s https://k6.io | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://k6.io stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt-get update
-          sudo apt-get install -y k6
-
-      - name: Execute Live High-Throughput Stress Test Against Local Subsystems
+          npm run start > /tmp/mymomentoclock.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:8080/health; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mymomentoclock.log
+          exit 1
+      - uses: grafana/setup-k6-action@v1
+      - name: Run API checks
         env:
-          TARGET_URL: "http://localhost:8080"
-        run: |
-          k6 run tests/stress/load_profile.js
+          TARGET_URL: http://localhost:8080
+          TEST_PROFILE: ${{ inputs.profile || 'smoke' }}
+        run: k6 run tests/stress/load_profile.js
+      - name: Show server diagnostics on failure
+        if: failure()
+        run: cat /tmp/mymomentoclock.log

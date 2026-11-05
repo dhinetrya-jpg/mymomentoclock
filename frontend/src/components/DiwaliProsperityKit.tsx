@@ -20,7 +20,6 @@ interface DiwaliProsperityKitProps {
 }
 
 export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
-  chart,
   onOpenQuickCheckout,
 }) => {
   const [selectedCity, setSelectedCity] = useState<string>('');
@@ -83,7 +82,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="relative w-full max-w-sm rounded-xl overflow-hidden border border-amber-500/30 shadow-2xl bg-[#1e060c] group">
               <img
-                src="/src/assets/images/diwali_sealed_wax_envelope_1791900494959.jpg"
+                src={envelopeImage}
                 alt="Sealed Vedic Wax Envelope"
                 referrerPolicy="no-referrer"
                 className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
@@ -339,7 +338,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
             <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-amber-500/40 shadow-2xl bg-[#280710] text-center p-6 text-neutral-100">
               <div className="relative h-44 w-full rounded-xl overflow-hidden mb-4">
                 <img
-                  src="/src/assets/images/diwali_blessing_card_art_1791900494610.jpg"
+                  src={blessingImage}
                   alt="Auspicious Diwali Art"
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover"

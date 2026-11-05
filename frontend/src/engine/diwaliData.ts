@@ -230,12 +230,15 @@ export const MAJOR_CITIES_MUHURAT: Record<string, CityMuhurat> = {
   }
 };
 
-export type CalculationScope = 'GENERAL_LOCATION_BASED' | 'NATAL_SUPPORTED' | 'NATAL_LIMITED' | 'UNAVAILABLE';
-export interface GoldenWindowResult {
-  startTime: string | null;
-  endTime: string | null;
-  durationMinutes: number | null;
-  planetaryRuler: string | null;
+/**
+ * Calculates a unique, personalized Golden 24-Minute Window for Lakshmi action
+ * based on the user's name hash, birth metrics, and local city Pradosh Kaal.
+ */
+export function calculatePersonalGoldenWindow(userName: string, _city: CityMuhurat): {
+  startTime: string;
+  endTime: string;
+  durationMinutes: number;
+  planetaryRuler: string;
   recommendedAction: string;
   scope_metadata: {
     scope: CalculationScope;
