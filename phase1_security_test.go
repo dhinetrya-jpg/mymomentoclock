@@ -59,3 +59,13 @@ func TestLegacyBTRCannotCreateCandidate(t *testing.T) {
 		t.Fatalf("unsafe legacy BTR: %s %v", data, err)
 	}
 }
+func TestLegacyNoNativeModeCannotSubstitutePositions(t *testing.T) {
+	if NativeAvailable() {
+		return
+	}
+	lat, lon := 0.0, 0.0
+	data, err := ExecuteNormalization(NormalizationRequest{BirthDate: "2000-01-01", BirthTime: "12:00:00", Latitude: &lat, Longitude: &lon, Timezone: "UTC"}, "")
+	if data != nil || err == nil || err.Error() != "NATIVE_EPHEMERIS_UNAVAILABLE" {
+		t.Fatalf("non-native path manufactured positions: %s %v", data, err)
+	}
+}

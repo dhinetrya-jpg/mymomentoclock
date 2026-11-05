@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.22-bookworm AS builder
+FROM golang:1.26-bookworm AS builder
 WORKDIR /app
 # This image includes gcc, g++, make and git. Optional CA mount supports managed proxies.
 COPY scripts/install-swisseph.sh /usr/local/bin/install-swisseph

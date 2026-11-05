@@ -19,7 +19,7 @@ docker_local run -d --name "$name-db" --network "$name" -e POSTGRES_USER=phase1_
 ready=false
 for attempt in $(seq 1 30);do if docker_local exec "$name-db" pg_isready -U phase1_test -d phase1_test >/dev/null 2>&1;then ready=true;break;fi;sleep 1;done
 [ "$ready" = true ] || { echo 'Isolated PostgreSQL failed readiness' >&2;exit 1; }
-docker_local run --rm --network "$name" --env-file "$config" -v "$repo:/repo" -w /repo mymomentoclock:phase1-go-tests sh -c 'set -e; go version; go test -count=1 -mod=readonly ./...; go test -count=1 -mod=readonly -race ./...; go vet ./...; cd backend; go test -count=1 -mod=readonly -v ./...; go test -count=1 -mod=readonly -race ./...; go vet ./...'
+docker_local run --rm --network "$name" --env-file "$config" -v "$repo:/repo" -w /repo mymomentoclock:phase1-go-tests sh -c 'set -e; go version; go test -count=1 -mod=readonly ./...; go test -count=1 -mod=readonly -race ./...; go vet ./...; CGO_ENABLED=0 go test -count=1 -mod=readonly ./...; cd backend; go test -count=1 -mod=readonly -v ./...; go test -count=1 -mod=readonly -race ./...; go vet ./...; CGO_ENABLED=0 go test -count=1 -mod=readonly ./...'
 docker_local restart "$name-db" >/dev/null
 ready=false
 for attempt in $(seq 1 30);do if docker_local exec "$name-db" pg_isready -U phase1_test -d phase1_test >/dev/null 2>&1;then ready=true;break;fi;sleep 1;done

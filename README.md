@@ -12,7 +12,13 @@ An enterprise-grade, high-performance Vedic MymomentOclock and Festival Prosperi
 
 ---
 
-## 🌟 Highlights & Core Architecture
+## Current Phase 1 release status: NO-GO
+
+The working surface is an analytical chart preview, unverified festival content and a separate native normalization API with actual ephemeris-mode disclosure. Personal prediction scores, Dasha/BTR, graph profiles, checkout, entitlements and private AI are unavailable. No real payment provider is activated.
+
+See [the final architecture](docs/remediation/PHASE1_FINAL_ARCHITECTURE.md) and [release gates](docs/remediation/PHASE1_FINAL_RELEASE_GATE.md). The descriptions below are historical design goals, not evidence that those capabilities are implemented or validated.
+
+## Historical design scope
 
 ### 1. 🪔 Live Diwali Countdown & Vedic Panchang Cosmic Clock
 - **Real-Time Astronomical Clock**: Live 1-second countdown to the next upcoming Diwali (Lakshmi Puja on Kartik Amavasya).
@@ -194,7 +200,7 @@ Configure in your GitHub repository via **Settings** → **Secrets and variables
 | `PORT` | Backend server port | `3000` |
 | `GEMINI_API_KEY` | Google Gemini API key for Desha-Kala-Patra AI | `Configure in GitHub Secrets` |
 | `APP_URL` | Base host URL | `http://localhost:3000` |
-| `PAYMENT_WEBHOOK_SECRET` | Webhook HMAC verification secret | `whsec_mymomentoclock_production_key_9981` |
+| `PAYMENT_WEBHOOK_SECRET` | Webhook HMAC verification secret | `Unavailable — requires an approved provider-specific integration` |
 
 ---
 
