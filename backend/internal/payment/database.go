@@ -75,7 +75,7 @@ func (s *Service) Ready(ctx context.Context) error {
 	}
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
-	rows, err := s.store.DB.QueryContext(ctx, `SELECT o.schema_version,o.provider_revision,e.processing_status,g.capability_id,a.action FROM phase1_orders o LEFT JOIN phase1_payment_events e USING(order_id) LEFT JOIN phase1_entitlements g USING(order_id) LEFT JOIN phase1_payment_audit a USING(order_id) LIMIT 0`)
+	rows, err := s.store.DB.QueryContext(ctx, `SELECT o.schema_version,o.provider_revision,o.evidence_model,o.provider_create_attempted,e.processing_status,g.capability_id,a.action FROM phase1_orders o LEFT JOIN phase1_payment_events e USING(order_id) LEFT JOIN phase1_entitlements g USING(order_id) LEFT JOIN phase1_payment_audit a USING(order_id) LIMIT 0`)
 	if err != nil {
 		return problem("PAYMENT_STORAGE_UNAVAILABLE")
 	}

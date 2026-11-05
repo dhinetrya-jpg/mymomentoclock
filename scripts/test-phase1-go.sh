@@ -35,4 +35,4 @@ docker_local restart "$name-db" >/dev/null
 ready=false
 for attempt in $(seq 1 30);do if docker_local exec "$name-db" pg_isready -U phase1_test -d phase1_test >/dev/null 2>&1;then ready=true;break;fi;sleep 1;done
 [ "$ready" = true ] || exit 1
-docker_local run --rm --network "$name" --env-file "$config" -v "$certdir:/test-tls:ro" -e PHASE1_TEST_RESTART_CHECK=1 -v "$repo:/repo" -w /repo/backend mymomentoclock:phase1-go-tests go test -count=1 -mod=readonly -v ./internal/payment -run '^TestRecoveryAfterRestart$'
+docker_local run --rm --network "$name" --env-file "$config" -v "$certdir:/test-tls:ro" -e PHASE1_TEST_RESTART_CHECK=1 -v "$repo:/repo" -w /repo/backend mymomentoclock:phase1-go-tests go test -count=1 -mod=readonly -v ./internal/payment ./internal/payment/providers/razorpay -run '^(TestRecoveryAfterRestart|TestRazorpayRecoveryAfterRestart)$'

@@ -51,6 +51,14 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 8*time.Second)
 		defer cancel()
+		if r.URL.Path == "/internal/ready" && r.Method == "GET" {
+			if err := s.Ready(ctx); err != nil {
+				fail(err.Error())
+				return
+			}
+			reply(200, map[string]string{"status": "ready", "payment_mode": "sandbox-or-test-only"})
+			return
+		}
 		customer, err := s.identity.Authenticate(ctx, r)
 		if err != nil || !opaque.MatchString(customer) {
 			fail("UNAUTHENTICATED")
@@ -80,7 +88,7 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 				fail(err.Error())
 				return
 			}
-			reply(200, o)
+			reply(200, s.checkoutOrder(o))
 		case strings.HasPrefix(path, "/api/payment/orders/") && r.Method == "GET":
 			id := strings.TrimPrefix(path, "/api/payment/orders/")
 			if !opaque.MatchString(id) || strings.Contains(id, "/") {
@@ -96,7 +104,7 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 				fail("PAYMENT_STORAGE_UNAVAILABLE")
 				return
 			}
-			reply(200, o)
+			reply(200, s.checkoutOrder(o))
 		case path == "/api/payment/entitlements" && r.Method == "GET":
 			if err = s.store.auditAccess(ctx, customer, "READ_ENTITLEMENTS"); err != nil {
 				fail(err.Error())

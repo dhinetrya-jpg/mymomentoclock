@@ -21,6 +21,7 @@ type Identity interface {
 type ProviderOrderRequest struct {
 	OrderID, IdempotencyKey, CustomerID string
 	Product                             Product
+	RecoveryOnly                        bool
 }
 type ProviderOrder struct {
 	ID, OrderID, CustomerID, Currency string
@@ -59,7 +60,13 @@ func NewService(d Dependencies) (*Service, error) {
 	if d.Provider == nil {
 		return nil, problem("PAYMENT_PROVIDER_UNAVAILABLE")
 	}
-	if d.Environment != "test" && (d.Environment != "production" || !d.ActivationApproved || !d.Provider.ProductionReady() || !d.Identity.ProductionReady()) {
+	if d.Environment == "sandbox" {
+		p, ok := d.Provider.(interface{ SandboxReady() bool })
+		identity, identityOK := d.Identity.(interface{ SandboxReady() bool })
+		if !ok || !identityOK || !d.ActivationApproved || !p.SandboxReady() || !identity.SandboxReady() {
+			return nil, problem("SANDBOX_DEPENDENCIES_UNAVAILABLE")
+		}
+	} else if d.Environment != "test" && (d.Environment != "production" || !d.ActivationApproved || !d.Provider.ProductionReady() || !d.Identity.ProductionReady()) {
 		return nil, problem("PAYMENT_ACTIVATION_NOT_APPROVED")
 	}
 	ns := strings.Split(d.Provider.Namespace(), "/")
@@ -86,6 +93,12 @@ func NewService(d Dependencies) (*Service, error) {
 	}
 	copyStore := *d.Store
 	copyStore.Catalog = catalog
+	if provider, ok := d.Provider.(interface{ SnapshotModel() string }); ok {
+		if provider.SnapshotModel() != "CAPTURE_REFUND_LATTICE_V1" {
+			return nil, problem("UNSUPPORTED_EVIDENCE_MODEL")
+		}
+		copyStore.EvidenceModel = provider.SnapshotModel()
+	}
 	service := &Service{&copyStore, d.Identity, d.Provider}
 	if err := service.Ready(context.Background()); err != nil {
 		return nil, err
@@ -101,17 +114,18 @@ func randomID() string {
 }
 
 type Order struct {
-	ID                                string `json:"order_id"`
-	Status                            string `json:"status"`
-	AmountMinor                       int64  `json:"amount_minor"`
-	Currency                          string `json:"currency"`
-	ProductID                         string `json:"product_id"`
-	ProductVersion                    string `json:"product_version"`
-	Capability                        string `json:"capability_id"`
+	ID                                string           `json:"order_id"`
+	Status                            string           `json:"status"`
+	AmountMinor                       int64            `json:"amount_minor"`
+	Currency                          string           `json:"currency"`
+	ProductID                         string           `json:"product_id"`
+	ProductVersion                    string           `json:"product_version"`
+	Capability                        string           `json:"capability_id"`
+	Checkout                          *CheckoutSession `json:"checkout,omitempty"`
 	providerOrder, customer, provider string
 }
 
-const orderFields = `order_id,status,amount_minor,currency,product_id,product_version,capability_id,coalesce(provider_order_id,''),customer_id,provider`
+const orderFields = `order_id,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,amount_minor,currency,product_id,product_version,capability_id,coalesce(provider_order_id,''),customer_id,provider`
 
 func scanOrder(row interface{ Scan(...any) error }) (Order, error) {
 	var o Order
@@ -150,7 +164,7 @@ func (s *Store) reserveOrder(ctx context.Context, customer, product, key, correl
 	if err = s.checkpoint("before_order_insert", nil); err != nil {
 		return Order{}, err
 	}
-	_, err = s.DB.ExecContext(ctx, `INSERT INTO phase1_orders(order_id,customer_id,product_id,product_version,capability_id,provider,amount_minor,currency,status,idempotency_key,correlation_id,access_expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,'CREATED',$9,$10,CASE WHEN $11::bigint>0 THEN now()+$11*interval '1 microsecond' ELSE NULL END) ON CONFLICT(customer_id,idempotency_key) WHERE idempotency_key IS NOT NULL DO NOTHING`, id, customer, p.ID, p.Version, p.Capability, s.Provider, p.AmountMinor, p.Currency, key, correlation, p.AccessDuration.Microseconds())
+	_, err = s.DB.ExecContext(ctx, `INSERT INTO phase1_orders(order_id,customer_id,product_id,product_version,capability_id,provider,amount_minor,currency,status,idempotency_key,correlation_id,access_expires_at,evidence_model) VALUES($1,$2,$3,$4,$5,$6,$7,$8,'CREATED',$9,$10,CASE WHEN $11::bigint>0 THEN now()+$11*interval '1 microsecond' ELSE NULL END,$12) ON CONFLICT(customer_id,idempotency_key) WHERE idempotency_key IS NOT NULL DO NOTHING`, id, customer, p.ID, p.Version, p.Capability, s.Provider, p.AmountMinor, p.Currency, key, correlation, p.AccessDuration.Microseconds(), s.model())
 	if err != nil {
 		return Order{}, storageError(err)
 	}
@@ -175,7 +189,19 @@ func (s *Service) createOrder(ctx context.Context, customer, product, key, corre
 	}
 	// Provider gets the durable snapshot, never current mutable catalog prices or browser amounts.
 	p := Product{ID: o.ProductID, Version: o.ProductVersion, Capability: o.Capability, AmountMinor: o.AmountMinor, Currency: o.Currency}
-	po, err := s.provider.CreateOrder(ctx, ProviderOrderRequest{OrderID: o.ID, IdempotencyKey: o.ID, CustomerID: customer, Product: p})
+	recoveryOnly := false
+	if provider, ok := s.provider.(interface{ RequiresCreateIntent() bool }); ok && provider.RequiresCreateIntent() {
+		result, e := s.store.DB.ExecContext(ctx, `UPDATE phase1_orders SET provider_create_attempted=true WHERE order_id=$1 AND provider_create_attempted=false AND status='CREATED'`, o.ID)
+		if e != nil {
+			return Order{}, storageError(e)
+		}
+		n, e := result.RowsAffected()
+		if e != nil {
+			return Order{}, storageError(e)
+		}
+		recoveryOnly = n == 0
+	}
+	po, err := s.provider.CreateOrder(ctx, ProviderOrderRequest{OrderID: o.ID, IdempotencyKey: o.ID, CustomerID: customer, Product: p, RecoveryOnly: recoveryOnly})
 	if err != nil {
 		return Order{}, problem("PAYMENT_PROVIDER_UNAVAILABLE")
 	}
@@ -200,7 +226,7 @@ type Entitlement struct {
 }
 
 func (s *Store) entitlements(ctx context.Context, customer string) ([]Entitlement, error) {
-	rows, err := s.DB.QueryContext(ctx, `SELECT e.capability_id,e.order_id,e.expires_at FROM phase1_entitlements e JOIN phase1_orders o USING(order_id) WHERE e.customer_id=$1 AND o.customer_id=$1 AND o.provider=$2 AND o.status='COMPLETED' AND e.active AND e.revoked_at IS NULL AND (e.expires_at IS NULL OR e.expires_at>now()) ORDER BY e.capability_id,e.order_id`, customer, s.Provider)
+	rows, err := s.DB.QueryContext(ctx, `SELECT e.capability_id,e.order_id,e.expires_at FROM phase1_entitlements e JOIN phase1_orders o USING(order_id) WHERE e.customer_id=$1 AND o.customer_id=$1 AND o.provider=$2 AND o.status='COMPLETED' AND NOT o.provider_review_required AND e.active AND e.revoked_at IS NULL AND (e.expires_at IS NULL OR e.expires_at>now()) ORDER BY e.capability_id,e.order_id`, customer, s.Provider)
 	if err != nil {
 		return nil, storageError(err)
 	}
@@ -243,7 +269,7 @@ func (s *Service) RequireAccess(ctx context.Context, r *http.Request, capability
 	return problem("ENTITLEMENT_REQUIRED")
 }
 func sameIdentity(a, b Event) bool {
-	return a.Provider == b.Provider && a.OrderID == b.OrderID && a.ProviderOrderID == b.ProviderOrderID && (a.PaymentID == "" || a.PaymentID == b.PaymentID) && a.CustomerID == b.CustomerID && a.Currency == b.Currency && a.AmountMinor == b.AmountMinor
+	return a.Provider == b.Provider && a.OrderID == b.OrderID && a.ProviderOrderID == b.ProviderOrderID && (a.PaymentID == "" || a.PaymentID == b.PaymentID || a.NotificationOnly && a.EventType != "payment.captured") && a.CustomerID == b.CustomerID && a.Currency == b.Currency && a.AmountMinor == b.AmountMinor
 }
 func (s *Service) ProcessWebhook(ctx context.Context, raw []byte, headers http.Header) error {
 	ctx, cancel := context.WithTimeout(ctx, 8*time.Second)
@@ -266,12 +292,16 @@ func (s *Service) ProcessWebhook(ctx context.Context, raw []byte, headers http.H
 	if err != nil {
 		return problem("PAYMENT_PROVIDER_UNAVAILABLE")
 	}
-	if !sameIdentity(e, snapshot) || snapshot.Revision < e.Revision {
+	if !sameIdentity(e, snapshot) || (e.EvidenceModel != "CAPTURE_REFUND_LATTICE_V1" && snapshot.Revision < e.Revision) {
 		return problem("PAYMENT_MISMATCH")
 	}
 	// Apply latest authoritative state first. A stale completed callback cannot unlock a refunded order.
 	if err = s.applySnapshot(ctx, snapshot); err != nil {
 		return err
+	}
+	if e.NotificationOnly {
+		_, err = s.store.DB.ExecContext(ctx, `UPDATE phase1_payment_events SET processing_status='PROCESSED',processing_attempts=processing_attempts+1 WHERE provider=$1 AND event_id=$2`, e.Provider, e.EventID)
+		return storageError(err)
 	}
 	_, err = s.store.ApplyVerifiedEvent(ctx, seal(e))
 	return err
@@ -280,7 +310,14 @@ func (s *Service) applySnapshot(ctx context.Context, e Event) error {
 	if !validEvent(e) {
 		return problem("INVALID_PAYMENT_EVENT")
 	}
-	e.EventID = "state/" + e.OrderID + "/" + jsonNumber(e.Revision)
+	if e.EvidenceModel == "CAPTURE_REFUND_LATTICE_V1" {
+		e.EventID = "snapshot"
+		e.EventType = "AUTHORITATIVE_STATE"
+		h, _ := fingerprint(e)
+		e.EventID = "state/" + h
+	} else {
+		e.EventID = "state/" + e.OrderID + "/" + jsonNumber(e.Revision)
+	}
 	e.EventType = "AUTHORITATIVE_STATE"
 	_, err := s.store.ApplyVerifiedEvent(ctx, seal(e))
 	return err
@@ -291,4 +328,24 @@ func (s *Store) auditAccess(ctx context.Context, customer, action string) error 
 	hash := sha256.Sum256([]byte(s.Provider + "/" + customer))
 	_, err := s.DB.ExecContext(ctx, `INSERT INTO phase1_payment_audit(action,outcome,actor_hash) VALUES($1,'AUTHORIZED',$2)`, action, hex.EncodeToString(hash[:]))
 	return storageError(err)
+}
+
+// ResolveBinding is only for provider adapters; never exposed as a customer lookup route.
+func (s *Store) ResolveBinding(ctx context.Context, providerOrder string) (orderID, customer, currency string, amount int64, err error) {
+	err = s.DB.QueryRowContext(ctx, `SELECT order_id,customer_id,currency,amount_minor FROM phase1_orders WHERE provider=$1 AND provider_order_id=$2`, s.Provider, providerOrder).Scan(&orderID, &customer, &currency, &amount)
+	err = storageError(err)
+	return
+}
+
+type CheckoutSession struct {
+	Mode            string `json:"mode"`
+	KeyID           string `json:"key_id"`
+	ProviderOrderID string `json:"provider_order_id"`
+}
+
+func (s *Service) checkoutOrder(o Order) Order {
+	if provider, ok := s.provider.(interface{ PublicKey() string }); ok && strings.HasSuffix(s.store.Provider, "/sandbox") && strings.HasPrefix(provider.PublicKey(), "rzp_test_") && o.providerOrder != "" {
+		o.Checkout = &CheckoutSession{"sandbox", provider.PublicKey(), o.providerOrder}
+	}
+	return o
 }
