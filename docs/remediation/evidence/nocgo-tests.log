@@ -1,0 +1,10 @@
+ok  	astroengine-core	0.002s
+ok  	astroengine-core/backend/cmd/server	0.011s
+ok  	astroengine-core/backend/internal/calibration	0.008s
+ok  	astroengine-core/backend/internal/ephemeris	0.003s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	0.002s
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/webhook	0.003s
