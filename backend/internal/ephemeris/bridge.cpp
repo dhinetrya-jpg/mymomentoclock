@@ -1,6 +1,6 @@
 #include <iostream>
 #include <mutex>
-#include "swephexp.h"
+#include <swephexp.h>
 
 std::mutex ephemeris_mutex;
 

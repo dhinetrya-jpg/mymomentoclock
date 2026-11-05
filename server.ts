@@ -52,14 +52,14 @@ paymentSessions.set('cs_live_a1b2c3d4', {
 });
 
 // Initialize Gemini client with telemetry header
-const ai = new GoogleGenAI({
+const ai = process.env.GEMINI_API_KEY ? new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',
     },
   },
-});
+}) : null;
 
 // Kubernetes Readiness & Liveness Probes Health Endpoint
 app.get(['/api/v1/health', '/health'], (_req: Request, res: Response) => {
@@ -617,6 +617,7 @@ app.post('/api/payment/simulate-webhook', (req: Request, res: Response) => {
 
 // 8. MODULE 6: Desha-Kala-Patra Contextual Streaming API (Server-Sent Events)
 app.post('/api/astro/stream-reading', async (req: Request, res: Response) => {
+  if (!ai) return res.status(503).json({error: 'AI_UNAVAILABLE', message: 'Configure GEMINI_API_KEY to enable AI readings.'});
   const { structuredPayload, userContext } = req.body;
 
   // Set SSE headers

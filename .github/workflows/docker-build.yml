@@ -25,3 +25,37 @@ jobs:
           file: ./Dockerfile
           push: false
           tags: mymomentoclock:latest
+          load: true
+
+      - name: Compile and test root Go module with Swiss Ephemeris
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: root-tests
+          push: false
+
+      - name: Build full-stack web deployment image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.web
+          push: false
+          load: true
+          tags: mymomentoclock-web:latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Smoke test both production images
+        run: |
+          docker run -d --name engine -p 127.0.0.1:18080:8080 mymomentoclock:latest
+          docker run -d --name web -p 127.0.0.1:13000:3000 mymomentoclock-web:latest
+          node tests/deployment/smoke.mjs engine http://127.0.0.1:18080
+          node tests/deployment/smoke.mjs web http://127.0.0.1:13000
+      - name: Container diagnostics and cleanup
+        if: always()
+        run: |
+          docker logs engine || true
+          docker logs web || true
+          docker rm -f engine web || true

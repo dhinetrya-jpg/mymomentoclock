@@ -9,8 +9,6 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChartCalculationResult, calculateFullChart, AyanamsaType } from '../engine/astroMath';
-import { ConflictResolutionResult, resolvePillarConflict } from '../engine/conflictResolver';
 import { playAcousticFrequencyTone } from '../engine/rvmEngine';
 
 interface ConversionFunnelViewProps {
@@ -48,9 +46,9 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
   const [telemetryProgress, setTelemetryProgress] = useState(0);
 
   // Screen 4 Paywall & Unlock State
-  const [isPaywallUnlocked, setIsPaywallUnlocked] = useState(false);
+  const [, setIsPaywallUnlocked] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [activeSessionToken, setActiveSessionToken] = useState('cs_live_a1b2c3d4');
+  const [activeSessionToken] = useState('cs_live_a1b2c3d4');
   const [paymentLog, setPaymentLog] = useState<string[]>([]);
 
   // Screen 5 Interactive State

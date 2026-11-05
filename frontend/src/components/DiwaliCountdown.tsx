@@ -160,7 +160,6 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
 
-  const isCelebrationNow = diffMs === 0;
 
   // Personalized Lagna alignment message
   const lagnaMatchNote = useMemo(() => {

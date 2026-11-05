@@ -3,7 +3,7 @@
 package ephemeris
 
 /*
-#cgo LDFLAGS: -lswe -lm
+#cgo LDFLAGS: -lswe -lm -ldl -lstdc++
 #include <stdint.h>
 typedef struct {
     double longitude;
