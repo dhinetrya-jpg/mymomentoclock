@@ -9,6 +9,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
+	"time"
 )
 
 func testDB(t *testing.T) *sql.DB {
@@ -57,20 +58,27 @@ func TestTransactionalPayments(t *testing.T) {
 		t.Fatal(err)
 	}
 	for i := 0; i < 2; i++ {
-		if _, err = db.ExecContext(ctx, string(schema)); err != nil {
-			t.Fatal(err)
+		for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql"} {
+			data, e := os.ReadFile("../../../database/migrations/" + file)
+			if e != nil {
+				t.Fatal(e)
+			}
+			if _, e = db.ExecContext(ctx, string(data)); e != nil {
+				t.Fatal(e)
+			}
 		}
 	}
-	if _, err = db.Exec(`TRUNCATE phase1_entitlements,phase1_payment_events,phase1_orders`); err != nil {
+	_ = schema
+	if _, err = db.Exec(`TRUNCATE phase1_payment_audit,phase1_entitlements,phase1_payment_events,phase1_orders`); err != nil {
 		t.Fatal(err)
 	}
 	s := &Store{DB: db, Provider: "isolated-test-provider", Catalog: map[string]Product{"test-product": {ID: "test-product", AmountMinor: 12345, Currency: "INR", OwnerApproved: true}}}
-	makeOrder := func(id string) VerifiedEvent {
+	makeOrder := func(id string) Event {
 		t.Helper()
 		if err := s.CreateOrder(ctx, id, "customer-a", "test-product", "provider-"+id); err != nil {
 			t.Fatal(err)
 		}
-		return VerifiedEvent{Provider: s.Provider, EventID: "event-" + id, OrderID: id, ProviderOrderID: "provider-" + id, PaymentID: "payment-" + id, CustomerID: "customer-a", Currency: "INR", Status: "COMPLETED", AmountMinor: 12345}
+		return Event{Provider: s.Provider, EventID: "event-" + id, OrderID: id, ProviderOrderID: "provider-" + id, PaymentID: "payment-" + id, CustomerID: "customer-a", Currency: "INR", Status: "COMPLETED", AmountMinor: 12345, Revision: 1, OccurredAt: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), EventType: "test"}
 	}
 	t.Run("no entitlement before verified event", func(t *testing.T) {
 		makeOrder("pending")
@@ -89,17 +97,17 @@ func TestTransactionalPayments(t *testing.T) {
 		}
 	})
 	t.Run("unknown order", func(t *testing.T) {
-		e := VerifiedEvent{Provider: s.Provider, EventID: "unknown", OrderID: "unknown", ProviderOrderID: "unknown", PaymentID: "unknown", CustomerID: "a", Currency: "INR", Status: "COMPLETED", AmountMinor: 1}
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); grant || err == nil {
+		e := Event{Provider: s.Provider, EventID: "unknown", OrderID: "unknown", ProviderOrderID: "unknown", PaymentID: "unknown", CustomerID: "a", Currency: "INR", Status: "COMPLETED", AmountMinor: 1, Revision: 1, OccurredAt: time.Now(), EventType: "test"}
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); grant || err == nil {
 			t.Fatal("unknown order fulfilled")
 		}
 	})
 	t.Run("amount currency customer and provider order mismatches", func(t *testing.T) {
 		e := makeOrder("mismatch")
-		for _, change := range []func(*VerifiedEvent){func(e *VerifiedEvent) { e.AmountMinor++ }, func(e *VerifiedEvent) { e.Currency = "USD" }, func(e *VerifiedEvent) { e.CustomerID = "customer-b" }, func(e *VerifiedEvent) { e.ProviderOrderID = "other" }, func(e *VerifiedEvent) { e.Status = "UNSUPPORTED" }, func(e *VerifiedEvent) { e.EventID = "" }} {
+		for _, change := range []func(*Event){func(e *Event) { e.AmountMinor++ }, func(e *Event) { e.Currency = "USD" }, func(e *Event) { e.CustomerID = "customer-b" }, func(e *Event) { e.ProviderOrderID = "other" }, func(e *Event) { e.Status = "UNSUPPORTED" }, func(e *Event) { e.EventID = "" }} {
 			bad := e
 			change(&bad)
-			if granted, err := s.ApplyVerifiedEvent(ctx, bad); granted || err == nil {
+			if granted, err := s.ApplyVerifiedEvent(ctx, seal(bad)); granted || err == nil {
 				t.Fatal("tampering accepted")
 			}
 		}
@@ -112,7 +120,7 @@ func TestTransactionalPayments(t *testing.T) {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				grant, err := s.ApplyVerifiedEvent(ctx, e)
+				grant, err := s.ApplyVerifiedEvent(ctx, seal(e))
 				if err != nil {
 					t.Error(err)
 				}
@@ -134,32 +142,34 @@ func TestTransactionalPayments(t *testing.T) {
 	t.Run("payment IDs cannot fulfill another order", func(t *testing.T) {
 		a := makeOrder("id-a")
 		b := makeOrder("id-b")
-		if _, err := s.ApplyVerifiedEvent(ctx, a); err != nil {
+		if _, err := s.ApplyVerifiedEvent(ctx, seal(a)); err != nil {
 			t.Fatal(err)
 		}
 		b.PaymentID = a.PaymentID
-		if grant, err := s.ApplyVerifiedEvent(ctx, b); grant || err == nil {
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(b)); grant || err == nil {
 			t.Fatal("reused provider payment accepted")
 		}
 	})
 	t.Run("failed then successful payment and refund", func(t *testing.T) {
 		e := makeOrder("refund")
 		e.Status = "FAILED"
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); grant || err != nil {
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); grant || err != nil {
 			t.Fatalf("failed event: %v", err)
 		}
 		e.Status = "COMPLETED"
+		e.Revision++
 		e.EventID = "success-refund"
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); !grant || err != nil {
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); !grant || err != nil {
 			t.Fatalf("success: %v", err)
 		}
 		completed := e
 		e.EventID = "refund-event"
 		e.Status = "REFUNDED"
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); grant || err != nil {
+		e.Revision++
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); grant || err != nil {
 			t.Fatalf("refund: %v", err)
 		}
-		if grant, err := s.ApplyVerifiedEvent(ctx, completed); grant || err != nil {
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(completed)); grant || err != nil {
 			t.Fatalf("duplicate after refund: %v", err)
 		}
 		var active bool
@@ -169,14 +179,15 @@ func TestTransactionalPayments(t *testing.T) {
 		}
 		e.Status = "COMPLETED"
 		e.EventID = "late-success"
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); grant || err == nil {
+		e.Revision++
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); grant || err == nil {
 			t.Fatal("terminal state regressed")
 		}
 	})
 	t.Run("missing provider and storage fail closed", func(t *testing.T) {
 		e := makeOrder("storage")
 		for _, bad := range []*Store{{}, {DB: db}} {
-			if grant, err := bad.ApplyVerifiedEvent(ctx, e); grant || err == nil {
+			if grant, err := bad.ApplyVerifiedEvent(ctx, seal(e)); grant || err == nil {
 				t.Fatal("missing dependency granted access")
 			}
 		}
@@ -187,18 +198,19 @@ func TestTransactionalPayments(t *testing.T) {
 		closed.Close()
 		bad := *s
 		bad.DB = closed
-		if grant, err := bad.ApplyVerifiedEvent(ctx, e); grant || err == nil {
+		if grant, err := bad.ApplyVerifiedEvent(ctx, seal(e)); grant || err == nil {
 			t.Fatal("closed storage granted access")
 		}
 	})
 	t.Run("reversal removes entitlement", func(t *testing.T) {
 		e := makeOrder("reverse")
-		if _, err := s.ApplyVerifiedEvent(ctx, e); err != nil {
+		if _, err := s.ApplyVerifiedEvent(ctx, seal(e)); err != nil {
 			t.Fatal(err)
 		}
 		e.Status = "REVERSED"
+		e.Revision++
 		e.EventID = "reversed-event"
-		if granted, err := s.ApplyVerifiedEvent(ctx, e); granted || err != nil {
+		if granted, err := s.ApplyVerifiedEvent(ctx, seal(e)); granted || err != nil {
 			t.Fatal(err)
 		}
 		var active bool
@@ -208,8 +220,27 @@ func TestTransactionalPayments(t *testing.T) {
 		}
 	})
 	t.Run("restart marker persisted", func(t *testing.T) {
+		app, provider := fixture(t)
+		appEvent := newOrder(t, app)
+		provider.set(appEvent)
+		if err := provider.deliver(ctx, app, appEvent); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := db.Exec(`INSERT INTO phase1_payment_audit(order_id,action,outcome) VALUES($1,'RESTART_APP_PROOF','ACTIVE')`, appEvent.OrderID); err != nil {
+			t.Fatal(err)
+		}
+		revoked := newOrder(t, app)
+		revoked.Status = "REFUNDED"
+		revoked.Revision = 2
+		provider.set(revoked)
+		if err := provider.deliver(ctx, app, revoked); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := db.Exec(`INSERT INTO phase1_payment_audit(order_id,action,outcome) VALUES($1,'RESTART_APP_PROOF','REVOKED')`, revoked.OrderID); err != nil {
+			t.Fatal(err)
+		}
 		e := makeOrder("restart-proof")
-		if grant, err := s.ApplyVerifiedEvent(ctx, e); !grant || err != nil {
+		if grant, err := s.ApplyVerifiedEvent(ctx, seal(e)); !grant || err != nil {
 			t.Fatal(err)
 		}
 	})
@@ -219,6 +250,10 @@ func TestRecoveryAfterRestart(t *testing.T) {
 		t.Skip("executed only after external database restart")
 	}
 	db := testDB(t)
+	var count int
+	if err := db.QueryRow(`SELECT count(*) FROM phase1_payment_audit a JOIN phase1_orders o USING(order_id) WHERE a.action='RESTART_APP_PROOF' AND ((a.outcome='ACTIVE' AND o.status='COMPLETED' AND EXISTS(SELECT 1 FROM phase1_entitlements e WHERE e.order_id=o.order_id AND e.active)) OR (a.outcome='REVOKED' AND o.status='REFUNDED' AND NOT EXISTS(SELECT 1 FROM phase1_entitlements e WHERE e.order_id=o.order_id AND e.active)))`).Scan(&count); err != nil || count != 2 {
+		t.Fatal("application restart recovery", count, err)
+	}
 	var state string
 	var active bool
 	if err := db.QueryRow(`SELECT o.status,e.active FROM phase1_orders o JOIN phase1_entitlements e USING(order_id) WHERE o.order_id='restart-proof'`).Scan(&state, &active); err != nil || state != "COMPLETED" || !active {
