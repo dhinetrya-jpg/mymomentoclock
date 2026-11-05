@@ -4,6 +4,7 @@ package main
 import (
 	"astroengine-core/backend/internal/calibration"
 	"astroengine-core/backend/internal/ephemeris"
+	"astroengine-core/backend/internal/payment"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
@@ -63,12 +64,25 @@ func domainError(w http.ResponseWriter, err error) {
 	}
 	failure(w, status, code, "The input or required calculation capability is unavailable. Check birth data and the explicit timezone.")
 }
-func newHandler() http.Handler {
+func paymentHandler(pay *payment.Service, serviceDNS string) http.Handler {
+	return payment.Handler(pay, serviceDNS)
+}
+
+func newHandler() http.Handler { return newHandlerWithPayment(nil, "") }
+
+// Payment handlers are wired, but no real adapters are registered in this build.
+func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler {
 	mux := http.NewServeMux()
 	health := func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/ready" && !ephemeris.NativeAvailable() {
 			failure(w, 503, "NATIVE_EPHEMERIS_UNAVAILABLE", "Native calculation is unavailable.")
 			return
+		}
+		if r.URL.Path == "/ready" && pay != nil {
+			if err := pay.Ready(r.Context()); err != nil {
+				failure(w, 503, "PAYMENT_STORAGE_UNAVAILABLE", "Payment storage is not ready.")
+				return
+			}
 		}
 		native := "UNAVAILABLE"
 		if ephemeris.NativeAvailable() {
@@ -115,7 +129,7 @@ func newHandler() http.Handler {
 		failure(w, 503, "PAYMENT_PROVIDER_UNAVAILABLE", "Payments are not enabled. No entitlement was granted.")
 	}
 	mux.HandleFunc("/api/v1/webhook/payment", payment)
-	mux.HandleFunc("/api/payment/", payment)
+	mux.Handle("/api/payment/", paymentHandler(pay, serviceDNS))
 	mux.HandleFunc("/api/v1/rvm/remedies", func(w http.ResponseWriter, r *http.Request) {
 		failure(w, 503, "REMEDIES_UNAVAILABLE", "Verified personal remedy rules are not available.")
 	})
