@@ -95,3 +95,17 @@ Base31dc6df; branch fix/pay-p0-01-durable-payment-integration; implementation `2
 | PRODUCTION_PAYMENT_ENABLED | SAFELY_DISABLED | Real auth/provider/catalog/production approvals absent; no merge/deploy/migrations |
 
 Details: docs/payment/PAY_P0_01_HANDOFF.md and TEST_REPORT.md. Node78/78, Go both modules test/race/vet/TLS PG and actual restart, native/web/migration images and desktop/mobile browser checked. This is a tested integration foundation, not production payment activation or independent astrology accuracy acceptance.
+
+
+## PAY-P0-02 provisional sandbox integration — 2026-11-05
+
+Base069587b; branch fix/pay-p0-02-provider-sandbox-integration; functional implementation `e22a04b4f57e450fd008677d3faac72e0784fb3d`. Provisional Razorpay adapter, durable non-idempotent-create recovery, raw signature/notification processing, explicit capture/refund lattice without fake revisions, additive005, optional official test-checkout UI and blocked real-identity bootstrap. PAY01 regression/fingerprint compatibility preserved.
+
+| Milestone | Status |
+|---|---|
+| PROVIDER_ADAPTER_IMPLEMENTED | VERIFIED_FIXED for supported local contracts; provisional disabled |
+| LOCAL_INTEGRATION_VERIFIED | VERIFIED_FIXED with local HTTP provider fixture and actual Node/mTLS/Go/PG |
+| REAL_PROVIDER_SANDBOX_VERIFIED | BLOCKED_EXTERNAL_DEPENDENCY; no genuine order/payment/webhook/refund |
+| PRODUCTION_PAYMENT_READY | SAFELY_DISABLED / NO-GO |
+
+Node82/82; dual-module Go test/race/vet/TLS PG and actual restart; Docker/API/browser375/1280 pass. Current hosted docs403; provider approval/credentials, real identity, pricing, webhook/network and reversal/dispute contract remain blocked. Detailed G01–G26 and next steps: docs/payment/PAY_P0_02_HANDOFF.md; no overall Phase1 production release approval.
