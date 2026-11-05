@@ -222,3 +222,6 @@ This project is licensed under the [MIT License](LICENSE).
 ## Build and deployment troubleshooting
 
 See [the verified build repair guide](docs/deployment/BUILD_REPAIR.md) for the pinned official Swiss Ephemeris GitHub source, native library installation, Go API versus full-stack web images, CI commands and deployment prerequisites. Use `Dockerfile.web` for the complete React/Express application; the default Dockerfile builds the separate Go API. GitHub Pages serves only static assets.
+
+
+PAY-P0-01 extends the Go payment authority with durable order/event/grant/audit lifecycle and a tested authenticated mTLS application boundary. Public checkout remains disabled; no provider sandbox or production activation is claimed. See [payment handoff](docs/payment/PAY_P0_01_HANDOFF.md) and [deployment runbook](docs/payment/PAY_P0_01_DEPLOYMENT_RUNBOOK.md).

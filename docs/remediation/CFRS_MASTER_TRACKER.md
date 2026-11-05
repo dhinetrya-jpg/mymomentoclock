@@ -81,3 +81,17 @@ Current branch `fix/phase1-final-remediation`, base `b0c9af31d2df505dbcc889fff16
 | Legacy CFR-005…018 definitions | NOT_STARTED | Authoritative definitions still absent; no invented whole-item completion |
 
 No known unresolved local test failure remains. Corrected transient environment/test failures and unexecuted checks are explicitly listed in PHASE1_FINAL_TEST_REPORT.md. Live provider/auth/accuracy remain BLOCKED_EXTERNAL_DEPENDENCY, not FAILED implementations or verified capabilities. PHASE1_FINAL_RELEASE_GATE.md is the current authoritative release decision.
+
+
+## PAY-P0-01 — 2026-11-05
+
+Base31dc6df; branch fix/pay-p0-01-durable-payment-integration; implementation `291aed20640839e015ce9f4ce4675e7d92600093`. Existing Phase1 release gate remains closed.
+
+| Milestone | Status | Evidence |
+|---|---|---|
+| DURABLE_STORAGE_IMPLEMENTED | VERIFIED_FIXED | Additive003/004, real TLS PG, idempotent/revision state and crash/restart tests |
+| APPLICATION_INTEGRATION_TESTED | VERIFIED_FIXED with test adapters only | Actual Node->mTLS->Go->PG lifecycle, ownership/status/access/refund; public default503 |
+| PROVIDER_SANDBOX_VERIFIED | BLOCKED_EXTERNAL_DEPENDENCY | Real selected account/provider/protocol/sandbox absent |
+| PRODUCTION_PAYMENT_ENABLED | SAFELY_DISABLED | Real auth/provider/catalog/production approvals absent; no merge/deploy/migrations |
+
+Details: docs/payment/PAY_P0_01_HANDOFF.md and TEST_REPORT.md. Node78/78, Go both modules test/race/vet/TLS PG and actual restart, native/web/migration images and desktop/mobile browser checked. This is a tested integration foundation, not production payment activation or independent astrology accuracy acceptance.

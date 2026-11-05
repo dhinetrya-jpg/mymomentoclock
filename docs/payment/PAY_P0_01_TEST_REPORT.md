@@ -1,0 +1,44 @@
+# PAY-P0-01 test report — 2026-11-05
+
+Implementation SHA `291aed20640839e015ce9f4ce4675e7d92600093`. Base31dc6dff42b31045e27327c8133cde09baff8fca. Results below are executed local checks, not a provider sandbox or production claim. Evidence logs are committed under evidence/.
+
+| Check / exact command | Actual result |
+|---|---|
+| `npm ci` | PASS; fresh root install; alternate build uses compatible existing root dependencies |
+| `npm run lint && npm run build` | PASS |
+| `npm --prefix frontend run lint && npm --prefix frontend run build` | PASS |
+| `node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/phase1/security.test.ts tests/payment/boundary.test.ts` |78 passed,0 failed,0 skipped,1382ms final run; existing66 unchanged plus12 payment checks |
+| `PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt sh scripts/test-phase1-go.sh` | Image compilation passed; full launch initially failed because local Docker VFS exhausted disk. After scoped task-cache recovery, final gate used already-built toolchain with PHASE1_REUSE_TEST_IMAGE=1; see below |
+| `PHASE1_REUSE_TEST_IMAGE=1 PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt sh scripts/test-phase1-go.sh` | PASS. go1.26.10, actual repository bind-mounted; root and backend test/race/vet, CGO_ENABLED=0, real TLS PostgreSQL16, Node22->Go mTLS->DB and external restart recovery. No cached Go test results used (`-count=1`) |
+| Go verbose results in go-verified.log |266 PASS result lines including nested matrix subtests,0 FAIL,1 conditional recovery SKIP in normal suite; separate explicit recovery invocation PASSED after actual DB restart. Plain root/race/non-CGO passes are additional package results, not invented individual counts |
+| `docker build --secret id=proxy_ca,src=/etc/ssl/certs/ca-certificates.crt -t mymomentoclock-engine-pay .` | PASS final production image; native and unavailable payment API smoke/contracts passed |
+| `docker build --secret id=proxy_ca,src=/etc/ssl/certs/ca-certificates.crt -f Dockerfile.web -t mymomentoclock-web-pay .` | PASS; includes new server module; native Node entry retained |
+| `docker build -f Dockerfile.payment-migrations -t mymomentoclock-payment-migrations .` | PASS; non-root file readability and no-approval refusal checked. Explicit reviewed operator tool actually reapplied001/003 and validated004 over verify-full TLS to the disposable test DB. Never run against production |
+| `node tests/deployment/smoke.mjs engine http://127.0.0.1:18081` and corresponding `web http://127.0.0.1:13001` | PASS actual constrained production images |
+| `PHASE1_WEB_URL=http://127.0.0.1:13001 PHASE1_ENGINE_URL=http://127.0.0.1:18081 node tests/phase1/contracts.mjs` | PASS missing/invalid birth, shared BTR/ownership/payment refusal, native flags/version/mode contracts |
+| `CHROMIUM_PATH=/usr/bin/chromium PHASE1_WEB_URL=http://127.0.0.1:13001 node tests/phase1/browser.mjs` | PASS375px and1280px: form, chart/divisions, safe BTR/modal, festival/city/seal, disabled checkout, no overflow/external transfer or browser storage |
+| Compose configuration,7 Kubernetes YAML files, `git diff --check` | PASS syntax/whitespace; no live Kubernetes apply |
+
+## Database and security coverage
+
+Disposable randomly credentialed database, no published5432. All migration001/003 reruns tested;004 constraints validated; optional002 legacy-default test retained; least-privilege runtime-role grants exercised under SET ROLE (UPDATE allowed, DELETE/DDL not granted, audit insert works). Verified TLS opener actually connected with hostname/CA validation; missing trust root rejected. Closed DB/cancellation and killed backend connection immediately before commit fail closed. Tests do not print credentials and reject a non-test database name.
+
+121 pure transition pairs and72 PostgreSQL state pairs; server-owned price/version snapshot; unknown/unapproved/invalid products, currency/amount constraints, retry keys and20 concurrent creations. Twenty identical completions create one durable grant;20 conflicting same-ID events cannot create multiple/unauthorized grants. Provider order/payment/event uniqueness, amount/currency/customer/provider mismatch, unsigned/invalid/unknown/unsealed/partial-refund evidence rejected. Completed/failure ordering, stale completion after refund, terminal no-reactivation, refund/completion race, multiple-purchase aggregation, access expiration, concurrent readers/revocation, durable reconciliation/backoff and context bounds.
+
+Faults before/after order insertion, before/after inbox insert, after order update/before grant, before commit and after successful commit/before acknowledgement prove rollback or retry consistency. This is controlled fault/connection injection, not a claim of OS crash/failover testing at every instruction. Queue persistence is intentionally separate: a failed fulfillment can leave RETRY evidence, never a partial paid grant.
+
+TestNodeGoPostgresLifecycle is an actual cross-service flow, not two disconnected mocks: a Node boundary verifies controlled session, calls Go over mutual TLS, creates/retries the approved test order in PostgreSQL, signed test adapter completion creates one grant, another customer cannot read it, duplicate does not duplicate fulfillment, refund revokes. Test fixtures are absent from production executable registration. Full application active/refunded markers and legacy domain marker survive the script's actual DB restart.
+
+## Second sweep and corrections
+
+Reviewed all active payment paths, original generic webhooks, old payment_transactions schemas, opaque seal callers, provider namespaces, response allowlists, client storage/unlock and deployment exposure. Only application verification and internal reconciliation seal events; no HTTP JSON decoder can produce a sealed event. Legacy schemas explicitly labelled inactive; original callbacks still503; simulate404; no localStorage/sessionStorage premium flag; no TLS bypass; no public fixture route or reconciliation endpoint. Node response fields are type-checked/allowlisted. Reconciliation verifies returned snapshot order/provider identity. Empty payment IDs allowed only before financial completion (pending/failure/cancel/expiry); no global empty-string payment binding. Original privacy/calculation tests not weakened.
+
+A pre-gate run caught the new nil-payment handler missing legacy `is_certified:false`; restored the safe error contract rather than weakening the existing test. Source snapshot/event ordering and unpaid expiry cases were added before the final full gate. Docker VFS filled disk during test-image launch; automatic review rejected broad pruning. Inspected immutable image IDs/cache ancestry and removed only identified superseded task test artifacts with specific IDs. Reused the already-built Go toolchain, reran all actual source tests, then separately built final production images. No repository/user volume data deleted. Test-only images/cache are disposable; reproduction defaults to rebuilding them.
+
+## Reproduce / environment requirements
+
+Run npm ci before full Go gate: cross-service fixture needs installed Node dependencies. The gate builds official pinned Swiss and supported Go, creates its own TLS cert/private DB/network, extracts Node22 only into the test container, tests both modules, restarts PostgreSQL and cleans its own resources/secret files. Optional PHASE1_REUSE_TEST_IMAGE=1 only reuses an existing trusted test toolchain; all source suites still run from the live repository with fresh counts. Never use it to claim an unbuilt production artifact. On a proxy host provide the combined CA as above; otherwise omit PHASE1_CA_BUNDLE. Never disable TLS/checksums. Required tools: Docker, OpenSSL, npm/Node, trusted network and Chromium for browser.
+
+Without disposable DB, integration tests explicitly skip; without Node, cross-service test explicitly skips. Those bare unit runs are not the integration gate. Only the normal recovery invocation skips in the recorded final full gate; its post-restart execution passes. Actual provider sandbox, live authentication, real checkout, production migration/role/CA/network, backup restore/failover, installed alerts and capacity/load benchmark are NOT VERIFIED. No production operation occurred.
+
+Final packaging check caught inherited host file modes blocking the non-root migration user, first on script then on directory traversal. Dockerfile now sets migration directory0555, SQL0444 and script0555; rebuilt, checked as non-root, verified refusal and then executed actual TLS migration/validation successfully. CI now checks non-root file readability and refusal to prevent regression. Web/native final containers stopped with exit0. All test containers/networks/temporary DB credentials and generated key/service files were removed; sanitized evidence retained.

@@ -1,3 +1,4 @@
+import {createPaymentBoundary} from './server/paymentBoundary';
 /** Authoritative web boundary: anonymous stateless previews; protected capabilities fail closed. */
 import express from 'express';
 import dotenv from 'dotenv';
@@ -31,7 +32,7 @@ app.get(['/health','/api/v1/health','/ready'],(_req,res)=>res.json({status:'heal
 app.get('/api/capabilities',(_req,res)=>res.json(capabilities));
 // No public payment adapter or entitlement storage is activated. These boundaries cannot be toggled by a client or env flag.
 app.all('/api/payment/simulate-webhook',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This operation is not available.',request_id:res.locals.requestId}));
-app.use('/api/payment',paymentUnavailable);
+app.use('/api/payment',createPaymentBoundary());
 app.all('/api/v1/webhook/payment',paymentUnavailable);
 app.all('/api/v1/graph/hydrate',graphUnavailable);
 app.all('/api/v1/resolver/evaluate',graphUnavailable);

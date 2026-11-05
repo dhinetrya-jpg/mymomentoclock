@@ -1,0 +1,7 @@
+# Explicitly run operator tool; not an application dependency or startup job.
+FROM postgres:16-alpine
+COPY database/migrations/ /migrations/
+RUN chmod 0555 /migrations && chmod 0444 /migrations/*.sql
+COPY --chmod=0555 scripts/migrate-payments.sh /usr/local/bin/migrate-payments
+USER postgres
+ENTRYPOINT ["/usr/local/bin/migrate-payments"]

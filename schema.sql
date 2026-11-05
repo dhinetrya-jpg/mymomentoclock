@@ -1,3 +1,5 @@
+-- LEGACY ONLY: payment_transactions is inactive. Authoritative payment schema is
+-- database/migrations/001 + 003 + reviewed 004; never bind new payment code to this legacy table.
 -- ============================================================================
 -- MYMOMENTOCLOCK ENTERPRISE DATABASE SCHEMA (schema.sql)
 -- Target: PostgreSQL 16+ with PostGIS / Temporal Extensions

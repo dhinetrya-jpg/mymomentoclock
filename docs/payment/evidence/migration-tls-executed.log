@@ -1,0 +1,95 @@
+psql:/migrations/001_secure_payments.sql:9: NOTICE:  relation "phase1_orders" already exists, skipping
+CREATE TABLE
+CREATE TABLE
+psql:/migrations/001_secure_payments.sql:13: NOTICE:  relation "phase1_payment_events" already exists, skipping
+psql:/migrations/001_secure_payments.sql:17: NOTICE:  relation "phase1_entitlements" already exists, skipping
+CREATE TABLE
+BEGIN
+SET
+SET
+psql:/migrations/003_payment_application.sql:5: NOTICE:  column "product_version" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:6: NOTICE:  column "capability_id" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:7: NOTICE:  column "idempotency_key" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:8: NOTICE:  column "correlation_id" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:9: NOTICE:  column "schema_version" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:10: NOTICE:  column "expires_at" of relation "phase1_orders" already exists, skipping
+psql:/migrations/003_payment_application.sql:11: NOTICE:  column "access_expires_at" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:12: NOTICE:  column "provider_revision" of relation "phase1_orders" already exists, skipping
+psql:/migrations/003_payment_application.sql:13: NOTICE:  column "next_reconcile_at" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:14: NOTICE:  column "reconcile_attempts" of relation "phase1_orders" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+DO
+psql:/migrations/003_payment_application.sql:24: NOTICE:  relation "phase1_order_retry" already exists, skipping
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:25: NOTICE:  relation "phase1_order_customer" already exists, skipping
+CREATE INDEX
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:26: NOTICE:  relation "phase1_order_reconcile" already exists, skipping
+psql:/migrations/003_payment_application.sql:27: NOTICE:  column "event_type" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:28: NOTICE:  column "provider_order_id" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:29: NOTICE:  column "provider_payment_id" of relation "phase1_payment_events" already exists, skipping
+psql:/migrations/003_payment_application.sql:30: NOTICE:  column "verified_at" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:31: NOTICE:  column "occurred_at" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:32: NOTICE:  column "received_at" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:33: NOTICE:  column "processing_status" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:34: NOTICE:  column "processing_attempts" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:35: NOTICE:  column "failure_class" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:36: NOTICE:  column "safe_evidence" of relation "phase1_payment_events" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:37: NOTICE:  relation "phase1_event_pending" already exists, skipping
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:38: NOTICE:  column "capability_id" of relation "phase1_entitlements" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:39: NOTICE:  column "granted_at" of relation "phase1_entitlements" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:40: NOTICE:  column "revoked_at" of relation "phase1_entitlements" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:41: NOTICE:  column "expires_at" of relation "phase1_entitlements" already exists, skipping
+psql:/migrations/003_payment_application.sql:42: NOTICE:  column "revision" of relation "phase1_entitlements" already exists, skipping
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:43: NOTICE:  column "revocation_reason" of relation "phase1_entitlements" already exists, skipping
+ALTER TABLE
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:44: NOTICE:  relation "phase1_access_lookup" already exists, skipping
+psql:/migrations/003_payment_application.sql:49: NOTICE:  relation "phase1_payment_audit" already exists, skipping
+CREATE TABLE
+ALTER TABLE
+psql:/migrations/003_payment_application.sql:51: NOTICE:  relation "phase1_audit_order" already exists, skipping
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:52: NOTICE:  relation "phase1_order_customer_identity" already exists, skipping
+CREATE INDEX
+CREATE INDEX
+psql:/migrations/003_payment_application.sql:53: NOTICE:  relation "phase1_order_provider_identity" already exists, skipping
+DO
+COMMIT
+BEGIN
+SET
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+COMMIT
