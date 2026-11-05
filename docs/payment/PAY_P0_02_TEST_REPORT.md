@@ -54,3 +54,7 @@ Disposable Docker VFS exhausted disk in one verification attempt. Inspected imag
 Run npm ci, both lint/build commands and Node command above. On Docker/OpenSSL host run `PHASE1_CA_BUNDLE=/path/to/trusted-combined-ca.pem sh scripts/test-phase1-go.sh`; omit CA variable outside proxy environment. By default rebuilds root-tests toolchain. PHASE1_REUSE_TEST_IMAGE=1 requires an already-built trusted image; source tests still fresh and live-mounted. No TLS/checksum bypass. Bare Go tests without disposable DB skip integration cases and are insufficient. Full script creates CA/private DB/network/Node22 fixture and cleans them, then explicitly restarts DB and runs both recovery tests.
 
 Genuine order/payment/webhook/refund tests are BLOCKED, not mocked successes or framework skips. No official widget transaction, provider dispute/reversal, real identity issuer/session, production migration/network/backup restore, installed alerts, live pagination/consistency or load capacity was verified. Optional sandbox UI is prepared/render-tested; actual official SDK interaction requires approved current docs/credentials/identity/environment. See gate table in HANDOFF.
+
+## GitHub publication
+
+Remote branch fix/pay-p0-02-provider-sandbox-integration was confirmed at0bc39faa9a266e0607244ab075d29b9662a7b5b3 before final delivery metadata. Native main remained069587b. Draft PR creation returned Forbidden from the available GraphQL API. Final delivery commit is separately remote-verified and supplied in the response; no unverified PR URL or sandbox success is claimed.

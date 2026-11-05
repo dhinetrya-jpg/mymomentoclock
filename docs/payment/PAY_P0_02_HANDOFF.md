@@ -41,7 +41,7 @@ PASS below describes implementation/local evidence only. G18–G21 require genui
 | G22 scoped security audit | PASS | No identified active bypass in current disabled paths; live security certification not claimed |
 | G23 regression | PASS | Node82, dual Go/race/vet,PG restart,Docker/API,375/1280 browser |
 | G24 production disabled | PASS | Production keys/mode rejected; default endpoints unavailable |
-| G25 GitHub delivery | NOT_TESTED | Must be updated after remote branch confirmation; final response supplies verified SHA |
+| G25 GitHub delivery | PASS | Native git ls-remote confirmed branch0bc39faa9a266e0607244ab075d29b9662a7b5b3; final delivery metadata commit follows and is verified separately |
 | G26 handoff/docs | PASS | Twelve PAY_P0_02 documents, evidence and tracker |
 
 Overall **NO-GO**. Do not activate while blocked gates remain. No source of external success was fabricated.
@@ -85,3 +85,9 @@ Read API_MAPPING/STATE_MACHINE_MAPPING before modifying the domain. Never invent
 | tests/payment/pay02.test.tsx | Disabled/default test-mode presentation, absent-identity and live-key rejection tests. |
 
 Documentation: BASELINE records reconciliation; PROVIDER_SELECTION approval/provisional choice; PROVIDER_API_MAPPING official references; ARCHITECTURE wiring; WEBHOOK_SECURITY raw boundary; STATE_MACHINE_MAPPING ordering/review/compatibility; SANDBOX_SETUP missing configuration; TEST_MATRIX coverage; TEST_REPORT exact results/blocked evidence; SECURITY_AUDIT scoped review; DEPLOYMENT_RUNBOOK controlled operation; this HANDOFF continuity/gates. Evidence logs contain no generated keys/DSNs. Tracker appended, historical PAY01 docs preserved.
+
+## GitHub delivery evidence
+
+Branch: https://github.com/dhinetrya-jpg/mymomentoclock/tree/fix/pay-p0-02-provider-sandbox-integration . GitHub confirmed the implementation/report commit0bc39faa9a266e0607244ab075d29b9662a7b5b3 via git ls-remote; main remained069587b. Final response supplies the final documentation SHA after a second remote verification.
+
+Draft PR creation attempted with gh pr create --draft, explicit base/main and workstream head, body-file. Available GitHub GraphQL API returned `Post https://api.github.com/graphql: Forbidden`; no PR was created or claimed. Review/create manually: https://github.com/dhinetrya-jpg/mymomentoclock/pull/new/fix/pay-p0-02-provider-sandbox-integration . No token was requested or credentials exposed. No main merge or deployment occurred.
