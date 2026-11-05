@@ -92,6 +92,13 @@ func (s *Service) Reconcile(ctx context.Context, olderThan time.Duration, batch 
 					err = problem("PAYMENT_EVENT_INVALID_STORAGE")
 				} else {
 					for _, e := range events {
+						if e.NotificationOnly {
+							if _, updateErr := s.store.DB.ExecContext(ctx, `UPDATE phase1_payment_events SET processing_status='PROCESSED',processing_attempts=processing_attempts+1 WHERE provider=$1 AND event_id=$2`, e.Provider, e.EventID); updateErr != nil {
+								err = storageError(updateErr)
+								break
+							}
+							continue
+						}
 						if _, applyErr := s.store.ApplyVerifiedEvent(ctx, seal(e)); applyErr != nil {
 							err = applyErr
 							break

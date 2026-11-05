@@ -1,0 +1,11 @@
+# Raw webhook security
+
+Only the separate approved sandbox receiver POST /sandbox/webhooks/razorpay may invoke provider processing. Existing public/native legacy callback remains503. Receiver checks method,64KiB raw body limit, HTTP read/write/header timeouts and8s application deadline. Nil dependencies503. It never decodes public JSON into VerifiedEvent.
+
+Adapter first verifies HMAC-SHA256 on exact raw bytes using independent configured webhook secret. Missing/bad length/hex/tampered signature rejects in constant time. Then validate entity=event, expected account_id, supported event, signed created_at nonzero/not >5minutes future, event-ID syntax and financial identity/value. Captured must actually be captured, authorized/failed do not grant; refund.processed must identify a real payment and processed refund notification. Unknown/dispute events reject.
+
+The supplied X-Razorpay-Event-Id is not independently authenticated by body HMAC. Durable event uniqueness plus full raw-body SHA256 digest detects conflicting reuse; changing that header cannot create another source-order grant. No raw body, email/card details or signing secret is stored/logged. Long-delayed valid retries are not rejected by an invented short timestamp window; replay safety relies on retained event uniqueness, raw digest and terminal state protections. Retention must preserve replay tombstones. Actual provider delivery/rotation windows remain a configuration dependency.
+
+A valid signed callback is only a notification. Service queues typed minimal verified notification, retrieves authoritative order/payment/refund state and applies a separate opaque snapshot, then marks the callback processed. NotificationOnly evidence cannot directly fulfill. Reconciliation can complete pending notifications after provider/DB outage. If snapshot processing fails, callback remains retryable. Wrong amount/currency/order/account/payment identity cannot grant. A previously failed attempt may notify after another attempt captured; it cannot overwrite captured state.
+
+No genuine webhook received or signature verified against a real merchant secret. All local signed fixtures are explicitly test-only. Provider account/key binding, external TLS routing, retry semantics and real signature delivery remain BLOCKED_EXTERNAL_DEPENDENCY.

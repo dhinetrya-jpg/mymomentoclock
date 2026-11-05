@@ -54,8 +54,18 @@ export function createPaymentBoundary(deps?:{identity:VerifiedSessionAdapter; tr
         const entitlements=value.entitlements.map((v:any)=>{if(typeof v.capability_id!=='string'||typeof v.source_order!=='string')throw Error();return {capability_id:v.capability_id,source_order:v.source_order,...(typeof v.expires_at==='string'?{expires_at:v.expires_at}:{})};});
         return void res.json({entitlements});
       }
-      if(!value||typeof value.order_id!=='string'||typeof value.product_id!=='string'||typeof value.status!=='string'||!Number.isSafeInteger(value.amount_minor)||Number(value.amount_minor)<=0||typeof value.currency!=='string'||!/^[A-Z]{3}$/.test(value.currency)||!['CREATED','PENDING','COMPLETED','FAILED','CANCELLED','EXPIRED','REFUNDED','REVERSED'].includes(value.status)||typeof value.product_version!=='string'||typeof value.capability_id!=='string')throw Error();
-      res.json({order_id:value.order_id,status:value.status,amount_minor:value.amount_minor,currency:value.currency,product_id:value.product_id,product_version:value.product_version,capability_id:value.capability_id});
+      if(!value||typeof value.order_id!=='string'||typeof value.product_id!=='string'||typeof value.status!=='string'||!Number.isSafeInteger(value.amount_minor)||Number(value.amount_minor)<=0||typeof value.currency!=='string'||!/^[A-Z]{3}$/.test(value.currency)||!['CREATED','PENDING','COMPLETED','FAILED','CANCELLED','EXPIRED','REFUNDED','REVERSED','PAYMENT_REVIEW'].includes(value.status)||typeof value.product_version!=='string'||typeof value.capability_id!=='string')throw Error();
+      let checkout:object|undefined;
+      if(value.checkout!==undefined){const c=value.checkout as any;if(c?.mode!=='sandbox'||typeof c.key_id!=='string'||!/^rzp_test_[A-Za-z0-9]+$/.test(c.key_id)||typeof c.provider_order_id!=='string'||!/^order_[A-Za-z0-9]+$/.test(c.provider_order_id))throw Error();checkout={mode:c.mode,key_id:c.key_id,provider_order_id:c.provider_order_id};}
+      res.json({... (checkout?{checkout}:{}),order_id:value.order_id,status:value.status,amount_minor:value.amount_minor,currency:value.currency,product_id:value.product_id,product_version:value.product_version,capability_id:value.capability_id});
     }catch{return void fail(503,'PAYMENT_SERVICE_UNAVAILABLE');}
   };
+}
+
+export function sandboxPaymentBoundaryFromEnvironment(identity?:VerifiedSessionAdapter):RequestHandler {
+  if(process.env.PAYMENT_MODE!=='sandbox'||process.env.RAZORPAY_SANDBOX_APPROVED!=='owner-approved'||!identity?.productionReady)return createPaymentBoundary();
+  const required=['PAYMENT_INTERNAL_URL','PAYMENT_INTERNAL_CA_FILE','PAYMENT_INTERNAL_CERT_FILE','PAYMENT_INTERNAL_KEY_FILE'] as const;
+  if(required.some(k=>!process.env[k]))throw Error('SANDBOX_TRANSPORT_CONFIGURATION_INVALID');
+  const transport=createMTLSTransport({url:process.env.PAYMENT_INTERNAL_URL!,caFile:process.env.PAYMENT_INTERNAL_CA_FILE!,certFile:process.env.PAYMENT_INTERNAL_CERT_FILE!,keyFile:process.env.PAYMENT_INTERNAL_KEY_FILE!});
+  return createPaymentBoundary({identity,transport,activationApproved:true});
 }

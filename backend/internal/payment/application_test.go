@@ -99,7 +99,7 @@ func (p *fixtureProvider) deliver(ctx context.Context, s *Service, e Event) erro
 func fixture(t *testing.T) (*Service, *fixtureProvider) {
 	t.Helper()
 	db := testDB(t)
-	for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql"} {
+	for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql"} {
 		data, err := os.ReadFile("../../../database/migrations/" + file)
 		if err != nil {
 			t.Fatal(err)
@@ -932,4 +932,63 @@ func e2eTLS(t *testing.T) ([]byte, []byte, []byte, *tls.Config) {
 		t.Fatal(err)
 	}
 	return pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: der}), cc, ck, InternalTLS(certificate, pool)
+}
+
+func TestRazorpayLatticeNoInventedRevision(t *testing.T) {
+	s, _ := fixture(t)
+	s.store.EvidenceModel = "CAPTURE_REFUND_LATTICE_V1"
+	for _, sequence := range [][]string{{"COMPLETED", "REFUNDED", "COMPLETED"}, {"REFUNDED", "COMPLETED"}, {"COMPLETED", "PAYMENT_REVIEW", "COMPLETED"}, {"PENDING", "COMPLETED", "PENDING"}} {
+		e := newOrder(t, s)
+		e.EvidenceModel = s.store.EvidenceModel
+		e.Revision = 0
+		for i, status := range sequence {
+			e.Status = status
+			e.EventID = randomID()
+			_, err := s.store.ApplyVerifiedEvent(context.Background(), seal(e))
+			if i == len(sequence)-1 {
+				if err == nil {
+					t.Fatal("stale lattice transition accepted", sequence)
+				}
+			} else if err != nil {
+				t.Fatal(err)
+			}
+		}
+		var state string
+		if err := s.store.DB.QueryRow(`SELECT CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END FROM phase1_orders WHERE order_id=$1`, e.OrderID).Scan(&state); err != nil {
+			t.Fatal(err)
+		}
+		want := sequence[1]
+		if len(sequence) == 3 && sequence[1] == "COMPLETED" {
+			want = "COMPLETED"
+		}
+		if sequence[0] == "REFUNDED" {
+			want = "REFUNDED"
+		}
+		if state != want {
+			t.Fatalf("%v -> %s expected %s", sequence, state, want)
+		}
+		if state != "COMPLETED" && activeCount(t, s, e.OrderID) != 0 {
+			t.Fatal("refund/review retained grant")
+		}
+	}
+}
+
+func TestLegacyFingerprintCompatibility(t *testing.T) {
+	type legacy struct {
+		Provider, EventID, EventType, OrderID, ProviderOrderID, PaymentID, CustomerID, Currency, Status string
+		AmountMinor                                                                                     int64
+		Revision                                                                                        int64
+		OccurredAt                                                                                      time.Time
+	}
+	original := legacy{"provider/account/test", "event", "captured", "order", "provider-order", "payment", "customer", "INR", "COMPLETED", 12345, 1, time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)}
+	encoded, _ := json.Marshal(original)
+	hash := sha256.Sum256(encoded)
+	var current Event
+	if err := json.Unmarshal(encoded, &current); err != nil {
+		t.Fatal(err)
+	}
+	got, _ := fingerprint(current)
+	if got != hex.EncodeToString(hash[:]) {
+		t.Fatal("PAY-P0-01 persisted event fingerprint changed")
+	}
 }

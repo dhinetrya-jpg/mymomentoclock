@@ -5,6 +5,7 @@ import (
 	"astroengine-core/backend/internal/calibration"
 	"astroengine-core/backend/internal/ephemeris"
 	"astroengine-core/backend/internal/payment"
+	paymentsandbox "astroengine-core/backend/internal/payment/sandbox"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
@@ -173,6 +174,38 @@ func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler
 	})
 }
 func main() {
+	var paymentServers []*http.Server
+	if mode := os.Getenv("PAYMENT_MODE"); mode != "" && mode != "disabled" {
+		if mode != "sandbox" {
+			log.Fatal("PRODUCTION_PAYMENT_DISABLED")
+		}
+		// No approved real identity integration is registered in this repository. No test substitute.
+		runtime, err := paymentsandbox.FromEnvironment(context.Background(), nil)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer runtime.Service.Close()
+		// Only reached after a separately reviewed real Identity is supplied above.
+		internal, err := payment.NewInternalServer(":8443", runtime.Service, runtime.TLS, runtime.ClientDNS)
+		if err != nil {
+			log.Fatal("PAYMENT_INTERNAL_TLS_REQUIRED")
+		}
+		webhookMux := http.NewServeMux()
+		webhookMux.Handle("/sandbox/webhooks/razorpay", payment.ProviderWebhook(runtime.Service))
+		webhookServer := &http.Server{Addr: ":8444", Handler: webhookMux, TLSConfig: runtime.WebhookTLS, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+		paymentServers = append(paymentServers, internal, webhookServer)
+		go func() {
+			if err := webhookServer.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
+				log.Print("SANDBOX_WEBHOOK_LISTENER_FAILED")
+			}
+		}()
+		go func() {
+			if err := internal.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
+				log.Print("SANDBOX_INTERNAL_LISTENER_FAILED")
+			}
+		}()
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -185,6 +218,9 @@ func main() {
 		shutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		_ = server.Shutdown(shutdown)
+		for _, paymentServer := range paymentServers {
+			_ = paymentServer.Shutdown(shutdown)
+		}
 	}()
 	log.Print("Native service ready; protected capabilities disabled")
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {

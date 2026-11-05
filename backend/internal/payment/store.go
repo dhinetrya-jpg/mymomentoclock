@@ -26,9 +26,10 @@ type Product struct {
 type Store struct {
 	DB *sql.DB
 	// Provider is a namespace, not a brand: provider/account/environment.
-	Provider  string
-	Catalog   map[string]Product
-	failpoint func(string, *sql.Tx) error // only set in same-package tests; no runtime injection/configuration.
+	Provider      string
+	Catalog       map[string]Product
+	EvidenceModel string
+	failpoint     func(string, *sql.Tx) error // only set in same-package tests; no runtime injection/configuration.
 }
 
 // Event is untrusted until a configured Provider verifies it AND authoritative state is retrieved.
@@ -38,6 +39,9 @@ type Event struct {
 	AmountMinor                                                                                     int64
 	Revision                                                                                        int64
 	OccurredAt                                                                                      time.Time
+	EvidenceModel                                                                                   string `json:",omitempty"`
+	NotificationOnly                                                                                bool   `json:",omitempty"`
+	PayloadDigest                                                                                   string `json:",omitempty"`
 }
 
 // VerifiedEvent is opaque outside this package. JSON decoding cannot construct the seal or evidence.
@@ -108,7 +112,7 @@ func (s *Store) CreateOrder(ctx context.Context, id, customer, productID, provid
 	return storageError(err)
 }
 func validEvent(e Event) bool {
-	return opaque.MatchString(e.EventID) && opaque.MatchString(e.OrderID) && (opaque.MatchString(e.PaymentID) || e.PaymentID == "" && (e.Status == "PENDING" || e.Status == "FAILED" || e.Status == "CANCELLED" || e.Status == "EXPIRED")) && opaque.MatchString(e.ProviderOrderID) && opaque.MatchString(e.CustomerID) && e.AmountMinor > 0 && currency.MatchString(e.Currency) && e.Revision > 0 && !e.OccurredAt.IsZero() && len(e.EventType) > 0 && len(e.EventType) <= 100
+	return opaque.MatchString(e.EventID) && opaque.MatchString(e.OrderID) && (opaque.MatchString(e.PaymentID) || e.PaymentID == "" && (e.Status == "PENDING" || e.Status == "FAILED" || e.Status == "CANCELLED" || e.Status == "EXPIRED")) && opaque.MatchString(e.ProviderOrderID) && opaque.MatchString(e.CustomerID) && e.AmountMinor > 0 && currency.MatchString(e.Currency) && (e.Revision > 0 && (e.EvidenceModel == "" || e.EvidenceModel == "ORDERED_REVISION") || e.Revision == 0 && e.EvidenceModel == "CAPTURE_REFUND_LATTICE_V1") && !e.OccurredAt.IsZero() && len(e.EventType) > 0 && len(e.EventType) <= 100
 }
 func fingerprint(e Event) (string, []byte) {
 	b, _ := json.Marshal(e)
@@ -152,6 +156,9 @@ func (s *Store) queue(ctx context.Context, v VerifiedEvent) error {
 	if s.DB == nil {
 		return problem("PAYMENT_STORAGE_UNAVAILABLE")
 	}
+	if e.EvidenceModel != "" && e.EvidenceModel != s.model() {
+		return problem("UNSUPPORTED_EVIDENCE_MODEL")
+	}
 	h, b := fingerprint(e)
 	_, err := s.DB.ExecContext(ctx, `INSERT INTO phase1_payment_events(provider,event_id,order_id,fingerprint,event_type,provider_order_id,provider_payment_id,verified_at,occurred_at,processing_status,safe_evidence) VALUES($1,$2,$3,$4,$5,$6,$7,now(),$8,'PENDING',$9) ON CONFLICT(provider,event_id) DO NOTHING`, e.Provider, e.EventID, e.OrderID, h, e.EventType, e.ProviderOrderID, e.PaymentID, e.OccurredAt, string(b))
 	if err != nil {
@@ -192,11 +199,11 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 		return false, storageError(err)
 	}
 	defer tx.Rollback()
-	var customer, provider, providerOrder, curr, state, capability string
+	var customer, provider, providerOrder, curr, state, capability, model string
 	var amount, revision int64
 	var paymentID sql.NullString
 	var expiration sql.NullTime
-	err = tx.QueryRowContext(ctx, `SELECT customer_id,provider,coalesce(provider_order_id,''),amount_minor,currency,status,provider_payment_id,provider_revision,capability_id,access_expires_at FROM phase1_orders WHERE order_id=$1 FOR UPDATE`, e.OrderID).Scan(&customer, &provider, &providerOrder, &amount, &curr, &state, &paymentID, &revision, &capability, &expiration)
+	err = tx.QueryRowContext(ctx, `SELECT customer_id,provider,coalesce(provider_order_id,''),amount_minor,currency,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,provider_payment_id,provider_revision,capability_id,access_expires_at,evidence_model FROM phase1_orders WHERE order_id=$1 FOR UPDATE`, e.OrderID).Scan(&customer, &provider, &providerOrder, &amount, &curr, &state, &paymentID, &revision, &capability, &expiration, &model)
 	if err == sql.ErrNoRows {
 		return false, problem("UNKNOWN_ORDER")
 	}
@@ -219,20 +226,30 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 	if customer != e.CustomerID || provider != e.Provider || providerOrder != e.ProviderOrderID || amount != e.AmountMinor || curr != e.Currency || (paymentID.Valid && paymentID.String != e.PaymentID) {
 		return false, problem("PAYMENT_MISMATCH")
 	}
-	if e.Revision < revision {
+	if model != s.model() || (e.EvidenceModel != "" && e.EvidenceModel != model) {
+		return false, problem("UNSUPPORTED_EVIDENCE_MODEL")
+	}
+	if model == "CAPTURE_REFUND_LATTICE_V1" {
+		if e.NotificationOnly {
+			return false, problem("NOTIFICATION_NOT_FULFILLMENT")
+		}
+		if !latticeTransition(state, e.Status) {
+			return false, problem("INVALID_PAYMENT_TRANSITION")
+		}
+	} else if e.Revision < revision {
 		_, err = tx.ExecContext(ctx, `UPDATE phase1_payment_events SET processing_status='IGNORED',processing_attempts=processing_attempts+1,failure_class='STALE_REVISION' WHERE provider=$1 AND event_id=$2`, e.Provider, e.EventID)
 		if err != nil {
 			return false, storageError(err)
 		}
 		return false, storageError(tx.Commit())
 	}
-	if e.Revision == revision && state != e.Status {
+	if model != "CAPTURE_REFUND_LATTICE_V1" && e.Revision == revision && state != e.Status {
 		return false, problem("PAYMENT_REVISION_CONFLICT")
 	}
-	if !transition(state, e.Status) {
+	if model != "CAPTURE_REFUND_LATTICE_V1" && !transition(state, e.Status) {
 		return false, problem("INVALID_PAYMENT_TRANSITION")
 	}
-	if _, err = tx.ExecContext(ctx, `UPDATE phase1_orders SET status=$2,provider_payment_id=NULLIF($3,''),provider_revision=$4,updated_at=now() WHERE order_id=$1`, e.OrderID, e.Status, e.PaymentID, e.Revision); err != nil {
+	if _, err = tx.ExecContext(ctx, `UPDATE phase1_orders SET status=CASE WHEN $2='PAYMENT_REVIEW' THEN status ELSE $2 END,provider_review_required=($2='PAYMENT_REVIEW'),provider_payment_id=NULLIF($3,''),provider_revision=$4,updated_at=now() WHERE order_id=$1`, e.OrderID, e.Status, e.PaymentID, e.Revision); err != nil {
 		return false, storageError(err)
 	}
 	if err = s.checkpoint("after_order_update", tx); err != nil {
@@ -249,7 +266,7 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 			return false, storageError(err)
 		}
 		granted = n == 1
-	} else if e.Status == "REFUNDED" || e.Status == "REVERSED" {
+	} else if e.Status == "REFUNDED" || e.Status == "REVERSED" || e.Status == "PAYMENT_REVIEW" {
 		if _, err = tx.ExecContext(ctx, `UPDATE phase1_entitlements SET active=false,revoked_at=coalesce(revoked_at,now()),revocation_reason=$2,revision=revision+CASE WHEN active THEN 1 ELSE 0 END,updated_at=now() WHERE order_id=$1`, e.OrderID, e.Status); err != nil {
 			return false, storageError(err)
 		}
@@ -270,4 +287,24 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 		return false, err
 	}
 	return granted, nil
+}
+
+func (s *Store) model() string {
+	if s.EvidenceModel == "" {
+		return "ORDERED_REVISION"
+	}
+	return s.EvidenceModel
+}
+func latticeTransition(from, to string) bool {
+	switch from {
+	case "PENDING":
+		return to == "PENDING" || to == "COMPLETED" || to == "REFUNDED" || to == "PAYMENT_REVIEW"
+	case "COMPLETED":
+		return to == "COMPLETED" || to == "REFUNDED" || to == "PAYMENT_REVIEW"
+	case "PAYMENT_REVIEW":
+		return to == "PAYMENT_REVIEW" || to == "REFUNDED"
+	case "REFUNDED":
+		return to == "REFUNDED"
+	}
+	return false
 }
