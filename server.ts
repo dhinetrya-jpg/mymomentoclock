@@ -594,6 +594,7 @@ app.post('/api/payment/simulate-webhook', (req: Request, res: Response) => {
 
 // 8. MODULE 6: Desha-Kala-Patra Contextual Streaming API (Server-Sent Events)
 app.post('/api/astro/stream-reading', async (req: Request, res: Response) => {
+  if (!ai) return res.status(503).json({error: 'AI_UNAVAILABLE', message: 'Configure GEMINI_API_KEY to enable AI readings.'});
   const { structuredPayload, userContext } = req.body;
 
   // Set SSE headers

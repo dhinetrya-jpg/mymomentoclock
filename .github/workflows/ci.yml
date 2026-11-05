@@ -16,14 +16,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: TypeScript Lint & Typecheck
         run: npm run lint
@@ -32,3 +32,11 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Typecheck and build alternate frontend
+        run: |
+          npm --prefix frontend run lint
+          npm --prefix frontend run build
+
+      - name: Calculation integrity regression tests
+        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx

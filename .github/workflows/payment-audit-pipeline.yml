@@ -79,28 +79,23 @@ jobs:
           echo "Executing schema migration from: $SCHEMA_FILE"
           psql -h localhost -U astro_user -d astro_db -f "$SCHEMA_FILE"
 
+      - name: Install pinned Swiss Ephemeris native library
+        run: sudo sh scripts/install-swisseph.sh
+
       - name: Run Cryptographic Signature Fuzzing & Security Tests
         env:
           DATABASE_URL: postgres://astro_user:secure_pass@localhost:5432/astro_db?sslmode=disable
           WEBHOOK_SECRET_KEY: 8f8dce9176c84d50939a20f99ca75f6e
         run: |
           echo "[SECURITY_AUDIT] Running HMAC-SHA256 signature fuzzing and verification tests..."
-          if [ -d "./backend/internal/webhook" ]; then
-            go test -v -run=TestVerifyWebhookSignature ./backend/internal/webhook/...
-          else
-            go test -v -run=TestVerifyWebhookSignature .
-          fi
+          CGO_ENABLED=1 go test -mod=readonly -v -run '^TestVerifyWebhookSignature$' .
 
       - name: Execute Replay Attack Vulnerability Checks
         env:
           DATABASE_URL: postgres://astro_user:secure_pass@localhost:5432/astro_db?sslmode=disable
         run: |
           echo "[SECURITY_AUDIT] Asserting replay attack prevention and HTTP 409 Conflict rejection..."
-          if [ -d "./backend/internal/webhook" ]; then
-            go test -v -run=TestReplayAttackPrevention ./backend/internal/webhook/...
-          else
-            go test -v -run=TestReplayAttackPrevention .
-          fi
+          CGO_ENABLED=1 go test -mod=readonly -v -run '^TestReplayAttackPrevention$' .
 
       - name: Commercial Fraud Keywords Content Audit
         run: |
@@ -123,9 +118,5 @@ jobs:
         run: |
           mkdir -p bin
           echo "[BUILD_AUDIT] Verifying compilation integrity of Go payment and webhook binaries..."
-          if [ -d "./backend/internal/webhook" ]; then
-            go build -v -o bin/payment_test_build ./backend/internal/webhook/...
-          else
-            go test -v -c -o bin/payment_test_build .
-          fi
-          echo "[SUCCESS] Build artifact bin/payment_test_build successfully compiled."
+          (cd backend && CGO_ENABLED=1 go build -mod=readonly -o ../bin/astroengine_server ./cmd/server)
+          echo "[SUCCESS] Build artifact bin/astroengine_server successfully compiled."

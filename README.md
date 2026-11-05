@@ -3,7 +3,7 @@
 [![CI - Lint & Build](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/ci.yml/badge.svg)](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/ci.yml)
 [![Deploy to GitHub Pages](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/dhinetrya-jpg/mymomentoclock/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22.x-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-purple.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4.svg)](https://tailwindcss.com/)
@@ -68,7 +68,7 @@ An enterprise-grade, high-performance Vedic MymomentOclock and Festival Prosperi
 ## 🚀 Quick Start (Local Development)
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v20 or higher recommended)
+- [Node.js](https://nodejs.org/) (v22.12 or higher recommended)
 - `npm` (v9 or higher)
 
 ### Installation
@@ -78,8 +78,8 @@ An enterprise-grade, high-performance Vedic MymomentOclock and Festival Prosperi
 git clone https://github.com/dhinetrya-jpg/mymomentoclock.git
 cd mymomentoclock
 
-# 2. Install dependencies
-npm install
+# 2. Install locked dependencies
+npm ci
 
 # 3. Setup environment variables from GitHub Secrets
 cp .env.example .env
@@ -211,3 +211,8 @@ Configure in your GitHub repository via **Settings** → **Secrets and variables
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+
+## Build and deployment troubleshooting
+
+See [the verified build repair guide](docs/deployment/BUILD_REPAIR.md) for the pinned official Swiss Ephemeris GitHub source, native library installation, Go API versus full-stack web images, CI commands and deployment prerequisites. Use `Dockerfile.web` for the complete React/Express application; the default Dockerfile builds the separate Go API. GitHub Pages serves only static assets.

@@ -1,4 +1,9 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: astro-production
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mymomentoclock-config

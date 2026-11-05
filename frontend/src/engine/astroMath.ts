@@ -251,7 +251,6 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
   // Moon
   const lMoon = (218.3165 + 481267.8813 * t) % 360;
   const mMoon = (134.963 + 477198.8675 * t) % 360;
-  const fMoon = (93.272 + 483202.0175 * t) % 360;
   const moonTrop = lMoon + 6.289 * Math.sin(mMoon * Math.PI / 180) - 1.274 * Math.sin((mMoon - 2 * (lMoon - lSun)) * Math.PI / 180)
                    + 0.658 * Math.sin(2 * (lMoon - lSun) * Math.PI / 180) - 0.214 * Math.sin(2 * mMoon * Math.PI / 180);
 

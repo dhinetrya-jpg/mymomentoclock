@@ -24,3 +24,7 @@ Existing UAT initially became 3/4 after removing synthetic fallback yoga and unc
 - Alternate frontend baseline typecheck was established retrospectively from untouched HEAD, not assumed from the edited tree.
 
 No test was disabled to obtain a passing result. Overall repository completion remains PARTIAL.
+
+## PR #5 integration follow-up
+
+See CFRS_PR5_MERGE_REPAIR.md for the updated test invocation with Node asset registration and the combined main-branch validation. Earlier standalone frontend failures above describe the historical baseline; the merged build fixes now pass both frontend typechecks.
