@@ -1,0 +1,11 @@
+# PAY-P0-01 baseline — 2026-11-05
+
+Initial local branch: fix/phase1-final-remediation, clean, SHA08c84ac780c02a163f1b561a76f7ca2279e10416. Fetched main:31dc6dff42b31045e27327c8133cde09baff8fca, matching the supplied baseline (PR6 merge). Dedicated branch fix/pay-p0-01-durable-payment-integration starts from that main. No reset, clean, force push, rebase, main merge or discard. Repository origin remains https://github.com/dhinetrya-jpg/mymomentoclock.git.
+
+Inspected root/backend payment/webhook code, migrations001/002, both legacy SQL schemas, Node routes, both checkout components, Compose/default dev, Dockerfiles, Kubernetes, env specification, all CI files, existing security/calculation tests and Phase1 remediation reports. Existing HMAC is a generic primitive, not any selected provider protocol. Neither production identity/provider nor approved price/production database is configured.
+
+The existing Go Store remains the authority; no Node database implementation was added. Existing strengths: BIGINT price, transaction/row locks, provider matching, duplicate event uniqueness and grant/revoke tests. Gaps confirmed: no authenticated application lifecycle, retry-safe creation, durable status/access queries, secure Node transport, reconciliation, runtime pool/TLS configuration, detailed audit/events/entitlement metadata or complete transition table. Old COMPLETED->COMPLETED was implicitly accepted; FAILED->COMPLETED had no independent ordering proof. Revoked states blocked fresh completion, but arrival order remained significant.
+
+Historical `payment_transactions` tables and root/backend generic webhook DTOs are inactive compatibility surfaces. No code reads those legacy financial rows. No legacy table or data is dropped. Root and backend public callbacks continue refusing fulfillment. The floating legacy DTO field is not used by the authoritative amount model. Public aistudio historical snippets remain excluded/unserved by the prior remediation.
+
+Phase1 invariants preserved: no fabricated BTR/Dasha/certification/graph/AI results, chart as unvalidated preview, explicit inputs/timezone, cultural registry disclosure, no private-data forwarding. Pricing in fixtures is12345 minor units and is TEST ONLY; neither historical ₹499 nor ₹500 is an approved price.

@@ -1,0 +1,11 @@
+server.ts:34:app.all('/api/payment/simulate-webhook',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This operation is not available.',request_id:res.locals.requestId}));
+database/schema.sql:1:-- LEGACY ONLY: payment_transactions is inactive. Authoritative payment schema is
+database/schema.sql:5:CREATE TABLE payment_transactions (
+database/schema.sql:16:CREATE INDEX idx_payment_session ON payment_transactions(session_token);
+backend/internal/payment/reconcile.go:95:						if _, applyErr := s.store.ApplyVerifiedEvent(ctx, seal(e)); applyErr != nil {
+backend/internal/payment/store.go:49:func seal(e Event) VerifiedEvent { return VerifiedEvent{e, true} }
+backend/internal/payment/store.go:170:func (s *Store) ApplyVerifiedEvent(ctx context.Context, v VerifiedEvent) (bool, error) {
+backend/internal/payment/http.go:15:// SAN allowlisting is additionally enforced by Handler; no X-User-ID is trusted.
+backend/internal/payment/application.go:262:	if err = s.store.queue(ctx, seal(e)); err != nil {
+backend/internal/payment/application.go:276:	_, err = s.store.ApplyVerifiedEvent(ctx, seal(e))
+backend/internal/payment/application.go:285:	_, err := s.store.ApplyVerifiedEvent(ctx, seal(e))

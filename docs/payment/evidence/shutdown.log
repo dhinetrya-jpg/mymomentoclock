@@ -1,0 +1,5 @@
+pay-web-final
+pay-native-final
+pay-workstream-db
+/pay-web-final exit=0
+/pay-native-final exit=0

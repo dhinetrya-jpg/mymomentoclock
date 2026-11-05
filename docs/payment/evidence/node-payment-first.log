@@ -1,0 +1,20 @@
+✔ default unavailable: /api/payment/orders (65.898605ms)
+✔ default unavailable: /api/payment/orders/other (21.700014ms)
+✔ default unavailable: /api/payment/entitlements (9.989729ms)
+✔ no approval or unready identity cannot call transport (13.201272ms)
+✔ forged identity/header does not forward (4.411267ms)
+✔ body and query tampering rejected before forwarding (28.915479ms)
+✔ transport receives verified bearer, fixed safe contract and no caller IDs (6.594292ms)
+✔ failures never fall back to paid (4.841082ms)
+✔ entitlement response strips internal identifiers (4.836334ms)
+✔ mutual TLS transport verifies both peers and sends bounded safe requests (229.95185ms)
+✔ production entry contains no test adapter activation or identity fallback (0.921952ms)
+✔ both checkout models keep browser callbacks from authorizing access (0.707966ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 899.540108
