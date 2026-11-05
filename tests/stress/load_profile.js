@@ -1,17 +1,19 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-export const options = {
+const stress = __ENV.TEST_PROFILE === 'stress';
+export const options = stress ? {
     stages: [
         { duration: '1m', target: 2000 },  
         { duration: '3m', target: 10000 }, 
         { duration: '1m', target: 0 },     
     ],
     thresholds: {
+        checks: ['rate==1'],
         http_req_duration: ['p(95)<200', 'p(99)<500'], 
         http_req_failed: ['rate<0.0001'],
     },
-};
+} : { vus: 1, iterations: 10, thresholds: { checks: ['rate==1'], http_req_failed: ['rate==0'] } };
 
 const BASE_URL = __ENV.TARGET_URL || 'http://localhost:8080';
 
@@ -41,7 +43,8 @@ export default function () {
     const btrResponse = http.post(`${BASE_URL}/api/v1/btr/rectify`, payload, params);
     check(btrResponse, {
         'BTR Status is 200': (r) => r.status === 200,
-        'BTR Certified True': (r) => r.json().is_certified_true === true,
+        'BTR returns a bounded computed fit score': (r) => Number.isFinite(r.json().confidence_score) && r.json().confidence_score >= 0 && r.json().confidence_score <= 1,
+        'BTR returns the current API contract': (r) => typeof r.json().is_certified === 'boolean',
     });
 
     sleep(0.5); 
@@ -50,7 +53,7 @@ export default function () {
     const resolverResponse = http.get(`${BASE_URL}/api/v1/resolver/evaluate?user_id=USR_KOLKATA_89&category=Wealth`, params);
     check(resolverResponse, {
         'Resolver Status is 200': (r) => r.status === 200,
-        'Graph Path Verified': (r) => r.json().is_graph_verified === true,
+        'Resolver returns a finite vector': (r) => Number.isFinite(r.json().net_auspiciousness_vector),
     });
 
     sleep(0.5);

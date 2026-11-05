@@ -1,3 +1,4 @@
+import altarImage from '../assets/images/diwali_lakshmi_altar_1791900494902.jpg';
 /**
  * Living Room TV & Ambient Puja Dashboard (Component 3 from Prompt PDF)
  * A high-definition interactive digital backdrop designed to run on the living room TV
@@ -84,7 +85,7 @@ export const LivingRoomTvDashboard: React.FC = () => {
       {/* Background Altar Artwork */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/diwali_lakshmi_altar_1791900494902.jpg"
+          src={altarImage}
           alt="Diwali Sacred Altar"
           referrerPolicy="no-referrer"
           className="h-full w-full object-cover object-center opacity-40 filter brightness-75 contrast-125"

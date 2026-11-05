@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Navigation, ActiveTab } from './components/Navigation';
 import { ConversionFunnelView } from './components/ConversionFunnelView';
 import { DashboardView } from './components/DashboardView';
