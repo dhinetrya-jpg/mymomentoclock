@@ -1,0 +1,331 @@
+{
+  "ascendantDegree": 17.4971,
+  "planets": [
+    {
+      "name": "Sun",
+      "symbol": "☉",
+      "longitude": 216.92,
+      "signIndex": 7,
+      "signName": "Scorpio",
+      "signLord": "Mars",
+      "degreeInSign": 6.92,
+      "speed": 0.98,
+      "isRetrograde": false,
+      "shadbala": 1.2,
+      "ashtakavargaBindus": 5,
+      "functionalNature": 1,
+      "functionalScore": 0.9688,
+      "houseNumber": 8,
+      "nakshatra": "Anuradha",
+      "nakshatraPada": 2
+    },
+    {
+      "name": "Moon",
+      "symbol": "☽",
+      "longitude": 157.9556,
+      "signIndex": 5,
+      "signName": "Virgo",
+      "signLord": "Mercury",
+      "degreeInSign": 7.96,
+      "speed": 13.17,
+      "isRetrograde": false,
+      "shadbala": 1.35,
+      "ashtakavargaBindus": 6,
+      "functionalNature": 1,
+      "functionalScore": 1.0875,
+      "houseNumber": 6,
+      "nakshatra": "Uttara Phalguni",
+      "nakshatraPada": 4
+    },
+    {
+      "name": "Mars",
+      "symbol": "♂",
+      "longitude": 187.5491,
+      "signIndex": 6,
+      "signName": "Libra",
+      "signLord": "Venus",
+      "degreeInSign": 7.55,
+      "speed": 0.52,
+      "isRetrograde": false,
+      "shadbala": 1.1,
+      "ashtakavargaBindus": 4,
+      "functionalNature": 0.2,
+      "functionalScore": 0.755,
+      "houseNumber": 7,
+      "nakshatra": "Swati",
+      "nakshatraPada": 1
+    },
+    {
+      "name": "Mercury",
+      "symbol": "☿",
+      "longitude": 195.7008,
+      "signIndex": 6,
+      "signName": "Libra",
+      "signLord": "Venus",
+      "degreeInSign": 15.7,
+      "speed": 1.15,
+      "isRetrograde": false,
+      "shadbala": 1.15,
+      "ashtakavargaBindus": 5,
+      "functionalNature": -1,
+      "functionalScore": 0.6437,
+      "houseNumber": 7,
+      "nakshatra": "Swati",
+      "nakshatraPada": 3
+    },
+    {
+      "name": "Jupiter",
+      "symbol": "♃",
+      "longitude": 69.2145,
+      "signIndex": 2,
+      "signName": "Gemini",
+      "signLord": "Mercury",
+      "degreeInSign": 9.21,
+      "speed": 0.08,
+      "isRetrograde": false,
+      "shadbala": 1.45,
+      "ashtakavargaBindus": 6,
+      "functionalNature": 0.2,
+      "functionalScore": 1.0175,
+      "houseNumber": 3,
+      "nakshatra": "Ardra",
+      "nakshatraPada": 1
+    },
+    {
+      "name": "Venus",
+      "symbol": "♀",
+      "longitude": 254.0718,
+      "signIndex": 8,
+      "signName": "Sagittarius",
+      "signLord": "Jupiter",
+      "degreeInSign": 14.07,
+      "speed": 1.1,
+      "isRetrograde": false,
+      "shadbala": 1.3,
+      "ashtakavargaBindus": 7,
+      "functionalNature": 1,
+      "functionalScore": 1.1062,
+      "houseNumber": 9,
+      "nakshatra": "Purva Ashadha",
+      "nakshatraPada": 1
+    },
+    {
+      "name": "Saturn",
+      "symbol": "♄",
+      "longitude": 261.5062,
+      "signIndex": 8,
+      "signName": "Sagittarius",
+      "signLord": "Jupiter",
+      "degreeInSign": 21.51,
+      "speed": 0.03,
+      "isRetrograde": true,
+      "shadbala": 0.95,
+      "ashtakavargaBindus": 3,
+      "functionalNature": 1,
+      "functionalScore": 0.7562,
+      "houseNumber": 9,
+      "nakshatra": "Purva Ashadha",
+      "nakshatraPada": 3
+    },
+    {
+      "name": "Rahu",
+      "symbol": "☊",
+      "longitude": 70.9487,
+      "signIndex": 2,
+      "signName": "Gemini",
+      "signLord": "Mercury",
+      "degreeInSign": 10.95,
+      "speed": -0.05,
+      "isRetrograde": true,
+      "shadbala": 1.05,
+      "ashtakavargaBindus": 4,
+      "functionalNature": -0.5,
+      "functionalScore": 0.625,
+      "houseNumber": 3,
+      "nakshatra": "Ardra",
+      "nakshatraPada": 2
+    },
+    {
+      "name": "Ketu",
+      "symbol": "☋",
+      "longitude": 250.9487,
+      "signIndex": 8,
+      "signName": "Sagittarius",
+      "signLord": "Jupiter",
+      "degreeInSign": 10.95,
+      "speed": -0.05,
+      "isRetrograde": true,
+      "shadbala": 1,
+      "ashtakavargaBindus": 4,
+      "functionalNature": -0.5,
+      "functionalScore": 0.6,
+      "houseNumber": 9,
+      "nakshatra": "Mula",
+      "nakshatraPada": 4
+    }
+  ],
+  "divisionalCharts": {
+    "d1": {
+      "name": "D-1 Rashi (Lagna)",
+      "housePlacements": {
+        "1": [],
+        "2": [],
+        "3": [
+          "Jupiter",
+          "Rahu"
+        ],
+        "4": [],
+        "5": [],
+        "6": [
+          "Moon"
+        ],
+        "7": [
+          "Mars",
+          "Mercury"
+        ],
+        "8": [
+          "Sun"
+        ],
+        "9": [
+          "Venus",
+          "Saturn",
+          "Ketu"
+        ],
+        "10": [],
+        "11": [],
+        "12": []
+      }
+    },
+    "d2": {
+      "name": "D-2 Hora (Wealth & Vitality)",
+      "signs": {
+        "Sun": "Moon (Cancer - Receptive/Lunar)",
+        "Moon": "Moon (Cancer - Receptive/Lunar)",
+        "Mars": "Sun (Leo - Active/Wealth Solar)",
+        "Mercury": "Moon (Cancer - Receptive/Lunar)",
+        "Jupiter": "Sun (Leo - Active/Wealth Solar)",
+        "Venus": "Sun (Leo - Active/Wealth Solar)",
+        "Saturn": "Moon (Cancer - Receptive/Lunar)",
+        "Rahu": "Sun (Leo - Active/Wealth Solar)",
+        "Ketu": "Sun (Leo - Active/Wealth Solar)"
+      }
+    },
+    "d9": {
+      "name": "D-9 Navamsha (Dharma & Destiny)",
+      "navamshaPlacements": {
+        "Sun": {
+          "sign": "Virgo",
+          "signIndex": 5
+        },
+        "Moon": {
+          "sign": "Pisces",
+          "signIndex": 11
+        },
+        "Mars": {
+          "sign": "Sagittarius",
+          "signIndex": 8
+        },
+        "Mercury": {
+          "sign": "Aquarius",
+          "signIndex": 10
+        },
+        "Jupiter": {
+          "sign": "Sagittarius",
+          "signIndex": 8
+        },
+        "Venus": {
+          "sign": "Leo",
+          "signIndex": 4
+        },
+        "Saturn": {
+          "sign": "Libra",
+          "signIndex": 6
+        },
+        "Rahu": {
+          "sign": "Capricorn",
+          "signIndex": 9
+        },
+        "Ketu": {
+          "sign": "Cancer",
+          "signIndex": 3
+        }
+      }
+    },
+    "d60": {
+      "name": "D-60 Shashtyamsa (Macro Karma)",
+      "shashtyamsas": [
+        {
+          "planet": "Sun",
+          "partIndex": 13,
+          "deityName": "Sheetala",
+          "nature": "Auspicious",
+          "significance": "D-60 Part 14/60 (Sheetala): karmic destiny seed for Sun"
+        },
+        {
+          "planet": "Moon",
+          "partIndex": 15,
+          "deityName": "Saumya",
+          "nature": "Auspicious",
+          "significance": "D-60 Part 16/60 (Saumya): karmic destiny seed for Moon"
+        },
+        {
+          "planet": "Mars",
+          "partIndex": 15,
+          "deityName": "Sarpa",
+          "nature": "Malefic",
+          "significance": "D-60 Part 16/60 (Sarpa): karmic destiny seed for Mars"
+        },
+        {
+          "planet": "Mercury",
+          "partIndex": 31,
+          "deityName": "Kaala",
+          "nature": "Malefic",
+          "significance": "D-60 Part 32/60 (Kaala): karmic destiny seed for Mercury"
+        },
+        {
+          "planet": "Jupiter",
+          "partIndex": 18,
+          "deityName": "Mridu",
+          "nature": "Auspicious",
+          "significance": "D-60 Part 19/60 (Mridu): karmic destiny seed for Jupiter"
+        },
+        {
+          "planet": "Venus",
+          "partIndex": 28,
+          "deityName": "Kamalakara",
+          "nature": "Neutral",
+          "significance": "D-60 Part 29/60 (Kamalakara): karmic destiny seed for Venus"
+        },
+        {
+          "planet": "Saturn",
+          "partIndex": 43,
+          "deityName": "Kaalarupa",
+          "nature": "Neutral",
+          "significance": "D-60 Part 44/60 (Kaalarupa): karmic destiny seed for Saturn"
+        },
+        {
+          "planet": "Rahu",
+          "partIndex": 21,
+          "deityName": "Brahma",
+          "nature": "Auspicious",
+          "significance": "D-60 Part 22/60 (Brahma): karmic destiny seed for Rahu"
+        },
+        {
+          "planet": "Ketu",
+          "partIndex": 21,
+          "deityName": "Brahma",
+          "nature": "Auspicious",
+          "significance": "D-60 Part 22/60 (Brahma): karmic destiny seed for Ketu"
+        }
+      ]
+    }
+  },
+  "inputProfile": {
+    "birthDate": "1989-11-23",
+    "birthTime": "04:30:00",
+    "latitude": 22.5726,
+    "longitude": 88.3639,
+    "cityName": "",
+    "timezoneOffset": 5.5
+  }
+}

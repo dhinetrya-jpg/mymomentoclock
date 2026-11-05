@@ -162,15 +162,8 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
 
   const isCelebrationNow = diffMs === 0;
 
-  // Personalized Lagna alignment message
-  const lagnaMatchNote = useMemo(() => {
-    if (!chart) return null;
-    const nativeLagna = chart.ascendantSignName;
-    if (nativeLagna.toLowerCase() === 'taurus' || nativeLagna.toLowerCase() === 'vrishabha') {
-      return 'Direct Sthira Lagna Synchronicity! Your natal ascendant exactly aligns with the Pradosh Vrishabha Puja window.';
-    }
-    return `Native ${nativeLagna} Lagna: Pair Pradosh Vrishabha Sthira window with your active ${chart.vimshottariDasha.activeMahadasha} Dasha mantra for highest resonance.`;
-  }, [chart]);
+  // Static festival data cannot establish natal timing alignment.
+  const lagnaMatchNote = chart ? 'Unverified static festival preview. Natal timing alignment is unavailable for this chart.' : 'Unverified static festival preview. No natal chart supplied.';
 
   const handleCopyMuhurta = () => {
     const text = `🪔 ${activeEvent.name} (${activeEvent.sanskritName}) 🪔\n` +

@@ -1,3 +1,4 @@
+import { CalculationInputError, validateBirthInput, TIMEZONE_LIMITATION } from './src/engine/calculationValidation';
 /**
  * MymomentOclock Full-Stack Server
  * Hosts astronomical calculation endpoints, UAT & stress testing endpoints,
@@ -52,14 +53,14 @@ paymentSessions.set('cs_live_a1b2c3d4', {
 });
 
 // Initialize Gemini client with telemetry header
-const ai = new GoogleGenAI({
+const ai = process.env.GEMINI_API_KEY ? new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',
     },
   },
-});
+}) : null;
 
 // Kubernetes Readiness & Liveness Probes Health Endpoint
 app.get(['/api/v1/health', '/health'], (_req: Request, res: Response) => {
@@ -70,6 +71,28 @@ app.get(['/api/v1/health', '/health'], (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
     uptime_seconds: Math.floor(process.uptime()),
   });
+});
+
+// Boundary checks run before all calculation adapters (including the v1 load-test adapter).
+app.use(['/api/astro/calculate', '/api/astro/rectify-btr', '/api/v1/btr/rectify'], (req, res, next) => {
+  if (req.method !== 'POST') return next();
+  try {
+    const raw = req.body || {};
+    if (raw.profileId !== undefined || raw.userId !== undefined || raw.user_id !== undefined) {
+      return res.status(401).json({error: 'PROFILE_AUTHENTICATION_UNAVAILABLE', message: 'Stored-profile requests require an authenticated ownership service, which is unavailable.'});
+    }
+    const bp = raw.base_payload;
+    const input = req.originalUrl.split('?')[0] === '/api/v1/btr/rectify' ? {
+      ...bp, birthDate: bp?.birth_date, birthTime: bp?.birth_time,
+      timezoneOffset: bp?.timezone_offset, ayanamsaType: bp?.ayanamsa_type,
+      birthTimeCertainty: bp?.birth_time_certainty,
+    } : raw;
+    validateBirthInput(input);
+    next();
+  } catch (error) {
+    if (error instanceof CalculationInputError) return res.status(422).json({error: error.code, message: error.message, missing_fields: error.fields});
+    return res.status(400).json({error: 'INVALID_REQUEST'});
+  }
 });
 
 // 1. Spatiotemporal & Full Chart API
@@ -124,8 +147,9 @@ app.post('/api/astro/calculate', (req: Request, res: Response) => {
       timezoneOffset !== undefined ? timezoneOffset : 5.5,
       ayanamsaType || AyanamsaType.TRUE_LAHIRI
     );
-    res.json(chart);
+    res.json({...chart, scope_metadata: {birth_time_certainty: req.body.birthTimeCertainty || 'UNSPECIFIED', limitations: [TIMEZONE_LIMITATION]}});
   } catch (error: unknown) {
+    if (error instanceof CalculationInputError) return res.status(422).json({error: error.code, message: error.message});
     const msg = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ error: msg });
   }
@@ -171,10 +195,11 @@ app.post('/api/astro/rectify-btr', (req: Request, res: Response) => {
       latitude,
       longitude,
       cityName || '',
-      milestones
+      milestones, 15, 15, req.body.timezoneOffset, req.body.ayanamsaType
     );
     res.json(result);
   } catch (error: unknown) {
+    if (error instanceof CalculationInputError) return res.status(422).json({error: error.code, message: error.message});
     const msg = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ error: msg });
   }
@@ -212,76 +237,30 @@ app.post('/api/v1/btr/rectify', (req: Request, res: Response) => {
       latitude,
       longitude,
       cityName,
-      milestones
+      milestones, 15, 15, bp.timezone_offset, bp.ayanamsa_type
     );
 
-    // CFR-003: Use the actual computed concordance rating.
-    // Do NOT hardcode is_certified_true: true or fallback to 0.942.
-    // Certification threshold: concordance >= 0.75 AND milestones were provided.
-    const CERTIFICATION_THRESHOLD = 0.75;
-    const hasMilestones = Array.isArray(milestones) && milestones.length > 0;
-    const isCertified = hasMilestones && result.concordanceRating >= CERTIFICATION_THRESHOLD;
-
+    // Compatibility aliases remain, but cannot claim certification or probability.
     res.status(200).json({
-      // CFR-003: Real computed value only — no hardcoded certainty
-      is_certified: isCertified,
-      certification_threshold: CERTIFICATION_THRESHOLD,
-      confidence_score: result.concordanceRating,         // actual computed rating
-      rectified_time: result.rectifiedTrueTime,
+      ...result, schema_version: 2, is_certified: false,
+      rectified_time: result.candidate_birth_time,
       rectified_seconds_delta: result.offsetSeconds,
-      // CFR-003: lagna_d60_verified removed — was unconditionally true without real D-60 verification
       iterations_executed: result.testedCandidatesCount,
-      status: 'SUCCESS',
-      timestamp: new Date().toISOString(),
-      // CFR-001/CFR-003 scope metadata
-      scope_metadata: {
-        milestones_provided: hasMilestones,
-        milestone_count: hasMilestones ? milestones.length : 0,
-        certification_basis: hasMilestones
-          ? `concordance_rating >= ${CERTIFICATION_THRESHOLD} evaluated against ${milestones.length} lifecycle milestone(s)`
-          : 'NOT_CERTIFIED — no milestones supplied; concordance score is a search heuristic only',
-        disclaimer:
-          'BTR concordance is a heuristic estimate computed over discrete Dasha-lord and D-60 boundary alignments. ' +
-          'It is NOT a validated astronomical certainty. Results should be reviewed by a qualified Jyotisha practitioner.',
-      },
+      status: 'HEURISTIC_CANDIDATE',
     });
   } catch (error: unknown) {
+    if (error instanceof CalculationInputError) return res.status(422).json({error: error.code, message: error.message});
     const msg = error instanceof Error ? error.message : 'BTR Execution Failure';
     res.status(500).json({ error: msg, is_certified: false });
   }
 });
 
 // 2.2 K6 High-Throughput Load Testing Endpoint: Conflict Resolver Evaluation
-app.get('/api/v1/resolver/evaluate', (req: Request, res: Response) => {
-  try {
-    const category = (req.query.category as string) || 'Wealth';
-    const userId = (req.query.user_id as string) || 'USR_KOLKATA_89';
-
-    // Baseline chart evaluation
-    const chart = calculateFullChart('1989-11-23', '04:30:00', 22.572645, 88.363892, 'Kolkata', 5.5, AyanamsaType.TRUE_LAHIRI);
-    const resolution = resolvePillarConflict(chart, category as any);
-
-    res.status(200).json({
-      is_graph_verified: true,
-      user_id: userId,
-      pillar: category,
-      active_verified_path: resolution.verifiedGraphPayload?.active_verified_path || 'DHANA_YOGA_SECURE_MULTIPATH_MATCH_PASSED',
-      vector_matrix: resolution.verifiedGraphPayload?.vector_matrix || {
-        earning_capacity: 0.82,
-        retention_velocity: 0.45,
-        asset_multiplier: 0.72,
-        temporal_friction: 0.38,
-      },
-      net_potency: resolution.verifiedGraphPayload?.calculatedPotency ?? resolution.netPotencyScore,
-      net_auspiciousness_vector: resolution.verifiedGraphPayload?.netAuspiciousness ?? resolution.netAuspiciousnessVector,
-      dominant_vector: resolution.dominantVector,
-      execution_latency_ms: resolution.graphTraversalStats.executionLatencyMs,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : 'Evaluation Failure';
-    res.status(500).json({ error: msg, is_graph_verified: false });
-  }
+app.get('/api/v1/resolver/evaluate', (_req, res) => {
+  // No authenticated profile/ownership or genuine graph integration exists here.
+  res.status(503).json({error: 'PROFILE_GRAPH_UNAVAILABLE', status: 'UNAVAILABLE',
+    is_graph_verified: false, vector_matrix: null,
+    message: 'Authenticated profile ownership and graph evidence are required. No example data is substituted.'});
 });
 
 // 3. Symbolic Conflict Resolver API
@@ -312,25 +291,23 @@ app.post('/api/astro/remedies', (req: Request, res: Response) => {
 });
 
 // 5. Diwali Muhurat & Golden 24-Minute Window API
-app.get('/api/astro/muhurat', (req: Request, res: Response) => {
-  try {
-    const city = (req.query.city as string) || 'New Delhi';
-    const userName = (req.query.name as string) || 'Seeker';
-    const cityData = MAJOR_CITIES_MUHURAT[city] || MAJOR_CITIES_MUHURAT['New Delhi'];
-    const goldenWindow = calculatePersonalGoldenWindow(userName, cityData);
-    res.json({
-      cityData,
-      goldenWindow,
-      allSupportedCities: Object.keys(MAJOR_CITIES_MUHURAT),
-    });
-  } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ error: msg });
-  }
+app.get('/api/astro/muhurat', (req, res) => {
+  const allSupportedCities = Object.keys(MAJOR_CITIES_MUHURAT);
+  if (typeof req.query.city !== 'string' || !req.query.city.trim()) return res.status(422).json({error: 'LOCATION_REQUIRED', allSupportedCities});
+  const city = allSupportedCities.find(c => c.toLowerCase() === (req.query.city as string).trim().toLowerCase());
+  if (!city) return res.status(422).json({error: 'UNSUPPORTED_LOCATION', allSupportedCities});
+  if (['latitude','longitude','timezone'].some(k => req.query[k] !== undefined)) return res.status(422).json({error: 'UNSUPPORTED_LOCATION_INPUT', message: 'Only the explicit city registry is supported; coordinates and timezone overrides are unavailable.'});
+  if (['activity','duration','tradition','date'].some(k => req.query[k] !== undefined)) return res.status(422).json({error: 'UNSUPPORTED_TIMING_REQUEST', message: 'Activity, duration, tradition and date calculations are unavailable.'});
+  const cityData = MAJOR_CITIES_MUHURAT[city];
+  const goldenWindow = calculatePersonalGoldenWindow('', cityData);
+  res.json({cityData, goldenWindow, allSupportedCities, scope_metadata: {
+    ...goldenWindow.scope_metadata, scope: 'GENERAL_LOCATION_BASED', status: 'PREVIEW',
+  }});
 });
 
 // 6. UAT Test Suite Runner API
 app.get('/api/astro/uat-test', (_req: Request, res: Response) => {
+  if (process.env.NODE_ENV !== 'test') return res.status(404).json({error: 'TEST_ONLY_ENDPOINT'});
   try {
     const report = runEngineUatSuite();
     res.json(report);
@@ -630,7 +607,7 @@ app.post('/api/astro/stream-reading', async (req: Request, res: Response) => {
   };
 
   const systemInstruction = `You are the MymomentOclock Desha-Kala-Patra Contextual Synthesis Engine.
-You receive a mathematically pre-calculated, verified astrological vector payload from the Symbolic Reasoning Engine.
+You receive a client-supplied traditional-rule heuristic payload, not independently verified graph evidence from the Symbolic Reasoning Engine.
 YOUR CORE MANDATES:
 1. NEVER guess or calculate planetary degrees, transits, or dashas yourself. You must strictly obey the pre-calculated numbers provided in the payload.
 2. RESOLVE THE SYNTHESIS GAP: The payload has already balanced conflicting Yogas (e.g. Dhana Yoga vs. Daridra Yoga) into a single Net Auspiciousness Vector. Do NOT output contradictory bullet points. Frame the dynamic as a unified reality (e.g., high earning potential balanced with structured operational friction).
@@ -641,7 +618,7 @@ YOUR CORE MANDATES:
 4. REMEDIAL VECTOR INTEGRATION: Frame remedies as practical, zero-cost, non-commercial behavioral and acoustic micro-habits (such as 147Hz audio focus windows and automated 8% locked savings vaults). Never mention buying gemstones or paid pujas.
 5. Tone: Dignified, empowering, lucid, culturally authentic yet sharply modern.`;
 
-  const promptContent = `Here is the verified MymomentOclock technical system payload:
+  const promptContent = `Here is the unverified client-supplied MymomentOclock heuristic payload:
 ${JSON.stringify(structuredPayload || {}, null, 2)}
 
 User Profile & Context:
@@ -653,11 +630,11 @@ User Profile & Context:
 Please provide a structured, cohesive Desha-Kala-Patra reading synthesizing:
 1. Executive Alignment & Net Force Balance (explaining the Net Auspiciousness Vector)
 2. 2026 Modernized Translation of Dominant Planetary Combinations
-3. Strategic Muhurat Timing & Personal Golden Action Window
+3. Explain that personal timing is unavailable; do not invent a window
 4. Targeted Daily Acoustic & Behavioral Micro-Remedies (RVM Protocol)`;
 
   try {
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'MY_GEMINI_API_KEY') {
+    if (!ai || !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'MY_GEMINI_API_KEY') {
       throw new Error('GEMINI_API_KEY environment variable not configured');
     }
 
@@ -684,19 +661,8 @@ Please provide a structured, cohesive Desha-Kala-Patra reading synthesizing:
 
     // Fallback deterministic Desha-Kala-Patra synthesis if API key is not present or rate limited
     const fallbackLines = [
-      `### 1. Executive Alignment & Net Force Balance\n\n`,
-      `The symbolic conflict resolver has evaluated your chart: **${structuredPayload?.pillar_metrics?.wealth_status?.dominant_vector || 'BENEFIC_OPULENCE_DOMINANT'}** is active with a Net Auspiciousness Vector of **${((structuredPayload?.pillar_metrics?.wealth_status?.net_auspiciousness_vector || 0.5476) * 100).toFixed(1)}%**.\n\n`,
-      `Rather than contradictory outcomes, the algebraic matrix demonstrates that your structural wealth capacity (Dhana Yoga) is fully intact, but tempered by secondary Saturnian aspect friction. This indicates steady, high-value asset accumulation coupled with enforced operational budgeting.\n\n`,
-      `### 2. Modern 2026 Translation (Desha-Kala-Patra)\n\n`,
-      `In the 2026 digital economy, ancient indicators of "royal favors and golden granaries" translate directly into **institutional funding, high-trust client contracts, and equity vesting milestones**.\n\n`,
-      `Secondary Saturnian friction alerts against speculative leverage. Your optimal wealth loop flourishes through systematic compounding rather than impulsive market timing.\n\n`,
-      `### 3. Auspicious Action Window & Lakshmi Muhurat\n\n`,
-      `During the upcoming Diwali window, your personalized **Golden 24-Minute Action Window** unlocks an auspicious focal point. Align this window with setting your annual financial allocation and gratitude offerings.\n\n`,
-      `### 4. Targeted Remedial Vector Matrix (RVM) Protocol\n\n`,
-      `To dissipate the 45.24% Saturn deficiency:\n`,
-      `- **Acoustic Modality (SAT_147_MID):** Listen to pure 147Hz acoustic resonance for 11 minutes during your personal Saturn Hora.\n`,
-      `- **Behavioral Modality (SAT_DISC_FIN):** Enforce artificial friction in your liquidity loop—automate exactly 8% of weekly income into a locked reserve vault.\n\n`,
-      `*Delivered under zero-commercial parihara principles.*`
+      'AI reading unavailable. No substitute personal reading or timing is generated. Internal chart scores are not calibrated outcome probabilities.'
+
     ];
 
     for (const line of fallbackLines) {

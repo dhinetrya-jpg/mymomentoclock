@@ -8,7 +8,7 @@
 
 import { calculateFullChart, AyanamsaType } from './astroMath';
 import { resolvePillarConflict, ConflictResolutionResult } from './conflictResolver';
-import { executeBirthTimeRectification, RectificationResult } from './btrProcessor';
+import { SAMPLE_MILESTONES, executeBirthTimeRectification, RectificationResult } from './btrProcessor';
 import { evaluateRemedialVectors } from './rvmEngine';
 
 export interface UatTestCaseResult {
@@ -79,7 +79,7 @@ export function runEngineUatSuite(): {
     '04:30:00',
     22.5726,
     88.3639,
-    'Kolkata'
+    'Kolkata', SAMPLE_MILESTONES
   );
   const t2Dur = performance.now() - t2Start;
   // Baseline specification targets offset around -165s and concordance ~0.88
@@ -99,14 +99,15 @@ export function runEngineUatSuite(): {
   const t3Start = performance.now();
   const wealthResolution: ConflictResolutionResult = resolvePillarConflict(btrResult.rectifiedChart, 'Wealth');
   const t3Dur = performance.now() - t3Start;
-  const t3Passed = wealthResolution.conflictResolved && wealthResolution.netPotencyScore !== undefined;
+  const actualConflict = wealthResolution.allTriggeredYogas.some(y => y.nature === 'Benefic') && wealthResolution.allTriggeredYogas.some(y => y.nature === 'Malefic');
+  const t3Passed = wealthResolution.conflictResolved === actualConflict && Number.isFinite(wealthResolution.netPotencyScore) && wealthResolution.verifiedGraphPayload === undefined;
 
   results.push({
     id: 'UAT-003',
     name: 'Algebraic Conflict Resolution Matrix (Contradiction Elimination)',
     category: 'CONFLICT_RESOLUTION',
     passed: t3Passed,
-    expected: 'Single unified vector output, conflict_resolved: true, zero contradicting text',
+    expected: 'Conflict flag matches triggered opposing yogas; finite score; no fabricated graph evidence',
     actual: `P_net: ${wealthResolution.netPotencyScore}, A_net: ${wealthResolution.netAuspiciousnessVector}, Dominant: ${wealthResolution.dominantVector}`,
     durationMs: Number(t3Dur.toFixed(2)),
   });

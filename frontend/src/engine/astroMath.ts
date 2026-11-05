@@ -1,3 +1,4 @@
+import { validateBirthInput } from './calculationValidation';
 /**
  * MymomentOclock Mathematical & Astronomical Specification Core
  * Supports True Lahiri (Chitrapaksha), KP, and Raman Ayanamsas.
@@ -501,17 +502,18 @@ export function calculateFullChart(
   birthTime: string,
   latitude: number,
   longitude: number,
-  cityName: string = 'Kolkata',
+  cityName: string = '',
   timezoneOffset: number = 5.5,
   ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI
 ): ChartCalculationResult {
+  validateBirthInput({ birthDate, birthTime, latitude, longitude, timezoneOffset, ayanamsaType });
   const [yearStr, monthStr, dayStr] = birthDate.split('-');
   const [hourStr, minStr, secStr] = birthTime.split(':');
 
   const year = parseInt(yearStr, 10) || 1990;
   const month = parseInt(monthStr, 10) || 1;
   const day = parseInt(dayStr, 10) || 1;
-  const localHour = parseInt(hourStr, 10) || 12;
+  const localHour = parseInt(hourStr, 10);
   const localMin = parseInt(minStr, 10) || 0;
   const localSec = parseInt(secStr || '0', 10) || 0;
 

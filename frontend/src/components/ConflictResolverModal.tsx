@@ -241,18 +241,13 @@ export const ConflictResolverModal: React.FC<ConflictResolverModalProps> = ({
             <pre className="mt-3 overflow-x-auto rounded bg-[#140407] p-3 font-mono text-[11px] text-amber-200/90 leading-relaxed border border-rose-950/60">
 {JSON.stringify({
   pillar: resolution.verifiedGraphPayload?.pillar || resolution.category,
-  is_graph_verified: resolution.verifiedGraphPayload?.is_graph_verified ?? true,
-  active_verified_path: resolution.verifiedGraphPayload?.active_verified_path || resolution.dominantVector,
-  vector_matrix: resolution.verifiedGraphPayload?.vector_matrix || {
-    earning_capacity: 0.82,
-    retention_velocity: 0.45,
-    asset_multiplier: 0.72,
-    temporal_friction: 0.38
-  },
-  calculated_p_net: 0.5910,
-  dasha_transit_modulator: 0.97,
-  final_a_net: 0.5733,
-  rvm_deficiency_intensity: 0.55
+  is_graph_verified: false,
+  active_verified_path: null,
+  vector_matrix: null,
+  calculated_p_net: resolution.netPotencyScore,
+  final_a_net: resolution.netAuspiciousnessVector,
+  scope: 'Internal traditional-rule heuristic; no graph verification or outcome probability'
+
 }, null, 2)}
             </pre>
           </div>

@@ -1,3 +1,5 @@
+import { validateBirthInput, validateMilestones, CalculationInputError } from './calculationValidation';
+import { AyanamsaType } from './astroMath';
 /**
  * MymomentOclock Automated Birth Time Rectification (BTR) Processor
  * Evaluates candidate charts using 15-second discrete steps across a ±15-minute window
@@ -26,6 +28,16 @@ export interface CandidateEvaluation {
 }
 
 export interface RectificationResult {
+  assessment_status: 'HEURISTIC_CANDIDATE';
+  method_id: string;
+  method_version: string;
+  candidate_birth_time: string;
+  candidate_fit_score: number;
+  candidate_fit_score_definition: string;
+  milestone_count: number;
+  independent_validation_status: 'NOT_PERFORMED';
+  limitations: string[];
+  /** Legacy aliases below describe a candidate, not a verified time. */
   originalInputTime: string;
   rectifiedTrueTime: string;
   offsetSeconds: number;
@@ -82,13 +94,19 @@ export function executeBirthTimeRectification(
   latitude: number,
   longitude: number,
   cityName: string,
-  milestones: LifeMilestone[] = SAMPLE_MILESTONES,
+  milestones: LifeMilestone[] = [],
   searchWindowMinutes: number = 15,
-  intervalSeconds: number = 15
+  intervalSeconds: number = 15,
+  timezoneOffset: number = 5.5,
+  ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI
 ): RectificationResult {
-  const timeStr = rawTime || '12:00:00';
+  validateBirthInput({birthDate, birthTime: rawTime, latitude, longitude, timezoneOffset, ayanamsaType});
+  validateMilestones(milestones);
+  if (!milestones.length) throw new CalculationInputError('MILESTONES_REQUIRED', 'Supply actual lifecycle milestones; sample events are never substituted.');
+  if (!Number.isFinite(searchWindowMinutes) || searchWindowMinutes <= 0 || searchWindowMinutes > 15 || !Number.isFinite(intervalSeconds) || intervalSeconds < 1) throw new CalculationInputError('INVALID_SEARCH_WINDOW', 'Use a positive search window up to 15 minutes and interval of at least one second.');
+  const timeStr = rawTime;
   const [hStr, mStr, sStr] = timeStr.split(':');
-  const baseH = parseInt(hStr, 10) || 12;
+  const baseH = parseInt(hStr, 10);
   const baseM = parseInt(mStr, 10) || 0;
   const baseS = parseInt(sStr || '0', 10) || 0;
   const baseTotalSeconds = baseH * 3600 + baseM * 60 + baseS;
@@ -102,8 +120,8 @@ export function executeBirthTimeRectification(
 
   for (let offset = -halfWindowSec; offset <= halfWindowSec; offset += intervalSeconds) {
     let candidateTotalSec = baseTotalSeconds + offset;
-    if (candidateTotalSec < 0) candidateTotalSec += 86400;
-    candidateTotalSec = candidateTotalSec % 86400;
+    // Cross-date searches need date-aware Dasha handling; do not wrap onto the wrong date.
+    if (candidateTotalSec < 0 || candidateTotalSec >= 86400) continue;
 
     const candH = Math.floor(candidateTotalSec / 3600);
     const candM = Math.floor((candidateTotalSec % 3600) / 60);
@@ -111,7 +129,7 @@ export function executeBirthTimeRectification(
     const testTimeStr = `${String(candH).padStart(2, '0')}:${String(candM).padStart(2, '0')}:${String(candS).padStart(2, '0')}`;
 
     // Quick chart run for candidate
-    const testChart = calculateFullChart(birthDate, testTimeStr, latitude, longitude, cityName);
+    const testChart = calculateFullChart(birthDate, testTimeStr, latitude, longitude, cityName, timezoneOffset, ayanamsaType);
 
     // Evaluate concordance with milestone timeline
     let score = 0;
@@ -125,21 +143,21 @@ export function executeBirthTimeRectification(
     // Subcharts D-60 shift boundary every 30' (2 minutes).
     const harmonicResonance = Math.sin((offset / 120.0) * Math.PI) * 0.15;
 
-    const effectiveMilestones = (milestones && milestones.length > 0) ? milestones : SAMPLE_MILESTONES;
+    const effectiveMilestones = milestones;
 
     effectiveMilestones.forEach(ms => {
       const msWeight = ms.confidence === 'HIGH' ? 1.0 : 0.6;
       totalWeight += msWeight;
 
-      const dateStr = ms.approxDate || (ms as any).timestamp || '2020-01-01';
-      const eventYear = parseInt(String(dateStr).split('-')[0], 10) || 2020;
+      const dateStr = ms.approxDate;
+      const eventYear = parseInt(dateStr.split('-')[0], 10);
       const activePeriod = testChart.vimshottariDasha.timeline.find(t => {
         const sY = parseInt(t.startDate.split('-')[0], 10);
         const eY = parseInt(t.endDate.split('-')[0], 10);
         return eventYear >= sY && eventYear < eY;
       });
 
-      const effectiveType: string = ms.type || (ms as any).event_type || 'CAREER_PROMOTION';
+      const effectiveType: string = ms.type;
 
       let eventConcordance = 0.70;
       if (activePeriod) {
@@ -188,15 +206,20 @@ export function executeBirthTimeRectification(
   // Pick optimal candidate
   // If baseline offset matches -165 seconds (as in prompt baseline Kolkata scenario), allow strong weight
   const rectifiedTime = bestCandidateEval?.testTimeStr || rawTime;
-  const rectifiedChart = calculateFullChart(birthDate, rectifiedTime, latitude, longitude, cityName);
+  const rectifiedChart = calculateFullChart(birthDate, rectifiedTime, latitude, longitude, cityName, timezoneOffset, ayanamsaType);
 
   // Sort top candidates
   const topCandidates = [...candidates].sort((a, b) => b.concordanceScore - a.concordanceScore).slice(0, 5);
 
   const signOffset = bestOffset >= 0 ? `+${bestOffset}s` : `${bestOffset}s`;
-  const verificationSummary = `Automated Janma Lagna Shodhana calibrated original time (${rawTime}) by ${signOffset} to ${rectifiedTime}. Concordance rating: ${(bestScore * 100).toFixed(1)}%. D-60 Shashtyamsa macro-destiny seed stabilized.`;
+  const verificationSummary = `Heuristic candidate ${rectifiedTime} (${signOffset}); internal fit ${bestScore}. Not a probability of correctness or independently validated birth time.`;
 
   return {
+    assessment_status: 'HEURISTIC_CANDIDATE', method_id: 'DISCRETE_DASHA_HARMONIC_SEARCH', method_version: '1',
+    candidate_birth_time: rectifiedTime, candidate_fit_score: bestScore,
+    candidate_fit_score_definition: 'Bounded weighted milestone/Dasha heuristic plus sinusoidal offset term; not a calibrated probability.',
+    milestone_count: milestones.length, independent_validation_status: 'NOT_PERFORMED',
+    limitations: ['No independent validation or D-60 correctness verification.', 'UTC offset supplied by caller; no historical timezone conversion.', 'Candidates crossing the birth-date boundary are excluded.', 'Original birth time is preserved; applying a candidate requires explicit action.'],
     originalInputTime: rawTime,
     rectifiedTrueTime: rectifiedTime,
     offsetSeconds: bestOffset,
