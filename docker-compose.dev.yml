@@ -20,3 +20,5 @@ services:
 volumes:
   pgdata:
   neo4jdata:
+# PAY-P0-01 integration tests use disposable DB containers, not these persistent volumes.
+# Do not reuse development credentials or this non-TLS database for production payment bindings.

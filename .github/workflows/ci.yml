@@ -43,6 +43,8 @@ jobs:
 
       - name: Phase 1 security and privacy regression
         run: node --import tsx --test tests/phase1/security.test.ts
+      - name: Payment boundary and checkout contract tests
+        run: node --import tsx --test tests/payment/boundary.test.ts
       - name: Desktop and mobile production browser regression
         run: |
           NODE_ENV=production PORT=3101 node --import tsx server.ts > /tmp/phase1-browser-server.log 2>&1 &

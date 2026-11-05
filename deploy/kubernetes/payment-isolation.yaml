@@ -1,0 +1,39 @@
+# Future payment workload label; no Deployment/Secret/worker is activated by this file.
+# Dedicated internal TLS listener8443 only; do not add an Ingress for it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: payment-internal-only
+  namespace: astro-production
+spec:
+  podSelector:
+    matchLabels:
+      app: mymomentoclock-payment
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: mymomentoclock-web
+      ports:
+        - protocol: TCP
+          port: 8443
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+# Provider egress is intentionally NOT open: add approved provider/proxy destinations
+# through the deployment's actual network enforcement layer after provider selection.

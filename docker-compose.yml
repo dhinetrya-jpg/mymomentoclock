@@ -19,3 +19,6 @@ services:
     tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
+# No payment service/database/worker is started here. Future payment internal transport
+# requires dedicated mTLS certificate mounts, secret DSN with verify-full, private networking,
+# real reviewed adapters and owner-approved activation. See docs/payment deployment runbook.

@@ -1,0 +1,6 @@
+# Explicitly run operator tool; not an application dependency or startup job.
+FROM postgres:16-alpine
+COPY database/migrations/ /migrations/
+COPY scripts/migrate-payments.sh /usr/local/bin/migrate-payments
+USER postgres
+ENTRYPOINT ["/usr/local/bin/migrate-payments"]
