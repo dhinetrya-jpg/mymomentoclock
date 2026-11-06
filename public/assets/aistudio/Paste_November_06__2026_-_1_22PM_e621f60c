@@ -1,0 +1,856 @@
+# GOOGLE AI STUDIO — EXECUTION PROMPT
+# CORE-P0-01-FINAL-ACCURACY-FIX
+## Independent Astronomical Accuracy Certification, Executable Reference Comparisons and Final Defect Remediation
+
+**Product:** MyMomentOclock  
+**Repository:** https://github.com/dhinetrya-jpg/mymomentoclock  
+**Base branch:** Latest `main`  
+**Last independently audited SHA:** `49f891b595db612753eebcd78be53d88543ff85f`  
+**Working branch:** `fix/core-p0-01-final-accuracy`  
+**Priority:** P0  
+**Task type:** Code implementation, numerical verification, automated tests, evidence generation, documentation correction and release-gate reassessment.
+
+## 0. Mandatory execution instructions
+
+You are operating as a principal astronomical software engineer, numerical verification specialist, Go/CGO engineer, TypeScript engineer, astronomical reference-data auditor and independent software quality assessor.
+
+Your assignment is to **implement and verify fixes**, not merely provide a plan, report or recommendation.
+
+The previous CORE-P0-01 repair improved test coverage and documentation but did not establish sufficient independent astronomical accuracy.
+
+Your job is to resolve the nine findings V01–V09 with reproducible evidence.
+
+### Non-negotiable rules
+
+1. Do not mark any numerical accuracy gate PASS based solely on passing unit tests, source-code inspection, fixture existence or documentation.
+2. Actual production Go/Swiss calculation code must execute against independently obtained numerical reference results.
+3. Do not fabricate JPL Horizons, USNO, IERS, PAC India or Swiss Ephemeris results.
+4. Do not widen tolerances to make failing calculations pass.
+5. Do not mark missing capabilities as implemented.
+6. Do not alter payment logic, merchant integrations, customer authentication or entitlements.
+7. Preserve CORE-P0-02's merged implementation and existing release gates.
+8. Do not enable personalized auspicious timing, live financial recommendations or paid access merely because this task succeeds.
+9. Do not merge into `main` or deploy to production without owner authorization.
+10. If external reference retrieval or native Go execution is unavailable, report BLOCKED and produce a runnable handoff for an environment that supports it.
+
+**Mandatory success condition: Real Go/Swiss output versus independently sourced astronomical numerical reference output, executed and passing under justified tolerances.**
+
+---
+
+## 1. First inspect the latest repository
+
+Before changing code:
+
+- Fetch latest `main`.
+- Record actual HEAD SHA.
+- Inspect existing branches, pending changes and worktrees.
+- Identify CORE-P0-01 and CORE-P0-02 changes since the historical audit.
+- Identify all calculation entry points.
+- Identify the native Go/CGO test environment and GitHub Actions workflows.
+- Inspect current independent reference fixtures.
+- Review the existing tolerance policy and test reports.
+
+Required files to inspect include:
+
+- `backend/internal/ephemeris/normalizer.go`
+- `backend/internal/ephemeris/bridge.cpp`
+- `backend/internal/ephemeris/bridge_cgo.go`
+- `backend/internal/ephemeris/bridge_cgo_test.go`
+- `backend/internal/ephemeris/validation_test.go`
+- `src/engine/astroMath.ts`
+- `frontend/src/engine/astroMath.ts`
+- `src/engine/calculationValidation.ts`
+- `tests/calculation/astronomical_accuracy.test.ts`
+- `tests/calculation/astronomical_reference_fixtures.json`
+- `docs/core/CORE_P0_01_INDEPENDENT_AUDIT.md`
+- `docs/core/CORE_P0_01_TEST_REPORT.md`
+- `docs/core/CORE_P0_01_TOLERANCE_POLICY.md`
+- `docs/core/CORE_P0_01_HANDOFF.md`
+- CORE-P0-02 calculation, rules and release-gate files.
+
+Determine the current source of truth rather than assuming old paths or architecture remain unchanged.
+
+Create the working branch only after confirming a clean and safe baseline.
+
+---
+
+# 2. V01 — Real Go/Swiss planetary numerical validation
+
+**Severity: P0**
+
+### Existing defect
+
+The previous accuracy test verifies that Go source files contain expected strings such as `MOSHIER`, `EPHEMERIS_MODE_UNAVAILABLE` and timezone error codes.
+
+That is a contract inspection, not astronomical accuracy validation.
+
+### Required implementation
+
+Create a native Go numerical accuracy test suite that invokes the real production calculation path.
+
+Suggested location:
+
+`backend/internal/ephemeris/independent_accuracy_test.go`
+
+Use existing native bridge functions or service interfaces. Avoid introducing a parallel test-only calculation implementation.
+
+For each test case:
+
+1. Load an independently sourced reference fixture.
+2. Pass its exact timestamp, coordinates and requested ephemeris settings to the real Go calculation function.
+3. Capture the actual output.
+4. Record actual runtime mode and flags.
+5. Compare every applicable astronomical quantity numerically.
+6. Calculate absolute and circular angular errors.
+7. Assert against justified tolerances.
+8. Fail if the required precision mode is unavailable.
+9. Fail on missing, nonfinite, invalid or unsupported output.
+10. Record sufficient evidence to reproduce the comparison.
+
+### Minimum astronomical bodies
+
+- Sun
+- Moon
+- Mercury
+- Venus
+- Mars
+- Jupiter
+- Saturn
+
+Include lunar nodes and outer planets only where implemented and supported by the production engine.
+
+### Minimum observation scenarios
+
+- J2000-era reference epoch.
+- Modern epoch in 2026.
+- Historical date in 1989.
+- India/Kolkata observation.
+- New York observation.
+- Canadian observation.
+- Near a sidereal sign boundary.
+- Near a Nakshatra/Pada boundary.
+- Retrograde period for an applicable planet.
+- Multiple times of day.
+- Multiple geographic latitudes and longitudes.
+
+Use at least **20 independently evidenced reference cases across at least five distinct dates**, with all seven required bodies represented. Add more cases where boundary coverage or precision claims require them.
+
+This is a minimum coverage target, not proof of accuracy by itself.
+
+### Required numerical output
+
+For each comparison report:
+
+- Reference ID.
+- Timestamp and time scale.
+- Planet/body.
+- Observer center.
+- Coordinate frame.
+- Ephemeris mode.
+- Expected longitude.
+- Actual longitude.
+- Circular angular error.
+- Allowed tolerance.
+- PASS/FAIL.
+- Reference provenance.
+
+**Acceptance V01:** Native Go calculations execute successfully, reference comparisons are reproducible, and all mandatory numerical assertions pass.
+
+---
+
+# 3. V02 — Remove scientifically unacceptable precision tolerances
+
+**Severity: P0**
+
+### Existing defect
+
+The analytical TypeScript engine reports errors including:
+
+- Moon: approximately 5.36°.
+- Saturn: approximately 5.23°.
+- Mars: approximately 25.80°.
+
+The prior test treated these as passing because tolerances were set as high as 6° or 30°.
+
+Such tolerances are not acceptable for minute-level auspicious-time calculations or reliable planetary sign classification.
+
+### Required correction
+
+Separate three concepts:
+
+**Tier A — Authoritative numerical calculation**
+
+Native Go/Swiss mode with independently verified numerical accuracy.
+
+**Tier B — Approximate analytical visualization**
+
+TypeScript calculations explicitly labeled approximate and not used for precision-dependent decisions.
+
+**Tier C — Unavailable/unverified calculation**
+
+Unsupported results that must remain disabled.
+
+Do not use analytical approximation tolerances as evidence of production astronomical precision.
+
+Define and justify independent tolerance policies for:
+
+- Sun.
+- Moon.
+- Other planets.
+- Ayanamsa.
+- Ascendant.
+- Sidereal longitude.
+- Time-scale conversion.
+- Sunrise/sunset.
+- Panchang transition times.
+- Classification boundaries.
+
+Use reference uncertainty and the actual computation mode to justify each tolerance.
+
+Suggested initial precision targets for evaluation, subject to independent source compatibility:
+
+| Quantity | Candidate acceptance target |
+|---|---|
+| Native planetary longitude | ≤ 0.001° |
+| Native Moon longitude | ≤ 0.001° |
+| Native sidereal longitude | ≤ 0.001° |
+| Ascendant | ≤ 0.01° |
+| Julian Day | ≤ 0.000001 day |
+| Sunrise/sunset | ≤ 60 seconds, only if implemented |
+| Panchang transition | ≤ 60 seconds, only if implemented |
+
+These are **candidate engineering targets**, not automatically valid tolerances. Validate the suitability of each against the reference frame, model, data quality, computation mode and intended product use.
+
+Do not silently weaken targets when tests fail.
+
+### Boundary uncertainty
+
+When a calculation's uncertainty overlaps a sign, Nakshatra, Pada or divisional boundary:
+
+- Mark classification uncertain.
+- Do not return an unjustifiably definitive classification.
+- Preserve the underlying numerical value and uncertainty.
+- Block precision-dependent downstream recommendations where necessary.
+
+**Acceptance V02:** No high-error analytical result is treated as independently certified precision.
+
+---
+
+# 4. V03 — Execute real IANA DST validation
+
+**Severity: P0**
+
+### Existing defect
+
+Previous tests verify DST fixture values and numeric-offset arithmetic without directly invoking the production Go timezone resolver for each required transition.
+
+### Required implementation
+
+Test the real Go timezone-resolution code using:
+
+| Scenario | Local timestamp | Expected behavior |
+|---|---|---|
+| New York spring gap | 2026-03-08 02:30 | Nonexistent time rejected |
+| New York fall fold | 2026-11-01 01:30 | Ambiguous without disambiguation |
+| New York fall fold, EDT | 2026-11-01 01:30, UTC−4 | Resolves to 05:30 UTC |
+| New York fall fold, EST | 2026-11-01 01:30, UTC−5 | Resolves to 06:30 UTC |
+| Kolkata | Valid date, UTC+5:30 | Correct UTC conversion |
+| Toronto | DST gap and fold | Correct transition behavior |
+| Vancouver | DST gap and fold | Correct transition behavior |
+
+Also test:
+
+- Historical timezone changes.
+- Leap dates.
+- Midnight transitions.
+- UTC date rollover.
+- Explicit offset conflicting with IANA rules.
+- Missing timezone identifier.
+- Invalid timezone identifier.
+
+Use the actual production resolver, not hardcoded expected error strings.
+
+**Acceptance V03:** Real resolver calls demonstrate correct behavior for nonexistent, ambiguous and unambiguous local times.
+
+---
+
+# 5. V04 — Correct J2000 and astronomical time-scale handling
+
+**Severity: P0**
+
+### Existing defect
+
+Previous documentation and tests conflate UTC, UT1, TT and a fixed 64.184-second difference.
+
+### Required correction
+
+Distinguish:
+
+- UTC: civil atomic time with leap seconds.
+- TAI: International Atomic Time.
+- TT: Terrestrial Time, TT = TAI + 32.184 seconds.
+- UT1: Earth-rotation time.
+- Delta-T: TT − UT1.
+- TDB: barycentric dynamical time.
+
+At J2000.0:
+
+`JD 2451545.0 TT` defines the J2000 epoch.
+
+Do not assume:
+
+`TT − UTC = 64.184 seconds`
+
+for every date.
+
+Do not assume:
+
+`TT − UT1 = TT − UTC`.
+
+Use date-appropriate leap-second and Earth-orientation information when required.
+
+Implement tests covering:
+
+1. J2000 TT epoch.
+2. UTC-to-TAI conversion.
+3. TAI-to-TT conversion.
+4. UT1 and Delta-T distinction.
+5. Julian Day noon convention.
+6. Historical and contemporary dates.
+7. Precision and floating-point rounding.
+
+If the engine uses approximated Delta-T, disclose its uncertainty.
+
+**Acceptance V04:** All time-scale conversions and epoch descriptions are mathematically consistent and supported by reproducible references.
+
+---
+
+# 6. V05 — Establish genuinely reproducible independent reference provenance
+
+**Severity: P0**
+
+### Existing defect
+
+The fixture dataset contains source names, query parameters and retrieval dates, but metadata presence alone does not establish that numerical values were actually obtained from the named sources.
+
+### Required implementation
+
+Create a reference-evidence directory:
+
+`tests/reference-data/`
+
+Suggested structure:
+
+- `manifest.json`
+- `jpl-horizons/`
+- `usno/`
+- `iers/`
+- `timezone/`
+- `pac-india/`
+- `README.md`
+
+Store only material that may legally be retained or redistributed.
+
+For each independently obtained astronomical value, capture:
+
+- Official source URL or endpoint.
+- Exact query or request.
+- Retrieval timestamp.
+- Source version.
+- Raw permitted response or immutable evidence.
+- SHA-256 checksum where applicable.
+- Target body.
+- Observer center.
+- Coordinate reference system.
+- Time scale.
+- Units.
+- Light-time and aberration settings.
+- Sidereal transformation methodology.
+- Expected numerical value.
+- Source uncertainty.
+- Selected tolerance.
+- Reproduction instructions.
+
+### Important JPL requirements
+
+Do not compare JPL ICRF equatorial coordinates directly with Swiss sidereal ecliptic longitudes.
+
+Normalize:
+
+1. Observer/center.
+2. Geometric versus apparent coordinates.
+3. Equatorial versus ecliptic coordinates.
+4. Reference epoch and equinox.
+5. Time scale.
+6. Light-time and aberration settings.
+7. Geocentric versus topocentric calculation.
+8. Ayanamsa conversion.
+
+Record the normalization method explicitly.
+
+Do not describe a value as a direct JPL Lahiri sidereal result unless the exact derivation is established.
+
+### Reference retrieval
+
+Where supported, implement a deterministic reference retrieval/verification script.
+
+For example:
+
+`tools/astronomy/verify-reference-provenance.*`
+
+It must fail on missing evidence, invalid hashes or mismatched fixture metadata.
+
+Do not require live internet access for every CI run; committed, permitted and verifiable evidence should support offline regression.
+
+**Acceptance V05:** A third party can reproduce or independently verify each mandatory reference value.
+
+---
+
+# 7. V06 — Expand accuracy sampling beyond one epoch
+
+**Severity: High**
+
+### Existing defect
+
+The earlier report used four planets at a single J2000-era timestamp.
+
+This is insufficient for general astronomical accuracy claims.
+
+### Required implementation
+
+Expand numerical coverage across:
+
+- 1980–1999.
+- 2000–2019.
+- 2020–2026.
+- Future dates within supported ephemeris range.
+- Multiple seasons.
+- Multiple geographic locations.
+- Retrograde periods.
+- Sidereal sign transitions.
+- Lunar Nakshatra transitions.
+- Near-boundary values.
+
+Use stratified sampling rather than only convenient dates.
+
+Generate an error summary for each supported body:
+
+- Sample count.
+- Mean absolute angular error.
+- Median angular error.
+- 95th percentile error.
+- Maximum error.
+- Worst-case fixture ID.
+- Failed-case count.
+- Precision mode.
+
+Do not use the sample mean as a substitute for worst-case safety assessment.
+
+**Acceptance V06:** The validation report quantifies accuracy across representative operating conditions, with no unexplained failed mandatory case.
+
+---
+
+# 8. V07 — Independently validate ascendant, houses and divisional calculations
+
+**Severity: High**
+
+### Existing defect
+
+The previous tests added expected numerical values but did not sufficiently establish their independent derivation.
+
+### Required implementation
+
+For supported calculations validate:
+
+- Local sidereal time.
+- Ascendant longitude.
+- Sidereal ascendant.
+- Whole-sign house assignments.
+- Nakshatra and Pada.
+- D-2 Hora.
+- D-9 Navamsha.
+- D-60 Shashtyamsa.
+
+Use separately derived mathematical reference cases, documented traditional conventions or independently computed fixtures.
+
+For ascendant calculations, explicitly specify:
+
+- Geographic latitude/longitude.
+- UT1.
+- Sidereal time model.
+- Obliquity.
+- Tropical/sidereal conversion.
+- Ayanamsa.
+- House system.
+
+For vargas, distinguish mathematical partition correctness from astronomical planetary-position accuracy.
+
+A mathematically correct Navamsha mapping applied to a planet with a 5° longitude error does not produce a validated placement.
+
+Test values just below, exactly at and just above relevant boundaries.
+
+**Acceptance V07:** Numerical calculations and classification rules are independently reproducible, and input uncertainty is propagated to classifications.
+
+---
+
+# 9. V08 — Correct acceptance-gate documentation
+
+**Severity: High**
+
+### Existing defect
+
+The previous reports declare A01–A12 PASS despite missing native numerical comparisons and other incomplete evidence.
+
+### Required correction
+
+Reassess all gates using executed results.
+
+Allowed statuses:
+
+- PASS
+- FAIL
+- BLOCKED_EXTERNAL_DEPENDENCY
+- NOT_TESTED
+- NOT_APPLICABLE
+
+Every PASS must link to:
+
+- Executable test.
+- Actual command.
+- Result.
+- Reference evidence.
+- Relevant source code.
+- Commit SHA.
+
+Do not treat:
+
+- A fixture's `verificationStatus` string as proof.
+- A source-code string match as native runtime validation.
+- A passing build as numerical correctness.
+- A successful GitHub Pages deployment as backend readiness.
+- Documented licensing requirements as completed licensing approval.
+
+Update:
+
+- `CORE_P0_01_INDEPENDENT_AUDIT.md`
+- `CORE_P0_01_DEFECT_REGISTER.md`
+- `CORE_P0_01_REFERENCE_MATRIX.md`
+- `CORE_P0_01_TEST_REPORT.md`
+- `CORE_P0_01_TOLERANCE_POLICY.md`
+- `CORE_P0_01_HANDOFF.md`
+
+Preserve a record of previous claims and their corrections.
+
+**Acceptance V08:** Documentation exactly matches the available executable evidence.
+
+---
+
+# 10. V09 — Panchang dependency and CORE-P0-02 integration safety
+
+**Severity: P0**
+
+### Existing defect
+
+The astronomical foundation required for personalized auspicious timing is incomplete.
+
+Existing reports identify unavailable or unverified:
+
+- Tithi.
+- Yoga.
+- Karana.
+- Sunrise/sunset.
+- Rahu Kaal.
+- Other local-day timing calculations.
+
+### Required action
+
+First inspect the latest merged CORE-P0-02 implementation.
+
+For each timing dependency determine:
+
+- Is it implemented?
+- Which engine supplies it?
+- Is it based on verified astronomical output?
+- Does it use actual location and timezone?
+- Does it use validated local sunrise/sunset?
+- Is the rule deterministic and documented?
+- Does it propagate uncertainty?
+- Is it protected by release gates?
+
+Do not assume the earlier implementation status remains current.
+
+Create a dependency contract with statuses:
+
+- `VERIFIED`
+- `IMPLEMENTED_UNVERIFIED`
+- `UNAVAILABLE`
+- `BLOCKED`
+
+If an essential calculation is unavailable, preserve fail-closed behavior.
+
+Do not silently introduce static festival values, hardcoded auspicious times or approximate planetary results as authoritative inputs.
+
+If an implemented calculation can be validated safely within CORE-P0-01, add the numerical test. Otherwise assign it explicitly to the appropriate CORE-P0-02 follow-up.
+
+**Acceptance V09:** CORE-P0-02 cannot consume unverified precision-dependent inputs as authoritative results.
+
+---
+
+# 11. Mandatory automated test architecture
+
+Create or extend tests in the appropriate existing repository locations.
+
+Required test groups:
+
+**Group 1 — Native numerical accuracy**
+- Actual Go/Swiss calculations.
+- Independent reference values.
+- Planetary and lunar comparisons.
+- Runtime mode assertions.
+
+**Group 2 — Reference provenance**
+- Evidence manifest.
+- Source queries.
+- Checksums.
+- Frame and unit compatibility.
+- Fixture integrity.
+
+**Group 3 — Time and timezone**
+- UT1, UTC, TAI, TT and Delta-T.
+- Julian Day.
+- DST gap/fold.
+- Historical IANA zones.
+
+**Group 4 — Sidereal and Vedic calculations**
+- Ayanamsa.
+- Ascendant.
+- Nakshatra/Pada.
+- Supported vargas.
+- Boundary uncertainty.
+
+**Group 5 — Integration safety**
+- Node/Go precision metadata.
+- CORE-P0-02 fail-closed dependencies.
+- Unsupported calculation refusal.
+- Payment/authentication regression.
+
+**Group 6 — Build and CI**
+- TypeScript lint/typecheck.
+- Frontend lint.
+- Production build.
+- Node regression suite.
+- Go unit tests.
+- Go race detector.
+- Go vet.
+- CGO/native tests.
+- Docker build.
+- GitHub Actions.
+
+Where necessary, add a dedicated CI job for native independent accuracy.
+
+The job must fail if required numerical fixtures are absent, actual native execution is skipped or a mandatory accuracy comparison fails.
+
+Do not make this job green by substituting a JavaScript mock.
+
+---
+
+# 12. Mandatory validation report
+
+Produce a machine-readable and human-readable comparison report.
+
+Example structure:
+
+| Fixture | Body | Mode | Reference | Actual | Error | Tolerance | Result |
+|---|---|---|---|---|---|---|---|
+| REF-001 | Sun | SWISS_FILE | From evidence | Runtime output | Computed | Justified | PASS/FAIL |
+| REF-002 | Moon | SWISS_FILE | From evidence | Runtime output | Computed | Justified | PASS/FAIL |
+
+Use actual results only.
+
+Include:
+
+- Exact source commit.
+- Native library version.
+- Runtime flags.
+- Ephemeris file checksums.
+- Test environment.
+- Source reference versions.
+- Test commands.
+- Sample counts.
+- Error statistics.
+- Failures and blockers.
+- Reproduction instructions.
+
+If SWISS_FILE mode is not provisioned, mark its validation blocked. A separately validated MOSHIER mode must not be relabeled SWISS_FILE.
+
+---
+
+# 13. Required implementation sequence
+
+Execute in this order:
+
+**Phase 1 — Baseline**
+- Inspect current main.
+- Record SHA.
+- Identify parallel CORE-P0-02 and payment changes.
+- Establish safe working branch.
+
+**Phase 2 — Evidence**
+- Obtain real external reference results.
+- Validate source provenance.
+- Normalize coordinate systems and time scales.
+- Establish justified tolerance policy.
+
+**Phase 3 — Native verification**
+- Build Go/Swiss integration.
+- Execute production calculations.
+- Compare actual numerical results.
+- Capture errors and runtime modes.
+
+**Phase 4 — Defect repair**
+- Reproduce confirmed defects.
+- Apply minimal corrections.
+- Add failing-then-passing regression tests.
+- Preserve API compatibility.
+
+**Phase 5 — Extended validation**
+- DST and time scales.
+- Ascendant and vargas.
+- Multi-epoch accuracy.
+- CORE-P0-02 dependencies.
+- Boundary uncertainty.
+
+**Phase 6 — Regression**
+- Execute all relevant Node, Go, CGO, Docker and security tests.
+- Inspect GitHub Actions results.
+- Verify no payment or authorization regressions.
+
+**Phase 7 — Documentation**
+- Update V01–V09 findings.
+- Reassess A01–A12.
+- Produce numerical accuracy evidence.
+- Correct prior overstatements.
+
+**Phase 8 — Handoff**
+- Review diff.
+- Commit scoped changes.
+- Provide commit SHA and PR link where supported.
+- Do not merge or deploy without approval.
+
+---
+
+# 14. Final acceptance gates
+
+| Gate | Requirement |
+|---|---|
+| F01 | Actual Go/Swiss numerical comparisons executed |
+| F02 | Independent reference evidence reproducible |
+| F03 | Seven supported primary bodies covered |
+| F04 | Multi-date, multi-location sampling completed |
+| F05 | Tolerances independently justified |
+| F06 | No unacceptable precision errors accepted |
+| F07 | Correct J2000/UTC/UT1/TT treatment |
+| F08 | Real IANA DST resolver tests passing |
+| F09 | Ascendant and supported varga rules verified |
+| F10 | Native ephemeris mode and flags proven |
+| F11 | CORE-P0-02 unverified dependencies fail closed |
+| F12 | Existing security and payment regressions pass |
+| F13 | CI accuracy job actually executes native tests |
+| F14 | Reports accurately reflect evidence |
+| F15 | No unrelated modifications or premature activation |
+
+**CORE-P0-01 GO requires every mandatory applicable gate to PASS.**
+
+A BLOCKED, FAIL or NOT_TESTED mandatory gate means CORE-P0-01 remains NO-GO.
+
+A documented exception must not silently convert a failed accuracy requirement into a pass.
+
+---
+
+# 15. Final deliverables and response format
+
+Provide the following at completion.
+
+### A. Repository details
+- Actual base SHA.
+- Working branch.
+- Final commit SHA.
+- PR URL if created.
+- Files changed.
+
+### B. V01–V09 defect resolution matrix
+For each finding:
+- Root cause.
+- Exact code change.
+- Test implemented.
+- Test result.
+- Evidence path.
+- Status.
+
+### C. Numerical verification results
+- Actual native Go/Swiss output.
+- Independent expected output.
+- Error and tolerance.
+- Runtime ephemeris mode.
+- Source provenance.
+- PASS/FAIL per case.
+
+### D. Test execution report
+- Commands actually executed.
+- Environment.
+- Passed/failed/skipped tests.
+- CI results.
+- Unexecuted tests explicitly marked NOT_TESTED.
+
+### E. Release gates
+- F01–F15.
+- A01–A12.
+- Evidence for every PASS.
+
+### F. Remaining dependencies
+- Ephemeris data provisioning.
+- Licensing approval.
+- External reference limitations.
+- CORE-P0-02 dependencies.
+- Production deployment dependencies.
+
+### G. Separate final decisions
+
+1. **Engineering build quality:** GO / NO-GO.
+2. **CORE-P0-01 independent astronomical accuracy:** GO / NO-GO.
+3. **CORE-P0-02 precision integration:** GO / CONDITIONAL / NO-GO.
+4. **Commercial production launch:** GO / NO-GO.
+
+Do not conflate these decisions.
+
+---
+
+# 16. Stop conditions and escalation
+
+Stop any attempt to declare completion if:
+
+- Go/CGO cannot execute.
+- Independent numerical reference values are unavailable.
+- Required reference evidence cannot be reproduced.
+- The calculation mode cannot be identified.
+- Required accuracy tolerances fail.
+- CORE-P0-02 depends on unverified precision inputs.
+- Critical security regressions fail.
+
+You may continue implementing safely isolated fixes, tests and documentation, but report the affected acceptance gates as blocked.
+
+If Google AI Studio lacks Go/CGO or external network capability, produce a concrete GitHub Actions/Codex execution handoff with all test files and commands. Do not claim the blocked work passed.
+
+---
+
+# FINAL EXECUTION COMMAND
+
+**Start the implementation now.**
+
+Inspect the latest main branch, reproduce V01–V09, establish independently sourced astronomical evidence, execute actual native Go/Swiss numerical comparisons, fix demonstrated defects, extend regression coverage, reassess every acceptance gate, correct documentation and provide an evidence-backed handoff.
+
+Do not stop after planning.
+
+Do not produce another report claiming 100% accuracy without actual independent numerical execution.
+
+**The final deliverable is a verifiable astronomical calculation foundation, not a declaration of success.**
