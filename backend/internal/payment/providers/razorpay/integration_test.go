@@ -72,7 +72,7 @@ func adapterDB(t *testing.T, migrate bool) *sql.DB {
 	db.SetMaxOpenConns(20)
 	t.Cleanup(func() { db.Close() })
 	if migrate {
-		for _, name := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql"} {
+		for _, name := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql", "006_commercial_readiness.sql"} {
 			b, err := os.ReadFile("../../../../../database/migrations/" + name)
 			if err != nil {
 				t.Fatal(err)

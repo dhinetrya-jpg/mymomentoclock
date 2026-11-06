@@ -1,0 +1,13 @@
+# Commercial deployment review specification — NOT an activation manifest
+
+No Deployment, public Service or Secret is supplied for automatic application. The existing payment-isolation policy deliberately blocks provider egress and public webhook ingress until reviewed.
+
+The release owner must approve image digests (separate `commercial` targets), namespace, database name/environment binding, read-only versioned configuration mounts and secret-version references. Set PAYMENT_MODE explicitly. Go: PAYMENT_COMMERCIAL_CONFIG_FILE; Node: the identical file plus PAYMENT_AUTH_CONFIG_FILE, PAYMENT_PUBLIC_ORIGIN and PAYMENT_INTERNAL_{URL,CA_FILE,CERT_FILE,KEY_FILE}. Database credentials use the existing PAYMENT_DATABASE_* configuration with verify-full CA validation (see database.go), never browser/build variables.
+
+Go private 8443 accepts web service SAN, with observer SAN only for readiness/metrics. Never expose it via Ingress. Go public 8444 exposes only exact POST /webhooks/razorpay; TLS 1.3, raw-body limits and provider HMAC remain mandatory through the reviewed ingress. Observer network access needs a separately reviewed ingress allowance in the NetworkPolicy; it is blocked by default. Select the real ingress-controller namespace/pod labels rather than an any-source allowance. Review the network plugin's enforcement.
+
+Permit database egress5432, cluster DNS53 and approved outbound proxy:443 with an enforced api.razorpay.com allowlist. Kubernetes NetworkPolicy alone cannot enforce FQDNs. Node browser origin must be the exact approved HTTPS host, behind bounded requests/rate limiting. No public auth/payment internal route, metrics route or operator CLI listener.
+
+Run nonroot, readOnlyRootFilesystem, allowPrivilegeEscalation:false, drop ALL capabilities, seccomp RuntimeDefault, no service-account token, versioned projected secrets, resource requests/limits approved from staging measurements. Configure mTLS readiness using the observer identity; a TCP liveness probe alone must never signal payment readiness. Disable worker until recovery checks pass. Use graceful termination >=15s, rolling rollout with connection limits reviewed against PostgreSQL capacity. These settings require actual staging review; none was deployed here.
+
+Owner public Ed25519 verification key is baked at build time; private signing key stays offline. Signed activation binds both artifacts/config/catalog/merchant/identity/all26 PASS gates, expires within24h. Standard images contain no key. A runtime PAYMENT_ENABLED flag is insufficient. See PAY_P0_03_DEPLOYMENT_RUNBOOK.md for ordered release, backup and rollback.

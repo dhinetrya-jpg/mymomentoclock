@@ -1,3 +1,4 @@
+import {commercialGatewayFromEnvironment} from './server/commercialGateway';
 import {createPaymentBoundary,sandboxPaymentBoundaryFromEnvironment} from './server/paymentBoundary';
 /** Authoritative web boundary: anonymous stateless previews; protected capabilities fail closed. */
 import express from 'express';
@@ -13,13 +14,14 @@ import { runEngineUatSuite } from './src/engine/uatAndStress';
 dotenv.config({quiet:true});
 export const app = express();
 app.disable('x-powered-by');
+let commerce:ReturnType<typeof commercialGatewayFromEnvironment>;try{commerce=commercialGatewayFromEnvironment();}catch{console.error(JSON.stringify({event:'startup_failed',code:'PAYMENT_CONFIGURATION_UNAPPROVED'}));process.exit(1);}
 let active=0,windowStart=Date.now(),windowCount=0;
 app.use((req,res,next)=>{
   const requestId=crypto.randomUUID(); res.locals.requestId=requestId;
   res.set({'X-Request-ID':requestId,'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'});
   if(req.path.startsWith('/api')) res.set('Cache-Control','no-store');
   if(process.env.NODE_ENV==='production') {
-    const sandbox=process.env.PAYMENT_MODE==='sandbox'&&process.env.RAZORPAY_SANDBOX_APPROVED==='owner-approved';
+    const sandbox=commerce.checkoutSources||(process.env.PAYMENT_MODE==='sandbox'&&process.env.RAZORPAY_SANDBOX_APPROVED==='owner-approved');
     const sdk=sandbox?' https://checkout.razorpay.com':'';
     const api=sandbox?' https://api.razorpay.com':'';
     res.set('Content-Security-Policy',`default-src 'self'; script-src 'self'${sdk}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self'${api}; frame-src 'self'${api}${sdk}; frame-ancestors 'none'`);
@@ -32,13 +34,14 @@ app.use(express.json({limit:'64kb',strict:false}));
 const unavailable=(code:string,message:string)=>(_req:express.Request,res:express.Response)=>res.status(503).json({error:code,status:'UNAVAILABLE',message,request_id:res.locals.requestId,is_certified:false,is_graph_verified:false,vector_matrix:null});
 const graphUnavailable=unavailable('PROFILE_GRAPH_UNAVAILABLE','Profile calculations are unavailable until secure sign-in, ownership checks and verified rules are configured.');
 const paymentUnavailable=unavailable('PAYMENT_PROVIDER_UNAVAILABLE','Checkout is not enabled. No payment or access entitlement has been created.');
-const capabilities={chart:'UNVALIDATED_ANALYTICAL_PREVIEW',btr:'UNAVAILABLE',personal_timing:'UNAVAILABLE',profiles:'UNAVAILABLE',payments:'UNAVAILABLE',ai:'UNAVAILABLE'};
+const capabilities={chart:'UNVALIDATED_ANALYTICAL_PREVIEW',btr:'UNAVAILABLE',personal_timing:'UNAVAILABLE',profiles:'UNAVAILABLE',payments:commerce.auth.identity?'AUTHENTICATED_GATEWAY_CONFIGURED':'UNAVAILABLE',ai:'UNAVAILABLE'};
 app.get(['/health','/api/v1/health','/ready'],(_req,res)=>res.json({status:'healthy',capabilities}));
 app.get('/api/capabilities',(_req,res)=>res.json(capabilities));
 // No public payment adapter or entitlement storage is activated. These boundaries cannot be toggled by a client or env flag.
 app.all('/api/payment/simulate-webhook',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This operation is not available.',request_id:res.locals.requestId}));
 // No approved identity adapter is registered. Sandbox env alone cannot authorize a customer.
-app.use('/api/payment',process.env.PAYMENT_MODE==='sandbox'?sandboxPaymentBoundaryFromEnvironment():createPaymentBoundary());
+app.use('/api/auth',commerce.auth.handler);
+app.use('/api/payment',commerce.auth.identity?commerce.payment:(process.env.PAYMENT_MODE==='sandbox'?sandboxPaymentBoundaryFromEnvironment():createPaymentBoundary()));
 app.all('/api/v1/webhook/payment',paymentUnavailable);
 app.all('/api/v1/graph/hydrate',graphUnavailable);
 app.all('/api/v1/resolver/evaluate',graphUnavailable);
