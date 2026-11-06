@@ -1,0 +1,25 @@
+✔ versioned activity work cannot activate personal results (17.099099ms)
+✔ versioned activity purchases cannot activate personal results (0.39929ms)
+✔ versioned activity travel cannot activate personal results (0.287485ms)
+✔ versioned activity learning cannot activate personal results (0.202409ms)
+✔ versioned activity family cannot activate personal results (0.262207ms)
+✔ versioned activity finance cannot activate personal results (4.359299ms)
+✔ strict request schema rejects profiles, facts, approval flags and invalid civil data (0.672083ms)
+✔ default gateway always returns typed unavailable without personal echoes (101.025979ms)
+✔ query parameters and oversized bodies are rejected (20.453395ms)
+✔ capability and registry remain explicitly blocked (7.114791ms)
+✔ upstream fixtures, fake approval or response birth details cannot leak through gateway (5.164809ms)
+✔ upstream blocked response is projected and stripped of extras (5.507957ms)
+✔ daily screen has no stored natal defaults or verified recommendation (8.706671ms)
+✔ timeline renders DST elapsed hours and escapes explanation markup (3.1415ms)
+✔ mirrored timing client and UI are identical (0.607177ms)
+✔ remote public URLs cannot become personal-data transport (0.489253ms)
+✔ browser client rejects verified claims, invalid windows and mismatched provenance (3.404359ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.201193

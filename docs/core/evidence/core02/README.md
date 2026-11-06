@@ -1,0 +1,7 @@
+# CORE-P0-02 execution evidence
+
+2026-11-06. Baseline993837f1b04dfb9873b79ee27c46c483feb7e2dd. Logs are actual local checks, with trailing whitespace normalized. Host Node24.22.1; Go1.26.10/pinned Swiss native toolchain; cross-service Node22. Full Go script binds current repository source, uses a disposable verified-TLS PostgreSQL database and deletes private keys/session state through existing cleanup traps. Cross-service timing test creates ephemeral mTLS certificates, never production credentials.
+
+148 Node assertions passed:17 timing+41 integrity+17 CORE01 analytical+73 payment/security. Eight timing browser cases, original375/1280 regression and12 payment fixture browser cases passed. Both frontend builds, dual-module Go normal/race/vet/CGO-disabled and three database restart recovery checks passed. The new timing mTLS integration actually ran in the full Go gate; focused Go-only environments without Node explicitly skip it.
+
+Native API smoke builds with -buildvcs=false because the bind-mounted test checkout ownership prevents automatic VCS stamping; it does not alter Git trust or production settings. Tested functional source commit: `73f4819db8f6d42d8ebbf7837b16102ebac9c72d`. Final delivery may include subsequent documentation-only commits. No real rule or astronomical reference acceptance is implied. CORE01's17 analytical assertions are not the required native/Panchang acceptance. No production deployment, personal recommendation, charge or external astronomical API call.

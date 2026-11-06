@@ -1,0 +1,105 @@
+✔ default unavailable: /api/payment/orders (67.287344ms)
+✔ default unavailable: /api/payment/orders/other (10.65708ms)
+✔ default unavailable: /api/payment/entitlements (4.29966ms)
+✔ no approval or unready identity cannot call transport (14.865005ms)
+✔ forged identity/header does not forward (4.182749ms)
+✔ body and query tampering rejected before forwarding (53.024106ms)
+✔ transport receives verified bearer, fixed safe contract and no caller IDs (16.095903ms)
+✔ failures never fall back to paid (7.679242ms)
+✔ entitlement response strips internal identifiers (3.565075ms)
+✔ mutual TLS transport verifies both peers and sends bounded safe requests (361.209249ms)
+✔ production entry contains no test adapter activation or identity fallback (0.339532ms)
+✔ both checkout models keep browser callbacks from authorizing access (5.891672ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 556.635921
+✔ both default checkout views remain unavailable without SDK loading or a guessed price (10.846229ms)
+✔ sandbox presentation is clearly test mode and never renders a confirmed payment initially (1.633503ms)
+✔ sandbox environment flags without a real identity cannot enable checkout (49.860293ms)
+✔ live provider checkout keys are never forwarded by the sandbox boundary (17.59647ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.031598
+✔ session exchange sets secure HttpOnly host-only cookie and never returns bearer to browser JSON (72.019611ms)
+✔ cookie mutation requires exact Origin, double-submit token and downstream session binding (19.378002ms)
+✔ duplicate session cookies and forged public identities do not authenticate (5.190006ms)
+✔ logout revokes through Go and clears host session cookies (5.14613ms)
+✔ account deactivation requires explicit confirmation and never accepts another customer ID (6.280286ms)
+✔ signed readiness is artifact/config bound; no default production approval exists (3.226406ms)
+✔ blocked G01 prevents production permit (0.726233ms)
+✔ blocked G02 prevents production permit (0.527199ms)
+✔ blocked G03 prevents production permit (0.600457ms)
+✔ blocked G04 prevents production permit (0.662219ms)
+✔ blocked G05 prevents production permit (0.57538ms)
+✔ blocked G06 prevents production permit (0.625965ms)
+✔ blocked G07 prevents production permit (0.56868ms)
+✔ blocked G08 prevents production permit (0.712252ms)
+✔ blocked G09 prevents production permit (0.523924ms)
+✔ blocked G10 prevents production permit (0.448483ms)
+✔ blocked G11 prevents production permit (0.482894ms)
+✔ blocked G12 prevents production permit (0.439048ms)
+✔ blocked G13 prevents production permit (0.463674ms)
+✔ blocked G14 prevents production permit (0.428913ms)
+✔ blocked G15 prevents production permit (0.55532ms)
+✔ blocked G16 prevents production permit (2.798584ms)
+✔ blocked G17 prevents production permit (0.472959ms)
+✔ blocked G18 prevents production permit (0.590642ms)
+✔ blocked G19 prevents production permit (0.515672ms)
+✔ blocked G20 prevents production permit (0.489603ms)
+✔ blocked G21 prevents production permit (0.453851ms)
+✔ blocked G22 prevents production permit (0.445038ms)
+✔ blocked G23 prevents production permit (0.477376ms)
+✔ blocked G24 prevents production permit (0.375575ms)
+✔ blocked G25 prevents production permit (0.407932ms)
+✔ blocked G26 prevents production permit (0.397507ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 138.537339
+✔ explicit offset -3.5 preserves J2000 instant (235.922776ms)
+✔ explicit offset 5.75 preserves J2000 instant (0.327524ms)
+✔ explicit offset 14 preserves J2000 instant (0.310398ms)
+✔ explicit offset -12 preserves J2000 instant (0.427291ms)
+✔ engine cannot silently choose a timezone (4.456532ms)
+✔ milestones reject duplicate (0.640315ms)
+✔ milestones reject pre-birth (0.145715ms)
+✔ milestones reject future (0.108601ms)
+✔ milestones reject invalid date (0.132475ms)
+✔ milestones reject invalid confidence (0.316407ms)
+✔ unsupported resolver returns no score or resolution claim (2.127653ms)
+✔ create order fails closed for missing forged and expired credentials (28.309193ms)
+✔ unknown order fails closed for missing forged and expired credentials (9.404229ms)
+✔ v1 webhook fails closed for missing forged and expired credentials (8.792577ms)
+✔ session lookup fails closed for missing forged and expired credentials (7.036854ms)
+✔ SSE fails closed for missing forged and expired credentials (5.184046ms)
+✔ graph hydration fails closed for missing forged and expired credentials (8.237186ms)
+✔ resolver fails closed for missing forged and expired credentials (5.94429ms)
+✔ malformed JSON and oversized bodies fail safely (26.394603ms)
+✔ production diagnostics and payment simulation stay hidden (6.368687ms)
+✔ a supplied AI key cannot bypass consent/provenance boundary (1.802873ms)
+✔ chart provenance discloses analytical preview and uncertainty (3.945828ms)
+✔ missing timezone is never inferred from city or zone label (1.830544ms)
+✔ rate limiting is bounded without retaining client identities (425.495008ms)
+✔ chart outputs never fabricate strength or motion metrics (0.496563ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 846.580466
