@@ -233,6 +233,38 @@ export function calculateAscendant(jd: number, lat: number, lon: number, ayanams
 }
 
 /**
+ * Calculates the shortest distance between two angles in degrees [0, 360).
+ * Handles the 0°/360° circular boundary properly (e.g. diff between 359.9° and 0.1° is 0.2°).
+ */
+export function circularAngularDifference(a: number, b: number): number {
+  const diff = Math.abs(((a - b) % 360 + 360) % 360);
+  return diff > 180 ? 360 - diff : diff;
+}
+
+/**
+ * Checks whether an angle lies within a given angular threshold of a boundary step.
+ * Useful for reporting classification uncertainty near Nakshatra / Sign transitions.
+ */
+export function checkBoundaryProximity(
+  angleDegrees: number,
+  stepDegrees: number,
+  thresholdDegrees: number = 0.05
+): { isNearBoundary: boolean; distanceToNearestBoundary: number; nearestBoundary: number } {
+  const norm = ((angleDegrees % 360) + 360) % 360;
+  const lowerBoundary = Math.floor(norm / stepDegrees) * stepDegrees;
+  const upperBoundary = (lowerBoundary + stepDegrees) % 360;
+  const distToLower = circularAngularDifference(norm, lowerBoundary);
+  const distToUpper = circularAngularDifference(norm, upperBoundary);
+  const distanceToNearest = Math.min(distToLower, distToUpper);
+  const nearestBoundary = distToLower <= distToUpper ? lowerBoundary : upperBoundary;
+  return {
+    isNearBoundary: distanceToNearest <= thresholdDegrees,
+    distanceToNearestBoundary: Number(distanceToNearest.toFixed(6)),
+    nearestBoundary,
+  };
+}
+
+/**
  * Deterministic astronomical positions for Vedic Navagrahas
  */
 export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, ascendantDegree: number): PlanetPosition[] {

@@ -38,8 +38,8 @@ jobs:
           npm --prefix frontend run lint
           npm --prefix frontend run build
 
-      - name: Calculation integrity regression tests
-        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx
+      - name: Calculation integrity & astronomical accuracy regression tests
+        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts
 
       - name: Phase 1 security and privacy regression
         run: node --import tsx --test tests/phase1/security.test.ts

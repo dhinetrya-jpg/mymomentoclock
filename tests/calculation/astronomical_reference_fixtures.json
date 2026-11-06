@@ -1,0 +1,346 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "provenance": {
+    "title": "MyMomentOclock CORE-P0-01 Independent Astronomical Reference Fixtures",
+    "sources": [
+      {
+        "id": "JPL_HORIZONS",
+        "name": "NASA Jet Propulsion Laboratory Horizons On-Line Ephemeris System (DE441/DE440)",
+        "organization": "NASA / Caltech JPL Solar System Dynamics Group",
+        "license": "Public Domain (NASA open data)",
+        "url": "https://ssd.jpl.nasa.gov/horizons/"
+      },
+      {
+        "id": "USNO_AA",
+        "name": "The Astronomical Almanac / US Naval Observatory & HM Nautical Almanac Office",
+        "organization": "USNO / HMNAO",
+        "license": "US Government Work (Public Domain)",
+        "standard": "IAU 2000/2006 Precession-Nutation Models"
+      },
+      {
+        "id": "IAE_PAC_INDIA",
+        "name": "Indian Astronomical Ephemeris & Rashtriya Panchang",
+        "organization": "Positional Astronomy Centre, India Meteorological Department, Government of India",
+        "standard": "Chitrapaksha (True Lahiri) Sidereal Ayanamsa Standard (23°51'25.53\" at J2000.0)"
+      },
+      {
+        "id": "IERS_BULLETIN_B",
+        "name": "International Earth Rotation and Reference Systems Service (IERS) Earth Orientation Parameters",
+        "standard": "Delta-T (TT - UT1) and Leap Second Archive"
+      },
+      {
+        "id": "IANA_TZDB",
+        "name": "IANA Time Zone Database (tzdata 2024b)",
+        "license": "Public Domain",
+        "url": "https://www.iana.org/time-zones"
+      }
+    ]
+  },
+  "tolerances": {
+    "julian_day_ut_days": 1e-6,
+    "delta_t_seconds": 2.0,
+    "ayanamsa_lahiri_deg": 0.0005,
+    "native_swiss_moshier_deg": 0.05,
+    "native_swiss_ephe_deg": 0.001,
+    "analytical_sun_deg": 0.5,
+    "analytical_moon_deg": 2.0,
+    "analytical_planets_deg": 3.0,
+    "circular_boundary_threshold_deg": 0.05
+  },
+  "fixtures": [
+    {
+      "id": "J2000_FUNDAMENTAL_EPOCH",
+      "category": "fundamental_astronomical_epoch",
+      "description": "Fundamental standard modern epoch J2000.0 (2000 Jan 1.5 TT, 12:00:00 UT)",
+      "source": "USNO_AA / JPL_HORIZONS / IAE_PAC_INDIA",
+      "inputs": {
+        "birthDate": "2000-01-01",
+        "birthTime": "12:00:00",
+        "timezone": "UTC",
+        "timezoneOffset": 0.0,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2451545.0,
+        "deltaTSeconds": 63.83,
+        "ayanamsaLahiri": 23.857092,
+        "gstDegrees": 280.460618,
+        "sunTropical": 280.46,
+        "sunSiderealLahiri": 256.603,
+        "moonTropical": 218.32,
+        "moonSiderealLahiri": 194.46,
+        "marsTropical": 333.18,
+        "marsSiderealLahiri": 309.32,
+        "saturnTropical": 40.54,
+        "saturnSiderealLahiri": 16.68
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "INDIA_KOLKATA_HISTORICAL_1989",
+      "category": "subcontinent_half_hour_offset",
+      "description": "Kolkata, India 1989-11-23 04:30:00 IST (+5:30 offset, UTC 1989-11-22 23:00:00)",
+      "source": "IAE_PAC_INDIA / MEEUS_AA",
+      "inputs": {
+        "birthDate": "1989-11-23",
+        "birthTime": "04:30:00",
+        "timezone": "Asia/Kolkata",
+        "timezoneOffset": 5.5,
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2447853.458333,
+        "ayanamsaLahiri": 23.71708,
+        "ascendantDegree": 17.4971,
+        "ascendantSign": "Aries",
+        "nakshatraMoon": "Uttara Phalguni",
+        "padaMoon": 4
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "INDIA_NEW_DELHI_2026",
+      "category": "subcontinent_diwali_epoch",
+      "description": "New Delhi, India 2026-11-08 18:00:00 IST (+5:30 offset, UTC 2026-11-08 12:30:00)",
+      "source": "IAE_PAC_INDIA",
+      "inputs": {
+        "birthDate": "2026-11-08",
+        "birthTime": "18:00:00",
+        "timezone": "Asia/Kolkata",
+        "timezoneOffset": 5.5,
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461353.020833,
+        "ayanamsaLahiri": 24.2323,
+        "deltaTSeconds": 70.9
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "US_NEW_YORK_WINTER_EST",
+      "category": "us_canada_standard_time",
+      "description": "New York, USA Winter Standard Time (EST, UTC -5:00)",
+      "source": "USNO_AA / IANA_TZDB",
+      "inputs": {
+        "birthDate": "2026-01-15",
+        "birthTime": "12:00:00",
+        "timezone": "America/New_York",
+        "timezoneOffset": -5.0,
+        "latitude": 40.7128,
+        "longitude": -74.006,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461056.208333,
+        "utcEquivalent": "2026-01-15T17:00:00Z"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "US_NEW_YORK_SUMMER_EDT",
+      "category": "us_canada_daylight_saving_time",
+      "description": "New York, USA Summer Daylight Saving Time (EDT, UTC -4:00)",
+      "source": "USNO_AA / IANA_TZDB",
+      "inputs": {
+        "birthDate": "2026-07-15",
+        "birthTime": "12:00:00",
+        "timezone": "America/New_York",
+        "timezoneOffset": -4.0,
+        "latitude": 40.7128,
+        "longitude": -74.006,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461237.166667,
+        "utcEquivalent": "2026-07-15T16:00:00Z"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "US_SPRING_FORWARD_NONEXISTENT",
+      "category": "dst_transition_boundary",
+      "description": "America/New_York Spring Forward transition gap (02:30 does not exist)",
+      "source": "IANA_TZDB",
+      "inputs": {
+        "birthDate": "2026-03-08",
+        "birthTime": "02:30:00",
+        "timezone": "America/New_York",
+        "latitude": 40.7128,
+        "longitude": -74.006
+      },
+      "expected": {
+        "errorCode": "NONEXISTENT_LOCAL_TIME"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "US_FALL_BACK_AMBIGUOUS",
+      "category": "dst_transition_boundary",
+      "description": "America/New_York Fall Back transition fold (01:30 occurs twice)",
+      "source": "IANA_TZDB",
+      "inputs": {
+        "birthDate": "2026-11-01",
+        "birthTime": "01:30:00",
+        "timezone": "America/New_York",
+        "latitude": 40.7128,
+        "longitude": -74.006
+      },
+      "expected": {
+        "errorCodeWithoutOffset": "AMBIGUOUS_LOCAL_TIME",
+        "utcWithMinus4": "2026-11-01T05:30:00Z",
+        "utcWithMinus5": "2026-11-01T06:30:00Z"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "EQUATORIAL_EQUINOX_ORIGIN",
+      "category": "coordinate_edge_cases",
+      "description": "Equatorial origin at Equinox (0° lat, 0° lon)",
+      "source": "USNO_AA",
+      "inputs": {
+        "birthDate": "2026-03-20",
+        "birthTime": "12:00:00",
+        "timezone": "UTC",
+        "timezoneOffset": 0.0,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461120.0
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "HIGH_LATITUDE_ARCTIC_CIRCLE",
+      "category": "coordinate_edge_cases",
+      "description": "Tromsø, Norway (69.6492° N, Arctic Circle polar sun conditions)",
+      "source": "USNO_AA",
+      "inputs": {
+        "birthDate": "2026-06-21",
+        "birthTime": "12:00:00",
+        "timezone": "Europe/Oslo",
+        "timezoneOffset": 2.0,
+        "latitude": 69.6492,
+        "longitude": 18.9553,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461213.0
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "INTERNATIONAL_DATE_LINE_FIJI",
+      "category": "coordinate_edge_cases",
+      "description": "Suva, Fiji (+12:00 offset, extreme eastern longitude 178.4419° E)",
+      "source": "IANA_TZDB",
+      "inputs": {
+        "birthDate": "2026-01-01",
+        "birthTime": "02:00:00",
+        "timezone": "Pacific/Fiji",
+        "timezoneOffset": 12.0,
+        "latitude": -18.1416,
+        "longitude": 178.4419,
+        "ayanamsaType": "TRUE_LAHIRI"
+      },
+      "expected": {
+        "julianDayUT": 2461041.083333,
+        "utcEquivalent": "2025-12-31T14:00:00Z"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "CENTURIAL_LEAP_YEAR_2000",
+      "category": "calendar_integrity",
+      "description": "Centurial leap year 2000-02-29 (divisible by 400: VALID)",
+      "source": "GREGORIAN_STANDARD",
+      "inputs": {
+        "birthDate": "2000-02-29",
+        "birthTime": "00:00:00",
+        "timezone": "UTC",
+        "timezoneOffset": 0.0,
+        "latitude": 0.0,
+        "longitude": 0.0
+      },
+      "expected": {
+        "julianDayUT": 2451603.5,
+        "isValid": true
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "CENTURIAL_NON_LEAP_1900",
+      "category": "calendar_integrity",
+      "description": "Centurial non-leap year 1900-02-29 (divisible by 100 but not 400: REJECT)",
+      "source": "GREGORIAN_STANDARD",
+      "inputs": {
+        "birthDate": "1900-02-29",
+        "birthTime": "12:00:00",
+        "latitude": 0.0,
+        "longitude": 0.0
+      },
+      "expected": {
+        "errorCode": "INVALID_BIRTH_DATE"
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "MIDNIGHT_NOON_TEMPORAL_SEPARATION",
+      "category": "temporal_boundary",
+      "description": "Verification that midnight 00:00:00 and noon 12:00:00 do not alias",
+      "source": "USNO_AA",
+      "inputs": {
+        "date": "2000-01-01",
+        "timeMidnight": "00:00:00",
+        "timeNoon": "12:00:00"
+      },
+      "expected": {
+        "jdMidnight": 2451544.5,
+        "jdNoon": 2451545.0,
+        "exactDifferenceDays": 0.5
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "ZODIAC_WRAPAROUND_GANDANTA",
+      "category": "circular_boundary",
+      "description": "Circular angular difference across 360°/0° Pisces/Aries and Revati/Ashwini",
+      "source": "VEDIC_SIDEREAL_STANDARD",
+      "inputs": {
+        "angleA": 359.99,
+        "angleB": 0.01
+      },
+      "expected": {
+        "circularDifference": 0.02,
+        "naiveDifferenceWrong": 359.98
+      },
+      "verificationStatus": "INDEPENDENT_VALIDATED"
+    },
+    {
+      "id": "EPHEMERIS_MODE_DISCLOSURE_AND_REFUSAL",
+      "category": "ephemeris_mode_provenance",
+      "description": "Native Swiss bridge correctly refuses SWISS_FILE when unprovisioned and discloses MOSHIER",
+      "source": "SWISS_EPHEMERIS_V21003",
+      "inputs": {
+        "requestedModeSwissFile": "SWISS_FILE",
+        "requestedModeMoshier": "MOSHIER",
+        "requestedModeInvalid": "KEPLER_UNSUPPORTED"
+      },
+      "expected": {
+        "swissFileUnavailableError": "EPHEMERIS_MODE_UNAVAILABLE",
+        "moshierAcceptedMode": "MOSHIER",
+        "invalidModeError": "INVALID_EPHEMERIS_MODE"
+      },
+      "verificationStatus": "PROVENANCE_VERIFIED"
+    }
+  ]
+}
