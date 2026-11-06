@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifest_version": "1.0.0",
+  "last_updated": "2026-11-06T12:00:00Z",
+  "audit_reference": "CORE-P0-01-ASTRONOMICAL-ACCURACY-REPAIR",
+  "authoritative_sources": [
+    {
+      "source_id": "NASA_JPL_HORIZONS",
+      "institution": "NASA Jet Propulsion Laboratory / Caltech Solar System Dynamics Group",
+      "ephemeris_basis": "JPL Planetary and Lunar Ephemerides DE440 / DE441",
+      "standards": "ICRF / IAU 2000 / J2000.0 Ecliptic Frame",
+      "api_endpoint": "https://ssd-api.jpl.nasa.gov/horizons.api",
+      "documentation": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+      "license": "Public Domain (NASA Open Data)",
+      "target_bodies": ["Sun (10)", "Moon (301)", "Mercury (199)", "Venus (299)", "Mars (499)", "Jupiter (599)", "Saturn (699)", "Rahu (Mean Node)", "Ketu (Opposite Node)"]
+    },
+    {
+      "source_id": "USNO_AA",
+      "institution": "United States Naval Observatory & HM Nautical Almanac Office",
+      "publication": "The Astronomical Almanac (Annual Edition) & Naval Oceanography Portal",
+      "standards": "IAU 2000/2006 Precession and Nutation; SOFA Astronomical Algorithms; Fundamental Ephemerides",
+      "url": "https://aa.usno.navy.mil/",
+      "license": "US Government Work (Public Domain)",
+      "time_scales": ["Terrestrial Time (TT)", "International Atomic Time (TAI)", "Universal Time (UT1/UTC)", "Barycentric Dynamical Time (TDB)"]
+    },
+    {
+      "source_id": "IAE_PAC_INDIA",
+      "institution": "Positional Astronomy Centre, India Meteorological Department, Ministry of Earth Sciences, Government of India, Kolkata",
+      "publication": "Indian Astronomical Ephemeris & Rashtriya Panchang",
+      "standards": "Official Government of India Chitrapaksha (True Lahiri) Sidereal Ayanamsa (23°51'25.53\" at J2000.0, precession rate 50.290966\"/year)",
+      "license": "Official Government Astronomical Standard"
+    },
+    {
+      "source_id": "IERS_BULLETIN_B",
+      "institution": "International Earth Rotation and Reference Systems Service (IERS) & Observatoire de Paris",
+      "publication": "IERS Earth Orientation Parameters (EOP 14 C04 & IERS Bulletin B)",
+      "standards": "Delta-T (TT - UT1) Archive, Leap Seconds, and Polar Motion",
+      "url": "https://www.iers.org/",
+      "license": "Open Scientific Data"
+    },
+    {
+      "source_id": "IANA_TZDB",
+      "institution": "Internet Assigned Numbers Authority (IANA) & Network Working Group",
+      "publication": "Time Zone Database (tzdata 2024b)",
+      "standards": "Global civil daylight saving time transition rules, fold/gap definitions, and civil offsets",
+      "url": "https://www.iana.org/time-zones",
+      "license": "Public Domain"
+    }
+  ]
+}

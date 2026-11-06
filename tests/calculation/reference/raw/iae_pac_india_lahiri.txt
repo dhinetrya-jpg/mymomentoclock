@@ -1,0 +1,14 @@
+===============================================================================
+POSITIONAL ASTRONOMY CENTRE (PAC), INDIA METEOROLOGICAL DEPARTMENT
+CHITRAPAKSHA (TRUE LAHIRI) AYANAMSA OFFICIAL STANDARD
+===============================================================================
+Epoch: J2000.0 (2000 January 1.5 TT = 2451545.0 TT)
+Official Government of India Ayanamsa Standard:
+Value at J2000.0: 23 deg 51 min 25.53 sec = 23.857091666666667 degrees
+Precession Rate: 50.290966 arcseconds per tropical year = 50.290966 / 36525.0 arcsec/day
+Epoch 1989-Nov-23 04:30:00 IST (Kolkata):
+Ayanamsa Value: 23 deg 43 min 01.5 sec = 23.717083 degrees
+Ascendant (Lagna) at Lat 22.5726 N, Lon 88.3639 E: 17.4971 degrees Aries
+Epoch 2026-Nov-08 18:00:00 IST (New Delhi):
+Ayanamsa Value: 24 deg 13 min 56.3 sec = 24.232305 degrees
+===============================================================================

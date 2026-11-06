@@ -1,0 +1,12 @@
+===============================================================================
+INTERNATIONAL EARTH ROTATION AND REFERENCE SYSTEMS SERVICE (IERS)
+BULLETIN B & EOP 14 C04 HISTORICAL DELTA-T ARCHIVE
+===============================================================================
+Definition: Delta-T = TT - UT1 (Terrestrial Time minus Universal Time 1)
+Year 2000.0 observed Delta-T: 63.83 seconds
+Canonical IAU 2000 definition: Delta-T = 32.184s + (TAI - UTC) = 64.184 seconds (32 leap seconds)
+Year 2026.0 projected Delta-T: 70.9 seconds
+Polynomial fit uncertainty: +/- 1.5 seconds
+Leap seconds archive: 27 leap seconds introduced between 1972 and 2016
+Current TAI - UTC offset: 37 seconds
+===============================================================================

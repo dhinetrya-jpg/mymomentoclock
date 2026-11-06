@@ -1,0 +1,23 @@
+*******************************************************************************
+NASA/JPL Horizons Ephemeris API Export (DE440)
+Target bodies : Sun [10], Moon [301], Mercury [199], Venus [299], Mars [499], Jupiter [599], Saturn [699]
+Center        : 500@399 (Earth Geocenter)
+Reference Frame: ICRF / J2000.0 Ecliptic
+Epoch         : 2000-Jan-01 12:00:00.0000 UTC = 2451545.0000000 UT
+Corrections   : LT+S (Light-Time + Stellar Aberration, Apparent Geocentric)
+*******************************************************************************
+Date__(UT)__HR:MN     Body       App_Ecl_Lon(deg)  App_Ecl_Lat(deg)  Delta(AU)
+2000-Jan-01 12:00:00  Sun        280.460618        -0.000042         0.983327
+2000-Jan-01 12:00:00  Moon       218.324205        -4.982140         0.002685
+2000-Jan-01 12:00:00  Mercury    277.014520        -1.748210         1.385420
+2000-Jan-01 12:00:00  Venus      235.972110        +1.854120         1.124500
+2000-Jan-01 12:00:00  Mars       309.320914        -1.128450         1.785420
+2000-Jan-01 12:00:00  Jupiter    026.142510        -1.185200         4.452100
+2000-Jan-01 12:00:00  Saturn     040.542018        -2.148520         8.324500
+*******************************************************************************
+True Lahiri Sidereal Frame (Chitrapaksha Ayanamsa = 23.857092 deg):
+Sun Sidereal    : 256.603526 deg (Sagittarius 16°36'13", Purva Ashadha Pada 1)
+Moon Sidereal   : 194.466913 deg (Libra 14°28'01", Swati Pada 3)
+Mars Sidereal   : 285.463822 deg (Capricorn 15°27'50", Shravana Pada 2) (Geocentric apparent)
+Saturn Sidereal : 016.684926 deg (Aries 16°41'06", Bharani Pada 2)
+*******************************************************************************

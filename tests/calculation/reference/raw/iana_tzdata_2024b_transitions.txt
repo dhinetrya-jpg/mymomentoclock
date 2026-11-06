@@ -1,0 +1,20 @@
+===============================================================================
+IANA TIME ZONE DATABASE (tzdata 2024b)
+TRANSITION SPECIFICATION FOR AMERICA/NEW_YORK (EASTERN TIME) 2026
+===============================================================================
+Spring Forward Gap (Rule US, 2nd Sunday in March):
+Date: 2026-03-08
+Local Wall Clock: 02:00:00 EST jumps to 03:00:00 EDT
+Local Time 02:30:00 does not exist.
+Result: NONEXISTENT_LOCAL_TIME
+
+Fall Back Fold (Rule US, 1st Sunday in November):
+Date: 2026-11-01
+Local Wall Clock: 02:00:00 EDT repeats 01:00:00 EST
+Local Time 01:30:00 occurs twice:
+  First Occurrence: 01:30:00 EDT (UTC-04:00) = 2026-11-01 05:30:00 UTC
+  Second Occurrence: 01:30:00 EST (UTC-05:00) = 2026-11-01 06:30:00 UTC
+Without explicit offset: AMBIGUOUS_LOCAL_TIME
+With offset -4.0: 2026-11-01T05:30:00Z (JD 2461345.729167)
+With offset -5.0: 2026-11-01T06:30:00Z (JD 2461345.770833)
+===============================================================================
