@@ -67,3 +67,5 @@ Changed-file inventory (repository-relative; evidence logs are included):
 - `tests/timing/browser.mjs`
 - `tests/timing/contracts.test.tsx`
 - `tests/timing/cross-service.mjs`
+
+Parallel-main check: main advanced during implementation to `e57f45273021552db5e9a0350f371ae5003eda04` (script execution/build fixes plus the same unused fMoon removal). These four changes were inspected; they add no native/Panchang acceptance evidence. A read-only `git merge-tree --write-tree origin/main HEAD` preview succeeded without conflicts. No branch was merged, rewritten or overwritten, and no post-merge CI result is claimed. The tested source baseline remains993837f; the build fixes remain on main for the authorized integration.
