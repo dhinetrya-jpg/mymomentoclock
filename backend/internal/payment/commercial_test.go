@@ -208,3 +208,19 @@ func TestPendingRiskNotificationCannotGrantBeforeReview(t *testing.T) {
 		t.Fatal("risk notification granted or failed to hold")
 	}
 }
+
+func TestBackoffCannotOverflowAtMaximumPolicy(t *testing.T) {
+	p := DefaultWorkerPolicy()
+	p.BaseDelay = 24 * time.Hour
+	p.MaxDelay = 24 * time.Hour
+	p.MaxAttempts = 20
+	if !p.valid() {
+		t.Fatal("fixture policy invalid")
+	}
+	for _, attempt := range []int{0, 1, 17, 20, 1000} {
+		delay, err := backoff(p, attempt)
+		if err != nil || delay < 12*time.Hour || delay > 24*time.Hour {
+			t.Fatal("unsafe retry delay", attempt, delay, err)
+		}
+	}
+}

@@ -24,9 +24,13 @@ func backoff(p WorkerPolicy, attempt int) (time.Duration, error) {
 	if attempt > 20 {
 		attempt = 20
 	}
-	delay := p.BaseDelay * time.Duration(1<<attempt)
-	if delay > p.MaxDelay {
-		delay = p.MaxDelay
+	delay := p.BaseDelay
+	for i := 0; i < attempt; i++ {
+		if delay >= p.MaxDelay/2 {
+			delay = p.MaxDelay
+			break
+		}
+		delay *= 2
 	}
 	random, err := rand.Int(rand.Reader, big.NewInt(int64(delay/2)+1))
 	if err != nil {
