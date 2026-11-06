@@ -3,9 +3,10 @@ FROM golang:1.26-bookworm AS builder
 WORKDIR /app
 # This image includes gcc, g++, make and git. Optional CA mount supports managed proxies.
 COPY scripts/install-swisseph.sh /usr/local/bin/install-swisseph
+RUN chmod +x /usr/local/bin/install-swisseph
 RUN --mount=type=secret,id=proxy_ca \
     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi; \
-    install-swisseph
+    sh /usr/local/bin/install-swisseph
 COPY backend/go.mod backend/go.sum ./backend/
 WORKDIR /app/backend
 RUN --mount=type=secret,id=proxy_ca \

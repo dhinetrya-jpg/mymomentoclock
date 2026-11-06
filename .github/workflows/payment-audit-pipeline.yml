@@ -16,7 +16,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Native Go tests, race detection, vet and isolated PostgreSQL recovery
-        run: scripts/test-phase1-go.sh
+        run: chmod +x scripts/*.sh && sh scripts/test-phase1-go.sh
       - name: Non-root migration package and disabled default
         run: |
           docker build -f Dockerfile.payment-migrations -t payment-migration-check .
