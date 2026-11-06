@@ -416,12 +416,12 @@
       "description": "Vancouver, Canada Pacific Standard Time (America/Vancouver, UTC -8:00)",
       "source_institution": "IANA / National Research Council Canada",
       "source_document_or_api": "IANA tzdata 2024b",
-      "exact_query": "ZONE='America/Vancouver', WALL_CLOCK='2026-12-15 09:00:00'",
+      "exact_query": "ZONE='America/Vancouver', WALL_CLOCK='2024-12-15 09:00:00'",
       "retrieval_date_utc": "2026-11-06T12:00:00Z",
       "target_body": "Civil Time",
-      "observation_instant": "2026-12-15T17:00:00.000Z",
+      "observation_instant": "2024-12-15T17:00:00.000Z",
       "time_scale": "UTC with -8:00 Offset",
-      "julian_day_definition": "JD_UT = 2461390.208333",
+      "julian_day_definition": "JD_UT = 2460660.208333",
       "coordinate_frame": "Civil Time / UTC",
       "reference_type": "Topocentric",
       "zodiac_convention": "Tropical",
@@ -429,7 +429,7 @@
       "corrections": "Standard Offset",
       "units": "Julian Day",
       "inputs": {
-        "birthDate": "2026-12-15",
+        "birthDate": "2024-12-15",
         "birthTime": "09:00:00",
         "timezone": "America/Vancouver",
         "timezoneOffset": -8.0,
@@ -437,8 +437,8 @@
         "longitude": -123.1207
       },
       "expected": {
-        "julianDayUT": 2461390.208333,
-        "utcEquivalent": "2026-12-15T17:00:00Z"
+        "julianDayUT": 2460660.208333,
+        "utcEquivalent": "2024-12-15T17:00:00Z"
       },
       "numerical_tolerance": { "julian_day_days": 1e-6 },
       "tolerance_rationale": "Exact offset arithmetic",

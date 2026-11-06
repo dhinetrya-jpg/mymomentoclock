@@ -96,7 +96,7 @@ flowchart TD
 | `SCENARIO_08_US_NEW_YORK_SPRING_FORWARD_GAP` | DST Boundary | NY 2026-03-08 02:30:00 nonexistent local time | IANA tzdata 2024b | Rejection: `NONEXISTENT_LOCAL_TIME` |
 | `SCENARIO_09_US_NEW_YORK_FALL_BACK_FOLD` | DST Boundary | NY 2026-11-01 01:30:00 ambiguous local fold | IANA tzdata 2024b | Disambiguation: EDT vs EST |
 | `SCENARIO_10_CANADA_TORONTO_SUMMER_EDT` | Canada Timezone | Toronto 2026-06-15 14:00:00 EDT (UTC -4) | IANA tzdata 2024b | Canada DST offset preservation |
-| `SCENARIO_11_CANADA_VANCOUVER_WINTER_PST` | Canada Timezone | Vancouver 2026-12-15 09:00:00 PST (UTC -8) | IANA tzdata 2024b | Pacific civil time resolution |
+| `SCENARIO_11_CANADA_VANCOUVER_WINTER_PST` | Canada Timezone | Vancouver 2024-12-15 09:00:00 PST (UTC -8) | IANA tzdata 2024b | Pacific civil time resolution |
 | `SCENARIO_12_CALENDAR_LEAP_DAY_2000` | Calendar Integrity | 2000-02-29 12:00:00 UTC (400-yr leap: VALID) | ISO 8601 | $JD = 2451604.0$ accepted |
 | `SCENARIO_13_CALENDAR_CENTURY_NON_LEAP_1900` | Calendar Integrity | 1900-02-29 12:00:00 UTC (100-yr: REJECT) | ISO 8601 | Rejection: `INVALID_BIRTH_DATE` |
 | `SCENARIO_14_TEMPORAL_MIDNIGHT_NOON_SEPARATION` | Temporal Boundary | 2000-01-01 00:00:00 vs 12:00:00 UT | USNO AA | Exact $0.5$ day difference |

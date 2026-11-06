@@ -5,6 +5,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -22,37 +23,28 @@ type ReferenceFixture struct {
 	SourceInstitution  string `json:"source_institution"`
 	ObservationInstant string `json:"observation_instant"`
 	Inputs             struct {
-		BirthDate      string   `json:"birthDate"`
-		BirthTime      string   `json:"birthTime"`
-		Timezone       string   `json:"timezone"`
-		TimezoneOffset float64  `json:"timezoneOffset"`
-		Latitude       float64  `json:"latitude"`
-		Longitude      float64  `json:"longitude"`
-		AyanamsaType   string   `json:"ayanamsaType"`
-		RequiredMode   string   `json:"required_mode"`
+		BirthDate      string  `json:"birthDate"`
+		BirthTime      string  `json:"birthTime"`
+		Timezone       string  `json:"timezone"`
+		TimezoneOffset float64 `json:"timezoneOffset"`
+		Latitude       float64 `json:"latitude"`
+		Longitude      float64 `json:"longitude"`
+		AyanamsaType   string  `json:"ayanamsaType"`
+		RequiredMode   string  `json:"required_mode"`
 	} `json:"inputs"`
 	Expected struct {
-		JulianDayUT       float64 `json:"julianDayUT"`
-		AyanamsaLahiri    float64 `json:"ayanamsaLahiri"`
-		DeltaTSeconds     float64 `json:"deltaTSeconds"`
-		SunSiderealLahiri float64 `json:"sunSiderealLahiri"`
-		MoonSiderealLahiri float64 `json:"moonSiderealLahiri"`
-		ErrorCode         string  `json:"errorCode"`
-		ErrorCodeWithoutOffset string `json:"errorCodeWithoutOffset"`
+		JulianDayUT            float64 `json:"julianDayUT"`
+		AyanamsaLahiri         float64 `json:"ayanamsaLahiri"`
+		DeltaTSeconds          float64 `json:"deltaTSeconds"`
+		SunSiderealLahiri      float64 `json:"sunSiderealLahiri"`
+		MoonSiderealLahiri     float64 `json:"moonSiderealLahiri"`
+		ErrorCode              string  `json:"errorCode"`
+		ErrorCodeWithoutOffset string  `json:"errorCodeWithoutOffset"`
 	} `json:"expected"`
 	ValidationStatus string `json:"validation_status"`
 }
 
-func circularAngularDifference(a, b float64) float64 {
-	diff := math.Mod(math.Abs(a-b), 360.0)
-	if diff > 180.0 {
-		return 360.0 - diff
-	}
-	return diff
-}
-
 func loadReferenceDataset(t *testing.T) *ReferenceDataset {
-	// Try multiple relative paths depending on where test is executed
 	candidates := []string{
 		"../../../tests/calculation/reference/independent_reference_fixtures.json",
 		"tests/calculation/reference/independent_reference_fixtures.json",
@@ -105,14 +97,7 @@ func TestIndependentAstronomicalAccuracy(t *testing.T) {
 				}
 				utcTime, err := ParseBirth(req, fix.Inputs.Timezone)
 				if err != nil {
-					// Check if this scenario was expected to fail (e.g. DST gap or leap year)
-					if fix.Expected.ErrorCode != "" {
-						if !stringsContains(err.Error(), fix.Expected.ErrorCode) {
-							t.Fatalf("Expected error %s, got %v", fix.Expected.ErrorCode, err)
-						}
-						return
-					}
-					t.Fatalf("ParseBirth failed unexpectedly: %v", err)
+					t.Fatalf("ParseBirth failed unexpectedly for %s: %v", fix.FixtureID, err)
 				}
 
 				jdCalculated := CalculateJulianDay(utcTime)
@@ -123,7 +108,7 @@ func TestIndependentAstronomicalAccuracy(t *testing.T) {
 				}
 			}
 
-			// Verify DST ambiguous local time behavior
+			// Verify DST ambiguous local time behavior without offset
 			if fix.Expected.ErrorCodeWithoutOffset == "AMBIGUOUS_LOCAL_TIME" {
 				lat := fix.Inputs.Latitude
 				lon := fix.Inputs.Longitude
@@ -135,23 +120,27 @@ func TestIndependentAstronomicalAccuracy(t *testing.T) {
 					Timezone:  fix.Inputs.Timezone,
 				}
 				_, err := ParseBirth(reqWithoutOffset, fix.Inputs.Timezone)
-				if err == nil || !stringsContains(err.Error(), "AMBIGUOUS_LOCAL_TIME") {
+				if err == nil || !strings.Contains(err.Error(), "AMBIGUOUS_LOCAL_TIME") {
 					t.Errorf("Expected AMBIGUOUS_LOCAL_TIME without offset, got: %v", err)
+				}
+			}
+
+			// Verify validation rejection error codes (e.g. spring forward gap or century non-leap)
+			if fix.Expected.ErrorCode != "" && fix.Inputs.BirthDate != "" {
+				lat := fix.Inputs.Latitude
+				lon := fix.Inputs.Longitude
+				req := NormalizationRequest{
+					BirthDate: fix.Inputs.BirthDate,
+					BirthTime: fix.Inputs.BirthTime,
+					Latitude:  &lat,
+					Longitude: &lon,
+					Timezone:  fix.Inputs.Timezone,
+				}
+				_, err := ParseBirth(req, fix.Inputs.Timezone)
+				if err == nil || !strings.Contains(err.Error(), fix.Expected.ErrorCode) {
+					t.Errorf("Expected error %s for %s, got: %v", fix.Expected.ErrorCode, fix.FixtureID, err)
 				}
 			}
 		})
 	}
-}
-
-func stringsContains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || (len(s) > 0 && len(substr) > 0 && hasSubstr(s, substr)))
-}
-
-func hasSubstr(s, substr string) bool {
-	for i := 0; i+len(substr) <= len(s); i++ {
-		if s[i:i+len(substr)] == substr {
-			return true
-		}
-	}
-	return false
 }

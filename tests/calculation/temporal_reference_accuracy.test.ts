@@ -79,7 +79,7 @@ test('A05: IANA timezone resolution for North America (New York, Toronto, Vancou
   assert.ok(fVan);
   const resVan = resolveIanaTimezone(fVan.inputs.birthDate, fVan.inputs.birthTime, fVan.inputs.timezone);
   assert.equal(resVan.offsetHours, -8);
-  assert.equal(resVan.isoUtc, '2026-12-15T17:00:00.000Z');
+  assert.equal(resVan.isoUtc, '2024-12-15T17:00:00.000Z');
 });
 
 test('A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zones', () => {
