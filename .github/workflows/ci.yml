@@ -45,6 +45,8 @@ jobs:
         run: node --import tsx --test tests/phase1/security.test.ts
       - name: Payment boundary and checkout contract tests
         run: node --import tsx --test tests/payment/boundary.test.ts tests/payment/pay02.test.tsx tests/payment/pay03.test.tsx
+      - name: Personalized timing API and UI contracts
+        run: node --import tsx --test tests/timing/contracts.test.tsx
       - name: Desktop and mobile production browser regression
         run: |
           NODE_ENV=production PORT=3101 node --import tsx server.ts > /tmp/phase1-browser-server.log 2>&1 &
@@ -55,3 +57,4 @@ jobs:
           export CHROMIUM_PATH="$(command -v google-chrome || command -v chromium)"
           PHASE1_WEB_URL=http://127.0.0.1:3101 node tests/phase1/browser.mjs
           node tests/payment/pay03-browser.mjs
+          CORE02_WEB_URL=http://127.0.0.1:3101 node tests/timing/browser.mjs

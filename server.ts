@@ -1,3 +1,4 @@
+import {timingGatewayFromEnvironment} from './server/timingBoundary';
 import {commercialGatewayFromEnvironment} from './server/commercialGateway';
 import {createPaymentBoundary,sandboxPaymentBoundaryFromEnvironment} from './server/paymentBoundary';
 /** Authoritative web boundary: anonymous stateless previews; protected capabilities fail closed. */
@@ -77,6 +78,7 @@ app.get('/api/astro/muhurat',(req,res)=>{
   res.json({cityData,goldenWindow,...list,scope_metadata:{...goldenWindow.scope_metadata,scope:'GENERAL_LOCATION_BASED',status:'PREVIEW',location:city,timezone:cityData.timezone,activity_rules_used:false,calculation_version:'static-preview-2026-v1'}});
 });
 app.use(['/assets/aistudio','/public/assets/aistudio'],(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'Historical implementation artifacts are not public content.'}));
+app.use('/api/v1/timing',timingGatewayFromEnvironment());
 app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This API is not available.',request_id:res.locals.requestId}));
 const handleError=(err:any,_req:express.Request,res:express.Response,next:express.NextFunction)=>{
   if(res.headersSent)return next(err);
