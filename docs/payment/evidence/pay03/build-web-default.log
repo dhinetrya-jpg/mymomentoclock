@@ -1,0 +1,86 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.web
+#1 transferring dockerfile: 1.54kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.2s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/node:22-bookworm-slim
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 174B done
+#5 DONE 0.0s
+
+#6 [build 1/6] FROM docker.io/library/node:22-bookworm-slim
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 21.70kB done
+#7 DONE 0.0s
+
+#8 [build 2/6] WORKDIR /app
+#8 CACHED
+
+#9 [build 3/6] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [build 4/6] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca; fi;     npm ci --no-audit --no-fund
+#10 CACHED
+
+#11 [build 5/6] COPY . .
+#11 DONE 0.8s
+
+#12 [build 6/6] RUN npm run lint && npm run build
+#12 0.976
+#12 0.976 > mymomentoclock@1.0.0 lint
+#12 0.976 > tsc --noEmit
+#12 0.976
+#12 1.376
+#12 1.376 > mymomentoclock@1.0.0 build
+#12 1.376 > vite build
+#12 1.376
+#12 1.611 vite v8.3.5 building client environment for production...
+#12 1.620 transforming...
+#12 1.755 ✓ 45 modules transformed.
+#12 1.779 rendering chunks...
+#12 1.816 computing gzip size...
+#12 1.822 dist/index.html                                                      1.01 kB │ gzip:   0.45 kB
+#12 1.822 dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+#12 1.822 dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+#12 1.822 dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+#12 1.822 dist/assets/index-BFmrPvOU.css                                      62.24 kB │ gzip:  10.02 kB
+#12 1.822 dist/assets/index-CJdTz6oh.js                                      325.10 kB │ gzip: 100.83 kB
+#12 1.822
+#12 1.822 ✓ built in 210ms
+#12 DONE 1.8s
+
+#13 [runtime 4/8] COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
+#13 CACHED
+
+#14 [runtime 5/8] COPY --from=build --chown=node:node /app/server.ts ./server.ts
+#14 CACHED
+
+#15 [runtime 7/8] COPY --from=build --chown=node:node /app/src ./src
+#15 CACHED
+
+#16 [runtime 3/8] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#16 CACHED
+
+#17 [runtime 6/8] COPY --from=build --chown=node:node /app/server ./server
+#17 CACHED
+
+#18 [runtime 8/8] COPY --from=build --chown=node:node /app/dist ./dist
+#18 CACHED
+
+#19 exporting to image
+#19 exporting layers done
+#19 writing image sha256:65810e76bf44f3359f604949107c333e615d071b98f6ee9ea32bc30de2161161
+#19 writing image sha256:65810e76bf44f3359f604949107c333e615d071b98f6ee9ea32bc30de2161161 done
+#19 naming to docker.io/library/mymomentoclock-web:pay03-default done
+#19 DONE 0.0s

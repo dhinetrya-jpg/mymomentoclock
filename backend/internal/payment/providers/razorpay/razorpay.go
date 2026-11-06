@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"astroengine-core/backend/internal/payment"
+	"astroengine-core/backend/internal/payment/release"
 )
 
 const SnapshotModel = "CAPTURE_REFUND_LATTICE_V1"
@@ -32,27 +33,73 @@ type Config struct {
 	KeyID, KeySecret, WebhookSecret, AccountID string
 }
 type Adapter struct {
-	config  Config
-	lookup  Lookup
-	client  *http.Client
-	baseURL string
+	config        Config
+	lookup        Lookup
+	client        *http.Client
+	baseURL       string
+	environment   string
+	authorization *release.Authorization
+	options       Options
 }
 
 var identifier = regexp.MustCompile(`^[A-Za-z0-9_-]{1,100}$`)
 
 func errCode(s string) error { return errors.New(s) }
+
+type RotationSecret struct {
+	Value               string
+	NotBefore, NotAfter time.Time
+}
+type Options struct {
+	Environment     string
+	PreviousSecrets []RotationSecret
+	Telemetry       *payment.Telemetry
+}
+
 func New(c Config, lookup Lookup) (*Adapter, error) {
+	return NewWithOptions(c, lookup, Options{Environment: "sandbox"})
+}
+func NewWithOptions(c Config, lookup Lookup, options Options) (*Adapter, error) {
+	if options.Environment == "production" {
+		return nil, errCode("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
+	return build(c, lookup, options, nil)
+}
+func NewProduction(c Config, lookup Lookup, options Options, authorization *release.Authorization) (*Adapter, error) {
+	if !authorization.Merchant(c.AccountID) {
+		return nil, errCode("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
+	options.Environment = "production"
+	return build(c, lookup, options, authorization)
+}
+func build(c Config, lookup Lookup, options Options, authorization *release.Authorization) (*Adapter, error) {
 	if !c.Approved {
 		return nil, errCode("PROVIDER_APPROVAL_REQUIRED")
 	}
-	if !strings.HasPrefix(c.KeyID, "rzp_test_") || !identifier.MatchString(c.KeyID) || len(c.KeySecret) < 16 || len(c.WebhookSecret) < 16 || !strings.HasPrefix(c.AccountID, "acc_") || !identifier.MatchString(c.AccountID) || lookup == nil {
-		return nil, errCode("RAZORPAY_SANDBOX_CONFIGURATION_INVALID")
+	prefix := "rzp_test_"
+	switch options.Environment {
+	case "local", "test", "sandbox", "staging":
+	case "production":
+		prefix = "rzp_live_"
+	default:
+		return nil, errCode("PROVIDER_ENVIRONMENT_INVALID")
 	}
-	return &Adapter{c, lookup, &http.Client{Timeout: 4 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}, "https://api.razorpay.com/v1"}, nil
+	if !strings.HasPrefix(c.KeyID, prefix) || !identifier.MatchString(c.KeyID) || len(c.KeySecret) < 16 || len(c.WebhookSecret) < 16 || !strings.HasPrefix(c.AccountID, "acc_") || !identifier.MatchString(c.AccountID) || lookup == nil || len(options.PreviousSecrets) > 2 {
+		return nil, errCode("RAZORPAY_CONFIGURATION_INVALID")
+	}
+	for _, secret := range options.PreviousSecrets {
+		if len(secret.Value) < 16 || secret.NotBefore.IsZero() || !secret.NotAfter.After(secret.NotBefore) {
+			return nil, errCode("WEBHOOK_ROTATION_INVALID")
+		}
+	}
+	return &Adapter{config: c, lookup: lookup, client: &http.Client{Timeout: 4 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}, baseURL: "https://api.razorpay.com/v1", environment: options.Environment, authorization: authorization, options: options}, nil
 }
-func (a *Adapter) Namespace() string          { return "razorpay/" + a.config.AccountID + "/sandbox" }
-func (a *Adapter) ProductionReady() bool      { return false }
-func (a *Adapter) SandboxReady() bool         { return a.config.Approved }
+
+func (a *Adapter) Namespace() string { return "razorpay/" + a.config.AccountID + "/" + a.environment }
+func (a *Adapter) ProductionReady() bool {
+	return a.environment == "production" && a.authorization.Merchant(a.config.AccountID)
+}
+func (a *Adapter) SandboxReady() bool         { return a.environment == "sandbox" && a.config.Approved }
 func (a *Adapter) SnapshotModel() string      { return SnapshotModel }
 func (a *Adapter) RequiresCreateIntent() bool { return true }
 func (a *Adapter) PublicKey() string          { return a.config.KeyID }
@@ -62,7 +109,17 @@ func Receipt(id string) string {
 }
 
 // Only GET is retried. A POST timeout is ambiguous, never permission to issue another order.
-func (a *Adapter) request(ctx context.Context, method, path string, body any, out any) error {
+func (a *Adapter) request(ctx context.Context, method, path string, body any, out any) (resultErr error) {
+	started := time.Now()
+	defer func() {
+		a.options.Telemetry.Observe("provider_api", time.Since(started))
+		if resultErr != nil {
+			a.options.Telemetry.Observe("provider_api_error", 0)
+		}
+	}()
+	if a.environment == "production" && !a.ProductionReady() {
+		return errCode("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
 	var data []byte
 	var err error
 	if body != nil {
@@ -268,16 +325,35 @@ func (a *Adapter) GetPaymentStatus(ctx context.Context, internalID, providerID s
 	}
 	return payment.Event{Provider: a.Namespace(), EventID: "snapshot", EventType: "RAZORPAY_AUTHORITATIVE_SNAPSHOT", OrderID: binding.OrderID, ProviderOrderID: providerID, PaymentID: paymentID, CustomerID: binding.CustomerID, Currency: binding.Currency, AmountMinor: binding.AmountMinor, Status: state, OccurredAt: time.Unix(stamp, 0).UTC(), EvidenceModel: SnapshotModel}, nil
 }
-func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers http.Header) (payment.Event, error) {
+func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers http.Header) (result payment.Event, resultErr error) {
+	defer func() {
+		if resultErr != nil {
+			a.options.Telemetry.Observe("webhook_invalid", 0)
+		}
+	}()
+	if a.environment == "production" && !a.ProductionReady() {
+		return payment.Event{}, errCode("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
 	empty := payment.Event{}
 	signature := headers.Get("X-Razorpay-Signature")
 	decoded, err := hex.DecodeString(signature)
 	if err != nil || len(decoded) != sha256.Size || len(signature) != 64 || len(raw) == 0 || len(raw) > 64<<10 {
 		return empty, errCode("WEBHOOK_SIGNATURE_INVALID")
 	}
-	mac := hmac.New(sha256.New, []byte(a.config.WebhookSecret))
-	mac.Write(raw)
-	if !hmac.Equal(decoded, mac.Sum(nil)) {
+	secrets := []string{a.config.WebhookSecret}
+	for _, secret := range a.options.PreviousSecrets {
+		if !time.Now().Before(secret.NotBefore) && time.Now().Before(secret.NotAfter) {
+			secrets = append(secrets, secret.Value)
+		}
+	}
+	matched := false
+	for _, secret := range secrets {
+		mac := hmac.New(sha256.New, []byte(secret))
+		mac.Write(raw)
+		equal := hmac.Equal(decoded, mac.Sum(nil))
+		matched = equal || matched
+	}
+	if !matched {
 		return empty, errCode("WEBHOOK_SIGNATURE_INVALID")
 	}
 	var event struct {
@@ -286,6 +362,13 @@ func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers
 		Event   string
 		Created int64 `json:"created_at"`
 		Payload struct {
+			Dispute struct {
+				Entity struct {
+					ID, Entity, Status, Currency string
+					PaymentID                    string `json:"payment_id"`
+					Amount                       int64
+				}
+			}
 			Payment struct{ Entity providerPayment }
 			Refund  struct {
 				Entity struct {
@@ -304,20 +387,20 @@ func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers
 		return empty, errCode("WEBHOOK_EVENT_INVALID")
 	}
 	p := event.Payload.Payment.Entity
-	switch event.Event {
-	case "payment.captured":
+	switch {
+	case event.Event == "payment.captured":
 		if p.Status != "captured" || !p.Captured {
 			return empty, errCode("WEBHOOK_EVENT_INVALID")
 		}
-	case "payment.authorized":
+	case event.Event == "payment.authorized":
 		if p.Status != "authorized" || p.Captured {
 			return empty, errCode("WEBHOOK_EVENT_INVALID")
 		}
-	case "payment.failed":
+	case event.Event == "payment.failed":
 		if p.Status != "failed" || p.Captured {
 			return empty, errCode("WEBHOOK_EVENT_INVALID")
 		}
-	case "refund.processed":
+	case event.Event == "refund.processed":
 		refund := event.Payload.Refund.Entity
 		if refund.Status != "processed" || refund.Amount <= 0 || !identifier.MatchString(refund.PaymentID) {
 			return empty, errCode("WEBHOOK_EVENT_INVALID")
@@ -327,6 +410,28 @@ func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers
 		}
 		if p.ID != refund.PaymentID || p.AmountRefunded < refund.Amount {
 			return empty, errCode("WEBHOOK_EVENT_INVALID")
+		}
+	case strings.HasPrefix(event.Event, "payment.dispute."):
+		risk := event.Payload.Dispute.Entity
+		if !strings.HasPrefix(risk.ID, "disp_") || !identifier.MatchString(risk.ID) || !strings.HasPrefix(risk.PaymentID, "pay_") || !identifier.MatchString(risk.PaymentID) {
+			return empty, errCode("WEBHOOK_EVENT_INVALID")
+		}
+		var authoritative struct {
+			ID, Entity, Status, Currency string
+			PaymentID                    string `json:"payment_id"`
+			Amount                       int64
+		}
+		if err = a.request(ctx, "GET", "/disputes/"+risk.ID, nil, &authoritative); err != nil {
+			return empty, err
+		}
+		if authoritative.ID != risk.ID || authoritative.Entity != "dispute" || authoritative.PaymentID != risk.PaymentID || authoritative.Amount <= 0 || authoritative.Amount != risk.Amount || authoritative.Currency != risk.Currency || authoritative.Status == "" {
+			return empty, errCode("PROVIDER_DISPUTE_MISMATCH")
+		}
+		if err = a.request(ctx, "GET", "/payments/"+risk.PaymentID, nil, &p); err != nil {
+			return empty, err
+		}
+		if p.ID != risk.PaymentID || risk.Amount > p.Amount || risk.Currency != p.Currency {
+			return empty, errCode("PROVIDER_DISPUTE_MISMATCH")
 		}
 	default:
 		return empty, errCode("WEBHOOK_EVENT_UNSUPPORTED")
@@ -340,5 +445,9 @@ func (a *Adapter) VerifyAndParseWebhook(ctx context.Context, raw []byte, headers
 	}
 	digest := sha256.Sum256(raw)
 	// Callback is a notification, never grant evidence. The service retrieves authoritative state.
-	return payment.Event{Provider: a.Namespace(), EventID: id, EventType: event.Event, OrderID: binding.OrderID, ProviderOrderID: p.OrderID, PaymentID: p.ID, CustomerID: binding.CustomerID, Currency: binding.Currency, AmountMinor: binding.AmountMinor, Status: "PENDING", OccurredAt: time.Unix(event.Created, 0).UTC(), EvidenceModel: SnapshotModel, NotificationOnly: true, PayloadDigest: hex.EncodeToString(digest[:])}, nil
+	return payment.Event{Provider: a.Namespace(), EventID: id, EventType: event.Event, OrderID: binding.OrderID, ProviderOrderID: p.OrderID, PaymentID: p.ID, CustomerID: binding.CustomerID, Currency: binding.Currency, AmountMinor: binding.AmountMinor, Status: "PENDING", OccurredAt: time.Unix(event.Created, 0).UTC(), EvidenceModel: SnapshotModel, NotificationOnly: true, RiskHold: strings.HasPrefix(event.Event, "payment.dispute."), PayloadDigest: hex.EncodeToString(digest[:])}, nil
+}
+
+func (a *Adapter) NonProductionReady(environment string) bool {
+	return environment != "production" && a.environment == environment && a.config.Approved
 }

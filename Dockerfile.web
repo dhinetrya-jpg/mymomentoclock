@@ -13,7 +13,7 @@ WORKDIR /app
 ENV NODE_ENV=production PORT=3000
 # tsx is currently a devDependency but is required by the start script.
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
-COPY --from=build --chown=node:node /app/package.json ./package.json
+COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
 COPY --from=build --chown=node:node /app/server.ts ./server.ts
 COPY --from=build --chown=node:node /app/server ./server
 COPY --from=build --chown=node:node /app/src ./src
@@ -21,3 +21,14 @@ COPY --from=build --chown=node:node /app/dist ./dist
 EXPOSE 3000
 USER node
 CMD ["node", "--import", "tsx", "server.ts"]
+
+# No private signing material is accepted by the build. Default image has no trust root.
+FROM runtime AS commercial
+USER root
+ARG PAYMENT_OWNER_PUBLIC_KEY_HEX=""
+RUN set -eu; case "$PAYMENT_OWNER_PUBLIC_KEY_HEX" in *[!0-9a-f]* ) exit 1;; esac; \
+    test -z "$PAYMENT_OWNER_PUBLIC_KEY_HEX" || test "${#PAYMENT_OWNER_PUBLIC_KEY_HEX}" -eq 64; \
+    mkdir -p /app/release && printf '%s' "$PAYMENT_OWNER_PUBLIC_KEY_HEX" > /app/release/owner-public-key.hex && \
+    chmod 0555 /app/release && chmod 0444 /app/release/owner-public-key.hex
+USER node
+FROM runtime AS default

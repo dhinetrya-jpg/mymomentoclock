@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"astroengine-core/backend/internal/payment/release"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -43,14 +44,21 @@ type Dependencies struct {
 	Provider           Provider
 	Environment        string
 	ActivationApproved bool
+	Release            *release.Authorization
+	Capabilities       map[string]CapabilityPolicy
 }
 type Service struct {
-	store    *Store
-	identity Identity
-	provider Provider
+	store        *Store
+	identity     Identity
+	provider     Provider
+	release      *release.Authorization
+	capabilities map[string]CapabilityPolicy
 }
 
 func NewService(d Dependencies) (*Service, error) {
+	if d.Environment == "production" && (d.Release == nil || !d.Release.Valid(time.Now())) {
+		return nil, problem("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
 	if d.Store == nil || d.Store.DB == nil {
 		return nil, problem("PAYMENT_STORAGE_UNAVAILABLE")
 	}
@@ -60,7 +68,13 @@ func NewService(d Dependencies) (*Service, error) {
 	if d.Provider == nil {
 		return nil, problem("PAYMENT_PROVIDER_UNAVAILABLE")
 	}
-	if d.Environment == "sandbox" {
+	if d.Environment == "local" || d.Environment == "staging" {
+		p, ok := d.Provider.(interface{ NonProductionReady(string) bool })
+		i, iok := d.Identity.(interface{ NonProductionReady(string) bool })
+		if !ok || !iok || !d.ActivationApproved || !p.NonProductionReady(d.Environment) || !i.NonProductionReady(d.Environment) {
+			return nil, problem("NONPRODUCTION_DEPENDENCIES_UNAVAILABLE")
+		}
+	} else if d.Environment == "sandbox" {
 		p, ok := d.Provider.(interface{ SandboxReady() bool })
 		identity, identityOK := d.Identity.(interface{ SandboxReady() bool })
 		if !ok || !identityOK || !d.ActivationApproved || !p.SandboxReady() || !identity.SandboxReady() {
@@ -86,6 +100,14 @@ func NewService(d Dependencies) (*Service, error) {
 		if _, err := d.Store.product(id); err != nil || p.Version == "" || p.Capability == "" || p.AccessDuration < 0 || !opaque.MatchString(id) || !opaque.MatchString(p.Version) || !opaque.MatchString(p.Capability) {
 			return nil, problem("PRODUCT_UNAVAILABLE")
 		}
+		if p.Commercial != nil {
+			copyPolicy := *p.Commercial
+			copyPolicy.Countries = append([]string(nil), p.Commercial.Countries...)
+			p.Commercial = &copyPolicy
+		}
+		if d.Environment == "production" && p.Commercial == nil {
+			return nil, problem("COMMERCIAL_CATALOG_UNAPPROVED")
+		}
 		catalog[id] = p
 	}
 	if len(catalog) == 0 {
@@ -99,7 +121,20 @@ func NewService(d Dependencies) (*Service, error) {
 		}
 		copyStore.EvidenceModel = provider.SnapshotModel()
 	}
-	service := &Service{&copyStore, d.Identity, d.Provider}
+	service := &Service{store: &copyStore, identity: d.Identity, provider: d.Provider, release: d.Release, capabilities: map[string]CapabilityPolicy{}}
+	for id, p := range d.Capabilities {
+		if id != p.ID || !opaque.MatchString(p.ApprovalReference) {
+			return nil, problem("CAPABILITY_POLICY_UNAPPROVED")
+		}
+		service.capabilities[id] = p
+	}
+	if d.Environment == "production" {
+		for _, p := range catalog {
+			if !service.capabilities[p.Capability].Delivered {
+				return nil, problem("CAPABILITY_NOT_DELIVERED")
+			}
+		}
+	}
 	if err := service.Ready(context.Background()); err != nil {
 		return nil, err
 	}
@@ -114,24 +149,31 @@ func randomID() string {
 }
 
 type Order struct {
-	ID                                string           `json:"order_id"`
-	Status                            string           `json:"status"`
-	AmountMinor                       int64            `json:"amount_minor"`
-	Currency                          string           `json:"currency"`
-	ProductID                         string           `json:"product_id"`
-	ProductVersion                    string           `json:"product_version"`
-	Capability                        string           `json:"capability_id"`
-	Checkout                          *CheckoutSession `json:"checkout,omitempty"`
+	ID                                string            `json:"order_id"`
+	Status                            string            `json:"status"`
+	AmountMinor                       int64             `json:"amount_minor"`
+	Currency                          string            `json:"currency"`
+	ProductID                         string            `json:"product_id"`
+	ProductVersion                    string            `json:"product_version"`
+	Capability                        string            `json:"capability_id"`
+	Checkout                          *CheckoutSession  `json:"checkout,omitempty"`
+	Commercial                        *CommercialPolicy `json:"commercial_policy,omitempty"`
 	providerOrder, customer, provider string
 }
 
-const orderFields = `order_id,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,amount_minor,currency,product_id,product_version,capability_id,coalesce(provider_order_id,''),customer_id,provider`
+const orderFields = `order_id,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,amount_minor,currency,product_id,product_version,capability_id,coalesce(provider_order_id,''),customer_id,provider,commercial_snapshot`
 
 func scanOrder(row interface{ Scan(...any) error }) (Order, error) {
 	var o Order
-	err := row.Scan(&o.ID, &o.Status, &o.AmountMinor, &o.Currency, &o.ProductID, &o.ProductVersion, &o.Capability, &o.providerOrder, &o.customer, &o.provider)
+	var snapshot []byte
+	err := row.Scan(&o.ID, &o.Status, &o.AmountMinor, &o.Currency, &o.ProductID, &o.ProductVersion, &o.Capability, &o.providerOrder, &o.customer, &o.provider, &snapshot)
 	if err == sql.ErrNoRows {
 		return o, problem("ORDER_NOT_FOUND")
+	}
+	if err == nil && len(snapshot) > 0 && string(snapshot) != "null" {
+		if json.Unmarshal(snapshot, &o.Commercial) != nil {
+			return o, problem("PAYMENT_STORAGE_UNAVAILABLE")
+		}
 	}
 	return o, storageError(err)
 }
@@ -157,6 +199,15 @@ func (s *Store) reserveOrder(ctx context.Context, customer, product, key, correl
 	if err != nil {
 		return Order{}, err
 	}
+	if err := s.commercialCheck(ctx, customer, p); err != nil {
+		return Order{}, err
+	}
+	if p.Commercial != nil {
+		copyPolicy := *p.Commercial
+		copyPolicy.PurchaseCountry, _ = ctx.Value(countryContextKey{}).(string)
+		p.Commercial = &copyPolicy
+	}
+	snapshot, _ := json.Marshal(p.Commercial)
 	id := randomID()
 	if id == "" {
 		return Order{}, problem("PAYMENT_STORAGE_UNAVAILABLE")
@@ -164,7 +215,7 @@ func (s *Store) reserveOrder(ctx context.Context, customer, product, key, correl
 	if err = s.checkpoint("before_order_insert", nil); err != nil {
 		return Order{}, err
 	}
-	_, err = s.DB.ExecContext(ctx, `INSERT INTO phase1_orders(order_id,customer_id,product_id,product_version,capability_id,provider,amount_minor,currency,status,idempotency_key,correlation_id,access_expires_at,evidence_model) VALUES($1,$2,$3,$4,$5,$6,$7,$8,'CREATED',$9,$10,CASE WHEN $11::bigint>0 THEN now()+$11*interval '1 microsecond' ELSE NULL END,$12) ON CONFLICT(customer_id,idempotency_key) WHERE idempotency_key IS NOT NULL DO NOTHING`, id, customer, p.ID, p.Version, p.Capability, s.Provider, p.AmountMinor, p.Currency, key, correlation, p.AccessDuration.Microseconds(), s.model())
+	_, err = s.DB.ExecContext(ctx, `INSERT INTO phase1_orders(order_id,customer_id,product_id,product_version,capability_id,provider,amount_minor,currency,status,idempotency_key,correlation_id,access_expires_at,evidence_model,commercial_snapshot) VALUES($1,$2,$3,$4,$5,$6,$7,$8,'CREATED',$9,$10,CASE WHEN $11::bigint>0 THEN now()+$11*interval '1 microsecond' ELSE NULL END,$12,$13) ON CONFLICT(customer_id,idempotency_key) WHERE idempotency_key IS NOT NULL DO NOTHING`, id, customer, p.ID, p.Version, p.Capability, s.Provider, p.AmountMinor, p.Currency, key, correlation, p.AccessDuration.Microseconds(), s.model(), string(snapshot))
 	if err != nil {
 		return Order{}, storageError(err)
 	}
@@ -180,6 +231,14 @@ func (s *Store) reserveOrder(ctx context.Context, customer, product, key, correl
 func (s *Service) createOrder(ctx context.Context, customer, product, key, correlation string) (Order, error) {
 	ctx, cancel := context.WithTimeout(ctx, 8*time.Second)
 	defer cancel()
+	s.store.Telemetry.Observe("order_attempt", 0)
+	if strings.HasSuffix(s.store.Provider, "/production") && !s.release.Valid(time.Now()) {
+		return Order{}, problem("PAYMENT_RELEASE_NOT_AUTHORIZED")
+	}
+
+	if p, ok := s.store.Catalog[product]; ok && p.Commercial != nil && !s.capabilities[p.Capability].Delivered {
+		return Order{}, problem("CAPABILITY_NOT_DELIVERED")
+	}
 	o, err := s.store.reserveOrder(ctx, customer, product, key, correlation)
 	if err != nil {
 		return o, err
@@ -203,6 +262,7 @@ func (s *Service) createOrder(ctx context.Context, customer, product, key, corre
 	}
 	po, err := s.provider.CreateOrder(ctx, ProviderOrderRequest{OrderID: o.ID, IdempotencyKey: o.ID, CustomerID: customer, Product: p, RecoveryOnly: recoveryOnly})
 	if err != nil {
+		s.store.Telemetry.Observe("provider_create_error", 0)
 		return Order{}, problem("PAYMENT_PROVIDER_UNAVAILABLE")
 	}
 	if !opaque.MatchString(po.ID) || po.OrderID != o.ID || po.CustomerID != customer || po.AmountMinor != o.AmountMinor || po.Currency != o.Currency {
@@ -226,7 +286,7 @@ type Entitlement struct {
 }
 
 func (s *Store) entitlements(ctx context.Context, customer string) ([]Entitlement, error) {
-	rows, err := s.DB.QueryContext(ctx, `SELECT e.capability_id,e.order_id,e.expires_at FROM phase1_entitlements e JOIN phase1_orders o USING(order_id) WHERE e.customer_id=$1 AND o.customer_id=$1 AND o.provider=$2 AND o.status='COMPLETED' AND NOT o.provider_review_required AND e.active AND e.revoked_at IS NULL AND (e.expires_at IS NULL OR e.expires_at>now()) ORDER BY e.capability_id,e.order_id`, customer, s.Provider)
+	rows, err := s.DB.QueryContext(ctx, `SELECT e.capability_id,e.order_id,e.expires_at FROM phase1_entitlements e JOIN phase1_orders o USING(order_id) WHERE e.customer_id=$1 AND o.customer_id=$1 AND o.provider=$2 AND o.status='COMPLETED' AND NOT o.provider_review_required AND NOT EXISTS(SELECT 1 FROM payment_customers c WHERE c.customer_id=$1 AND c.deleted_at IS NOT NULL) AND e.active AND e.revoked_at IS NULL AND (e.expires_at IS NULL OR e.expires_at>now()) ORDER BY e.capability_id,e.order_id`, customer, s.Provider)
 	if err != nil {
 		return nil, storageError(err)
 	}
@@ -295,6 +355,10 @@ func (s *Service) ProcessWebhook(ctx context.Context, raw []byte, headers http.H
 	if !sameIdentity(e, snapshot) || (e.EvidenceModel != "CAPTURE_REFUND_LATTICE_V1" && snapshot.Revision < e.Revision) {
 		return problem("PAYMENT_MISMATCH")
 	}
+	if e.RiskHold && snapshot.Status != "REFUNDED" {
+		snapshot.Status = "PAYMENT_REVIEW"
+		s.store.Telemetry.Observe("refund_review", 0)
+	}
 	// Apply latest authoritative state first. A stale completed callback cannot unlock a refunded order.
 	if err = s.applySnapshot(ctx, snapshot); err != nil {
 		return err
@@ -344,8 +408,21 @@ type CheckoutSession struct {
 }
 
 func (s *Service) checkoutOrder(o Order) Order {
-	if provider, ok := s.provider.(interface{ PublicKey() string }); ok && strings.HasSuffix(s.store.Provider, "/sandbox") && strings.HasPrefix(provider.PublicKey(), "rzp_test_") && o.providerOrder != "" {
-		o.Checkout = &CheckoutSession{"sandbox", provider.PublicKey(), o.providerOrder}
+	provider, ok := s.provider.(interface{ PublicKey() string })
+	if !ok || o.providerOrder == "" {
+		return o
+	}
+	mode := "sandbox"
+	prefix := "rzp_test_"
+	if strings.HasSuffix(s.store.Provider, "/production") {
+		if !s.release.Valid(time.Now()) || !s.provider.ProductionReady() {
+			return o
+		}
+		mode = "production"
+		prefix = "rzp_live_"
+	}
+	if strings.HasPrefix(provider.PublicKey(), prefix) {
+		o.Checkout = &CheckoutSession{mode, provider.PublicKey(), o.providerOrder}
 	}
 	return o
 }

@@ -5,6 +5,7 @@ import (
 	"astroengine-core/backend/internal/calibration"
 	"astroengine-core/backend/internal/ephemeris"
 	"astroengine-core/backend/internal/payment"
+	"astroengine-core/backend/internal/payment/commercial"
 	paymentsandbox "astroengine-core/backend/internal/payment/sandbox"
 	"context"
 	"crypto/rand"
@@ -180,30 +181,51 @@ func main() {
 			log.Fatal("PRODUCTION_PAYMENT_DISABLED")
 		}
 		// No approved real identity integration is registered in this repository. No test substitute.
-		runtime, err := paymentsandbox.FromEnvironment(context.Background(), nil)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		defer runtime.Service.Close()
-		// Only reached after a separately reviewed real Identity is supplied above.
-		internal, err := payment.NewInternalServer(":8443", runtime.Service, runtime.TLS, runtime.ClientDNS)
-		if err != nil {
-			log.Fatal("PAYMENT_INTERNAL_TLS_REQUIRED")
-		}
-		webhookMux := http.NewServeMux()
-		webhookMux.Handle("/sandbox/webhooks/razorpay", payment.ProviderWebhook(runtime.Service))
-		webhookServer := &http.Server{Addr: ":8444", Handler: webhookMux, TLSConfig: runtime.WebhookTLS, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
-		paymentServers = append(paymentServers, internal, webhookServer)
-		go func() {
-			if err := webhookServer.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
-				log.Print("SANDBOX_WEBHOOK_LISTENER_FAILED")
+		if os.Getenv("PAYMENT_COMMERCIAL_CONFIG_FILE") != "" {
+			config, _, err := commercial.ReadConfig(os.Getenv("PAYMENT_COMMERCIAL_CONFIG_FILE"))
+			if err != nil || config.Environment != mode {
+				log.Fatal("COMMERCIAL_CONFIGURATION_UNAPPROVED")
 			}
-		}()
-		go func() {
-			if err := internal.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
-				log.Print("SANDBOX_INTERNAL_LISTENER_FAILED")
+			runtime, err := commercial.Build(context.Background(), config, nil)
+			if err != nil {
+				log.Fatal(err.Error())
 			}
-		}()
+			defer runtime.Service.Close()
+			private, public := runtime.Servers()
+			paymentServers = append(paymentServers, private, public)
+			for _, listener := range paymentServers {
+				go func(server *http.Server) {
+					if err := server.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
+						log.Print("PAYMENT_LISTENER_FAILED")
+					}
+				}(listener)
+			}
+		} else {
+			runtime, err := paymentsandbox.FromEnvironment(context.Background(), nil)
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+			defer runtime.Service.Close()
+			// Only reached after a separately reviewed real Identity is supplied above.
+			internal, err := payment.NewInternalServer(":8443", runtime.Service, runtime.TLS, runtime.ClientDNS)
+			if err != nil {
+				log.Fatal("PAYMENT_INTERNAL_TLS_REQUIRED")
+			}
+			webhookMux := http.NewServeMux()
+			webhookMux.Handle("/sandbox/webhooks/razorpay", payment.ProviderWebhook(runtime.Service))
+			webhookServer := &http.Server{Addr: ":8444", Handler: webhookMux, TLSConfig: runtime.WebhookTLS, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+			paymentServers = append(paymentServers, internal, webhookServer)
+			go func() {
+				if err := webhookServer.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
+					log.Print("SANDBOX_WEBHOOK_LISTENER_FAILED")
+				}
+			}()
+			go func() {
+				if err := internal.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
+					log.Print("SANDBOX_INTERNAL_LISTENER_FAILED")
+				}
+			}()
+		}
 	}
 
 	port := os.Getenv("PORT")

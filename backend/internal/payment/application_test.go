@@ -99,7 +99,7 @@ func (p *fixtureProvider) deliver(ctx context.Context, s *Service, e Event) erro
 func fixture(t *testing.T) (*Service, *fixtureProvider) {
 	t.Helper()
 	db := testDB(t)
-	for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql"} {
+	for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql", "006_commercial_readiness.sql"} {
 		data, err := os.ReadFile("../../../database/migrations/" + file)
 		if err != nil {
 			t.Fatal(err)
@@ -733,7 +733,7 @@ func TestSchemaConstraintsAndLeastPrivilege(t *testing.T) {
 	if _, err := s.store.DB.Exec(`UPDATE phase1_orders SET provider_order_id=$2 WHERE order_id=$1`, other.OrderID, e.ProviderOrderID); err == nil {
 		t.Fatal("duplicate provider order")
 	}
-	for _, file := range []string{"../../../database/migrations/004_payment_validate.sql", "../../../database/payment_runtime_role.sql"} {
+	for _, file := range []string{"../../../database/migrations/004_payment_validate.sql", "../../../database/payment_runtime_role.sql", "../../../database/commercial_runtime_role.sql"} {
 		b, err := os.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)
@@ -741,6 +741,13 @@ func TestSchemaConstraintsAndLeastPrivilege(t *testing.T) {
 		if _, err = s.store.DB.Exec(string(b)); err != nil {
 			t.Fatal(err)
 		}
+	}
+	var commercialGrants bool
+	if err := s.store.DB.QueryRow(`SELECT has_table_privilege('mymomentoclock_payment_runtime','payment_sessions','UPDATE') AND NOT has_table_privilege('mymomentoclock_payment_runtime','payment_environment_binding','INSERT') AND has_table_privilege('mymomentoclock_payment_observer','phase1_orders','SELECT') AND NOT has_table_privilege('mymomentoclock_payment_observer','phase1_orders','UPDATE') AND NOT has_table_privilege('mymomentoclock_payment_observer','payment_sessions','SELECT') AND NOT has_table_privilege('mymomentoclock_payment_runtime','phase1_payment_audit','UPDATE')`).Scan(&commercialGrants); err != nil || !commercialGrants {
+		t.Fatal("commercial role isolation", err)
+	}
+	if _, err := s.OperationalStats(ctx); err != nil {
+		t.Fatal("commercial monitoring gauges", err)
 	}
 	// Test the granted role using SET ROLE on a dedicated connection, not the migration owner.
 	conn, err := s.store.DB.Conn(ctx)

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -26,17 +27,24 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
+		requestID := randomID()
+		if HasTrustedPeer(r, serviceDNS) && regexp.MustCompile(`^[a-f0-9-]{36}$`).MatchString(r.Header.Get("X-Request-ID")) {
+			requestID = r.Header.Get("X-Request-ID")
+		}
+		w.Header().Set("X-Request-ID", requestID)
 		reply := func(status int, value any) { w.WriteHeader(status); _ = json.NewEncoder(w).Encode(value) }
 		fail := func(code string) {
 			status := 503
 			switch code {
+			case "CSRF_INVALID":
+				status = 403
 			case "UNAUTHENTICATED", "INTERNAL_SERVICE_AUTH_REQUIRED":
 				status = 401
 			case "ORDER_NOT_FOUND":
 				status = 404
 			case "INVALID_REQUEST", "INVALID_ORDER", "PRODUCT_UNAVAILABLE":
 				status = 422
-			case "IDEMPOTENCY_CONFLICT", "PAYMENT_CONFLICT":
+			case "IDEMPOTENCY_CONFLICT", "PAYMENT_CONFLICT", "ALREADY_PURCHASED":
 				status = 409
 			}
 			reply(status, map[string]any{"error": code, "status": "UNAVAILABLE", "is_certified": false, "is_graph_verified": false, "vector_matrix": nil})
@@ -61,8 +69,22 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 		}
 		customer, err := s.identity.Authenticate(ctx, r)
 		if err != nil || !opaque.MatchString(customer) {
+			if err != nil && err.Error() == "CSRF_INVALID" {
+				fail("CSRF_INVALID")
+				return
+			}
 			fail("UNAUTHENTICATED")
 			return
+		}
+		if identity, ok := s.identity.(interface {
+			CustomerCountry(context.Context, string) (string, error)
+		}); ok {
+			country, e := identity.CustomerCountry(ctx, customer)
+			if e != nil {
+				fail("UNAUTHENTICATED")
+				return
+			}
+			ctx = context.WithValue(ctx, countryContextKey{}, country)
 		}
 		// Reject all client identity/amount/status selectors, even on GET requests.
 		if r.URL.RawQuery != "" {
@@ -71,6 +93,8 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 		}
 		path := r.URL.Path
 		switch {
+		case path == "/api/payment/catalog" && r.Method == "GET":
+			reply(200, map[string]any{"products": s.Catalog(ctx, customer)})
 		case path == "/api/payment/orders" && r.Method == "POST":
 			var req struct {
 				ProductID      string `json:"product_id"`
@@ -83,7 +107,7 @@ func Handler(s *Service, serviceDNS string) http.Handler {
 				fail("INVALID_REQUEST")
 				return
 			}
-			o, err := s.createOrder(ctx, customer, req.ProductID, req.IdempotencyKey, randomID())
+			o, err := s.createOrder(ctx, customer, req.ProductID, req.IdempotencyKey, requestID)
 			if err != nil {
 				fail(err.Error())
 				return

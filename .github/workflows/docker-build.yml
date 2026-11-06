@@ -44,6 +44,19 @@ jobs:
           load: true
           tags: mymomentoclock-web:latest
 
+      - name: Build disabled commercial native artifact
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: commercial
+          push: false
+          load: true
+          tags: payment-commercial-check:latest
+      - name: Commercial default refuses activation
+        run: |
+          if docker run --rm payment-commercial-check:latest > /tmp/payment-commercial-refusal.log 2>&1; then exit 1; fi
+          grep -q COMMERCIAL_CONFIGURATION_UNAPPROVED /tmp/payment-commercial-refusal.log
       - uses: actions/setup-node@v4
         with:
           node-version: 22

@@ -15,16 +15,18 @@ import (
 )
 
 type Product struct {
-	ID             string        `json:"id"`
-	Version        string        `json:"version"`
-	Capability     string        `json:"capability"`
-	AmountMinor    int64         `json:"amount_minor"`
-	Currency       string        `json:"currency"`
-	OwnerApproved  bool          `json:"-"`
-	AccessDuration time.Duration `json:"-"`
+	ID             string            `json:"id"`
+	Version        string            `json:"version"`
+	Capability     string            `json:"capability"`
+	AmountMinor    int64             `json:"amount_minor"`
+	Currency       string            `json:"currency"`
+	OwnerApproved  bool              `json:"-"`
+	AccessDuration time.Duration     `json:"-"`
+	Commercial     *CommercialPolicy `json:"commercial_policy,omitempty"`
 }
 type Store struct {
-	DB *sql.DB
+	Telemetry *Telemetry
+	DB        *sql.DB
 	// Provider is a namespace, not a brand: provider/account/environment.
 	Provider      string
 	Catalog       map[string]Product
@@ -42,6 +44,7 @@ type Event struct {
 	EvidenceModel                                                                                   string `json:",omitempty"`
 	NotificationOnly                                                                                bool   `json:",omitempty"`
 	PayloadDigest                                                                                   string `json:",omitempty"`
+	RiskHold                                                                                        bool   `json:",omitempty"`
 }
 
 // VerifiedEvent is opaque outside this package. JSON decoding cannot construct the seal or evidence.
@@ -203,7 +206,8 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 	var amount, revision int64
 	var paymentID sql.NullString
 	var expiration sql.NullTime
-	err = tx.QueryRowContext(ctx, `SELECT customer_id,provider,coalesce(provider_order_id,''),amount_minor,currency,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,provider_payment_id,provider_revision,capability_id,access_expires_at,evidence_model FROM phase1_orders WHERE order_id=$1 FOR UPDATE`, e.OrderID).Scan(&customer, &provider, &providerOrder, &amount, &curr, &state, &paymentID, &revision, &capability, &expiration, &model)
+	var createdAt time.Time
+	err = tx.QueryRowContext(ctx, `SELECT customer_id,provider,coalesce(provider_order_id,''),amount_minor,currency,CASE WHEN provider_review_required THEN 'PAYMENT_REVIEW' ELSE status END,provider_payment_id,provider_revision,capability_id,access_expires_at,evidence_model,created_at FROM phase1_orders WHERE order_id=$1 FOR UPDATE`, e.OrderID).Scan(&customer, &provider, &providerOrder, &amount, &curr, &state, &paymentID, &revision, &capability, &expiration, &model, &createdAt)
 	if err == sql.ErrNoRows {
 		return false, problem("UNKNOWN_ORDER")
 	}
@@ -215,6 +219,7 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 		return false, storageError(err)
 	}
 	if processing == "PROCESSED" || processing == "IGNORED" {
+		s.Telemetry.Observe("duplicate_event", 0)
 		return false, storageError(tx.Commit())
 	}
 	if processing == "REJECTED" {
@@ -257,7 +262,7 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 	}
 	granted := false
 	if e.Status == "COMPLETED" {
-		result, err := tx.ExecContext(ctx, `INSERT INTO phase1_entitlements(order_id,customer_id,capability_id,active,expires_at) VALUES($1,$2,$3,true,$4) ON CONFLICT(order_id) DO NOTHING`, e.OrderID, e.CustomerID, capability, expiration)
+		result, err := tx.ExecContext(ctx, `INSERT INTO phase1_entitlements(order_id,customer_id,capability_id,active,expires_at) SELECT $1,$2,$3,true,$4 WHERE NOT EXISTS(SELECT 1 FROM payment_customers c WHERE c.customer_id=$2 AND c.deleted_at IS NOT NULL) ON CONFLICT(order_id) DO NOTHING`, e.OrderID, e.CustomerID, capability, expiration)
 		if err != nil {
 			return false, storageError(err)
 		}
@@ -282,6 +287,9 @@ func (s *Store) apply(ctx context.Context, e Event) (bool, error) {
 	}
 	if err = tx.Commit(); err != nil {
 		return false, problem("PAYMENT_COMMIT_UNKNOWN")
+	}
+	if granted {
+		s.Telemetry.Observe("payment_confirmation", time.Since(createdAt))
 	}
 	if err = s.checkpoint("after_commit", nil); err != nil {
 		return false, err

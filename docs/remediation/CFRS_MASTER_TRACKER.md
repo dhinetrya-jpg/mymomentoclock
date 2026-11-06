@@ -109,3 +109,12 @@ Base069587b; branch fix/pay-p0-02-provider-sandbox-integration; functional imple
 | PRODUCTION_PAYMENT_READY | SAFELY_DISABLED / NO-GO |
 
 Node82/82; dual-module Go test/race/vet/TLS PG and actual restart; Docker/API/browser375/1280 pass. Current hosted docs403; provider approval/credentials, real identity, pricing, webhook/network and reversal/dispute contract remain blocked. Detailed G01–G26 and next steps: docs/payment/PAY_P0_02_HANDOFF.md; no overall Phase1 production release approval.
+
+
+## PAY-P0-03 commercial infrastructure — 2026-11-06
+
+Baseline main e8c65c1fb21d31a781d5d9314cf2722983558e2c; feature branch fix/pay-p0-03-live-commercial-readiness. Vendor-neutral pinned identity verification/durable sessions, immutable approved commercial catalog schema, gated separate production provider/artifacts, cookie/CSRF hosted checkout, durable capability enforcement, conservative dispute holds/full refund revocation, leased recovery/dead-letter, private metrics/read-only operations and additive006 are implemented.
+
+Local evidence:114 Node/calculation tests, dual-module Go test/race/vet/CGO-disabled, actual TLS PostgreSQL and three restart checks, Node→mTLS→Go→PG→local provider lifecycle, desktop/mobile checkout states. Detailed final artifact results: docs/payment/PAY_P0_03_TEST_REPORT.md.
+
+Code/local integration:GO for engineering review within evidence scope. Genuine provider sandbox, actual approved product and live activation:NO-GO. Real identity vendor/SDK, merchant/credentials/current API/genuine transactions, catalog/features/legal/tax/refund approvals, deployed infrastructure/backup/incident review and owner release authorization remain blocked. The actual premium delivery registry is empty; no paid placeholder feature is enabled. No main merge, production migration/deployment or live charge. Human and unsigned machine26-gate reports and exact next owner actions are in PAY_P0_03_HANDOFF/RELEASE_GATES.

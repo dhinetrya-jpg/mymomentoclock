@@ -20,6 +20,6 @@ jobs:
       - name: Non-root migration package and disabled default
         run: |
           docker build -f Dockerfile.payment-migrations -t payment-migration-check .
-          docker run --rm --entrypoint sh payment-migration-check -c 'test -r /migrations/001_secure_payments.sql && test -r /migrations/003_payment_application.sql && test -r /migrations/004_payment_validate.sql'
+          docker run --rm --entrypoint sh payment-migration-check -c 'test -r /migrations/001_secure_payments.sql && test -r /migrations/003_payment_application.sql && test -r /migrations/004_payment_validate.sql && test -r /migrations/005_provider_sandbox.sql && test -r /migrations/006_commercial_readiness.sql'
           if docker run --rm payment-migration-check > /tmp/payment-migration-refusal.log 2>&1; then exit 1; fi
           grep -q 'Migration requires operator-reviewed approval' /tmp/payment-migration-refusal.log

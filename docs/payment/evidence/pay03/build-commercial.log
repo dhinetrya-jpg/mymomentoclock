@@ -1,0 +1,102 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.63kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.4s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/golang:1.26-bookworm
+#4 DONE 0.3s
+
+#5 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#5 DONE 0.4s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 174B done
+#6 DONE 0.0s
+
+#7 [builder 1/9] FROM docker.io/library/golang:1.26-bookworm@sha256:5de7c99eb78ca5e515a4c340235d0955ec5964a5071c492c15503d7c267da473
+#7 DONE 0.0s
+
+#8 [runtime 1/5] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 273.02kB done
+#9 DONE 0.0s
+
+#10 [builder 5/9] COPY backend/go.mod backend/go.sum ./backend/
+#10 CACHED
+
+#11 [builder 4/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi;     install-swisseph
+#11 CACHED
+
+#12 [builder 3/9] COPY scripts/install-swisseph.sh /usr/local/bin/install-swisseph
+#12 CACHED
+
+#13 [builder 2/9] WORKDIR /app
+#13 CACHED
+
+#14 [builder 6/9] WORKDIR /app/backend
+#14 CACHED
+
+#15 [builder 7/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     go mod download
+#15 DONE 9.0s
+
+#16 [builder 8/9] COPY backend/ ./
+#16 DONE 6.0s
+
+#17 [builder 9/9] RUN CGO_ENABLED=1 go test -mod=readonly ./... &&     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/astroengine_server ./cmd/server
+#17 18.78 ?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+#17 18.78 ?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+#17 19.97 ok  	astroengine-core/backend/cmd/server	0.037s
+#17 19.98 ok  	astroengine-core/backend/internal/calibration	0.005s
+#17 19.99 ok  	astroengine-core/backend/internal/ephemeris	0.009s
+#17 19.99 ?   	astroengine-core/backend/internal/graph	[no test files]
+#17 20.82 ?   	astroengine-core/backend/internal/metrics	[no test files]
+#17 20.83 ok  	astroengine-core/backend/internal/payment	0.006s
+#17 20.91 ok  	astroengine-core/backend/internal/payment/authn	0.092s
+#17 20.91 ok  	astroengine-core/backend/internal/payment/commercial	0.006s
+#17 20.94 ok  	astroengine-core/backend/internal/payment/providers/razorpay	0.117s
+#17 20.94 ok  	astroengine-core/backend/internal/payment/release	0.016s
+#17 20.94 ?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+#17 20.94 ?   	astroengine-core/backend/internal/resolver	[no test files]
+#17 20.94 ?   	astroengine-core/backend/internal/rvm	[no test files]
+#17 20.94 ok  	astroengine-core/backend/internal/webhook	0.003s
+#17 DONE 32.0s
+
+#18 [runtime 2/5] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     apt-get update && apt-get install -y --no-install-recommends ca-certificates libstdc++6 tzdata &&     rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [runtime 3/5] WORKDIR /app
+#19 CACHED
+
+#20 [runtime 4/5] COPY --from=builder /app/astroengine_server ./astroengine_server
+#20 DONE 0.5s
+
+#21 [commercial-builder 1/1] RUN set -eu; case "$PAYMENT_OWNER_PUBLIC_KEY_HEX" in *[!0-9a-f]* ) exit 1;; esac;     test -z "$PAYMENT_OWNER_PUBLIC_KEY_HEX" || test "${#PAYMENT_OWNER_PUBLIC_KEY_HEX}" -eq 64;     CGO_ENABLED=1 go build -mod=readonly -trimpath -ldflags "-X main.releaseTrustPublicKeyHex=$PAYMENT_OWNER_PUBLIC_KEY_HEX" -o /app/payment-commercial ./cmd/payment-commercial &&     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/payment-observer ./cmd/payment-observer
+#21 ...
+
+#22 [runtime 5/5] COPY --from=builder /usr/local/share/licenses/swisseph /usr/share/licenses/swisseph
+#22 DONE 0.2s
+
+#21 [commercial-builder 1/1] RUN set -eu; case "$PAYMENT_OWNER_PUBLIC_KEY_HEX" in *[!0-9a-f]* ) exit 1;; esac;     test -z "$PAYMENT_OWNER_PUBLIC_KEY_HEX" || test "${#PAYMENT_OWNER_PUBLIC_KEY_HEX}" -eq 64;     CGO_ENABLED=1 go build -mod=readonly -trimpath -ldflags "-X main.releaseTrustPublicKeyHex=$PAYMENT_OWNER_PUBLIC_KEY_HEX" -o /app/payment-commercial ./cmd/payment-commercial &&     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/payment-observer ./cmd/payment-observer
+#21 DONE 2.9s
+
+#23 [commercial 1/2] COPY --from=commercial-builder /app/payment-commercial /app/payment-commercial
+#23 DONE 0.2s
+
+#24 [commercial 2/2] COPY --from=commercial-builder /app/payment-observer /app/payment-observer
+#24 DONE 0.2s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 0.4s done
+#25 writing image sha256:6fdd73a42b3fecd88c8be050b8bdf3d7632e76e7bc03b88290c21d4ee72e77c4 done
+#25 naming to docker.io/library/mymomentoclock:pay03-commercial done
+#25 DONE 0.4s

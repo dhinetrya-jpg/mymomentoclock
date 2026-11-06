@@ -1,0 +1,30 @@
+# Proposals only. Owner/SRE must choose thresholds/routing from staging measurements.
+# No production monitor or notification is created by this file.
+groups:
+  - name: payment-proposals
+    rules:
+      - alert: PaymentProviderErrors
+        expr: increase(mymomento_payment_provider_api_error_total[5m]) > 5
+        for: 5m
+        labels: {severity: proposed_warning}
+        annotations: {summary: "Provider errors: inspect reachability and merchant status; do not mark payments paid"}
+      - alert: PaymentRecoveryBacklog
+        expr: mymomento_payment_overdue_reconciliation > 10
+        for: 10m
+        labels: {severity: proposed_warning}
+      - alert: PaymentDeadLetter
+        expr: mymomento_payment_dead_letters > 0
+        for: 1m
+        labels: {severity: proposed_review}
+      - alert: PaymentEntitlementMismatch
+        expr: increase(mymomento_payment_entitlement_mismatch_total[5m]) > 0
+        for: 1m
+        labels: {severity: proposed_review}
+      - alert: PaymentPendingAge
+        expr: mymomento_payment_pending_over_hour > 0
+        for: 10m
+        labels: {severity: proposed_warning}
+      - alert: PaymentWebhookSignatures
+        expr: increase(mymomento_payment_webhook_invalid_total[5m]) > 10
+        for: 5m
+        labels: {severity: proposed_warning}

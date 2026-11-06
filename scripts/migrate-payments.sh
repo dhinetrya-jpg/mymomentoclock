@@ -7,6 +7,7 @@ root=${PAYMENT_MIGRATION_ROOT:-/migrations}
 psql 'service=payment sslmode=verify-full connect_timeout=5' -X -v ON_ERROR_STOP=1 --single-transaction -f "$root/001_secure_payments.sql"
 psql 'service=payment sslmode=verify-full connect_timeout=5' -X -v ON_ERROR_STOP=1 -f "$root/003_payment_application.sql"
 psql 'service=payment sslmode=verify-full connect_timeout=5' -X -v ON_ERROR_STOP=1 -f "$root/005_provider_sandbox.sql"
+psql 'service=payment sslmode=verify-full connect_timeout=5' -X -v ON_ERROR_STOP=1 -f "$root/006_commercial_readiness.sql"
 if [ "${PAYMENT_VALIDATE_EXISTING:-}" = reviewed ]; then
  psql 'service=payment sslmode=verify-full connect_timeout=5' -X -v ON_ERROR_STOP=1 -f "$root/004_payment_validate.sql"
 fi

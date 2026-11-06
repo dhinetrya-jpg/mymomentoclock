@@ -58,7 +58,7 @@ func TestTransactionalPayments(t *testing.T) {
 		t.Fatal(err)
 	}
 	for i := 0; i < 2; i++ {
-		for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql"} {
+		for _, file := range []string{"001_secure_payments.sql", "003_payment_application.sql", "005_provider_sandbox.sql", "006_commercial_readiness.sql"} {
 			data, e := os.ReadFile("../../../database/migrations/" + file)
 			if e != nil {
 				t.Fatal(e)
