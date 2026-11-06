@@ -1,0 +1,797 @@
+go version go1.26.10 linux/amd64
+ok  	astroengine-core	0.004s
+ok  	astroengine-core	1.013s
+ok  	astroengine-core	0.002s
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+=== RUN   TestProtectedOperationsFailClosed
+--- PASS: TestProtectedOperationsFailClosed (0.00s)
+=== RUN   TestMalformedAndOversizedRequests
+--- PASS: TestMalformedAndOversizedRequests (0.00s)
+=== RUN   TestProductionDiagnosticsHidden
+--- PASS: TestProductionDiagnosticsHidden (0.00s)
+PASS
+ok  	astroengine-core/backend/cmd/server	0.005s
+=== RUN   TestNoFabricatedDashaOrCertification
+--- PASS: TestNoFabricatedDashaOrCertification (0.00s)
+=== RUN   TestMilestoneValidation
+--- PASS: TestMilestoneValidation (0.00s)
+=== RUN   TestCanonicalNodeMilestoneContract
+--- PASS: TestCanonicalNodeMilestoneContract (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/calibration	0.004s
+=== RUN   TestNativeEphemeris
+--- PASS: TestNativeEphemeris (0.00s)
+=== RUN   TestNativeNormalizationWithTimezone
+--- PASS: TestNativeNormalizationWithTimezone (0.00s)
+=== RUN   TestNativeConcurrentDeterminism
+--- PASS: TestNativeConcurrentDeterminism (0.00s)
+=== RUN   TestBirthValidation
+=== RUN   TestBirthValidation/missing_date
+=== RUN   TestBirthValidation/missing_time
+=== RUN   TestBirthValidation/missing_coordinates
+=== RUN   TestBirthValidation/invalid_leap_day
+=== RUN   TestBirthValidation/invalid_time
+=== RUN   TestBirthValidation/invalid_latitude
+=== RUN   TestBirthValidation/nan
+=== RUN   TestBirthValidation/infinity
+=== RUN   TestBirthValidation/unknown_time
+=== RUN   TestBirthValidation/missing_zone
+=== RUN   TestBirthValidation/machine-local_zone
+=== RUN   TestBirthValidation/invalid_zone
+=== RUN   TestBirthValidation/DST_gap
+=== RUN   TestBirthValidation/DST_fold
+--- PASS: TestBirthValidation (0.00s)
+    --- PASS: TestBirthValidation/missing_date (0.00s)
+    --- PASS: TestBirthValidation/missing_time (0.00s)
+    --- PASS: TestBirthValidation/missing_coordinates (0.00s)
+    --- PASS: TestBirthValidation/invalid_leap_day (0.00s)
+    --- PASS: TestBirthValidation/invalid_time (0.00s)
+    --- PASS: TestBirthValidation/invalid_latitude (0.00s)
+    --- PASS: TestBirthValidation/nan (0.00s)
+    --- PASS: TestBirthValidation/infinity (0.00s)
+    --- PASS: TestBirthValidation/unknown_time (0.00s)
+    --- PASS: TestBirthValidation/missing_zone (0.00s)
+    --- PASS: TestBirthValidation/machine-local_zone (0.00s)
+    --- PASS: TestBirthValidation/invalid_zone (0.00s)
+    --- PASS: TestBirthValidation/DST_gap (0.00s)
+    --- PASS: TestBirthValidation/DST_fold (0.00s)
+=== RUN   TestTimezoneArithmetic
+--- PASS: TestTimezoneArithmetic (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/ephemeris	0.005s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+=== RUN   TestTransitionMatrix
+=== RUN   TestTransitionMatrix/CREATED/CREATED
+=== RUN   TestTransitionMatrix/CREATED/PENDING
+=== RUN   TestTransitionMatrix/CREATED/COMPLETED
+=== RUN   TestTransitionMatrix/CREATED/FAILED
+=== RUN   TestTransitionMatrix/CREATED/CANCELLED
+=== RUN   TestTransitionMatrix/CREATED/EXPIRED
+=== RUN   TestTransitionMatrix/CREATED/REFUNDED
+=== RUN   TestTransitionMatrix/CREATED/REVERSED
+=== RUN   TestTransitionMatrix/CREATED/AUTHORIZED
+=== RUN   TestTransitionMatrix/CREATED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/CREATED/UNKNOWN
+=== RUN   TestTransitionMatrix/PENDING/CREATED
+=== RUN   TestTransitionMatrix/PENDING/PENDING
+=== RUN   TestTransitionMatrix/PENDING/COMPLETED
+=== RUN   TestTransitionMatrix/PENDING/FAILED
+=== RUN   TestTransitionMatrix/PENDING/CANCELLED
+=== RUN   TestTransitionMatrix/PENDING/EXPIRED
+=== RUN   TestTransitionMatrix/PENDING/REFUNDED
+=== RUN   TestTransitionMatrix/PENDING/REVERSED
+=== RUN   TestTransitionMatrix/PENDING/AUTHORIZED
+=== RUN   TestTransitionMatrix/PENDING/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/PENDING/UNKNOWN
+=== RUN   TestTransitionMatrix/COMPLETED/CREATED
+=== RUN   TestTransitionMatrix/COMPLETED/PENDING
+=== RUN   TestTransitionMatrix/COMPLETED/COMPLETED
+=== RUN   TestTransitionMatrix/COMPLETED/FAILED
+=== RUN   TestTransitionMatrix/COMPLETED/CANCELLED
+=== RUN   TestTransitionMatrix/COMPLETED/EXPIRED
+=== RUN   TestTransitionMatrix/COMPLETED/REFUNDED
+=== RUN   TestTransitionMatrix/COMPLETED/REVERSED
+=== RUN   TestTransitionMatrix/COMPLETED/AUTHORIZED
+=== RUN   TestTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/COMPLETED/UNKNOWN
+=== RUN   TestTransitionMatrix/FAILED/CREATED
+=== RUN   TestTransitionMatrix/FAILED/PENDING
+=== RUN   TestTransitionMatrix/FAILED/COMPLETED
+=== RUN   TestTransitionMatrix/FAILED/FAILED
+=== RUN   TestTransitionMatrix/FAILED/CANCELLED
+=== RUN   TestTransitionMatrix/FAILED/EXPIRED
+=== RUN   TestTransitionMatrix/FAILED/REFUNDED
+=== RUN   TestTransitionMatrix/FAILED/REVERSED
+=== RUN   TestTransitionMatrix/FAILED/AUTHORIZED
+=== RUN   TestTransitionMatrix/FAILED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/FAILED/UNKNOWN
+=== RUN   TestTransitionMatrix/CANCELLED/CREATED
+=== RUN   TestTransitionMatrix/CANCELLED/PENDING
+=== RUN   TestTransitionMatrix/CANCELLED/COMPLETED
+=== RUN   TestTransitionMatrix/CANCELLED/FAILED
+=== RUN   TestTransitionMatrix/CANCELLED/CANCELLED
+=== RUN   TestTransitionMatrix/CANCELLED/EXPIRED
+=== RUN   TestTransitionMatrix/CANCELLED/REFUNDED
+=== RUN   TestTransitionMatrix/CANCELLED/REVERSED
+=== RUN   TestTransitionMatrix/CANCELLED/AUTHORIZED
+=== RUN   TestTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/CANCELLED/UNKNOWN
+=== RUN   TestTransitionMatrix/EXPIRED/CREATED
+=== RUN   TestTransitionMatrix/EXPIRED/PENDING
+=== RUN   TestTransitionMatrix/EXPIRED/COMPLETED
+=== RUN   TestTransitionMatrix/EXPIRED/FAILED
+=== RUN   TestTransitionMatrix/EXPIRED/CANCELLED
+=== RUN   TestTransitionMatrix/EXPIRED/EXPIRED
+=== RUN   TestTransitionMatrix/EXPIRED/REFUNDED
+=== RUN   TestTransitionMatrix/EXPIRED/REVERSED
+=== RUN   TestTransitionMatrix/EXPIRED/AUTHORIZED
+=== RUN   TestTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/EXPIRED/UNKNOWN
+=== RUN   TestTransitionMatrix/REFUNDED/CREATED
+=== RUN   TestTransitionMatrix/REFUNDED/PENDING
+=== RUN   TestTransitionMatrix/REFUNDED/COMPLETED
+=== RUN   TestTransitionMatrix/REFUNDED/FAILED
+=== RUN   TestTransitionMatrix/REFUNDED/CANCELLED
+=== RUN   TestTransitionMatrix/REFUNDED/EXPIRED
+=== RUN   TestTransitionMatrix/REFUNDED/REFUNDED
+=== RUN   TestTransitionMatrix/REFUNDED/REVERSED
+=== RUN   TestTransitionMatrix/REFUNDED/AUTHORIZED
+=== RUN   TestTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/REFUNDED/UNKNOWN
+=== RUN   TestTransitionMatrix/REVERSED/CREATED
+=== RUN   TestTransitionMatrix/REVERSED/PENDING
+=== RUN   TestTransitionMatrix/REVERSED/COMPLETED
+=== RUN   TestTransitionMatrix/REVERSED/FAILED
+=== RUN   TestTransitionMatrix/REVERSED/CANCELLED
+=== RUN   TestTransitionMatrix/REVERSED/EXPIRED
+=== RUN   TestTransitionMatrix/REVERSED/REFUNDED
+=== RUN   TestTransitionMatrix/REVERSED/REVERSED
+=== RUN   TestTransitionMatrix/REVERSED/AUTHORIZED
+=== RUN   TestTransitionMatrix/REVERSED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/REVERSED/UNKNOWN
+=== RUN   TestTransitionMatrix/AUTHORIZED/CREATED
+=== RUN   TestTransitionMatrix/AUTHORIZED/PENDING
+=== RUN   TestTransitionMatrix/AUTHORIZED/COMPLETED
+=== RUN   TestTransitionMatrix/AUTHORIZED/FAILED
+=== RUN   TestTransitionMatrix/AUTHORIZED/CANCELLED
+=== RUN   TestTransitionMatrix/AUTHORIZED/EXPIRED
+=== RUN   TestTransitionMatrix/AUTHORIZED/REFUNDED
+=== RUN   TestTransitionMatrix/AUTHORIZED/REVERSED
+=== RUN   TestTransitionMatrix/AUTHORIZED/AUTHORIZED
+=== RUN   TestTransitionMatrix/AUTHORIZED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/AUTHORIZED/UNKNOWN
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/CREATED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/PENDING
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/COMPLETED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/FAILED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/CANCELLED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/EXPIRED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/REFUNDED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/REVERSED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/AUTHORIZED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/UNKNOWN
+=== RUN   TestTransitionMatrix/UNKNOWN/CREATED
+=== RUN   TestTransitionMatrix/UNKNOWN/PENDING
+=== RUN   TestTransitionMatrix/UNKNOWN/COMPLETED
+=== RUN   TestTransitionMatrix/UNKNOWN/FAILED
+=== RUN   TestTransitionMatrix/UNKNOWN/CANCELLED
+=== RUN   TestTransitionMatrix/UNKNOWN/EXPIRED
+=== RUN   TestTransitionMatrix/UNKNOWN/REFUNDED
+=== RUN   TestTransitionMatrix/UNKNOWN/REVERSED
+=== RUN   TestTransitionMatrix/UNKNOWN/AUTHORIZED
+=== RUN   TestTransitionMatrix/UNKNOWN/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/UNKNOWN/UNKNOWN
+--- PASS: TestTransitionMatrix (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/UNKNOWN (0.00s)
+=== RUN   TestPaymentApplication
+=== RUN   TestPaymentApplication/configuration_fails_closed
+=== RUN   TestPaymentApplication/retry-safe_catalog_snapshot_and_concurrent_creation
+=== RUN   TestPaymentApplication/unknown_unapproved_product_and_invalid_currency
+=== RUN   TestPaymentApplication/20_duplicates_and_post-commit_retry
+=== RUN   TestPaymentApplication/20_conflicting_event_IDs
+=== RUN   TestPaymentApplication/refund_versus_completion_is_deterministic
+=== RUN   TestPaymentApplication/failure_completion_out-of-order_and_payment_reuse
+=== RUN   TestPaymentApplication/multiple_purchases_refunds_and_expiration
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_event_insert
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_event_insert
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_order_update
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_commit
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_commit
+=== RUN   TestPaymentApplication/order_crash_and_provider_outage_recovery
+=== RUN   TestPaymentApplication/connection_loss_during_commit_and_cancellation
+=== RUN   TestPaymentApplication/unsigned_malformed_unknown_and_partial_refund
+=== RUN   TestPaymentApplication/latest_provider_refund_overrides_stale_completion
+=== RUN   TestPaymentApplication/reconciliation_durable_pending_and_bounded_backoff
+=== RUN   TestPaymentApplication/simultaneous_access_reads_and_revocation
+--- PASS: TestPaymentApplication (0.93s)
+    --- PASS: TestPaymentApplication/configuration_fails_closed (0.00s)
+    --- PASS: TestPaymentApplication/retry-safe_catalog_snapshot_and_concurrent_creation (0.09s)
+    --- PASS: TestPaymentApplication/unknown_unapproved_product_and_invalid_currency (0.00s)
+    --- PASS: TestPaymentApplication/20_duplicates_and_post-commit_retry (0.25s)
+    --- PASS: TestPaymentApplication/20_conflicting_event_IDs (0.08s)
+    --- PASS: TestPaymentApplication/refund_versus_completion_is_deterministic (0.03s)
+    --- PASS: TestPaymentApplication/failure_completion_out-of-order_and_payment_reuse (0.05s)
+    --- PASS: TestPaymentApplication/multiple_purchases_refunds_and_expiration (0.04s)
+    --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries (0.06s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_event_insert (0.01s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_event_insert (0.01s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_order_update (0.01s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_commit (0.01s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_commit (0.02s)
+    --- PASS: TestPaymentApplication/order_crash_and_provider_outage_recovery (0.02s)
+    --- PASS: TestPaymentApplication/connection_loss_during_commit_and_cancellation (0.02s)
+    --- PASS: TestPaymentApplication/unsigned_malformed_unknown_and_partial_refund (0.01s)
+    --- PASS: TestPaymentApplication/latest_provider_refund_overrides_stale_completion (0.03s)
+    --- PASS: TestPaymentApplication/reconciliation_durable_pending_and_bounded_backoff (0.04s)
+    --- PASS: TestPaymentApplication/simultaneous_access_reads_and_revocation (0.11s)
+=== RUN   TestApplicationHTTPOverMutualTLS
+2026/11/06 07:09:45 http: TLS handshake error from 127.0.0.1:53774: tls: client didn't provide a certificate
+--- PASS: TestApplicationHTTPOverMutualTLS (0.45s)
+=== RUN   TestDurableTransitionMatrix
+=== RUN   TestDurableTransitionMatrix/CREATED/CREATED
+=== RUN   TestDurableTransitionMatrix/CREATED/PENDING
+=== RUN   TestDurableTransitionMatrix/CREATED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/CREATED/FAILED
+=== RUN   TestDurableTransitionMatrix/CREATED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/CREATED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/CREATED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/CREATED/REVERSED
+=== RUN   TestDurableTransitionMatrix/CREATED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/PENDING/CREATED
+=== RUN   TestDurableTransitionMatrix/PENDING/PENDING
+=== RUN   TestDurableTransitionMatrix/PENDING/COMPLETED
+=== RUN   TestDurableTransitionMatrix/PENDING/FAILED
+=== RUN   TestDurableTransitionMatrix/PENDING/CANCELLED
+=== RUN   TestDurableTransitionMatrix/PENDING/EXPIRED
+=== RUN   TestDurableTransitionMatrix/PENDING/REFUNDED
+=== RUN   TestDurableTransitionMatrix/PENDING/REVERSED
+=== RUN   TestDurableTransitionMatrix/PENDING/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/CREATED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/PENDING
+=== RUN   TestDurableTransitionMatrix/COMPLETED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/FAILED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/REVERSED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/FAILED/CREATED
+=== RUN   TestDurableTransitionMatrix/FAILED/PENDING
+=== RUN   TestDurableTransitionMatrix/FAILED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/FAILED/FAILED
+=== RUN   TestDurableTransitionMatrix/FAILED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/FAILED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/FAILED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/FAILED/REVERSED
+=== RUN   TestDurableTransitionMatrix/FAILED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/CREATED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/PENDING
+=== RUN   TestDurableTransitionMatrix/CANCELLED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/FAILED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/REVERSED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/CREATED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/PENDING
+=== RUN   TestDurableTransitionMatrix/EXPIRED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/FAILED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/REVERSED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/CREATED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/PENDING
+=== RUN   TestDurableTransitionMatrix/REFUNDED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/FAILED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/REVERSED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/REVERSED/CREATED
+=== RUN   TestDurableTransitionMatrix/REVERSED/PENDING
+=== RUN   TestDurableTransitionMatrix/REVERSED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/REVERSED/FAILED
+=== RUN   TestDurableTransitionMatrix/REVERSED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/REVERSED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/REVERSED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/REVERSED/REVERSED
+=== RUN   TestDurableTransitionMatrix/REVERSED/PARTIALLY_REFUNDED
+--- PASS: TestDurableTransitionMatrix (0.89s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/COMPLETED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/PARTIALLY_REFUNDED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/CREATED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/EXPIRED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/REVERSED (0.03s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/REFUNDED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/PENDING (0.02s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/COMPLETED (0.03s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/REVERSED (0.02s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/PARTIALLY_REFUNDED (0.01s)
+=== RUN   TestSchemaConstraintsAndLeastPrivilege
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/amount
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/currency
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/state
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/revision
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/owner
+--- PASS: TestSchemaConstraintsAndLeastPrivilege (0.05s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/amount (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/currency (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/state (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/revision (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/owner (0.00s)
+=== RUN   TestDatabaseConfigurationAndReadiness
+--- PASS: TestDatabaseConfigurationAndReadiness (0.03s)
+=== RUN   TestVerifiedDatabaseTLS
+--- PASS: TestVerifiedDatabaseTLS (0.01s)
+=== RUN   TestPendingAndExpiryWithoutPaymentID
+--- PASS: TestPendingAndExpiryWithoutPaymentID (0.04s)
+=== RUN   TestCatalogManifest
+--- PASS: TestCatalogManifest (0.00s)
+=== RUN   TestNodeGoPostgresLifecycle
+    application_test.go:908: Node -> mutual TLS -> Go -> PostgreSQL lifecycle passed: idempotent order, ownership, completion, one grant, duplicate, refund and revocation
+--- PASS: TestNodeGoPostgresLifecycle (0.95s)
+=== RUN   TestRazorpayLatticeNoInventedRevision
+--- PASS: TestRazorpayLatticeNoInventedRevision (0.32s)
+=== RUN   TestLegacyFingerprintCompatibility
+--- PASS: TestLegacyFingerprintCompatibility (0.00s)
+=== RUN   TestCommercialCatalogValidation
+--- PASS: TestCommercialCatalogValidation (0.00s)
+=== RUN   TestCommercialOrdersAndProtection
+--- PASS: TestCommercialOrdersAndProtection (0.04s)
+=== RUN   TestWorkerLimitsAndDeadLetter
+--- PASS: TestWorkerLimitsAndDeadLetter (0.03s)
+=== RUN   TestWorkerConcurrentClaims
+--- PASS: TestWorkerConcurrentClaims (0.09s)
+=== RUN   TestFixedTelemetryNoIdentifiers
+--- PASS: TestFixedTelemetryNoIdentifiers (0.00s)
+=== RUN   TestPendingRiskNotificationCannotGrantBeforeReview
+--- PASS: TestPendingRiskNotificationCannotGrantBeforeReview (0.04s)
+=== RUN   TestBackoffCannotOverflowAtMaximumPolicy
+--- PASS: TestBackoffCannotOverflowAtMaximumPolicy (0.00s)
+=== RUN   TestTransactionalPayments
+=== RUN   TestTransactionalPayments/no_entitlement_before_verified_event
+=== RUN   TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing
+=== RUN   TestTransactionalPayments/unknown_order
+=== RUN   TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches
+=== RUN   TestTransactionalPayments/concurrent_duplicate_granted_once
+=== RUN   TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order
+=== RUN   TestTransactionalPayments/failed_then_successful_payment_and_refund
+=== RUN   TestTransactionalPayments/missing_provider_and_storage_fail_closed
+=== RUN   TestTransactionalPayments/reversal_removes_entitlement
+=== RUN   TestTransactionalPayments/restart_marker_persisted
+--- PASS: TestTransactionalPayments (0.21s)
+    --- PASS: TestTransactionalPayments/no_entitlement_before_verified_event (0.00s)
+    --- PASS: TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing (0.00s)
+    --- PASS: TestTransactionalPayments/unknown_order (0.00s)
+    --- PASS: TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches (0.01s)
+    --- PASS: TestTransactionalPayments/concurrent_duplicate_granted_once (0.06s)
+    --- PASS: TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order (0.01s)
+    --- PASS: TestTransactionalPayments/failed_then_successful_payment_and_refund (0.01s)
+    --- PASS: TestTransactionalPayments/missing_provider_and_storage_fail_closed (0.00s)
+    --- PASS: TestTransactionalPayments/reversal_removes_entitlement (0.01s)
+    --- PASS: TestTransactionalPayments/restart_marker_persisted (0.05s)
+=== RUN   TestRecoveryAfterRestart
+    store_test.go:250: executed only after external database restart
+--- SKIP: TestRecoveryAfterRestart (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment	4.080s
+=== RUN   TestPinnedOIDCVerification
+=== RUN   TestPinnedOIDCVerification/audience
+=== RUN   TestPinnedOIDCVerification/expired
+=== RUN   TestPinnedOIDCVerification/nonce
+=== RUN   TestPinnedOIDCVerification/missing_expiry
+=== RUN   TestPinnedOIDCVerification/missing_issued
+=== RUN   TestPinnedOIDCVerification/subject
+=== RUN   TestPinnedOIDCVerification/issuer
+=== RUN   TestPinnedOIDCVerification/future
+=== RUN   TestPinnedOIDCVerification/multiple_audiences
+=== RUN   TestPinnedOIDCVerification/excess_lifetime
+--- PASS: TestPinnedOIDCVerification (0.13s)
+    --- PASS: TestPinnedOIDCVerification/audience (0.00s)
+    --- PASS: TestPinnedOIDCVerification/expired (0.00s)
+    --- PASS: TestPinnedOIDCVerification/nonce (0.00s)
+    --- PASS: TestPinnedOIDCVerification/missing_expiry (0.00s)
+    --- PASS: TestPinnedOIDCVerification/missing_issued (0.00s)
+    --- PASS: TestPinnedOIDCVerification/subject (0.00s)
+    --- PASS: TestPinnedOIDCVerification/issuer (0.00s)
+    --- PASS: TestPinnedOIDCVerification/future (0.00s)
+    --- PASS: TestPinnedOIDCVerification/multiple_audiences (0.00s)
+    --- PASS: TestPinnedOIDCVerification/excess_lifetime (0.00s)
+=== RUN   TestDurableSessions
+--- PASS: TestDurableSessions (0.36s)
+=== RUN   TestSessionRecoveryAfterRestart
+    auth_test.go:256: explicit post-restart check
+--- SKIP: TestSessionRecoveryAfterRestart (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment/authn	0.506s
+=== RUN   TestConfigurationAndMissingDependenciesFailClosed
+--- PASS: TestConfigurationAndMissingDependenciesFailClosed (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/payment/commercial	0.015s
+=== RUN   TestCommercialAuthenticatedLifecycle
+    commercial_integration_test.go:198: {"local_fixture_only":true,"concurrent_requests":20,"duplicate_order_p95_ms":148.98,"duplicate_order_mean_ms":116.75,"full_flow_ms":289.89,"ownership":"passed","csrf_and_session":"passed","dispute_hold_refund":"passed","provider_orders":1}
+--- PASS: TestCommercialAuthenticatedLifecycle (1.33s)
+=== RUN   TestProviderPostgresNodeLifecycle
+    integration_test.go:304: Node -> mutual TLS -> Go -> PostgreSQL lifecycle passed: idempotent order, ownership, completion, one grant, duplicate, refund and revocation
+--- PASS: TestProviderPostgresNodeLifecycle (1.23s)
+=== RUN   TestRazorpayRecoveryAfterRestart
+    integration_test.go:348: explicit post-restart invocation
+--- SKIP: TestRazorpayRecoveryAfterRestart (0.00s)
+=== RUN   TestProductionIsolationAndRotation
+--- PASS: TestProductionIsolationAndRotation (0.00s)
+=== RUN   TestVerifiedDisputeBecomesReviewNotification
+--- PASS: TestVerifiedDisputeBecomesReviewNotification (0.00s)
+=== RUN   TestConfig
+--- PASS: TestConfig (0.00s)
+=== RUN   TestRawWebhook
+=== RUN   TestRawWebhook/unsupported
+=== RUN   TestRawWebhook/malformed
+=== RUN   TestRawWebhook/wrong-currency
+=== RUN   TestRawWebhook/wrong-order
+=== RUN   TestRawWebhook/wrong-merchant
+=== RUN   TestRawWebhook/authorized-not-captured
+=== RUN   TestRawWebhook/wrong-amount
+--- PASS: TestRawWebhook (0.00s)
+    --- PASS: TestRawWebhook/unsupported (0.00s)
+    --- PASS: TestRawWebhook/malformed (0.00s)
+    --- PASS: TestRawWebhook/wrong-currency (0.00s)
+    --- PASS: TestRawWebhook/wrong-order (0.00s)
+    --- PASS: TestRawWebhook/wrong-merchant (0.00s)
+    --- PASS: TestRawWebhook/authorized-not-captured (0.00s)
+    --- PASS: TestRawWebhook/wrong-amount (0.00s)
+=== RUN   TestCreateRecoveryAndNoPostRetry
+--- PASS: TestCreateRecoveryAndNoPostRetry (0.01s)
+=== RUN   TestAuthoritativeStates
+=== RUN   TestAuthoritativeStates/authorizedfalse_0
+=== RUN   TestAuthoritativeStates/failedfalse_0
+=== RUN   TestAuthoritativeStates/capturedtrue_0
+=== RUN   TestAuthoritativeStates/refundedtrue_12345
+=== RUN   TestAuthoritativeStates/capturedtrue_100
+=== RUN   TestAuthoritativeStates/capturedfalse_0
+=== RUN   TestAuthoritativeStates/unknowntrue_0
+--- PASS: TestAuthoritativeStates (0.01s)
+    --- PASS: TestAuthoritativeStates/authorizedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/failedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedtrue_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/refundedtrue_12345 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedtrue_100 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/unknowntrue_0 (0.00s)
+=== RUN   TestSafeRetriesAndTimeout
+--- PASS: TestSafeRetriesAndTimeout (0.10s)
+PASS
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	2.693s
+=== RUN   TestSignedArtifactGates
+=== RUN   TestSignedArtifactGates/G01_blocks
+=== RUN   TestSignedArtifactGates/G02_blocks
+=== RUN   TestSignedArtifactGates/G03_blocks
+=== RUN   TestSignedArtifactGates/G04_blocks
+=== RUN   TestSignedArtifactGates/G05_blocks
+=== RUN   TestSignedArtifactGates/G06_blocks
+=== RUN   TestSignedArtifactGates/G07_blocks
+=== RUN   TestSignedArtifactGates/G08_blocks
+=== RUN   TestSignedArtifactGates/G09_blocks
+=== RUN   TestSignedArtifactGates/G10_blocks
+=== RUN   TestSignedArtifactGates/G11_blocks
+=== RUN   TestSignedArtifactGates/G12_blocks
+=== RUN   TestSignedArtifactGates/G13_blocks
+=== RUN   TestSignedArtifactGates/G14_blocks
+=== RUN   TestSignedArtifactGates/G15_blocks
+=== RUN   TestSignedArtifactGates/G16_blocks
+=== RUN   TestSignedArtifactGates/G17_blocks
+=== RUN   TestSignedArtifactGates/G18_blocks
+=== RUN   TestSignedArtifactGates/G19_blocks
+=== RUN   TestSignedArtifactGates/G20_blocks
+=== RUN   TestSignedArtifactGates/G21_blocks
+=== RUN   TestSignedArtifactGates/G22_blocks
+=== RUN   TestSignedArtifactGates/G23_blocks
+=== RUN   TestSignedArtifactGates/G24_blocks
+=== RUN   TestSignedArtifactGates/G25_blocks
+=== RUN   TestSignedArtifactGates/G26_blocks
+--- PASS: TestSignedArtifactGates (0.02s)
+    --- PASS: TestSignedArtifactGates/G01_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G02_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G03_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G04_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G05_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G06_blocks (0.01s)
+    --- PASS: TestSignedArtifactGates/G07_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G08_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G09_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G10_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G11_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G12_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G13_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G14_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G15_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G16_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G17_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G18_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G19_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G20_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G21_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G22_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G23_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G24_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G25_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G26_blocks (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment/release	0.028s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+=== RUN   TestNodeMTLSGoTimingBoundary
+    cross_service_test.go:86: Node → verified mTLS → real Go civil-time/gate: India24h, US23h, Canada25h; DST fold/offset, invalid date, uncertainty and no fixture leakage passed. No astronomical accuracy claim.
+--- PASS: TestNodeMTLSGoTimingBoundary (0.51s)
+=== RUN   TestLocalDaysAndBirthDST
+=== RUN   TestLocalDaysAndBirthDST/Asia/Kolkata2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/America/New_York2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/America/Toronto2026-11-01
+=== RUN   TestLocalDaysAndBirthDST/America/Vancouver2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/Australia/Lord_Howe2026-10-04
+--- PASS: TestLocalDaysAndBirthDST (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/Asia/Kolkata2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/New_York2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/Toronto2026-11-01 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/Vancouver2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/Australia/Lord_Howe2026-10-04 (0.00s)
+=== RUN   TestStrictInputAndUncertainty
+--- PASS: TestStrictInputAndUncertainty (0.00s)
+=== RUN   TestIntervalAlgebraAndMidnight
+--- PASS: TestIntervalAlgebraAndMidnight (0.00s)
+=== RUN   TestDeterministicExclusionRankingAndTies
+--- PASS: TestDeterministicExclusionRankingAndTies (0.00s)
+=== RUN   TestMissingEvidenceModesAndPolar
+--- PASS: TestMissingEvidenceModesAndPolar (0.00s)
+=== RUN   TestRuleRegistryAndSnapshot
+--- PASS: TestRuleRegistryAndSnapshot (0.00s)
+=== RUN   TestHTTPContractsFailClosed
+--- PASS: TestHTTPContractsFailClosed (0.00s)
+=== RUN   TestPriorityOverlapsTiesAndEmptyWindows
+--- PASS: TestPriorityOverlapsTiesAndEmptyWindows (0.00s)
+=== RUN   TestMidnightCrossingAndSkippedCivilDate
+--- PASS: TestMidnightCrossingAndSkippedCivilDate (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/timing	0.524s
+=== RUN   TestUnavailableProviderCannotFulfill
+--- PASS: TestUnavailableProviderCannotFulfill (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/webhook	0.003s
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+ok  	astroengine-core/backend/cmd/server	1.025s
+ok  	astroengine-core/backend/internal/calibration	1.017s
+ok  	astroengine-core/backend/internal/ephemeris	1.019s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	5.208s
+ok  	astroengine-core/backend/internal/payment/authn	1.591s
+ok  	astroengine-core/backend/internal/payment/commercial	1.019s
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	3.938s
+ok  	astroengine-core/backend/internal/payment/release	1.087s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/timing	1.420s
+ok  	astroengine-core/backend/internal/webhook	1.019s
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+ok  	astroengine-core/backend/cmd/server	0.005s
+ok  	astroengine-core/backend/internal/calibration	0.007s
+ok  	astroengine-core/backend/internal/ephemeris	0.003s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	3.246s
+ok  	astroengine-core/backend/internal/payment/authn	0.635s
+ok  	astroengine-core/backend/internal/payment/commercial	0.010s
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	1.765s
+ok  	astroengine-core/backend/internal/payment/release	0.027s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/timing	0.401s
+ok  	astroengine-core/backend/internal/webhook	0.002s
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+=== RUN   TestRecoveryAfterRestart
+--- PASS: TestRecoveryAfterRestart (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/payment	0.016s
+=== RUN   TestRazorpayRecoveryAfterRestart
+--- PASS: TestRazorpayRecoveryAfterRestart (0.02s)
+PASS
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	0.028s
+=== RUN   TestSessionRecoveryAfterRestart
+--- PASS: TestSessionRecoveryAfterRestart (0.08s)
+PASS
+ok  	astroengine-core/backend/internal/payment/authn	0.082s

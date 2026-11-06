@@ -1,7 +1,7 @@
 import React from 'react';
-export type ActiveTab='funnel'|'dashboard'|'prosperity-kit'|'remediation'|'ambient-games'|'devops-uat';
+export type ActiveTab='daily-timing'|'funnel'|'dashboard'|'prosperity-kit'|'remediation'|'ambient-games'|'devops-uat';
 export const Navigation:React.FC<{activeTab:ActiveTab;onTabChange:(tab:ActiveTab)=>void;onOpenQuickCheckout:()=>void}>=({activeTab,onTabChange,onOpenQuickCheckout})=>{
- const tabs:Array<[ActiveTab,string]>=[['dashboard','Astro Dashboard'],['prosperity-kit','Prosperity Kit'],['remediation','RVM Remedies'],['ambient-games','Living Room & Games']];
+ const tabs:Array<[ActiveTab,string]>=[['daily-timing','Daily Timing'],['dashboard','Astro Dashboard'],['prosperity-kit','Prosperity Kit'],['remediation','RVM Remedies'],['ambient-games','Living Room & Games']];
  if(import.meta.env?.DEV)tabs.push(['funnel','Acquisition Demo'],['devops-uat','UAT & Benchmarks']);
  return <header className="sticky top-0 z-40 border-b border-rose-950/70 bg-[#160408]/95 backdrop-blur-md"><div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-3"><button className="font-serif text-base sm:text-lg text-amber-300 text-left" onClick={()=>onTabChange('dashboard')}>MyMomentOclock<span className="hidden sm:inline"> · Platform</span></button><button className="shrink-0 rounded-lg bg-amber-500 px-3 py-2 text-xs font-semibold text-neutral-950" onClick={onOpenQuickCheckout}>Checkout status</button></div><nav aria-label="Main navigation" className="mx-auto max-w-7xl flex gap-5 overflow-x-auto px-4 pb-3 text-xs sm:text-sm">{tabs.map(([tab,label])=><button key={tab} aria-current={activeTab===tab?'page':undefined} className={`whitespace-nowrap ${activeTab===tab?'text-amber-300':'text-rose-200/80'}`} onClick={()=>onTabChange(tab)}>{label}</button>)}</nav></header>;
 };

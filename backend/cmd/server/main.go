@@ -7,6 +7,7 @@ import (
 	"astroengine-core/backend/internal/payment"
 	"astroengine-core/backend/internal/payment/commercial"
 	paymentsandbox "astroengine-core/backend/internal/payment/sandbox"
+	"astroengine-core/backend/internal/timing"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
@@ -75,6 +76,7 @@ func newHandler() http.Handler { return newHandlerWithPayment(nil, "") }
 // Payment handlers are wired, but no real adapters are registered in this build.
 func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler {
 	mux := http.NewServeMux()
+	mux.Handle("/api/v1/timing/", timing.Handler(timing.NativeEngine(), time.Now))
 	health := func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/ready" && !ephemeris.NativeAvailable() {
 			failure(w, 503, "NATIVE_EPHEMERIS_UNAVAILABLE", "Native calculation is unavailable.")

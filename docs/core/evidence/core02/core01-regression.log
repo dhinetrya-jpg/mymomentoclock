@@ -1,0 +1,25 @@
+✔ A03: Machine-readable reference fixtures loaded with provenance and tolerances (3.481582ms)
+✔ A05: Fundamental Epoch J2000.0 Julian Day matches USNO/JPL ground truth (0.307594ms)
+✔ A05: Delta-T calculation agrees with IERS historical/modern boundaries within tolerance (0.266934ms)
+✔ A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris within 1 arcsecond (0.259293ms)
+✔ A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit offsets (0.27819ms)
+✔ A04: Circular angular difference handles 0°/360° wraparound accurately (0.20311ms)
+✔ A08: Boundary proximity check identifies classification uncertainty near step thresholds (1.391034ms)
+✔ A05: India half-hour UTC offset (+5:30) and date rollover verified (1.715464ms)
+✔ A05: US/Canada DST transitions and ambiguous/gap local times validated (0.764009ms)
+✔ A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day (0.29745ms)
+✔ A05: Leap year rules and centurial boundaries strictly enforced (0.415113ms)
+✔ A05: Midnight 00:00:00 and noon 12:00:00 differ by exactly 0.5 days with no aliasing (0.173736ms)
+✔ A06: Vedic Whole Sign Houses and 27 Nakshatras / 108 Padas verified (0.471887ms)
+✔ A06: Divisional charts D-2 (Hora), D-9 (Navamsha), and D-60 (Shashtyamsa) verified (0.417777ms)
+✔ A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs, and infinities (0.550773ms)
+✔ A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION without false Swiss claims (0.33866ms)
+✔ A12: Unimplemented/unauthorized capabilities remain safely disabled (0.192945ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25.009259

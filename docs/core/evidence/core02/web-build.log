@@ -1,0 +1,42 @@
+
+> mymomentoclock@1.0.0 lint
+> tsc --noEmit
+
+
+> mymomentoclock@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.01 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-DcJTjljj.css                                      62.19 kB │ gzip:  10.08 kB
+dist/assets/index-BkEdwMoT.js                                      335.58 kB │ gzip: 104.10 kB
+
+✓ built in 267ms
+
+> astroengine-frontend@1.0.0 lint
+> tsc --noEmit
+
+
+> astroengine-frontend@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.00 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-Cg3I8i12.css                                      61.33 kB │ gzip:   9.92 kB
+dist/assets/index-xpglW1AV.js                                      335.53 kB │ gzip: 104.08 kB
+
+✓ built in 229ms
