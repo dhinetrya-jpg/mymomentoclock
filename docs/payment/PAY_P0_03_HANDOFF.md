@@ -2,9 +2,9 @@
 
 2026-11-06 (Asia/Kolkata). **Live activation NO-GO; no merge or production deployment.**
 
-A. Baseline main: `e8c65c1fb21d31a781d5d9314cf2722983558e2c` (PAY02 merge). Final delivered SHA is recorded in the final delivery response and remotely verified branch head; implementation commit is recorded below after committing.
+A. Baseline main: `e8c65c1fb21d31a781d5d9314cf2722983558e2c` (PAY02 merge). Final delivered SHA is recorded in the final delivery response and remotely verified branch head; final functional source commit: `9dd0075b76cc4779863272fbce788222cd852d00` (initial implementation `a7f17e766f5b758565c6ebbf52e5e0eb2b71062a`).
 
-B. Branch: [fix/pay-p0-03-live-commercial-readiness](https://github.com/dhinetrya-jpg/mymomentoclock/tree/fix/pay-p0-03-live-commercial-readiness). PR creation result is recorded below; no fabricated PR URL.
+B. Branch: [fix/pay-p0-03-live-commercial-readiness](https://github.com/dhinetrya-jpg/mymomentoclock/tree/fix/pay-p0-03-live-commercial-readiness). Branch pushed successfully. Draft PR creation failed: `Post "https://api.github.com/graphql": Forbidden`. No PR number exists from this attempt. [Create the review PR](https://github.com/dhinetrya-jpg/mymomentoclock/compare/main...fix/pay-p0-03-live-commercial-readiness?expand=1); this link is not an existing PR.
 
 C. Files: see [PAY_P0_03_FILES_CHANGED.txt](PAY_P0_03_FILES_CHANGED.txt) and Git diff against baseline. Prior PAY01/PAY02 documentation is preserved. All17 requested PAY03 documents, unsigned26-gate report, additive006, deployment review specification, alert proposals and tests are included.
 

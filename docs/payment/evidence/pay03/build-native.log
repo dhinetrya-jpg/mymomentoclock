@@ -1,0 +1,74 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.63kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.2s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#4 DONE 0.2s
+
+#5 [internal] load metadata for docker.io/library/golang:1.26-bookworm
+#5 DONE 0.3s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 174B done
+#6 DONE 0.0s
+
+#7 [builder 1/9] FROM docker.io/library/golang:1.26-bookworm@sha256:5de7c99eb78ca5e515a4c340235d0955ec5964a5071c492c15503d7c267da473
+#7 DONE 0.0s
+
+#8 [runtime 1/5] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 3.72kB done
+#9 DONE 0.0s
+
+#10 [builder 7/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     go mod download
+#10 CACHED
+
+#11 [builder 5/9] COPY backend/go.mod backend/go.sum ./backend/
+#11 CACHED
+
+#12 [builder 4/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi;     install-swisseph
+#12 CACHED
+
+#13 [runtime 3/5] WORKDIR /app
+#13 CACHED
+
+#14 [builder 6/9] WORKDIR /app/backend
+#14 CACHED
+
+#15 [builder 2/9] WORKDIR /app
+#15 CACHED
+
+#16 [runtime 4/5] COPY --from=builder /app/astroengine_server ./astroengine_server
+#16 CACHED
+
+#17 [builder 3/9] COPY scripts/install-swisseph.sh /usr/local/bin/install-swisseph
+#17 CACHED
+
+#18 [runtime 2/5] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     apt-get update && apt-get install -y --no-install-recommends ca-certificates libstdc++6 tzdata &&     rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [builder 9/9] RUN CGO_ENABLED=1 go test -mod=readonly ./... &&     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/astroengine_server ./cmd/server
+#19 CACHED
+
+#20 [builder 8/9] COPY backend/ ./
+#20 CACHED
+
+#21 [runtime 5/5] COPY --from=builder /usr/local/share/licenses/swisseph /usr/share/licenses/swisseph
+#21 CACHED
+
+#22 exporting to image
+#22 exporting layers done
+#22 writing image sha256:55ef4d0581b65e3908220a89d4e547e6f82da2398b4fec40c397d512ddd7e744
+#22 writing image sha256:55ef4d0581b65e3908220a89d4e547e6f82da2398b4fec40c397d512ddd7e744 done
+#22 naming to docker.io/library/mymomentoclock:pay03-native done
+#22 DONE 0.0s
