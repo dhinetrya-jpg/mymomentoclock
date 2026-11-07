@@ -1,5 +1,43 @@
 # CORE-P0-01 final handoff
 
+## Option A final handoff — 2026-11-07
+
+**CORE-P0-01 ENGINEERING COMPLETE — EXTERNAL APPROVALS PENDING.** This verdict covers resolved independently actionable engineering work, not full independent scientific acceptance. SWISS_FILE numerical subset224/224 PASS; selected production science PARTIAL. Full cross-mode science remains FAIL with12 MOSHIER scalar failures. Customer release NOT AUTHORIZED. No merge/deployment/environment publication.
+
+### Architecture and repaired engineering
+
+Owner-selected Option A is already approved: pinned Swiss2.10.03/SWISS_FILE is the sole production candidate; exact DE441 file pins, actual mode/version, trusted explicit config, no fallback, immutable IANA data, truthful target/time/uncertainty metadata and customer refusal are implemented and tested. Diagnostic MOSHIER cannot enter the production typed provider. Its two Moon and ten outer-distance failures remain visible at unchanged thresholds and do not invalidate a separately accepted file-only configuration.
+
+A demonstrated scientific-admission defect was corrected: default Swiss targets are planetary-system barycenters for Mars/Jupiter/Saturn. The genuine Jupiter COB599 comparison is rejected, even though its numbers are close. Matching DE4215/6 and explicitly verified zero aliases now establish compatible default-target comparisons. All original expected values/failures are preserved; no orbit/output correction was applied. Physical COB output is not selected or claimed.
+
+The native timezone database is pinned to the audited IANA revision and embedded, not dependent on host/ZONEINFO fallback. Actual API coverage includes all eight requested location groups, current Vancouver policy and fractional offsets, polar refusal, leap labels and exact J2000 TT. The production API reports503 for server-side data/checksum failures and never substitutes MOSHIER.
+
+The existing real CORE-P0-02 inspection provider uses the same pinned native authority for natal/day, passes typed metadata and UTC intervals, refuses diagnostic requests and unaccepted customer admission, and cannot relabel real unverified data synthetic. Technical inspection is ready; activity-ranking/rule activation remains separate and disabled. No financial-return/guaranteed-profit claims were added.
+
+### Reuse and source governance
+
+All three requested repositories were verified at exact Git revisions and inspected from code.249 controlled mathematical window outputs agree where conventions match;24 variants and30 equal-segmentation probes remain explicit. PyJHora/Drik/vedic backends are AGPL-family references, not imported product code. No entire repository or additional astronomical runtime is vendored. Vedic's frontend MIT notice does not license its AGPL backend; its referenced backend/LICENSE is absent, an additional reason not to copy it. Official Swiss definitions are authoritative convention documentation, not independent numerical proof. Skyfield/JPL remains the separate test-only evaluator. See REUSE_DECISION and original notices.
+
+### Final owner-decision package
+
+| Outstanding gate | Why autonomous work stops | Exact owner action / evidence needed | Production impact | Blocks engineering completion? | Blocks full acceptance / customer release? |
+|---|---|---|---|---|---|
+|Independent node/Lahiri/sidereal evidence|Available same-Swiss projects are not independent; published IAE mean/original-precession tables do not identify the same native true/default-precession quantity; direct canonical sources previously inaccessible|Obtain a compatible authoritative/independent reference with exact frame,epoch,node/sidereal convention and uncertainty; allow source access if needed; domain expert review, then rerun existing pipeline|Sidereal/node/chart/Nakshatra/Yoga and remaining transition accuracy not fully accepted|No known actionable implementation defect remains; evidence gap|Yes|
+|Same-definition solar evidence|Conventional Skyfield center-altitude events differ from native upper-limb/variable-refraction/elevation model; closeness cannot waive definition mismatch|Approve a precise event definition and supply matching published/independent reference or expert-reviewed model validation. Retain diagnostics until then|Sunrise/set/daylight and derived traditional timing lack full independent physical acceptance|No; native implementation/edge behavior tested|Yes|
+|Traditional/domain approval|Source implementation agreement and mathematical tests cannot grant owner approval or efficacy; Brahma night/fixed variants, Wednesday Abhijit interpretation, civil/sunrise day, node choice and D2/D9/D60 interpretation remain distinct|Owner/domain expert approve the preserved versioned variants or specify a separately reviewed change; authenticate supporting sources. D60 currently means half-degree segment only and retains uncertain-birth suppression|CORE-P0-02 recommendations remain disabled; no tradition silently merged|No; intentional versioned scope/approval boundary|Yes for affected guidance/customer release|
+|Swiss/commercial/data legal decisions|Agent cannot choose product licensing, sign contracts, purchase a license or certify law; actual Swiss dual-license notice requires a choice before public service/distribution|Owner/legal choose AGPL-compatible compliance or Professional contract, confirm native data/JPL/reference redistribution terms and preserve required notices|Commercial release blocked; no license approval claimed|No; operational code and original notices are delivered|Yes|
+
+Architecture selection itself requires no repeated approval. Optional native JPL absence and MOSHIER diagnostic precision are not additional mandatory release blockers for the chosen configuration. Physical planet COB support would require a separate explicit flag/data/scope decision if desired; it is not silently supplied as a barycenter approximation. Broader historical/future UT1, pre1972 UTC-label matching and unmeasured epochs remain explicit uncertainty/coverage limits rather than invented precision.
+
+### Stop condition and delivery
+
+The engineering repair iteration ends with this package. Do not retry blocked institutional endpoints without changed access, fit expected values/tolerances, copy AGPL application code, activate paid timing or deploy/merge to turn a report green. Future evidence/domain/legal decisions have precise separate owners and executable follow-up commands in FINAL_TEST_EVIDENCE.
+
+Existing branch/PR only: `fix/core-p0-01-complete-acceptance`, https://github.com/dhinetrya-jpg/mymomentoclock/pull/21 . Starting remote branch/PR head fetched: `1b108e4135f1ef4893b9a19aaeb5341994605982`. Exact functional/final commits and observed final-head CI are recorded after push in the delivery section/final response. Complete changed paths will be in `CORE_P0_01_OPTION_A_FILES_CHANGED.txt`; no private credentials/customer records are included. Payment/auth/entitlement/pricing/ranking implementation is unchanged (timing calendar validation now uses the same pinned timezone source).
+
+
+## Historical PR21 snapshots — superseded by Option A above
+
 ## PR21 current acceptance update — 2026-11-07
 
 **FAILED — REQUIRED ACCEPTANCE TESTS FAIL.** This supersedes the earlier PARTIAL verdict and limited numerical scope preserved below as a historical snapshot. Current evidence: [planetary report](CORE_P0_01_PR21_PLANETARY_VALIDATION.md), [Panchang/solar report](CORE_P0_01_PR21_PANCHANG_SOLAR_VALIDATION.md), [repair matrix](CORE_P0_01_PR21_REPAIR_MATRIX.md).

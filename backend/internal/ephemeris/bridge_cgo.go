@@ -103,7 +103,16 @@ func nativeSnapshotAt(epoch NativeEpoch, cfg NativeConfig, place *NativePlace) (
 	names := []string{"sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn", "mean_node", "true_node"}
 	for i, name := range names {
 		p := r.planets[i]
-		definition := "GEOCENTRIC_APPARENT_BODY"
+		definition := "GEOCENTRIC_APPARENT_PLANETARY_SYSTEM_BARYCENTER; DEFAULT_SWISS_TARGET; COB_NOT_REQUESTED"
+		if name == "sun" {
+			definition = "GEOCENTRIC_APPARENT_SUN_CENTER"
+		}
+		if name == "moon" {
+			definition = "GEOCENTRIC_APPARENT_MOON_CENTER"
+		}
+		if name == "mercury" || name == "venus" {
+			definition = "GEOCENTRIC_APPARENT_MOONLESS_PLANET; BODY_CENTER_EQUALS_SYSTEM_BARYCENTER"
+		}
 		if name == "mean_node" {
 			definition = "MEAN_LUNAR_ASCENDING_NODE"
 		}

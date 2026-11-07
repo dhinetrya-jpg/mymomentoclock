@@ -1,0 +1,2512 @@
+{
+  "generator_sha256": "6879f71d1e07d02fc9dbc24e72115522b94a2b80d41ab3e5fc2228f56c8c3f82",
+  "rule_cases": [
+    {
+      "daylight_hours": 10,
+      "end_seconds": 57600.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 53100.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 39600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30600.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 26100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 35100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 44100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35100.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 30600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 39600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 39600.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30600.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 26100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 35100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 44100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35100.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 30600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 35100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30600.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 26100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35100.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 30600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 44100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40799.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 38400.00000000001,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 64800.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 43200.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 54000.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 27000.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 37800.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 54000.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 32400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 43200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 43200.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 27000.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 37800.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 32400.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 37800.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 54000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 27000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 32400.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 48600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 41760.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 72000.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 65700.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 46800.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 27900.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 40500.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 53100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 59400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 34200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 46800.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 46800.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 27900.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 40500.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 53100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 34200.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 40500.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 59400.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 27900.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.0,
+      "name": "RAHU_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 34200.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "pyjhora",
+      "start_seconds": 53100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "GULIKA_KAAL",
+      "source": "pyjhora",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "pyjhora",
+      "start_seconds": 45120.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 57600.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 53099.99999999999,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 39600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 26100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 35100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 44100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 30599.999999999996,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 39600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 39600.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 26100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 35100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 44100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 30599.999999999996,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 35100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 26100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 30599.999999999996,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 44100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 38400.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 64800.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 43200.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 54000.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 27000.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 37800.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 54000.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 32400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 43200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 43200.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 27000.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 37800.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 32400.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 37800.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 54000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 27000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 32400.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 48600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44639.99999999999,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 41760.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 72000.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 65700.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 46800.00000000001,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 27900.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 40500.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 53100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 59400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 34200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 46800.00000000001,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 46800.00000000001,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 27900.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 40500.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 53100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 34200.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 40500.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 59400.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 27900.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "RAHU_KAAL",
+      "source": "drik",
+      "start_seconds": 34200.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "drik",
+      "start_seconds": 53100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "GULIKA_KAAL",
+      "source": "drik",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "drik",
+      "start_seconds": 45120.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 57600.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 53099.99999999999,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 39600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 26100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 35100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 44100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 30599.999999999996,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 39600.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 44100.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 39600.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 26100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 35100.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 44100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 30599.999999999996,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 39600.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 35100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 30599.999999999996,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 26100.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 35099.99999999999,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 30599.999999999996,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 44100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 26100.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "end_seconds": 40800.0,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 38400.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 64800.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 43200.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 54000.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 27000.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 37800.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 54000.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 32400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 43200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 48600.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 43200.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 27000.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 37800.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 32400.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 43200.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 37800.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 54000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 32400.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 27000.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 37800.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 32400.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 54000.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 48600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 27000.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "end_seconds": 44640.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 41760.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 72000.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 65700.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 46800.00000000001,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 59400.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 27900.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 40500.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 53100.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 59400.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 34200.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 46800.00000000001,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 53100.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 46800.00000000001,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 27900.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 40500.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 53100.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 34200.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 46800.0,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 40500.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 65700.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 59400.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 34200.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 27900.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 40500.00000000001,
+      "name": "RAHU_KAAL",
+      "source": "vedic",
+      "start_seconds": 34200.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 59400.0,
+      "name": "YAMAGANDA",
+      "source": "vedic",
+      "start_seconds": 53100.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 27900.0,
+      "name": "GULIKA_KAAL",
+      "source": "vedic",
+      "start_seconds": 21600.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "end_seconds": 48480.00000000001,
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "start_seconds": 45120.0,
+      "weekday": 6
+    }
+  ],
+  "rule_tolerance_seconds": 1e-05,
+  "schema_version": 1,
+  "scope": "Source functions executed with supplied mathematical sunrise/daylength/weekday stubs, NOT live upstream astronomy. No AGPL product code or runtime dependency introduced.",
+  "segments": [
+    {
+      "longitude": 0,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 1e-08,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 359.99999999,
+      "nakshatra": 27,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 3.3333333233333335,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 3.3333333333333335,
+      "nakshatra": 1,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 3.3333333433333334,
+      "nakshatra": 1,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 13.333333323333333,
+      "nakshatra": 1,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 13.333333333333334,
+      "nakshatra": 2,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 13.333333343333335,
+      "nakshatra": 2,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 39.99999999,
+      "nakshatra": 3,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 40,
+      "nakshatra": 4,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 40.00000001,
+      "nakshatra": 4,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 179.99999999,
+      "nakshatra": 14,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 180,
+      "nakshatra": 14,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 180.00000001,
+      "nakshatra": 14,
+      "pada": 3,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "pyjhora"
+    },
+    {
+      "longitude": 0,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 1e-08,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 359.99999999,
+      "nakshatra": 27,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 3.3333333233333335,
+      "nakshatra": 1,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 3.3333333333333335,
+      "nakshatra": 1,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 3.3333333433333334,
+      "nakshatra": 1,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 13.333333323333333,
+      "nakshatra": 1,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 13.333333333333334,
+      "nakshatra": 2,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 13.333333343333335,
+      "nakshatra": 2,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 39.99999999,
+      "nakshatra": 3,
+      "pada": 4,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 40,
+      "nakshatra": 4,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 40.00000001,
+      "nakshatra": 4,
+      "pada": 1,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 179.99999999,
+      "nakshatra": 14,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 180,
+      "nakshatra": 14,
+      "pada": 2,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    },
+    {
+      "longitude": 180.00000001,
+      "nakshatra": 14,
+      "pada": 3,
+      "scope": "Equal-spacing mathematical convention, not independently verified sidereal longitude; exact floating-point boundary disagreements remain explicit",
+      "source": "drik"
+    }
+  ],
+  "sources": [
+    {
+      "independence": "SHARED_SWISS_ENGINE_NOT_INDEPENDENT_ASTRONOMICAL_EVIDENCE",
+      "inspected_at_utc": "2026-11-07T10:43:36.056024+00:00",
+      "license": "AGPL-3.0 family for inspected backend; no product source copied",
+      "license_capture": "licenses/pyjhora-LICENSE",
+      "license_file": "LICENSE",
+      "license_sha256": "3b091306f8a4c22c2cc7f332f32f4ec146a4cbf99898688a04e59ec8d6c3c355",
+      "project": "pyjhora",
+      "repository": "https://github.com/naturalstupid/PyJHora",
+      "revision": "48e57d29b47a3143519910a24866758116467485",
+      "source_file": "src/jhora/panchanga/drik.py",
+      "source_sha256": "f9dc88c31499b161aafdd4ffe1664da259c064f16459a6fe66856496532954d5",
+      "url": "https://raw.githubusercontent.com/naturalstupid/PyJHora/48e57d29b47a3143519910a24866758116467485/src/jhora/panchanga/drik.py"
+    },
+    {
+      "independence": "SHARED_SWISS_ENGINE_NOT_INDEPENDENT_ASTRONOMICAL_EVIDENCE",
+      "inspected_at_utc": "2026-11-07T10:43:36.118240+00:00",
+      "license": "AGPL-3.0 family for inspected backend; no product source copied",
+      "license_capture": "licenses/drik-LICENSE",
+      "license_file": "LICENSE",
+      "license_sha256": "e9b19b572f5988cc856d288de567e23151d66212eb3d0d7da375050d2a3a3d5a",
+      "project": "drik",
+      "repository": "https://github.com/bdsatish/drik-panchanga",
+      "revision": "3d12545d56266ebd4a0a6b008a55097e972a6300",
+      "source_file": "panchanga.py",
+      "source_sha256": "4e526239c24c6669e0d5eca8f512bd223ff81a0ebe616e5b9ef2f01e6ad7e0f8",
+      "url": "https://raw.githubusercontent.com/bdsatish/drik-panchanga/3d12545d56266ebd4a0a6b008a55097e972a6300/panchanga.py"
+    },
+    {
+      "constants_sha256": "5507e5367261bb1a18ecbc859486c02cc94d2e2c84a52d3235a1e5494b72f9c1",
+      "independence": "SHARED_SWISS_ENGINE_NOT_INDEPENDENT_ASTRONOMICAL_EVIDENCE",
+      "inspected_at_utc": "2026-11-07T10:43:36.142231+00:00",
+      "license": "AGPL-3.0 family for inspected backend; no product source copied",
+      "license_capture": "licenses/vedic-LICENSE",
+      "license_file": "LICENSE",
+      "license_sha256": "8672f0a5ff2cf55f95b63a60863091594fed7f22f6bb1dfc237e00598e80f748",
+      "panchang_constants_sha256": "57143616aa3b3fb2f82cc41f7765d9655755df5639153d0e2ab52ed59cf593a7",
+      "project": "vedic",
+      "repository": "https://github.com/jantech/vedicpanchanga",
+      "revision": "d938fa174d465b15d2f7285a5c4e7f72c6a7f4a1",
+      "source_file": "backend/advanced_panchang.py",
+      "source_sha256": "1e8d5d327fa3bca9ff97444b543cb814c7c51112be062f06ce3e4392a82f1fa8",
+      "url": "https://raw.githubusercontent.com/jantech/vedicpanchanga/d938fa174d465b15d2f7285a5c4e7f72c6a7f4a1/backend/advanced_panchang.py"
+    }
+  ],
+  "variants": [
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18240.0,
+      "upstream_start_seconds": 14879.999999999998,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 18720.0,
+      "upstream_start_seconds": 15840.000000000002,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 0
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 1
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 2
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 4
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 5
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "SAME_ONLY_FOR_12_HOUR_NIGHT; DO_NOT_MERGE_VARIANTS",
+      "name": "BRAHMA_MUHURTA",
+      "native_fixed_end_seconds": 18720.0,
+      "native_fixed_start_seconds": 15840.0,
+      "source": "pyjhora",
+      "upstream_end_seconds": 19200.0,
+      "upstream_start_seconds": 16800.0,
+      "weekday": 6
+    },
+    {
+      "daylight_hours": 10,
+      "disposition": "WEDNESDAY_SUPPRESSED_UPSTREAM; NATIVE_RETURNS_MEASUREMENT_WITHOUT_FAVORABLE_DAY_INTERPRETATION",
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 12,
+      "disposition": "WEDNESDAY_SUPPRESSED_UPSTREAM; NATIVE_RETURNS_MEASUREMENT_WITHOUT_FAVORABLE_DAY_INTERPRETATION",
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "weekday": 3
+    },
+    {
+      "daylight_hours": 14,
+      "disposition": "WEDNESDAY_SUPPRESSED_UPSTREAM; NATIVE_RETURNS_MEASUREMENT_WITHOUT_FAVORABLE_DAY_INTERPRETATION",
+      "name": "ABHIJIT_MUHURTA",
+      "source": "vedic",
+      "weekday": 3
+    }
+  ]
+}

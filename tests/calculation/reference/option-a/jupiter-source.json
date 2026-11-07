@@ -1,0 +1,12 @@
+{
+  "url": "https://raw.githubusercontent.com/skyfielders/python-skyfield/31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4/skyfield/tests/data/jup310-2015-03-02.bsp",
+  "final_url": "https://raw.githubusercontent.com/skyfielders/python-skyfield/31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4/skyfield/tests/data/jup310-2015-03-02.bsp",
+  "http_status": 200,
+  "publisher": "NASA/JPL JUP310 SPK, original subkernel redistributed in official Skyfield tests",
+  "revision": "31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4",
+  "retrieved_at_utc": "2026-11-07T09:58:02.933260+00:00",
+  "sha256": "0d315bf0d242530400cee1c9bc98974a7742e618a423953b49fb13cd6144e1cf",
+  "size_bytes": 27024,
+  "file": "originals/jup310-2015-03-02.bsp",
+  "limitation": "One distinct epoch only; not a multi-epoch Jupiter acceptance or a Saturn/node reference"
+}

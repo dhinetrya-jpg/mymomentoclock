@@ -83,7 +83,7 @@ func TestPublishedExternalNativePlanetaryComparisons(t *testing.T) {
 					t.Fatal("coordinate/source/tolerance admission mismatch")
 				}
 				if v.Body == "mars" {
-					t.Log("NOT_ADMITTED Mars barycenter vs native center and pre1972 UTC conventions lack established equivalence; no false numerical PASS")
+					t.Log("NOT_ADMITTED: default Swiss Mars target is also system barycenter, but the pre1972 UTC/UT1 physical instant remains unmatched; no false numerical PASS")
 					return
 				}
 				instant, err := time.Parse(time.RFC3339, v.UTC)

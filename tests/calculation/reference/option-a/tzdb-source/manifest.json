@@ -1,0 +1,75 @@
+{
+  "revision": "e29969d3f327f129ec4aebaa9c7aee96c46f8e3b",
+  "resources": [
+    {
+      "file": "africa",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/africa",
+      "http_status": 200,
+      "sha256": "f2851d4be4a4925cbdc9d56e10d780bccadb89d6ffb9aed78c3e35f97c200aed",
+      "retrieved_at_utc": "2026-11-07T10:06:40.174262+00:00"
+    },
+    {
+      "file": "antarctica",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/antarctica",
+      "http_status": 200,
+      "sha256": "e410ad71c9450828c592d21419301d41ac79ce50159fd0ac2d6c5031cb6bdfe6",
+      "retrieved_at_utc": "2026-11-07T10:06:40.399914+00:00"
+    },
+    {
+      "file": "asia",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/asia",
+      "http_status": 200,
+      "sha256": "02b69728085f6b0c999da70de2f1f9a2d8952b533a450d53bb41e03eb7d0e92e",
+      "retrieved_at_utc": "2026-11-07T10:06:40.694988+00:00"
+    },
+    {
+      "file": "australasia",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/australasia",
+      "http_status": 200,
+      "sha256": "846ba455578e3e0f9eb850f05be3cc06d02ff51bbe4b726f755be9dc765f16c9",
+      "retrieved_at_utc": "2026-11-07T10:06:40.943519+00:00"
+    },
+    {
+      "file": "europe",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/europe",
+      "http_status": 200,
+      "sha256": "fec11bf6c6bd0619a8777bbdaa2ecd184fde291cb4b97efa87d334c7145ba3c2",
+      "retrieved_at_utc": "2026-11-07T10:06:41.209485+00:00"
+    },
+    {
+      "file": "northamerica",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/northamerica",
+      "http_status": 200,
+      "sha256": "da7366f6e0862ed15cb787dd056dca3a255df2ec50d19ff0a9f54eeb1562083a",
+      "retrieved_at_utc": "2026-11-07T10:06:41.440085+00:00"
+    },
+    {
+      "file": "southamerica",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/southamerica",
+      "http_status": 200,
+      "sha256": "df4f2ae71a6980a76038f51bfc4cdaaca9af5ba8799df0b5bc73283db68c8cd6",
+      "retrieved_at_utc": "2026-11-07T10:06:41.655763+00:00"
+    },
+    {
+      "file": "etcetera",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/etcetera",
+      "http_status": 200,
+      "sha256": "7281f095b42c13c4ae36b8bcba884e81dbb38127221fc1d9805c4dbf852487db",
+      "retrieved_at_utc": "2026-11-07T10:06:41.885111+00:00"
+    },
+    {
+      "file": "backward",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/backward",
+      "http_status": 200,
+      "sha256": "b8296b9ef1ece72d813878132c0f17e2c52b26af6004eeb9c37d049b64cd9401",
+      "retrieved_at_utc": "2026-11-07T10:06:42.085448+00:00"
+    },
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/LICENSE",
+      "http_status": 200,
+      "sha256": "0613408568889f5739e5ae252b722a2659c02002839ad970a63dc5e9174b27cf",
+      "retrieved_at_utc": "2026-11-07T10:06:42.311896+00:00"
+    }
+  ]
+}

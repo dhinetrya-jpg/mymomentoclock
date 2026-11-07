@@ -1,0 +1,6 @@
+engine: health and functional production smoke checks passed
+Actual native API:9bodies/time-scales, PanchangUTCintervals, India/US/Canada localdays, DSTgap/fold+offsets, leaplabel and timing-admission refusal passed. Accuracy scope remains limited.
+Corrupt required checksum: readiness/API503, no fallback or numerical payload.
+Nonroot SWISS_FILE runtime, real public files, readonly mounts, then missing-file readiness refusal: passed.
+engine: health and functional production smoke checks passed
+Actual native API:9bodies/time-scales, PanchangUTCintervals, India/US/Canada localdays, DSTgap/fold+offsets, leaplabel and timing-admission refusal passed. Accuracy scope remains limited.

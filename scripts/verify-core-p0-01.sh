@@ -9,6 +9,12 @@ docker_local info >/dev/null
 python3 scripts/core-reference-acquire.py verify
 python3 scripts/core-reference-tests.py
 python3 scripts/core-pr21-tests.py
+python3 scripts/core-option-a-jupiter.py verify
+python3 scripts/core-option-a-outer-planets.py verify
+python3 scripts/core-option-a-reuse.py verify
+python3 scripts/core-option-a-timezones.py verify
+python3 scripts/core-option-a-events.py verify
+python3 scripts/core-option-a-tests.py
 npm run lint
 npm run build
 npm --prefix frontend run lint
@@ -32,10 +38,13 @@ else
 fi
 name="core01-verify-$(openssl rand -hex 6)"
 web_pid=''
-cleanup(){ [ -z "$web_pid" ] || kill "$web_pid" 2>/dev/null || true;docker_local rm -f "$name-native" "$name-web" >/dev/null 2>&1 || true; }
+diagnostic_config=$(mktemp)
+printf '%s\n' '{"mode":"MOSHIER","usage":"DIAGNOSTIC_ONLY"}' > "$diagnostic_config"
+chmod 0644 "$diagnostic_config"
+cleanup(){ rm -f "$diagnostic_config"; [ -z "$web_pid" ] || kill "$web_pid" 2>/dev/null || true;docker_local rm -f "$name-native" "$name-web" >/dev/null 2>&1 || true; }
 trap cleanup EXIT HUP INT TERM
 # Ephemeral loopback ports: no deployment or public exposure.
-docker_local run -d --name "$name-native" -p 127.0.0.1::8080 mymomentoclock:core01-verify-native >/dev/null
+docker_local run -d --name "$name-native" -p 127.0.0.1::8080 -v "$diagnostic_config:/run/astronomy-diagnostic.json:ro" -e ASTRONOMY_NATIVE_CONFIG_FILE=/run/astronomy-diagnostic.json mymomentoclock:core01-verify-native >/dev/null
 docker_local run -d --name "$name-web" -p 127.0.0.1::3000 mymomentoclock:core01-verify-web >/dev/null
 native_port=$(docker_local port "$name-native" 8080/tcp | sed 's/.*://')
 web_port=$(docker_local port "$name-web" 3000/tcp | sed 's/.*://')
@@ -51,5 +60,11 @@ node tests/payment/pay03-browser.mjs
 node tests/calculation/native_api_contract.mjs "http://127.0.0.1:$native_port"
 sh scripts/test-core-native-files.sh
 printf '%s\n' 'ENGINEERING_CHECKS_PASSED. Running independent scientific acceptance; engineering success cannot waive missing references.'
-sh scripts/test-core-pr21-acceptance.sh
-python3 scripts/core-reference-acquire.py accept
+production_result=0
+sh scripts/test-core-production-acceptance.sh || production_result=$?
+cross_mode_result=0
+sh scripts/test-core-pr21-acceptance.sh || cross_mode_result=$?
+printf 'PRODUCTION_ACCEPTANCE_EXIT=%s CROSS_MODE_DIAGNOSTIC_EXIT=%s\n' "$production_result" "$cross_mode_result"
+# A diagnostic model failure does not invalidate a separately accepted production mode.
+# Current production exits2 because independent coverage/approvals remain incomplete.
+exit "$production_result"

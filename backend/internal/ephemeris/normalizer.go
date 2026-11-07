@@ -146,7 +146,7 @@ func ParseBirth(req NormalizationRequest, zone string) (time.Time, error) {
 	}
 	var loc *time.Location
 	if zone != "" {
-		loc, err = time.LoadLocation(zone)
+		loc, err = LoadCalculationLocation(zone)
 		if err != nil {
 			return time.Time{}, fmt.Errorf("INVALID_TIMEZONE")
 		}

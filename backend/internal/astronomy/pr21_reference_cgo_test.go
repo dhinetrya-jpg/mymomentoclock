@@ -74,7 +74,7 @@ func pr21Record(t *testing.T, row map[string]any) {
 }
 func TestPR21IndependentDE421Evaluation(t *testing.T) {
 	rows, _, base := pr21Data(t)
-	for _, config := range fileModeConfigurations(t, filepath.Join(base, "..", "acquired")) {
+	for _, config := range pr21Configurations(t, base) {
 		for _, row := range rows {
 			t.Run(config.Mode+"/"+row.ID, func(t *testing.T) {
 				utc, err := time.Parse(time.RFC3339Nano, row.UTC)
@@ -130,7 +130,7 @@ func TestPR21IndependentDE421Evaluation(t *testing.T) {
 }
 func TestPR21IndependentLocalDays(t *testing.T) {
 	_, days, base := pr21Data(t)
-	for _, config := range fileModeConfigurations(t, filepath.Join(base, "..", "acquired")) {
+	for _, config := range pr21Configurations(t, base) {
 		for _, row := range days {
 			t.Run(config.Mode+"/"+row.ID, func(t *testing.T) {
 				actual, err := ComputeDay(context.Background(), DayRequest{SchemaVersion: 1, Date: row.Date, Timezone: row.Zone, Latitude: &row.Latitude, Longitude: &row.Longitude}, config)
@@ -217,7 +217,7 @@ func TestPR21IndependentTropicalAscendant(t *testing.T) {
 	if json.Unmarshal(raw, &data) != nil || len(data.Charts) != 7 {
 		t.Fatal("independent chart coverage absent")
 	}
-	for _, config := range fileModeConfigurations(t, filepath.Join(base, "..", "acquired")) {
+	for _, config := range pr21Configurations(t, base) {
 		for _, row := range data.Charts {
 			t.Run(config.Mode+"/"+row.ID, func(t *testing.T) {
 				instant, err := time.Parse(time.RFC3339Nano, row.UTC)
@@ -301,4 +301,19 @@ func TestPR21ObservedIERSTimeScales(t *testing.T) {
 			}
 		})
 	}
+}
+
+// Explicit selector is restricted to the architecture's sole production candidate.
+// With no selector the original cross-mode suite still evaluates both modes.
+func pr21Configurations(t *testing.T, base string) []ephemeris.NativeConfig {
+	t.Helper()
+	all := fileModeConfigurations(t, filepath.Join(base, "..", "acquired"))
+	mode := os.Getenv("CORE01_SCIENCE_MODE")
+	if mode == "" {
+		return all
+	}
+	if mode != "SWISS_FILE" {
+		t.Fatal("production scientific selector must be SWISS_FILE")
+	}
+	return []ephemeris.NativeConfig{all[1]}
 }

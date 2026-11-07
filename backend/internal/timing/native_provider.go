@@ -18,9 +18,6 @@ type NativeAstronomyProvider struct{ configuration ephemeris.NativeConfig }
 
 func NewNativeAstronomyProvider(c ephemeris.NativeConfig) *NativeAstronomyProvider {
 	copy := c
-	if copy.Mode == "" {
-		copy.Mode = "MOSHIER"
-	}
 	copy.FileSHA256 = map[string]string{}
 	for k, v := range c.FileSHA256 {
 		copy.FileSHA256[k] = v
@@ -30,6 +27,12 @@ func NewNativeAstronomyProvider(c ephemeris.NativeConfig) *NativeAstronomyProvid
 func (p *NativeAstronomyProvider) Inspect(ctx context.Context, v Validated) (NativeAstronomyPayload, error) {
 	if p == nil {
 		return NativeAstronomyPayload{}, problem("NATIVE_EPHEMERIS_UNAVAILABLE")
+	}
+	if err := astronomy.RequireProductionConfiguration(p.configuration); err != nil {
+		return NativeAstronomyPayload{}, err
+	}
+	if v.Request.EphemerisMode != "SWISS_FILE" {
+		return NativeAstronomyPayload{}, problem("PRODUCTION_AUTHORITY_REQUIRED")
 	}
 	birth := v.Request.Birth
 	natal, err := astronomy.ComputeSnapshot(ctx, astronomy.SnapshotRequest{SchemaVersion: 1, Civil: ephemeris.NormalizationRequest{BirthDate: birth.Date, BirthTime: birth.Time, Timezone: birth.Timezone, TimezoneOffset: birth.UTCOffset, Latitude: birth.Latitude, Longitude: birth.Longitude, BirthTimeCertainty: birth.Certainty, RequiredMode: v.Request.EphemerisMode}}, p.configuration)
@@ -46,6 +49,15 @@ func (p *NativeAstronomyProvider) Inspect(ctx context.Context, v Validated) (Nat
 
 // Load cannot turn real, unaccepted science into Synthetic=true to bypass the existing timing gate.
 // NativeEngine registration and activity-ranking code deliberately remain unchanged.
-func (p *NativeAstronomyProvider) Load(context.Context, Validated) (Inputs, error) {
+func (p *NativeAstronomyProvider) Load(_ context.Context, v Validated) (Inputs, error) {
+	if p == nil {
+		return Inputs{}, problem("NATIVE_EPHEMERIS_UNAVAILABLE")
+	}
+	if err := astronomy.RequireProductionConfiguration(p.configuration); err != nil {
+		return Inputs{}, err
+	}
+	if v.Request.EphemerisMode != "SWISS_FILE" {
+		return Inputs{}, problem("PRODUCTION_AUTHORITY_REQUIRED")
+	}
 	return Inputs{}, problem("ASTRONOMY_INDEPENDENT_ACCEPTANCE_PENDING")
 }

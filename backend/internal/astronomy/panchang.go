@@ -188,6 +188,7 @@ type DayRequest struct {
 	DUT1Seconds     *float64 `json:"dut1_seconds,omitempty"`
 }
 type DayResult struct {
+	Authority                AuthorityContract              `json:"authority"`
 	ContractVersion          string                         `json:"contract_version"`
 	Status                   string                         `json:"status"`
 	Start                    time.Time                      `json:"day_start_utc"`
@@ -253,6 +254,11 @@ func TraditionalIntervals(solar ephemeris.NativeSolarResult, weekday time.Weekda
 	return out
 }
 func ComputeDay(ctx context.Context, r DayRequest, configuration ephemeris.NativeConfig) (DayResult, error) {
+	if configuration.Mode == "SWISS_FILE" {
+		if err := RequireProductionConfiguration(configuration); err != nil {
+			return DayResult{}, err
+		}
+	}
 	if configuration.Mode == "" {
 		configuration.Mode = "MOSHIER"
 	}
@@ -266,6 +272,9 @@ func ComputeDay(ctx context.Context, r DayRequest, configuration ephemeris.Nativ
 	place := ephemeris.NativePlace{Latitude: *r.Latitude, Longitude: *r.Longitude, ElevationMeters: r.ElevationMeters}
 	first, err := ephemeris.NativeSnapshot(start, configuration, r.DUT1Seconds, nil)
 	if err != nil {
+		return DayResult{}, err
+	}
+	if err := verifyActualAuthority(first, configuration); err != nil {
 		return DayResult{}, err
 	}
 	solar, err := ephemeris.NativeSolarDay(start, end, place, configuration, r.DUT1Seconds)
@@ -379,7 +388,7 @@ func ComputeDay(ctx context.Context, r DayRequest, configuration ephemeris.Nativ
 			intervals = append(intervals, FactorInterval{kind, number, edges[i-1], edges[i]})
 		}
 	}
-	loc, _ := time.LoadLocation(r.Timezone)
+	loc, _ := ephemeris.LoadCalculationLocation(r.Timezone)
 	weekday := start.In(loc).Weekday()
 	sort.Slice(transitions, func(i, j int) bool {
 		if transitions[i].At.Equal(transitions[j].At) {
@@ -397,5 +406,5 @@ func ComputeDay(ctx context.Context, r DayRequest, configuration ephemeris.Nativ
 			traditional = append(traditional, TraditionalInterval{"VARA_" + time.Weekday((int(weekday)+6)%7).String(), start, rise, "sunrise-day-v1; before sunrise uses previous civil weekday", "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING"})
 		}
 	}
-	return DayResult{ContractVersion: Version, Status: "COMPUTED_UNVERIFIED", Start: start, End: end, Timezone: r.Timezone, Vara: weekday.String(), AtStart: atStart, Snapshot: first, Solar: solar, Transitions: transitions, FactorIntervals: intervals, EnclosingFactors: enclosing, Traditional: traditional, ValidationStatus: "NOT_INDEPENDENTLY_VERIFIED", CustomerTimingAuthorized: false, Limitations: []string{"Panchang angular segmentation and numerical convergence are not independent astronomical validation.", "Vara here is civil weekday; a sunrise-based day convention must be separately selected and approved.", "Traditional interval schedules are explicitly unapproved variants and do not authorize personal timing or financial predictions.", "Solar model pressure,temperature,limb and elevation assumptions limit real-world event accuracy; no sub-minute accuracy promise."}}, nil
+	return DayResult{Authority: Authority(configuration), ContractVersion: Version, Status: "COMPUTED_UNVERIFIED", Start: start, End: end, Timezone: r.Timezone, Vara: weekday.String(), AtStart: atStart, Snapshot: first, Solar: solar, Transitions: transitions, FactorIntervals: intervals, EnclosingFactors: enclosing, Traditional: traditional, ValidationStatus: "NOT_INDEPENDENTLY_VERIFIED", CustomerTimingAuthorized: false, Limitations: []string{"Panchang angular segmentation and numerical convergence are not independent astronomical validation.", "Vara here is civil weekday; a sunrise-based day convention must be separately selected and approved.", "Traditional interval schedules are explicitly unapproved variants and do not authorize personal timing or financial predictions.", "Solar model pressure,temperature,limb and elevation assumptions limit real-world event accuracy; no sub-minute accuracy promise."}}, nil
 }

@@ -1,0 +1,27 @@
+{
+  "body": "jupiter",
+  "frame": "APPARENT_GEOCENTRIC_TRUE_ECLIPTIC_OF_DATE",
+  "generator_sha256": "28a7b5a2c2002b84634bda2887ea213633964e21343e51ad66468c33204a6871",
+  "id": "JUP310_CENTER_20150302_12",
+  "jd_tt": 2457084.0007775924,
+  "limitation": "One Jupiter epoch only; Saturn centers/nodes/Lahiri still unverified",
+  "observer_center": 399,
+  "quantities": {
+    "distance_au": 4.436957713310058,
+    "latitude": 0.9841038595267523,
+    "longitude_speed_deg_per_day": -0.10644874138506566,
+    "tropical_longitude": 134.6909932537137
+  },
+  "reduction": "JUP310 original SPK includes SSB->Jupiter barycenter->599 AND SSB->Earth barycenter->399; Skyfield light time, aberration, Sun-only gravitational deflection, IAU2006 precession/IAU2000A nutation",
+  "schema_version": 1,
+  "source_sha256": "0d315bf0d242530400cee1c9bc98974a7742e618a423953b49fb13cd6144e1cf",
+  "source_uncertainty": "No per-row observational uncertainty supplied; original PR21 comparison budgets retained, not claimed as source error bars",
+  "target_center": 599,
+  "tolerances": {
+    "distance_au": 1e-06,
+    "latitude": 0.0002,
+    "longitude_speed_deg_per_day": 0.0002,
+    "tropical_longitude": 0.0002
+  },
+  "utc": "2015-03-02T12:00:00Z"
+}

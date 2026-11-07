@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "lint": "tsc --noEmit",
     "clean": "rm -rf dist server.js",
-    "verify:core-p0-01": "sh scripts/verify-core-p0-01.sh"
+    "verify:core-p0-01": "sh scripts/verify-core-p0-01.sh",
+    "verify:core-p0-01:production": "sh scripts/test-core-production-acceptance.sh",
+    "verify:core-p0-01:cross-mode": "sh scripts/test-core-pr21-acceptance.sh"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

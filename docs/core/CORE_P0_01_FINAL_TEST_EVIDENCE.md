@@ -1,5 +1,41 @@
 # CORE-P0-01 final test evidence
 
+## Option A final executed verification — 2026-11-07
+
+**Engineering PASS; SWISS_FILE admitted numerical subset PASS224/224; full production science PARTIAL; full cross-mode FAIL12 MOSHIER scalars. Customer authorization remains false.**
+
+### Exact commands and classifications
+
+| Command / execution | Result | Evidence |
+|---|---|---|
+|`CORE01_DOCKER_NO_CACHE=1 CORE01_PRODUCTION_RESULT=/workspace/mymomentoclock/docs/core/evidence/option-a/production-results.json PHASE1_REUSE_TEST_IMAGE=1 PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt CHROMIUM_PATH=/usr/bin/chromium npm run verify:core-p0-01`|Exit2: engineering completed; production science PARTIAL due to explicit evidence/approval gaps; separate cross-mode exit1|`verify-final.log`: ENGINEERING_CHECKS_PASSED and PRODUCTION_ACCEPTANCE_EXIT=2 CROSS_MODE_DIAGNOSTIC_EXIT=1|
+|Both frontend `npm run lint`, `npm run build`, corresponding `npm --prefix frontend` commands|PASS|Final verifier log|
+|12 existing Node calculation/timing/payment/security suites|181 assertions PASS,0fail/skip|Final verifier TAP logs; no payment/auth implementation changed|
+|`sh scripts/test-phase1-go.sh` inside verifier, with reusable installed toolchain and current-source count=1 compilation|PASS both Go modules: unit,CGO-enabled,race,vet,CGO-disabled; actual TLS PostgreSQL/Node integration and three process/database-restart checks|Final verifier log; toolchain reuse is not binary/result reuse|
+|Native/data/API tests|PASS explicit SWISS_FILE vs diagnostic roles, correct actual version/flags, pin/checksum/path/config refusal, concurrent isolation, missing/corrupt data and no fallback|Go tests, actual nonroot read-only runtime tests and API log|
+|`docker build --no-cache ... .` and `docker build --no-cache ... -f Dockerfile.web .` via verifier|PASS actual clean native and full-stack images|Final verifier build/export logs; no deployment|
+|Browser/legacy/native smoke, desktop/mobile, timing-disabled UI and commercial UI fixture tests|PASS; existing browser scripts run against newly built images|Final verifier log; payment UI fixtures are not a live provider sandbox|
+|`tests/calculation/native_api_contract.mjs` via verifier and final `sh /tmp/option-a-api-final.sh`|PASS both explicit modes; Kolkata/New Delhi,NY,Toronto,Vancouver,Kathmandu,Lord Howe,Tromso; gap/fold/23h/25h/24.5h,polar refusal,exact J2000TT UTC-label and leap labels|`api-final.log` plus final verifier; current Vancouver2026 remains unique UTC−7,2024 gap/fold separately tested|
+|`python3 scripts/core-reference-acquire.py verify`; `core-reference-tests.py`; `core-pr21-tests.py`; `core-option-a-tests.py`|PASS source admission and28 adversarial tests (8+10+10)|Reference integrity/adversarial logs; checksums are not treated as proof of astronomical accuracy|
+|`core-option-a-jupiter.py verify`, `core-option-a-outer-planets.py verify`, `core-option-a-reuse.py verify`, `core-option-a-timezones.py verify`, `core-option-a-events.py verify`|PASS immutable references, correct target identity, zero aliases,249 rule outputs,24 variants,30 segmentation probes,pinned timezone data and dated phase edges|Source manifests and current checked-in artifacts|
+|`npm run verify:core-p0-01:production` (same `test-core-production-acceptance.sh` invoked by full verifier)|Strict native selected-mode tests PASS; classifier exits2 PARTIAL,224 planetary scalars in296 executed records|`production-results.json`; source-configured kernel/data version checks included|
+|`npm run verify:core-p0-01:cross-mode` (same preserved strict script invoked by full verifier)|Exit1 FAIL;576records,448planetary scalars,12 MOSHIER failures; production mode has zero failed scalar rows|`cross-mode-final.log`, `cross-mode-results.json`; no tolerance widening|
+
+### Repairs and initially unsuccessful attempts
+
+The first focused invocation lacked the session CA for an existing Go JWT download. It was rerun with a read-only supplied CA/SSL_CERT_FILE; TLS verification was never disabled. Test-only setup/fixture omissions and the newly added fractional birth-time test input were corrected before the final run; fractional UTC-label/J2000 handling is tested through its supported endpoint.
+
+The initial Option A JUP310599 comparison fit the bands but was physically inadmissible: official Swiss documentation proved native default Jupiter is target5, a system barycenter. That metadata/admission defect was fixed without changing astronomical outputs. Matching DE4215/6 sources and verified inner aliases replaced the mistaken acceptance. Initial logs/data are preserved, not hidden, in `verify-initial-target-policy.log` and `production-initial-center-mismatch.json`; those are historical evidence, never the final accepted dataset.
+
+The final current-source full verifier was rerun, including clean images. It intentionally did not exit0: source coverage and external approvals are still incomplete; diagnostic-mode failures remain real. Selected SWISS_FILE comparisons themselves pass. No calculation/tolerance was fitted, no traditional efficacy was inferred and no synthetic fixture was promoted to independent accuracy.
+
+Reference-generation hardening subsequently checked inspected files against their exact Git blobs; regeneration proved all numerical rule/outer-planet expectations unchanged. Those standard-library verification scripts/adversarial tests were executed again. No runtime algorithm changed after the final native build.
+
+Final remote CI is observed separately at the exact pushed head using the normal GitHub checks/workflow pages because API GraphQL/REST is403. Baseline/previous-head success is not claimed as final-head evidence. CI artifacts and final-head links are supplied in final handoff/response after push.
+
+
+## Historical PR21 snapshots — superseded by Option A above
+
 ## PR21 current acceptance update — 2026-11-07
 
 **FAILED — REQUIRED ACCEPTANCE TESTS FAIL.** This supersedes the earlier PARTIAL verdict and limited numerical scope preserved below as a historical snapshot. Current evidence: [planetary report](CORE_P0_01_PR21_PLANETARY_VALIDATION.md), [Panchang/solar report](CORE_P0_01_PR21_PANCHANG_SOLAR_VALIDATION.md), [repair matrix](CORE_P0_01_PR21_REPAIR_MATRIX.md).

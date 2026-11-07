@@ -1,5 +1,28 @@
 # CORE-P0-01 live completion matrix
 
+## Option A final acceptance matrix — 2026-11-07
+
+**CORE-P0-01 ENGINEERING COMPLETE — EXTERNAL APPROVALS PENDING.** This is not full scientific acceptance or customer authorization. Architecture was selected by the owner; statuses are supported by executed evidence, not by the selection alone.
+
+| Gate | Requirement | Implementation | Evidence | Final status | Remaining action |
+|---|---|---|---|---|---|
+|A01|Complete inventory|57 requested calculations with explicit conventions/evidence/eligibility|FINAL_CALCULATION_MATRIX + machine inventory|PASS|No blanket eligibility inferred|
+|A02|Pinned native authority|Explicit SWISS_FILE; immutable hashes; no silent fallback; diagnostic request refused|Actual native/mode/version/hash/readiness/provider/API tests|PASS|Optional JPL unsupported; not mandatory blocker|
+|A03|Independent reference provenance|Original DE421/IERS/IANA retained; correct target5/6 references; alias proof|Immutable raw SPK, source hashes/reproducers and28 provenance/adversarial tests|PARTIAL|Matched independent node/Lahiri/solar sources|
+|A04|Planetary accuracy|Production224/224 tropical/latitude/distance/speed pass; full cross-mode12 diagnostic FAIL|Strict mode-separated machine records; no tolerance relaxation|PARTIAL|Independent sidereal/node quantities; no physical COB claim|
+|A05|Temporal correctness|Pinned timezone data; explicit scales/leaps; actual eight-location API|ERFA/IERS, DST/fractional offsets/J2000/polar/API and no-OS-fallback tests|PARTIAL|Broad historical/observed-UT1 evidence; pre1972 restrictions remain|
+|A06|Chart acceptance|Native ascendant, whole signs and full-input mappings; D60 guard; node opposites|7 production tropical geometry cases; chart/math/source boundary tests|PARTIAL|Matched sidereal placements and traditional D2/D9/D60 interpretation approval|
+|A07|Panchang/solar/traditional|24 independent phase boundaries,7 noon, polar/day coverage;249 rule windows|Dated JPL/Skyfield events vs mathematical source outputs explicitly separated|PARTIAL|Same-definition sunrise/set, independent sidereal events and approved variants|
+|A08|Honest metadata/admission|Versioned authority, actual targets/modes/data/time and uncertainty|API/schema/forged-config/diagnostic-refusal tests; all customer flags false|PASS|No release approval implied|
+|A09|Operational and license governance|Clean native/web builds, nonroot/read-only/present/corrupt/missing tested; notices retained|Docker/runtime evidence and reuse/license inventory|BLOCKED|Owner/legal AGPL/Professional/data redistribution decisions|
+|A10|Reproducible tests/CI|Full local engineering stages pass; production partial and cross-mode fail classified|Final verification logs; final-source remote CI observation in handoff|PARTIAL|Observe final remote head; no overall scientific green claim|
+|A11|CORE-P0-02 provider readiness|Natal/day share file authority; UTC/provenance; diagnostics and customer admission refused|Actual same-engine inspection and Load/NativeEngine refusal tests|PASS|PASS technical inspection only; customer activation remains disabled|
+|A12|Evidence-based final acceptance|Adversarial target/flag/source/convention audit; concrete owner package|All actionable production engineering fixes verified; science/domain/legal gaps explicit|PARTIAL|No full independent or customer acceptance before external gates|
+
+A04 explicitly separates the selected SWISS_FILE subset from the still-failing diagnostic suite. A07 separates mathematics from astronomical event accuracy. A09 remains blocked on legal decisions. A11 PASS covers technical inspection/refusal, not recommendations. Detailed current limitations are in FINAL_HANDOFF; prior planet-center assumptions below are historical and superseded.
+
+## Historical PR21 snapshots — superseded by Option A above
+
 Initial audit2026-11-06 (Asia/Kolkata), clean baseline main `cc3ab8245ea5d6bced19f5fed200da1528d13154`. This supersedes prior self-declared GO reports; dispositions below begin from source inspection, not report labels. All engineering continues while genuine source/approval gaps remain explicit.
 
 | Gate | Existing / required | Existing coverage and missing evidence | Production dependency / severity | Fix and acceptance | Initial status |

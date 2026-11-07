@@ -4,3 +4,9 @@ tests/calculation/reference/acquired/originals/** -text whitespace=-blank-at-eol
 tests/calculation/reference/acquired/native-data/** -text whitespace=-blank-at-eol,-blank-at-eof
 
 tests/calculation/reference/pr21/originals/** -text whitespace=-blank-at-eol,-blank-at-eof
+
+tests/calculation/reference/option-a/originals/** -text whitespace=-blank-at-eol,-blank-at-eof
+tests/calculation/reference/option-a/licenses/** -text whitespace=-blank-at-eol,-blank-at-eof
+
+backend/internal/ephemeris/timezone.zip binary
+tests/calculation/reference/option-a/tzdb-source/** -text whitespace=-blank-at-eol,-blank-at-eof

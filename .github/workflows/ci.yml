@@ -46,6 +46,12 @@ jobs:
           python3 scripts/core-reference-acquire.py verify
           python3 scripts/core-reference-tests.py
           python3 scripts/core-pr21-tests.py
+          python3 scripts/core-option-a-jupiter.py verify
+          python3 scripts/core-option-a-outer-planets.py verify
+          python3 scripts/core-option-a-reuse.py verify
+          python3 scripts/core-option-a-timezones.py verify
+          python3 scripts/core-option-a-events.py verify
+          python3 scripts/core-option-a-tests.py
       - name: Phase 1 security and privacy regression
         run: node --import tsx --test tests/phase1/security.test.ts
       - name: Payment boundary and checkout contract tests

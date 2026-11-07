@@ -18,6 +18,7 @@ const SwissSourceCommit = "175e1fcb3108bcd5c0d146c803f51dcf23508012"
 
 // NativeConfig is trusted server configuration, never a client-selected file path or approval.
 type NativeConfig struct {
+	Usage         string            `json:"usage,omitempty"`
 	Mode          string            `json:"mode"`
 	EphemerisPath string            `json:"ephemeris_path,omitempty"`
 	JPLFile       string            `json:"jpl_file,omitempty"`
@@ -61,6 +62,7 @@ type NativeHouses struct {
 	System            string      `json:"system"`
 }
 type NativeSnapshotResult struct {
+	AuthorityRole        string                  `json:"authority_role"`
 	ContractVersion      string                  `json:"contract_version"`
 	Epoch                NativeEpoch             `json:"epoch"`
 	RequestedMode        string                  `json:"requested_mode"`
@@ -83,6 +85,7 @@ type NativeUTCInterval struct {
 	End   time.Time `json:"end"`
 }
 type NativeSolarResult struct {
+	AuthorityRole          string              `json:"authority_role"`
 	ContractVersion        string              `json:"contract_version"`
 	Sunrise                *time.Time          `json:"sunrise_utc,omitempty"`
 	Sunset                 *time.Time          `json:"sunset_utc,omitempty"`
@@ -109,6 +112,9 @@ func validNativePlace(p NativePlace) bool {
 	return !math.IsNaN(p.Latitude) && !math.IsInf(p.Latitude, 0) && math.Abs(p.Latitude) <= 90 && !math.IsNaN(p.Longitude) && !math.IsInf(p.Longitude, 0) && math.Abs(p.Longitude) <= 180 && !math.IsNaN(p.ElevationMeters) && !math.IsInf(p.ElevationMeters, 0) && p.ElevationMeters >= -500 && p.ElevationMeters <= 9000
 }
 func validateNativeConfig(c NativeConfig, instant time.Time) (NativeConfig, error) {
+	if (c.Usage != "" && c.Usage != "PRODUCTION_AUTHORITY" && c.Usage != "DIAGNOSTIC_ONLY") || (c.Usage == "PRODUCTION_AUTHORITY" && c.Mode != "SWISS_FILE") {
+		return c, nativeError("INVALID_AUTHORITY_USAGE")
+	}
 	if c.Mode == "" {
 		c.Mode = "MOSHIER"
 	}
@@ -251,6 +257,10 @@ func NativeSnapshot(instant time.Time, config NativeConfig, dut1 *float64, place
 	if err != nil {
 		return NativeSnapshotResult{}, err
 	}
+	result.AuthorityRole = "DIAGNOSTIC_ONLY"
+	if cfg.Mode == "SWISS_FILE" {
+		result.AuthorityRole = "PRODUCTION_AUTHORITY"
+	}
 	result.ContractVersion = NativeContractVersion
 	result.Epoch = epoch
 	result.RequestedMode = cfg.Mode
@@ -286,7 +296,12 @@ func NativeSolarDay(start, end time.Time, place NativePlace, config NativeConfig
 	if err != nil {
 		return NativeSolarResult{}, err
 	}
-	return nativeSolarAt(start, end, epoch, place, cfg, dut1)
+	result, err := nativeSolarAt(start, end, epoch, place, cfg, dut1)
+	result.AuthorityRole = "DIAGNOSTIC_ONLY"
+	if cfg.Mode == "SWISS_FILE" {
+		result.AuthorityRole = "PRODUCTION_AUTHORITY"
+	}
+	return result, err
 }
 
 // NativeUTCLabel preserves :60 labels which time.Time cannot represent. UTC quasi-JD is not UT1 or TT.

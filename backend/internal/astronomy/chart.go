@@ -53,6 +53,17 @@ func Classify(longitude float64, ascendant *float64, exactBirth bool) (ChartPlac
 	return result, nil
 }
 
+// Node conventions are returned separately so mean/true Rahu are never mistaken
+// for two different planets, and Ketu is explicitly a derived opposite node.
+type LunarNodePair struct {
+	Convention            string  `json:"convention"`
+	RahuTropical          float64 `json:"rahu_tropical_longitude"`
+	RahuSidereal          float64 `json:"rahu_sidereal_longitude"`
+	KetuTropical          float64 `json:"ketu_tropical_longitude"`
+	KetuSidereal          float64 `json:"ketu_sidereal_longitude"`
+	IndependentAcceptance string  `json:"independent_acceptance"`
+}
+
 type SnapshotRequest struct {
 	SchemaVersion   int                            `json:"schema_version"`
 	Civil           ephemeris.NormalizationRequest `json:"civil"`
@@ -60,6 +71,8 @@ type SnapshotRequest struct {
 	ElevationMeters float64                        `json:"elevation_meters"`
 }
 type SnapshotResult struct {
+	LunarNodes               map[string]LunarNodePair       `json:"lunar_nodes"`
+	Authority                AuthorityContract              `json:"authority"`
 	ContractVersion          string                         `json:"contract_version"`
 	Status                   string                         `json:"status"`
 	Native                   ephemeris.NativeSnapshotResult `json:"native"`
@@ -70,6 +83,11 @@ type SnapshotResult struct {
 }
 
 func ComputeSnapshot(ctx context.Context, r SnapshotRequest, configuration ephemeris.NativeConfig) (SnapshotResult, error) {
+	if configuration.Mode == "SWISS_FILE" {
+		if err := RequireProductionConfiguration(configuration); err != nil {
+			return SnapshotResult{}, err
+		}
+	}
 	if configuration.Mode == "" {
 		configuration.Mode = "MOSHIER"
 	}
@@ -96,6 +114,9 @@ func ComputeSnapshot(ctx context.Context, r SnapshotRequest, configuration ephem
 	if err != nil {
 		return SnapshotResult{}, err
 	}
+	if err := verifyActualAuthority(snapshot, configuration); err != nil {
+		return SnapshotResult{}, err
+	}
 	placements := map[string]ChartPlacement{}
 	var asc *float64
 	if snapshot.Houses != nil {
@@ -113,5 +134,10 @@ func ComputeSnapshot(ctx context.Context, r SnapshotRequest, configuration ephem
 	if certainty == "" {
 		certainty = "UNSPECIFIED"
 	}
-	return SnapshotResult{Version, "COMPUTED_UNVERIFIED", snapshot, placements, certainty, false, []string{"Actual native full-precision longitude drives segmentation; no rounded display degrees are used.", "D60 is suppressed unless birth time is explicitly EXACT; exact input is not a claim of externally verified longitude accuracy.", "D60 here is a half-degree segment, not an approved deity/sign interpretive mapping. D2/D9 traditional convention approval remains pending.", "No ascendant, house, or varga placement is a personal timing recommendation."}}, nil
+	nodes := map[string]LunarNodePair{}
+	for _, kind := range []string{"mean", "true"} {
+		p := snapshot.Planets[kind+"_node"]
+		nodes[kind] = LunarNodePair{"Swiss " + kind + " ascending node (Rahu); Ketu is descending node = Rahu+180deg, not a separately observed body", p.TropicalLongitude, p.SiderealLongitude, norm(p.TropicalLongitude + 180), norm(p.SiderealLongitude + 180), "NOT_INDEPENDENTLY_VERIFIED"}
+	}
+	return SnapshotResult{nodes, Authority(configuration), Version, "COMPUTED_UNVERIFIED", snapshot, placements, certainty, false, []string{"Actual native full-precision longitude drives segmentation; no rounded display degrees are used.", "D60 is suppressed unless birth time is explicitly EXACT; exact input is not a claim of externally verified longitude accuracy.", "D60 here is a half-degree segment, not an approved deity/sign interpretive mapping. D2/D9 traditional convention approval remains pending.", "No ascendant, house, or varga placement is a personal timing recommendation."}}, nil
 }

@@ -14,10 +14,10 @@ import (
 
 // ConfigFromEnvironment only reads a reviewed server file; clients never choose filesystem paths or hashes.
 func ConfigFromEnvironment() (ephemeris.NativeConfig, error) {
-	config := ephemeris.NativeConfig{Mode: "MOSHIER"}
+	config := ephemeris.NativeConfig{}
 	path := os.Getenv("ASTRONOMY_NATIVE_CONFIG_FILE")
 	if path == "" {
-		return config, nil
+		return config, problem("ASTRONOMY_CONFIGURATION_REQUIRED")
 	}
 	raw, err := os.ReadFile(path)
 	if err != nil || len(raw) > 16384 {
@@ -27,6 +27,12 @@ func ConfigFromEnvironment() (ephemeris.NativeConfig, error) {
 	decoder.DisallowUnknownFields()
 	if decoder.Decode(&config) != nil || decoder.Decode(new(any)) != io.EOF {
 		return config, problem("ASTRONOMY_CONFIGURATION_INVALID")
+	}
+	if config.Mode == "MOSHIER" && config.Usage == DiagnosticOnly {
+		return config, nil
+	}
+	if err := RequireProductionConfiguration(config); err != nil {
+		return config, err
 	}
 	return config, nil
 }
@@ -42,7 +48,7 @@ func Handler(config ephemeris.NativeConfig) http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		reply := func(status int, value any) { w.WriteHeader(status); _ = json.NewEncoder(w).Encode(value) }
 		fail := func(status int, code string) {
-			reply(status, map[string]any{"contract_version": Version, "status": "UNAVAILABLE", "code": code, "customer_timing_authorized": false, "validation_status": "NOT_INDEPENDENTLY_VERIFIED"})
+			reply(status, map[string]any{"contract_version": Version, "status": "UNAVAILABLE", "code": code, "customer_timing_authorized": false, "validation_status": "NOT_INDEPENDENTLY_VERIFIED", "authority": Authority(config)})
 		}
 		if r.URL.RawQuery != "" {
 			fail(422, "URL_PARAMETERS_NOT_ALLOWED")
@@ -53,7 +59,9 @@ func Handler(config ephemeris.NativeConfig) http.Handler {
 				fail(405, "METHOD_NOT_ALLOWED")
 				return
 			}
-			reply(200, Capabilities())
+			inventory := Capabilities()
+			inventory["authority"] = Authority(config)
+			reply(200, inventory)
 			return
 		}
 		if r.Method != "POST" {
@@ -107,7 +115,7 @@ func Handler(config ephemeris.NativeConfig) http.Handler {
 			}
 			var label ephemeris.NativeUTCLabelResult
 			label, err = ephemeris.ConvertUTCLabel(req.Date, req.Clock)
-			value = map[string]any{"contract_version": Version, "status": "COMPUTED_UNVERIFIED", "utc_scales": label, "customer_timing_authorized": false, "validation_status": "NOT_INDEPENDENTLY_VERIFIED"}
+			value = map[string]any{"contract_version": Version, "status": "COMPUTED_UNVERIFIED", "utc_scales": label, "customer_timing_authorized": false, "validation_status": "NOT_INDEPENDENTLY_VERIFIED", "authority": Authority(config)}
 		} else if r.URL.Path == "/api/v1/astronomy/snapshot" {
 			var req SnapshotRequest
 			if !decode(&req) {
@@ -124,7 +132,7 @@ func Handler(config ephemeris.NativeConfig) http.Handler {
 		if err != nil {
 			status := 422
 			switch err.Error() {
-			case "NATIVE_EPHEMERIS_UNAVAILABLE", "EPHEMERIS_MODE_UNAVAILABLE", "EPHEMERIS_DATA_UNAVAILABLE", "JPL_KERNEL_UNAVAILABLE", "ASTRONOMY_TIMEOUT", "PANCHANG_ENCLOSING_BOUNDARY_UNAVAILABLE":
+			case "NATIVE_EPHEMERIS_UNAVAILABLE", "EPHEMERIS_MODE_UNAVAILABLE", "EPHEMERIS_DATA_UNAVAILABLE", "JPL_KERNEL_UNAVAILABLE", "ASTRONOMY_TIMEOUT", "PANCHANG_ENCLOSING_BOUNDARY_UNAVAILABLE", "EPHEMERIS_CHECKSUM_MISMATCH", "EPHEMERIS_CHECKSUM_REQUIRED", "EPHEMERIS_CONFIGURATION_INVALID", "EPHEMERIS_ENVIRONMENT_CONFLICT", "PRODUCTION_DATASET_NOT_PINNED", "PRODUCTION_ENGINE_VERSION_OR_MODE_MISMATCH", "PRODUCTION_EPHEMERIS_PATH_REQUIRED":
 				status = 503
 			}
 			fail(status, err.Error())

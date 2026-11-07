@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "date": "2026-03-21",
+      "day_end_utc": "2026-03-21T18:30:00Z",
+      "day_start_utc": "2026-03-20T18:30:00Z",
+      "distance_seconds": 184.43015299999388,
+      "id": "MIDNIGHT_KOLKATA",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "selection": "Smallest independently computed distance to local midnight in 2026; not selected against native residuals",
+      "target_angle": 36,
+      "timezone": "Asia/Kolkata",
+      "transition_local": "2026-03-21T23:56:55.569847+05:30",
+      "transition_utc": "2026-03-21T18:26:55.569847Z"
+    },
+    {
+      "date": "2026-11-06",
+      "day_end_utc": "2026-11-07T05:00:00Z",
+      "day_start_utc": "2026-11-06T05:00:00Z",
+      "distance_seconds": 68.795873,
+      "id": "MIDNIGHT_NEW_YORK",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "selection": "Smallest independently computed distance to local midnight in 2026; not selected against native residuals",
+      "target_angle": 324,
+      "timezone": "America/New_York",
+      "transition_local": "2026-11-06T00:01:08.795873-05:00",
+      "transition_utc": "2026-11-06T05:01:08.795873Z"
+    },
+    {
+      "date": "2026-05-23",
+      "day_end_utc": "2026-05-23T18:30:00Z",
+      "day_start_utc": "2026-05-22T18:30:00Z",
+      "diagnostic_sunrise_utc": "2026-05-22T23:23:31.198609Z",
+      "distance_seconds": 682.686863,
+      "id": "SUNRISE_ADJACENT_KOLKATA",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "selection": "Nearest independent Tithi transition to independently defined conventional topocentric center-altitude sunrise in2026; NOT same-definition native solar acceptance",
+      "target_angle": 84,
+      "timezone": "Asia/Kolkata",
+      "transition_local": "2026-05-23T05:04:53.885472+05:30",
+      "transition_utc": "2026-05-22T23:34:53.885472Z"
+    }
+  ],
+  "generator_sha256": "f30380fc423921a56cbb89c6a8e8003e8658c0dd5b640593c48247a7d201b691",
+  "schema_version": 1,
+  "scope": "Independent apparent geocentric tropical elongation, true ecliptic of date; independent numerical epsilon0.05s, comparison budget10s unchanged. No sidereal or same-definition sunrise accuracy claim.",
+  "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+  "tolerance_seconds": 10
+}
