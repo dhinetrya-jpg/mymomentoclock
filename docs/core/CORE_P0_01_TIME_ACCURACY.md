@@ -1,3 +1,5 @@
+> SUPERSEDED — HISTORICAL, NOT ACCEPTANCE EVIDENCE (2026-11-07). The claims and figures in the preserved report below are not current verified findings. Consult [FINAL_ACCURACY_REPORT](CORE_P0_01_FINAL_ACCURACY_REPORT.md) and [COMPLETION_MATRIX](CORE_P0_01_COMPLETION_MATRIX.md). No historical GO/complete/precision claim authorizes production or CORE-P0-02.
+
 # CORE-P0-01 Temporal Reference & Time Scale Accuracy Report
 
 **Audit Identifier:** CORE-P0-01-ASTRONOMICAL-ACCURACY-REPAIR  
