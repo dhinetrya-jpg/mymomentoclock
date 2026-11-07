@@ -1,5 +1,5 @@
 /**
- * MyMomentOclock Authoritative Astronomical Panchang Engine
+ * MyMomentOclock analytical Panchang preview (not independently validated)
  * Computes:
  * - Tithi (30 lunar days, Shukla/Krishna pakshas, exact degrees and boundaries)
  * - Nakshatra & Pada (27 lunar mansions and 108 padas)
@@ -9,6 +9,8 @@
  * - Vedic Muhurtas: Rahu Kaal, Yamaganda, Gulika Kaal, Abhijit Muhurta, Brahma Muhurta
  * - Numerical boundary solver (Bisection / Bracketing root-finder within 1-minute convergence)
  */
+
+import {CalculationInputError, validGregorianDate} from './calculationValidation';
 
 import {
   calculateJulianDay,
@@ -20,6 +22,10 @@ import {
 // --- Types & Interfaces ---
 
 export interface SolarEventResult {
+  calculationMode: 'ANALYTICAL_APPROXIMATION';
+  independentValidationStatus: 'NOT_PERFORMED';
+  source: 'LEGACY_ANALYTICAL_PREVIEW';
+  eventDatePolicy: 'UTC_ISO_WITH_DATE';
   date: string;
   latitude: number;
   longitude: number;
@@ -39,6 +45,8 @@ export interface SolarEventResult {
 }
 
 export interface DayMuhurtas {
+  conventionVersion: 'legacy-day-eighths-fixed-brahma-v1';
+  traditionalRuleApproval: 'UNAPPROVED';
   date: string;
   weekday: number; // 0=Sunday, 1=Monday, ..., 6=Saturday
   weekdayName: string;
@@ -76,6 +84,7 @@ export interface YogaInfo {
   elapsedDegrees: number;
   remainingDegrees: number;
   nature: 'Auspicious' | 'Inauspicious' | 'Neutral';
+  interpretationStatus:'TRADITIONAL_UNAPPROVED';
 }
 
 export interface KaranaInfo {
@@ -85,6 +94,7 @@ export interface KaranaInfo {
   elapsedDegrees: number;
   remainingDegrees: number;
   nature: 'Auspicious' | 'Inauspicious' | 'Neutral';
+  interpretationStatus:'TRADITIONAL_UNAPPROVED';
 }
 
 export interface TransitionBoundaryResult {
@@ -98,9 +108,17 @@ export interface TransitionBoundaryResult {
   converged: boolean;
   iterations: number;
   angularResidualDegrees: number;
+  numericalToleranceSeconds:number;
+  bracketWidthSeconds:number;
+  astronomicalAccuracySeconds:null;
 }
 
 export interface PanchangReport {
+  calculationMode: 'ANALYTICAL_APPROXIMATION';
+  independentValidationStatus: 'NOT_PERFORMED';
+  timingGuidanceAuthorized: false;
+  supportedPrecision: 'UNVERIFIED';
+  limitations: string[];
   timestampUTC: string;
   julianDayUT: number;
   ayanamsaType: AyanamsaType;
@@ -157,10 +175,11 @@ export const FIXED_KARANAS = [
 
 export const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-// --- High-Precision Solar & Lunar Analytical Model ---
+// --- Legacy-named analytical solar/lunar preview; no independent accuracy claim ---
 
 /**
- * Computes apparent solar longitude, right ascension, declination, and equation of time
+ * @deprecated Legacy analytical preview; the historical name is not a precision claim.
+ * Computes approximate solar longitude, right ascension, declination, and equation of time
  */
 export function calculateHighPrecisionSun(jd: number): {
   apparentLongitude: number;
@@ -169,6 +188,7 @@ export function calculateHighPrecisionSun(jd: number): {
   declination: number;
   equationOfTimeMinutes: number;
 } {
+  if(!Number.isFinite(jd))throw new CalculationInputError('INVALID_JULIAN_DAY','Supply a finite Julian Day.');
   const d = jd - 2451545.0;
   const t = d / 36525.0;
 
@@ -231,11 +251,13 @@ export function calculateHighPrecisionSun(jd: number): {
 }
 
 /**
- * Computes geocentric tropical lunar longitude with major periodic terms (Meeus Ch. 47)
+ * @deprecated Legacy analytical preview; native Swiss is the authority.
+ * Computes approximate geocentric tropical lunar longitude with major periodic terms (Meeus Ch. 47)
  */
 export function calculateHighPrecisionMoon(jd: number): {
   tropicalLongitude: number;
 } {
+  if(!Number.isFinite(jd))throw new CalculationInputError('INVALID_JULIAN_DAY','Supply a finite Julian Day.');
   const d = jd - 2451545.0;
   const t = d / 36525.0;
 
@@ -261,7 +283,7 @@ export function calculateHighPrecisionMoon(jd: number): {
   const fRad = f * toRad;
 
   // Major periodic terms in lunar longitude (degrees)
-  let deltaL =
+  const deltaL =
     6.288774 * Math.sin(mpRad) +
     1.274027 * Math.sin(2 * dRad - mpRad) +
     0.658314 * Math.sin(2 * dRad) +
@@ -293,7 +315,9 @@ export function calculateSolarEvents(
   longitude: number,
   timezoneOffset: number
 ): SolarEventResult {
-  const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const dateStr = `${String(year).padStart(4,'0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  if(!validGregorianDate(dateStr)||![year,month,day].every(Number.isInteger))throw new CalculationInputError('INVALID_DATE','Supply an existing Gregorian date.');
+  if(![latitude,longitude,timezoneOffset].every(Number.isFinite)||Math.abs(latitude)>90||Math.abs(longitude)>180||timezoneOffset< -12||timezoneOffset>14)throw new CalculationInputError('INVALID_LOCATION','Supply finite coordinates and an explicit UTC offset.');
   // Approximate noon JD for the location
   const approxNoonJD = calculateJulianDay(year, month, day, 12, 0, 0) - timezoneOffset / 24;
 
@@ -327,23 +351,13 @@ export function calculateSolarEvents(
   const sunsetUTCHours = solarNoonUTCHours + h0Deg / 15.0;
   const dayLengthHours = (2 * h0Deg) / 15.0;
 
-  // Helper to format fractional UTC hours into ISO UTC and Local strings
+  // UTC hours are relative to the supplied Gregorian date. Preserve day rollover and
+  // carry rounded seconds through Date arithmetic instead of ever emitting :60.
+  const midnight=new Date(0);midnight.setUTCFullYear(year,month-1,day);midnight.setUTCHours(0,0,0,0);
   const formatHourToTimes = (utcHours: number) => {
-    let normalizedUTC = ((utcHours % 24) + 24) % 24;
-    const hUTC = Math.floor(normalizedUTC);
-    const mUTC = Math.floor((normalizedUTC - hUTC) * 60);
-    const sUTC = Math.round(((normalizedUTC - hUTC) * 60 - mUTC) * 60);
-
-    const localHours = normalizedUTC + timezoneOffset;
-    let normalizedLocal = ((localHours % 24) + 24) % 24;
-    const hLoc = Math.floor(normalizedLocal);
-    const mLoc = Math.floor((normalizedLocal - hLoc) * 60);
-    const sLoc = Math.round(((normalizedLocal - hLoc) * 60 - mLoc) * 60);
-
-    return {
-      utc: `${String(hUTC).padStart(2, '0')}:${String(mUTC).padStart(2, '0')}:${String(sUTC).padStart(2, '0')}Z`,
-      local: `${String(hLoc).padStart(2, '0')}:${String(mLoc).padStart(2, '0')}:${String(sLoc).padStart(2, '0')}`,
-    };
+    const utc=new Date(midnight.getTime()+Math.round(utcHours*3600)*1000);
+    const local=new Date(utc.getTime()+Math.round(timezoneOffset*3600)*1000);
+    return {utc:utc.toISOString(),local:local.toISOString().slice(11,19)};
   };
 
   const noonTimes = formatHourToTimes(solarNoonUTCHours);
@@ -351,16 +365,17 @@ export function calculateSolarEvents(
   const setTimes = formatHourToTimes(sunsetUTCHours);
 
   return {
+    calculationMode:'ANALYTICAL_APPROXIMATION',independentValidationStatus:'NOT_PERFORMED',source:'LEGACY_ANALYTICAL_PREVIEW',eventDatePolicy:'UTC_ISO_WITH_DATE',
     date: dateStr,
     latitude,
     longitude,
     timezoneOffset,
     julianDayNoonUT: Number(approxNoonJD.toFixed(6)),
     solarNoonUTC: noonTimes.utc,
-    sunriseUTC: isPolarNight ? 'POLAR_NIGHT' : riseTimes.utc,
-    sunsetUTC: isPolarDay ? 'POLAR_DAY' : setTimes.utc,
-    sunriseLocal: isPolarNight ? 'POLAR_NIGHT' : riseTimes.local,
-    sunsetLocal: isPolarDay ? 'POLAR_DAY' : setTimes.local,
+    sunriseUTC: isPolarNight ? 'POLAR_NIGHT' : isPolarDay ? 'POLAR_DAY' : riseTimes.utc,
+    sunsetUTC: isPolarDay ? 'POLAR_DAY' : isPolarNight ? 'POLAR_NIGHT' : setTimes.utc,
+    sunriseLocal: isPolarNight ? 'POLAR_NIGHT' : isPolarDay ? 'POLAR_DAY' : riseTimes.local,
+    sunsetLocal: isPolarDay ? 'POLAR_DAY' : isPolarNight ? 'POLAR_NIGHT' : setTimes.local,
     dayLengthHours: Number(dayLengthHours.toFixed(4)),
     isPolarDay,
     isPolarNight,
@@ -392,6 +407,7 @@ export function calculateDayMuhurtas(
 
   if (solar.isPolarDay || solar.isPolarNight) {
     return {
+      conventionVersion:'legacy-day-eighths-fixed-brahma-v1',traditionalRuleApproval:'UNAPPROVED',
       date: solar.date,
       weekday,
       weekdayName,
@@ -412,11 +428,9 @@ export function calculateDayMuhurtas(
   };
 
   const formatMinutesToLocal = (minutes: number) => {
-    let mNorm = ((minutes % 1440) + 1440) % 1440;
-    const h = Math.floor(mNorm / 60);
-    const m = Math.floor(mNorm % 60);
-    const s = Math.round((mNorm % 1) * 60);
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    const seconds=((Math.round(minutes*60)%86400)+86400)%86400;
+    const h=Math.floor(seconds/3600),m=Math.floor(seconds/60)%60,s=seconds%60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   };
 
   const riseMin = parseLocalMinutes(solar.sunriseLocal);
@@ -455,14 +469,15 @@ export function calculateDayMuhurtas(
   const isAbhijitAuspicious = weekday !== 3;
   const abhijitCaveat =
     weekday === 3
-      ? 'Abhijit Muhurta is traditionally avoided on Wednesdays due to Rahu Kaal proximity.'
-      : 'Generally highly auspicious for major undertakings, journeys, and ventures.';
+      ? 'Legacy Wednesday exclusion; traditional source/interpretation requires owner review. Not verified guidance.'
+      : 'Legacy conventional interval only; no empirical predictive validity or approved activity rule.';
 
   // Brahma Muhurta: 2 Muhurtas (96 min to 48 min) before sunrise (48 minutes duration)
   const brahmaStart = riseMin - 96;
   const brahmaEnd = riseMin - 48;
 
   return {
+    conventionVersion:'legacy-day-eighths-fixed-brahma-v1',traditionalRuleApproval:'UNAPPROVED',
     date: solar.date,
     weekday,
     weekdayName,
@@ -503,12 +518,9 @@ export function calculateDayMuhurtas(
  * Convention: Tithi is derived from the difference (Moon - Sun) mod 360 divided by 12°
  */
 export function calculateTithi(moonLongitude: number, sunLongitude: number): TithiInfo {
+  if(![moonLongitude,sunLongitude].every(Number.isFinite))throw new CalculationInputError('INVALID_LONGITUDE','Supply finite angular values.');
   const diffAngle = ((moonLongitude - sunLongitude) % 360 + 360) % 360;
-  let tithiIndex = Math.floor(diffAngle / 12.0); // 0 to 29
-  // At exact 180° opposition, it is the exact culmination instant of Shukla Purnima (index 14)
-  if (Math.abs(diffAngle - 180.0) < 1e-6) {
-    tithiIndex = 14;
-  }
+  const tithiIndex = Math.floor(diffAngle / 12.0); // Half-open intervals: exact180° starts Krishna Pratipada.
   const paksha: 'Shukla' | 'Krishna' = tithiIndex < 15 ? 'Shukla' : 'Krishna';
   const numberInPaksha = (tithiIndex % 15) + 1; // 1 to 15
 
@@ -542,6 +554,7 @@ export function calculateTithi(moonLongitude: number, sunLongitude: number): Tit
  * Convention: (Sun + Moon) mod 360 divided by (360 / 27) = 13°20'
  */
 export function calculateYoga(sunLongitudeSidereal: number, moonLongitudeSidereal: number): YogaInfo {
+  if(![sunLongitudeSidereal,moonLongitudeSidereal].every(Number.isFinite))throw new CalculationInputError('INVALID_LONGITUDE','Supply finite angular values.');
   const sumAngle = ((sunLongitudeSidereal + moonLongitudeSidereal) % 360 + 360) % 360;
   const yogaStep = 360.0 / 27.0; // 13.333333°
   const yogaIndex = Math.floor(sumAngle / yogaStep); // 0 to 26
@@ -562,7 +575,7 @@ export function calculateYoga(sunLongitudeSidereal: number, moonLongitudeSiderea
     name,
     elapsedDegrees: Number(elapsedDegrees.toFixed(4)),
     remainingDegrees: Number(remainingDegrees.toFixed(4)),
-    nature,
+    nature,interpretationStatus:'TRADITIONAL_UNAPPROVED',
   };
 }
 
@@ -571,6 +584,7 @@ export function calculateYoga(sunLongitudeSidereal: number, moonLongitudeSiderea
  * Convention: Half-Tithi of 6°
  */
 export function calculateKarana(moonLongitude: number, sunLongitude: number): KaranaInfo {
+  if(![moonLongitude,sunLongitude].every(Number.isFinite))throw new CalculationInputError('INVALID_LONGITUDE','Supply finite angular values.');
   const diffAngle = ((moonLongitude - sunLongitude) % 360 + 360) % 360;
   const karanaIndex = Math.floor(diffAngle / 6.0); // 0 to 59
 
@@ -612,103 +626,58 @@ export function calculateKarana(moonLongitude: number, sunLongitude: number): Ka
     type,
     elapsedDegrees: Number(elapsedDegrees.toFixed(4)),
     remainingDegrees: Number(remainingDegrees.toFixed(4)),
-    nature,
+    nature,interpretationStatus:'TRADITIONAL_UNAPPROVED',
   };
 }
 
-// --- High-Precision Numerical Boundary Transition Solver ---
+// --- Bounded numerical solver; solver tolerance is not astronomical accuracy ---
 
 /**
- * High-precision root solver using bracket bisection to find the exact instant
- * when an angular threshold (e.g. Tithi boundary, Nakshatra boundary) is crossed.
- * Guarantees convergence within 60 seconds of time (< 1e-4 days).
+ * Numerical crossing solver for the supplied angular function. Samples at most
+ * seven days in half-hour steps, unwraps each short arc, and bisects an actual
+ * crossing. Numerical tolerance never establishes model accuracy. A missing or
+ * discontinuous bracket throws rather than returning an invented timestamp.
  */
 export function findTransitionInstant(
   startJD: number,
   targetAngleDegrees: number,
   angleFunction: (jd: number) => number,
   maxHoursSearch: number = 36.0,
-  convergenceToleranceDays: number = 1e-5 // ~0.86 seconds
-): {
-  transitionJD: number;
-  converged: boolean;
-  iterations: number;
-  residualDegrees: number;
-} {
-  // Coarse step of 0.5 hours to bracket the root
-  const stepDays = 0.5 / 24.0;
-  const maxDays = maxHoursSearch / 24.0;
-
-  let tA = startJD;
-  let tB = startJD + stepDays;
-  let bracketFound = false;
-
-  const evalResidual = (jd: number) => {
-    const currentAngle = angleFunction(jd);
-    // Angular difference to target, normalized to [-180, 180]
-    let diff = (currentAngle - targetAngleDegrees) % 360;
-    if (diff > 180) diff -= 360;
-    if (diff < -180) diff += 360;
-    return diff;
-  };
-
-  let resA = evalResidual(tA);
-
-  while (tB <= startJD + maxDays) {
-    const resB = evalResidual(tB);
-    // If sign change occurred, root is bracketed
-    if (resA * resB <= 0 && Math.abs(resA - resB) < 180) {
-      bracketFound = true;
-      break;
+  convergenceToleranceDays: number = 1e-5
+): {transitionJD:number;converged:boolean;iterations:number;residualDegrees:number;bracketWidthDays:number} {
+  if(!Number.isFinite(startJD)||!Number.isFinite(targetAngleDegrees)||!Number.isFinite(maxHoursSearch)||maxHoursSearch<=0||maxHoursSearch>168||!Number.isFinite(convergenceToleranceDays)||convergenceToleranceDays<1e-9||convergenceToleranceDays>1/24)throw new CalculationInputError('INVALID_TRANSITION_OPTIONS','Supply bounded finite transition options.');
+  const normalize=(v:number)=>((v%360)+360)%360;
+  const sample=(jd:number)=>{const v=angleFunction(jd);if(!Number.isFinite(v))throw new CalculationInputError('INVALID_ANGULAR_SAMPLE','The angular model returned an invalid value.');return normalize(v);};
+  const delta=(a:number,b:number)=>((b-a+540)%360)-180;
+  const target=normalize(targetAngleDegrees),step=0.5/24,end=startJD+maxHoursSearch/24;
+  let a=startJD,rawA=sample(a),unwrappedA=rawA;
+  const initialResidual=delta(target,rawA);
+  if(Math.abs(initialResidual)<1e-12)return {transitionJD:startJD,converged:true,iterations:0,residualDegrees:initialResidual,bracketWidthDays:0};
+  while(a<end){
+    const b=Math.min(a+step,end),rawB=sample(b),arc=delta(rawA,rawB);
+    if(Math.abs(arc)>=90)throw new CalculationInputError('UNRESOLVED_ANGULAR_DISCONTINUITY','The angular function changes too quickly for the bounded search grid.');
+    const unwrappedB=unwrappedA+arc;
+    const min=Math.min(unwrappedA,unwrappedB),max=Math.max(unwrappedA,unwrappedB);
+    const level=target+360*Math.ceil((min-target)/360);
+    if(arc!==0&&level>=min&&level<=max){
+      let low=a,high=b,resLow=unwrappedA-level,iterations=0;
+      while(high-low>convergenceToleranceDays&&iterations<64){
+        const mid=(low+high)/2,rawMid=sample(mid),resMid=unwrappedA+delta(rawA,rawMid)-level;
+        iterations++;
+        if(resMid===0){low=mid;high=mid;break;}
+        if(resLow*resMid<=0)high=mid;else{low=mid;resLow=resMid;}
+      }
+      if(high-low>convergenceToleranceDays)throw new CalculationInputError('TRANSITION_DID_NOT_CONVERGE','The numerical iteration limit was reached.');
+      const transitionJD=(low+high)/2;
+      return {transitionJD,converged:true,iterations,residualDegrees:delta(target,sample(transitionJD)),bracketWidthDays:high-low};
     }
-    tA = tB;
-    resA = resB;
-    tB += stepDays;
+    a=b;rawA=rawB;unwrappedA=unwrappedB;
   }
-
-  if (!bracketFound) {
-    // Return best estimate at end of interval
-    return {
-      transitionJD: tB,
-      converged: false,
-      iterations: Math.round(maxDays / stepDays),
-      residualDegrees: Number(evalResidual(tB).toFixed(6)),
-    };
-  }
-
-  // Bisection refinement
-  let low = tA;
-  let high = tB;
-  let mid = (low + high) / 2.0;
-  let iter = 0;
-  const maxIter = 50;
-
-  while (high - low > convergenceToleranceDays && iter < maxIter) {
-    iter++;
-    mid = (low + high) / 2.0;
-    const resMid = evalResidual(mid);
-
-    if (Math.abs(resMid) < 1e-6) break;
-
-    const resLow = evalResidual(low);
-    if (resLow * resMid <= 0) {
-      high = mid;
-    } else {
-      low = mid;
-    }
-  }
-
-  const finalResidual = evalResidual(mid);
-  return {
-    transitionJD: Number(mid.toFixed(7)),
-    converged: Math.abs(finalResidual) < 0.05,
-    iterations: iter,
-    residualDegrees: Number(finalResidual.toFixed(6)),
-  };
+  throw new CalculationInputError('TRANSITION_NOT_BRACKETED','No transition was bracketed within the bounded search interval.');
 }
 
 /**
- * Calculates complete authoritative Panchang for a specific instant and location
+ * Calculates an unvalidated analytical Panchang preview for a specific instant and location
  */
 export function calculateFullPanchang(
   year: number,
@@ -723,7 +692,8 @@ export function calculateFullPanchang(
   ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI,
   solveTransitions: boolean = true
 ): PanchangReport {
-  // Universal Time Julian Day
+  if(![hour,minute,second].every(Number.isInteger)||hour<0||hour>23||minute<0||minute>59||second<0||second>59)throw new CalculationInputError('INVALID_TIME','Supply a valid civil clock time.');
+  // Nominal UTC JD for this analytical preview, not independently established UT1.
   const jdLocal = calculateJulianDay(year, month, day, hour, minute, second);
   const jdUT = jdLocal - timezoneOffset / 24.0;
 
@@ -780,14 +750,15 @@ export function calculateFullPanchang(
     nextTithiTransition = {
       transitionName: 'Tithi Transition',
       currentValue: tithi.fullName,
-      nextValue: TITHI_NAMES[tithi.numberInPaksha % 15],
+      nextValue: calculateTithi((targetTithiAngle+1e-8)%360,0).fullName,
       targetAngleDegrees: targetTithiAngle % 360,
-      transitionInstantUTC: new Date(Date.now() + tithiSecondsDiff * 1000).toISOString(),
+      transitionInstantUTC: new Date((tithiSol.transitionJD-2440587.5)*86400000).toISOString(),
       transitionJulianDayUT: tithiSol.transitionJD,
       secondsFromSearchEpoch: Math.round(tithiSecondsDiff),
       converged: tithiSol.converged,
       iterations: tithiSol.iterations,
       angularResidualDegrees: tithiSol.residualDegrees,
+      numericalToleranceSeconds:0.864,bracketWidthSeconds:tithiSol.bracketWidthDays*86400,astronomicalAccuracySeconds:null,
     };
 
     // Next Nakshatra boundary is at next multiple of 13°20'
@@ -805,18 +776,21 @@ export function calculateFullPanchang(
       currentValue: nakName,
       nextValue: NAKSHATRAS[(nakIndex + 1) % 27],
       targetAngleDegrees: targetNakAngle % 360,
-      transitionInstantUTC: new Date(Date.now() + nakSecondsDiff * 1000).toISOString(),
+      transitionInstantUTC: new Date((nakSol.transitionJD-2440587.5)*86400000).toISOString(),
       transitionJulianDayUT: nakSol.transitionJD,
       secondsFromSearchEpoch: Math.round(nakSecondsDiff),
       converged: nakSol.converged,
       iterations: nakSol.iterations,
       angularResidualDegrees: nakSol.residualDegrees,
+      numericalToleranceSeconds:0.864,bracketWidthSeconds:nakSol.bracketWidthDays*86400,astronomicalAccuracySeconds:null,
     };
   }
 
-  const isoUTC = new Date(Date.UTC(year, month - 1, day, hour, minute, second) - timezoneOffset * 3600000).toISOString();
+  const civil=new Date(0);civil.setUTCFullYear(year,month-1,day);civil.setUTCHours(hour,minute,second,0);
+  const isoUTC = new Date(civil.getTime() - timezoneOffset * 3600000).toISOString();
 
   return {
+    calculationMode:'ANALYTICAL_APPROXIMATION',independentValidationStatus:'NOT_PERFORMED',timingGuidanceAuthorized:false,supportedPrecision:'UNVERIFIED',limitations:['Legacy analytical coordinates, not the native Swiss authority.','Nominal UTC is used as UT1 without DUT1; no independent astronomical accuracy has been established.','Solver convergence bounds numerical search only; traditional interval interpretations remain unapproved.'],
     timestampUTC: isoUTC,
     julianDayUT: Number(jdUT.toFixed(6)),
     ayanamsaType,

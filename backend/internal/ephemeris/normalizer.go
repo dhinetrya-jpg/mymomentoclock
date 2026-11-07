@@ -46,7 +46,7 @@ type NormalizedPayload struct {
 func CalculateJulianDay(t time.Time) float64 {
 	t = t.UTC()
 	year, month, day := t.Date()
-	hour := float64(t.Hour()) + float64(t.Minute())/60.0 + float64(t.Second())/3600.0
+	hour := float64(t.Hour()) + float64(t.Minute())/60.0 + (float64(t.Second())+float64(t.Nanosecond())/1e9)/3600.0
 	m := int(month)
 	if m <= 2 {
 		year--
@@ -96,7 +96,7 @@ func ExecuteNormalization(req NormalizationRequest, tzLocation string) ([]byte, 
 	}
 	payload := NormalizedPayload{
 		BirthTimeCertainty: certainty, TimezoneMode: zoneMode, IndependentValidationStatus: "NOT_PERFORMED",
-		Limitations:     []string{"UTC is supplied as UT without a UT1 correction; independent numerical accuracy validation has not been performed.", "Native normalization supports sun, moon, mars and saturn only; returned flags disclose actual ephemeris mode."},
+		Limitations:     []string{"Legacy UTC_AS_UT preview is not the canonical time-scale-aware astronomy provider; independent numerical accuracy validation has not been performed.", "Legacy TRUE_LAHIRI input is a deprecated alias; actual native convention is SWISS_SE_SIDM_LAHIRI, not True Citra.", "Native normalization supports sun, moon, mars and saturn only; returned flags disclose actual ephemeris mode."},
 		JulianDayUtc:    julianDay,
 		NormalizedTime:  utcTime,
 		SystemTimestamp: time.Now().UnixNano(),

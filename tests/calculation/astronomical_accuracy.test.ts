@@ -1,3 +1,10 @@
+/**
+ * QUARANTINED LEGACY REGRESSION ONLY.
+ * Existing declared-source fixtures have not been authenticated as original
+ * external responses. Metadata, source-looking headers and local hashes do not
+ * establish independent accuracy. These assertions preserve historical behavior;
+ * they do not pass a scientific acceptance gate or justify wider tolerances.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -26,7 +33,7 @@ const fixturesData = JSON.parse(
   fs.readFileSync(new URL('./astronomical_reference_fixtures.json', import.meta.url), 'utf8')
 );
 
-test('A03 / AUD-01: Machine-readable reference fixtures loaded with full attributable metadata and scientific tolerances', () => {
+test('Legacy regression (not independent acceptance): A03 / AUD-01: Machine-readable reference fixtures retains legacy metadata (not source authenticity or accepted tolerances)', () => {
   assert.ok(fixturesData.fixtures.length >= 10);
   assert.ok(fixturesData.provenance.sources.length >= 5);
   assert.equal(fixturesData.version, '1.1.0');
@@ -61,7 +68,7 @@ test('A03 / AUD-01: Machine-readable reference fixtures loaded with full attribu
   });
 });
 
-test('A05 / AUD-04: J2000.0 time-scale separation between UT1/UTC and TT/TDB rigorously validated', () => {
+test('Legacy regression (not independent acceptance): A05 / AUD-04: J2000.0 time-scale separation between UT1/UTC and TT/TDB rigorously validated', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'J2000_FUNDAMENTAL_EPOCH');
   assert.ok(f);
 
@@ -94,7 +101,7 @@ test('A05 / AUD-04: J2000.0 time-scale separation between UT1/UTC and TT/TDB rig
   );
 });
 
-test('A05: Delta-T calculation agrees with IERS historical/modern boundaries within tolerance', () => {
+test('Legacy regression (not independent acceptance): A05: Delta-T calculation preserves legacy Delta-T model comparison (not observed IERS validation)', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'J2000_FUNDAMENTAL_EPOCH');
   const deltaT2000 = calculateDeltaT(2000);
   // IERS observed value for 2000 is ~63.83s
@@ -107,10 +114,10 @@ test('A05: Delta-T calculation agrees with IERS historical/modern boundaries wit
   assert.ok(deltaT2026 > 70.0 && deltaT2026 < 80.0, `Delta-T 2026 ${deltaT2026}s outside expected range [70, 80]`);
 });
 
-test('A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris within 1 arcsecond', () => {
+test('Legacy regression (not independent acceptance): A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris within 1 arcsecond', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'J2000_FUNDAMENTAL_EPOCH');
   const ayanamsaJ2000 = getAyanamsa(2451545.0, AyanamsaType.TRUE_LAHIRI);
-  // Official Lahiri Chitrapaksha at J2000.0 = 23°51'25.53" = 23.857092°
+  // Declared legacy Lahiri Chitrapaksha at J2000.0 = 23°51'25.53" = 23.857092°
   const diffDeg = Math.abs(ayanamsaJ2000 - f.expected.ayanamsaLahiri);
   assert.ok(
     diffDeg < fixturesData.tolerances.ayanamsa_lahiri_deg,
@@ -121,7 +128,7 @@ test('A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris 
   assert.ok(diffArcSec < 1.8, `Ayanamsa error ${diffArcSec}" exceeds 1.8 arcseconds`);
 });
 
-test('A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit offsets', () => {
+test('Legacy regression (not independent acceptance): A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit offsets', () => {
   const jd = 2451545.0;
   const lahiri = getAyanamsa(jd, AyanamsaType.TRUE_LAHIRI);
   const kp = getAyanamsa(jd, AyanamsaType.KP);
@@ -135,7 +142,7 @@ test('A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit 
   assert.ok(Math.abs((lahiri - raman) - 1.45) < 0.01);
 });
 
-test('A04: Circular angular difference handles 0°/360° wraparound accurately', () => {
+test('Legacy regression (not independent acceptance): A04: Circular angular difference handles 0°/360° wraparound accurately', () => {
   // Near Gandanta / Aries-Pisces boundary (accounting for IEEE 754 precision)
   assert.ok(Math.abs(circularAngularDifference(359.99, 0.01) - 0.02) < 1e-9);
   assert.ok(Math.abs(circularAngularDifference(0.01, 359.99) - 0.02) < 1e-9);
@@ -148,7 +155,7 @@ test('A04: Circular angular difference handles 0°/360° wraparound accurately',
   assert.equal(circularAngularDifference(-10, 10), 20);
 });
 
-test('A08: Boundary proximity check identifies classification uncertainty near step thresholds', () => {
+test('Legacy regression (not independent acceptance): A08: Boundary proximity check identifies classification uncertainty near step thresholds', () => {
   // Sign boundary at 30.0°: 29.98° is within 0.05° of Aries/Taurus boundary
   const nearSign = checkBoundaryProximity(29.98, 30.0, 0.05);
   assert.equal(nearSign.isNearBoundary, true);
@@ -164,7 +171,7 @@ test('A08: Boundary proximity check identifies classification uncertainty near s
   assert.equal(nearNakshatra.isNearBoundary, true);
 });
 
-test('A05: India half-hour UTC offset (+5:30) and date rollover verified', () => {
+test('Legacy regression (not independent acceptance): A05: India half-hour UTC offset (+5:30) and date rollover verified', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'INDIA_KOLKATA_HISTORICAL_1989');
   assert.ok(f);
   // 1989-11-23 04:30:00 IST -> UTC is 1989-11-22 23:00:00
@@ -183,7 +190,7 @@ test('A05: India half-hour UTC offset (+5:30) and date rollover verified', () =>
   assert.equal(chart.systemMetadata.julianDayUT, f.expected.julianDayUT);
 });
 
-test('A05 / AUD-03: US/Canada DST transitions, ambiguous fall folds, and spring gaps validated', () => {
+test('Legacy regression (not independent acceptance): A05 / AUD-03: US/Canada DST transitions, ambiguous fall folds, and spring gaps validated', () => {
   // Winter EST (-5.0)
   const winter = fixturesData.fixtures.find((x: any) => x.id === 'US_NEW_YORK_WINTER_EST');
   const jdWinter = calculateJulianDay(2026, 1, 15, 12, 0, 0) - (-5.0) / 24;
@@ -229,7 +236,7 @@ test('A05 / AUD-03: US/Canada DST transitions, ambiguous fall folds, and spring 
   assert.ok(Math.abs((jdEST - jdEDT) - 1.0 / 24.0) < 1e-9);
 });
 
-test('A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day', () => {
+test('Legacy regression (not independent acceptance): A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'INTERNATIONAL_DATE_LINE_FIJI');
   assert.ok(f);
   // 2026-01-01 02:00:00 with offset +12.0 -> previous day UTC: 2025-12-31 14:00:00
@@ -237,7 +244,7 @@ test('A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day
   assert.ok(Math.abs(jdUT - f.expected.julianDayUT) < 1e-5);
 });
 
-test('A05: Leap year rules and centurial boundaries strictly enforced', () => {
+test('Legacy regression (not independent acceptance): A05: Leap year rules and centurial boundaries strictly enforced', () => {
   // Centurial leap year 2000-02-29 accepted
   assert.doesNotThrow(() => validateBirthInput({
     birthDate: '2000-02-29',
@@ -266,13 +273,13 @@ test('A05: Leap year rules and centurial boundaries strictly enforced', () => {
   }), CalculationInputError);
 });
 
-test('A05: Midnight 00:00:00 and noon 12:00:00 differ by exactly 0.5 days with no aliasing', () => {
+test('Legacy regression (not independent acceptance): A05: Midnight 00:00:00 and noon 12:00:00 differ by exactly 0.5 days with no aliasing', () => {
   const midnight = calculateJulianDay(2000, 1, 1, 0, 0, 0);
   const noon = calculateJulianDay(2000, 1, 1, 12, 0, 0);
   assert.equal(noon - midnight, 0.5);
 });
 
-test('A06 / AUD-05: Numerical verification of Ascendant, Whole Sign Houses, and Nakshatra/Pada boundaries', () => {
+test('Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Ascendant, Whole Sign Houses, and Nakshatra/Pada boundaries', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'INDIA_KOLKATA_HISTORICAL_1989');
   assert.ok(f);
 
@@ -332,7 +339,7 @@ test('A06 / AUD-05: Numerical verification of Ascendant, Whole Sign Houses, and 
   });
 });
 
-test('A06 / AUD-05: Numerical verification of Divisional Charts D-2 (Hora), D-9 (Navamsha), and D-60 (Shashtyamsa)', () => {
+test('Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Divisional Charts D-2 (Hora), D-9 (Navamsha), and D-60 (Shashtyamsa)', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'INDIA_KOLKATA_HISTORICAL_1989');
   assert.ok(f);
 
@@ -377,13 +384,13 @@ test('A06 / AUD-05: Numerical verification of Divisional Charts D-2 (Hora), D-9 
   assert.equal(moonD60.nature, f.expected.moonD60ShashtyamsaNature);
 });
 
-test('A04 / AUD-06: Quantitative error evaluation of Node analytical approximation against JPL Horizons', () => {
+test('Legacy regression (not independent acceptance): A04 / AUD-06: Quantitative error evaluation of Node analytical approximation against quarantined claimed-JPL values', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'J2000_FUNDAMENTAL_EPOCH');
   assert.ok(f);
 
   const chart = calculateFullChart('2000-01-01', '12:00:00', 0, 0, 'Equator', 0);
 
-  // Ground truth JPL Horizons apparent geocentric sidereal Lahiri longitudes:
+  // Unverified legacy values JPL Horizons apparent geocentric sidereal Lahiri longitudes:
   const jplReferences: Record<string, number> = {
     Sun: f.expected.sunSiderealLahiri, // 256.6035°
     Moon: f.expected.moonSiderealLahiri, // 194.4669°
@@ -434,13 +441,13 @@ test('A04 / AUD-06: Quantitative error evaluation of Node analytical approximati
   const medianError = (diffs[1] + diffs[2]) / 2;
   const maxError = diffs[diffs.length - 1];
 
-  // Mean error ~9.12°, Median error ~5.30°, Max error ~25.80°
+  // These are historical residual snapshots against quarantined values, not measured independent error statistics.
   assert.ok(meanError > 5.0 && meanError < 15.0, `Mean error ${meanError}° outside expected range`);
   assert.ok(medianError > 3.0 && medianError < 10.0, `Median error ${medianError}° outside expected range`);
   assert.ok(maxError > 20.0 && maxError < 30.0, `Max error ${maxError}° outside expected range`);
 });
 
-test('A07 / AUD-07: Implemented Panchang elements validated and unverified solar algorithms safely disabled', () => {
+test('Legacy regression (not independent acceptance): A07 / AUD-07: Implemented Panchang elements validated and unverified solar algorithms safely disabled', () => {
   const chart = calculateFullChart('2000-01-01', '12:00:00', 22.57, 88.36, 'Kolkata', 5.5);
 
   // 1. Implemented Panchang elements: Nakshatra (0-26) and Pada (1-4)
@@ -464,7 +471,7 @@ test('A07 / AUD-07: Implemented Panchang elements validated and unverified solar
   assert.equal(window.scope_metadata.natal_chart_used, false);
 });
 
-test('A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs, and infinities', () => {
+test('Legacy regression (not independent acceptance): A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs, and infinities', () => {
   for (const lat of [90.001, -90.001, NaN, Infinity, -Infinity]) {
     assert.throws(
       () => validateBirthInput({ birthDate: '2000-01-01', birthTime: '12:00:00', latitude: lat, longitude: 0, timezoneOffset: 0 }),
@@ -479,7 +486,7 @@ test('A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs,
   }
 });
 
-test('A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION without false Swiss claims', () => {
+test('Legacy regression (not independent acceptance): A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION without false Swiss claims', () => {
   const chart = calculateFullChart('2000-01-01', '12:00:00', 0, 0, '', 0);
   assert.equal(chart.systemMetadata.calculationMode, 'ANALYTICAL_APPROXIMATION');
   assert.equal(chart.systemMetadata.independentValidationStatus, 'NOT_PERFORMED');
@@ -492,7 +499,7 @@ test('A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION withou
   });
 });
 
-test('A02 / AUD-02 / AUD-09: Native Swiss Ephemeris schema contract, mode disclosure, and environmental limitations', () => {
+test('Legacy regression (not independent acceptance): A02 / AUD-02 / AUD-09: Native Swiss Ephemeris schema contract, mode disclosure, and environmental limitations', () => {
   const f = fixturesData.fixtures.find((x: any) => x.id === 'EPHEMERIS_MODE_DISCLOSURE_AND_REFUSAL');
   assert.ok(f);
 
@@ -510,7 +517,7 @@ test('A02 / AUD-02 / AUD-09: Native Swiss Ephemeris schema contract, mode disclo
   assert.ok(normalizerSource.includes('MOSHIER'));
 });
 
-test('A12: Unimplemented/unauthorized capabilities remain safely disabled', () => {
+test('Legacy regression (not independent acceptance): A12: Unimplemented/unauthorized capabilities remain safely disabled', () => {
   // Golden window returns unavailable
   const window = calculatePersonalGoldenWindow('User', MAJOR_CITIES_MUHURAT['Mumbai']);
   assert.equal(window.startTime, null);

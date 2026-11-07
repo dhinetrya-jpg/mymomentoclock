@@ -2,6 +2,7 @@
 package main
 
 import (
+	"astroengine-core/backend/internal/astronomy"
 	"astroengine-core/backend/internal/calibration"
 	"astroengine-core/backend/internal/ephemeris"
 	"astroengine-core/backend/internal/payment"
@@ -77,10 +78,28 @@ func newHandler() http.Handler { return newHandlerWithPayment(nil, "") }
 func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/timing/", timing.Handler(timing.NativeEngine(), time.Now))
+	astronomyConfig, astronomyConfigError := astronomy.ConfigFromEnvironment()
+	if astronomyConfigError == nil {
+		mux.Handle("/api/v1/astronomy/", astronomy.Handler(astronomyConfig))
+	} else {
+		mux.HandleFunc("/api/v1/astronomy/", func(w http.ResponseWriter, r *http.Request) {
+			failure(w, 503, "ASTRONOMY_CONFIGURATION_INVALID", "Reviewed native configuration is unavailable.")
+		})
+	}
 	health := func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/ready" && !ephemeris.NativeAvailable() {
 			failure(w, 503, "NATIVE_EPHEMERIS_UNAVAILABLE", "Native calculation is unavailable.")
 			return
+		}
+		if r.URL.Path == "/ready" {
+			if astronomyConfigError != nil {
+				failure(w, 503, "ASTRONOMY_CONFIGURATION_INVALID", "Reviewed native configuration is unavailable.")
+				return
+			}
+			if _, err := ephemeris.NativeSnapshot(time.Now().UTC(), astronomyConfig, nil, nil); err != nil {
+				failure(w, 503, "ASTRONOMY_CONFIGURATION_UNAVAILABLE", "Native mode/data configuration is unavailable.")
+				return
+			}
 		}
 		if r.URL.Path == "/ready" && pay != nil {
 			if err := pay.Ready(r.Context()); err != nil {

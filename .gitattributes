@@ -1,0 +1,4 @@
+# Immutable upstream evidence: preserve original bytes/EOL and upstream trailing whitespace.
+# Integrity is enforced by SHA256 admission tests; application-source whitespace rules are unchanged.
+tests/calculation/reference/acquired/originals/** -text whitespace=-blank-at-eol,-blank-at-eof
+tests/calculation/reference/acquired/native-data/** -text whitespace=-blank-at-eol,-blank-at-eof

@@ -1,3 +1,10 @@
+/**
+ * QUARANTINED LEGACY REGRESSION ONLY.
+ * Existing declared-source fixtures have not been authenticated as original
+ * external responses. Metadata, source-looking headers and local hashes do not
+ * establish independent accuracy. These assertions preserve historical behavior;
+ * they do not pass a scientific acceptance gate or justify wider tolerances.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -15,7 +22,7 @@ const fixturesDataset = JSON.parse(
   fs.readFileSync(new URL('./reference/independent_reference_fixtures.json', import.meta.url), 'utf8')
 );
 
-test('A05: Timescale separation between UT and TT at J2000.0', () => {
+test('Legacy regression (not independent acceptance): A05: Timescale separation between UT and TT at J2000.0', () => {
   // Epoch J2000.0 is defined as 2000-01-01 12:00:00 TT -> JD_TT = 2451545.0
   const jdUT_12h = calculateJulianDay(2000, 1, 1, 12, 0, 0);
   assert.equal(jdUT_12h, 2451545.0);
@@ -35,7 +42,7 @@ test('A05: Timescale separation between UT and TT at J2000.0', () => {
   assert.ok(diffDays > 0.0007 && diffDays < 0.0008, `Expected ~0.00074 days difference, got ${diffDays}`);
 });
 
-test('A05: Delta-T values across historical and future epochs', () => {
+test('Legacy regression (not independent acceptance): A05: Delta-T values across historical and future epochs', () => {
   // Model implemented in engine:
   // 1900: 60.0 + 32.0 * (-1)^2 = 92.0s
   const dt1900 = calculateDeltaT(1900);
@@ -50,7 +57,7 @@ test('A05: Delta-T values across historical and future epochs', () => {
   assert.ok(dt2026 >= 74.0 && dt2026 <= 76.0);
 });
 
-test('A05: IANA timezone resolution for North America (New York, Toronto, Vancouver)', () => {
+test('Legacy regression (not independent acceptance): A05: IANA timezone resolution for North America (New York, Toronto, Vancouver)', () => {
   // Winter EST in New York (-5h)
   const fEst = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_06_US_NEW_YORK_WINTER_EST');
   assert.ok(fEst);
@@ -82,7 +89,7 @@ test('A05: IANA timezone resolution for North America (New York, Toronto, Vancou
   assert.equal(resVan.isoUtc, '2024-12-15T17:00:00.000Z');
 });
 
-test('A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zones', () => {
+test('Legacy regression (not independent acceptance): A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zones', () => {
   // Asia/Kolkata (+5:30 = +5.5h)
   const resKolkata = resolveIanaTimezone('2026-11-06', '12:00:00', 'Asia/Kolkata');
   assert.equal(resKolkata.offsetHours, 5.5);
@@ -99,7 +106,7 @@ test('A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zo
   assert.equal(resFiji.isoUtc, '2026-11-06T00:00:00.000Z');
 });
 
-test('A05: Daylight saving transitions - Spring-forward gap rejection (NONEXISTENT_LOCAL_TIME)', () => {
+test('Legacy regression (not independent acceptance): A05: Daylight saving transitions - Spring-forward gap rejection (NONEXISTENT_LOCAL_TIME)', () => {
   const fGap = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_08_US_NEW_YORK_SPRING_FORWARD_GAP');
   assert.ok(fGap);
 
@@ -115,7 +122,7 @@ test('A05: Daylight saving transitions - Spring-forward gap rejection (NONEXISTE
   );
 });
 
-test('A05: Daylight saving transitions - Fall-back fold detection (AMBIGUOUS_LOCAL_TIME)', () => {
+test('Legacy regression (not independent acceptance): A05: Daylight saving transitions - Fall-back fold detection (AMBIGUOUS_LOCAL_TIME)', () => {
   const fFold = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_09_US_NEW_YORK_FALL_BACK_FOLD');
   assert.ok(fFold);
 
@@ -140,7 +147,7 @@ test('A05: Daylight saving transitions - Fall-back fold detection (AMBIGUOUS_LOC
   assert.equal(resSecond.isoUtc, '2026-11-01T06:30:00.000Z');
 });
 
-test('A05: Calendar integrity - Leap year rules (2000 vs 1900 vs 2024)', () => {
+test('Legacy regression (not independent acceptance): A05: Calendar integrity - Leap year rules (2000 vs 1900 vs 2024)', () => {
   // 2000-02-29 is valid (400-year quadricentennial rule)
   const f2000 = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_12_CALENDAR_LEAP_DAY_2000');
   assert.ok(f2000);
@@ -188,7 +195,7 @@ test('A05: Calendar integrity - Leap year rules (2000 vs 1900 vs 2024)', () => {
   });
 });
 
-test('A05: Temporal boundary - Midnight vs noon separation (0.5 days difference, zero aliasing)', () => {
+test('Legacy regression (not independent acceptance): A05: Temporal boundary - Midnight vs noon separation (0.5 days difference, zero aliasing)', () => {
   const fSep = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_14_TEMPORAL_MIDNIGHT_NOON_SEPARATION');
   assert.ok(fSep);
 

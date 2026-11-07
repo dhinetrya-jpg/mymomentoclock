@@ -1,0 +1,439 @@
+[
+  {
+    "capability": "Julian Day UTC/TT/UT1",
+    "implementation": "ephemeris.NativeEpoch/ConvertUTC",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC civil instant; optional explicit DUT1",
+    "convention": "SWISS leap table; UT1 model disclosed when not supplied",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "FIVE_PUBLISHED_ERFA_VECTORS_ONLY_FULL_HISTORICAL_UT1_MODEL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "planetary longitude/latitude/distance",
+    "implementation": "ephemeris.NativeSnapshot",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC instant; mode",
+    "convention": "geocentric apparent ecliptic-of-date; tropical and sidereal",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "SUN_TROPICAL_LONGITUDE_LATITUDE_SUBSET_ONLY_OTHER_BODIES_DISTANCE_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "planetary velocities/retrograde",
+    "implementation": "ephemeris.NativeSnapshot",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC instant; mode",
+    "convention": "actual native speed; retrograde iff longitude speed<0",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_SPEED_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "ayanamsa",
+    "implementation": "ephemeris.NativeSnapshot",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC instant",
+    "convention": "actual SWISS_SE_SIDM_LAHIRI; not TRUE_CITRA",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_PAC_AYANAMSA_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "ascendant",
+    "implementation": "ephemeris.NativeSnapshot",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC; IANA location; coordinates",
+    "convention": "native sidereal ascendant; UT1 model disclosed",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_DATED_HOUSE_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "whole sign houses",
+    "implementation": "ephemeris.NativeSnapshot",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "UTC; coordinates",
+    "convention": "native whole-sign sidereal cusps",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_DATED_HOUSE_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "D1/rashi",
+    "implementation": "astronomy.Classify",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "full precision native sidereal longitude",
+    "convention": "half-open30deg",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "MATHEMATICAL_BOUNDARIES_TESTED_UNDERLYING_LONGITUDE_AND_TRADITION_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/chart.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "D2/Hora",
+    "implementation": "astronomy.Classify",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sidereal longitude",
+    "convention": "luminary Hora; odd/even15deg halves",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "MATHEMATICAL_BOUNDARIES_TESTED_UNDERLYING_LONGITUDE_AND_TRADITION_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/chart.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "D9/Navamsha",
+    "implementation": "astronomy.Classify",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sidereal longitude",
+    "convention": "Parashari ninth-sign numeric mapping",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "MATHEMATICAL_BOUNDARIES_TESTED_UNDERLYING_LONGITUDE_AND_TRADITION_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/chart.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "D60/Shashtyamsa",
+    "implementation": "astronomy.Classify",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "EXACT birth certainty; native longitude",
+    "convention": "half-degree segment; full traditional deity/sign interpretation NOT_APPROVED",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "SEGMENT_IMPLEMENTED_TRADITIONAL_MAPPING_BLOCKED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "MATHEMATICAL_BOUNDARIES_TESTED_UNDERLYING_LONGITUDE_AND_TRADITION_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/chart.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Tithi/Paksha",
+    "implementation": "astronomy.Segment",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native tropical Sun/Moon",
+    "convention": "elongation/12deg half-open",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Nakshatra/Pada",
+    "implementation": "astronomy.Segment",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sidereal Moon",
+    "convention": "27mansions/108padas half-open",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Yoga",
+    "implementation": "astronomy.Segment",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sidereal Sun+Moon",
+    "convention": "sum modulo360 /27",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Karana",
+    "implementation": "astronomy.Segment",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native Sun/Moon",
+    "convention": "60half-tithis; fixed and movable sequence",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Vara",
+    "implementation": "astronomy.ComputeDay",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "local day; native sunrise",
+    "convention": "civil weekday explicit; sunrise interval variant separately labeled",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "sunrise/sunset",
+    "implementation": "ephemeris.NativeSolarDay",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "IANA civil day; site/elevation",
+    "convention": "native upper limb/refraction; model assumptions disclosed",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_SOLAR_EVENT_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "solar noon",
+    "implementation": "ephemeris.NativeSolarDay",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "IANA civil day; site",
+    "convention": "native upper meridian transit",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_SOLAR_EVENT_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/ephemeris/native_api.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Rahu Kaal",
+    "implementation": "astronomy.TraditionalIntervals",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native daylight/weekday",
+    "convention": "unapproved versioned weekday-eighth schedule",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Yamaganda",
+    "implementation": "astronomy.TraditionalIntervals",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native daylight/weekday",
+    "convention": "unapproved versioned weekday-eighth schedule",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Gulika Kaal",
+    "implementation": "astronomy.TraditionalIntervals",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native daylight/weekday",
+    "convention": "unapproved versioned weekday-eighth schedule",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Abhijit Muhurta",
+    "implementation": "astronomy.TraditionalIntervals",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native daylight",
+    "convention": "unapproved daylight-fifteenth centered; no favorable-day judgment",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Brahma Muhurta",
+    "implementation": "astronomy.TraditionalIntervals",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sunrise",
+    "convention": "unapproved fixed96-to48min variant; other night-duration variants exist",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "TRADITIONAL_SOURCE_AND_OWNER_APPROVAL_PENDING",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  },
+  {
+    "capability": "Panchang transitions/start/end",
+    "implementation": "astronomy.Transitions/ComputeDay",
+    "authoritative_execution_path": "native Go; browser analytical path remains preview",
+    "required_inputs": "native sampler; UTCday",
+    "convention": "unwrapped positive-phase roots;1second bracket NOT external accuracy",
+    "supported_modes": [
+      "MOSHIER",
+      "SWISS_FILE",
+      "JPL_IF_LOCAL_KERNEL_AVAILABLE"
+    ],
+    "implementation_status": "IMPLEMENTED",
+    "precision_status": "NUMERICAL_OUTPUT_WITHOUT_FULL_EXTERNAL_ERROR_BUDGET",
+    "independent_validation_status": "NO_INDEPENDENT_PANCHANG_BOUNDARY_REFERENCE_ADMITTED",
+    "core_p0_02_dependency": true,
+    "customer_release_authorized": false,
+    "implementation_file": "backend/internal/astronomy/panchang.go",
+    "jpl_runtime_status": "NOT_TESTED_NO_LOCAL_KERNEL"
+  }
+]

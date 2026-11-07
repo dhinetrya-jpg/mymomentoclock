@@ -39,8 +39,12 @@ jobs:
           npm --prefix frontend run build
 
       - name: Calculation integrity & astronomical accuracy regression tests
-        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts
+        run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts tests/calculation/independent_planetary_accuracy.test.ts tests/calculation/temporal_reference_accuracy.test.ts tests/calculation/panchang_accuracy.test.ts tests/calculation/analytical_safety.test.ts tests/calculation/native_reference_diagnostics.test.ts
 
+      - name: Immutable source integrity and adversarial admission checks
+        run: |
+          python3 scripts/core-reference-acquire.py verify
+          python3 scripts/core-reference-tests.py
       - name: Phase 1 security and privacy regression
         run: node --import tsx --test tests/phase1/security.test.ts
       - name: Payment boundary and checkout contract tests
