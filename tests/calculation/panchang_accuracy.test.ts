@@ -1,3 +1,10 @@
+/**
+ * QUARANTINED LEGACY REGRESSION ONLY.
+ * Existing declared-source fixtures have not been authenticated as original
+ * external responses. Metadata, source-looking headers and local hashes do not
+ * establish independent accuracy. These assertions preserve historical behavior;
+ * they do not pass a scientific acceptance gate or justify wider tolerances.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -22,7 +29,7 @@ const fixturesDataset = JSON.parse(
   fs.readFileSync(new URL('./reference/independent_reference_fixtures.json', import.meta.url), 'utf8')
 );
 
-test('A07: Tithi calculation across Shukla and Krishna Pakshas', () => {
+test('Legacy regression (not independent acceptance): A07: Tithi calculation across Shukla and Krishna Pakshas', () => {
   // Test Shukla Pratipada (0° to 12°)
   const t1 = calculateTithi(6.0, 0.0);
   assert.equal(t1.index, 0);
@@ -33,15 +40,12 @@ test('A07: Tithi calculation across Shukla and Krishna Pakshas', () => {
   assert.equal(t1.isFullMoon, false);
   assert.equal(t1.isNewMoon, false);
 
-  // Test Shukla Purnima (168° to 180°) - Scenario 26
-  const fFull = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_26_MOON_PHASE_FULL_MOON_PURNIMA');
-  assert.ok(fFull);
-  const tFull = calculateTithi(fFull.inputs.moonLon, fFull.inputs.sunLon);
-  assert.equal(tFull.index, fFull.expected.tithiIndex);
-  assert.equal(tFull.paksha, fFull.expected.paksha);
-  assert.equal(tFull.name, fFull.expected.tithiName);
-  assert.equal(tFull.isFullMoon, true);
-  assert.equal(tFull.isNewMoon, false);
+  // Explicit half-open convention: [168,180) Purnima; [180,192) Krishna Pratipada.
+  // The legacy scenario26 incorrectly assigns exact180° to index14 and is not used as truth.
+  const tFull=calculateTithi(180-1e-8,0);
+  assert.equal(tFull.index,14);assert.equal(tFull.paksha,'Shukla');assert.equal(tFull.name,'Purnima');assert.equal(tFull.isFullMoon,true);
+  const tBoundary=calculateTithi(180,0);assert.equal(tBoundary.index,15);assert.equal(tBoundary.paksha,'Krishna');assert.equal(tBoundary.name,'Pratipada');
+  assert.equal(calculateTithi(180+1e-8,0).index,15);
 
   // Test Krishna Pratipada (180° to 192°)
   const tKrishna1 = calculateTithi(186.0, 0.0);
@@ -72,7 +76,7 @@ test('A07: Tithi calculation across Shukla and Krishna Pakshas', () => {
   assert.equal(tB.name, fTrans.expected.tithiNameB);
 });
 
-test('A07: Nakshatra and Pada calculation and boundary crossing', () => {
+test('Legacy regression (not independent acceptance): A07: Nakshatra and Pada calculation and boundary crossing', () => {
   const fNak = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_22_NAKSHATRA_BOUNDARY_ASHWINI_BHARANI');
   assert.ok(fNak);
 
@@ -98,7 +102,7 @@ test('A07: Nakshatra and Pada calculation and boundary crossing', () => {
   assert.equal(27 * 4, 108);
 });
 
-test('A07: Yoga calculation and auspiciousness categorization', () => {
+test('Legacy regression (not independent acceptance): A07: Yoga calculation and auspiciousness categorization', () => {
   // Test first yoga: Vishkambha (0° to 13°20')
   const y1 = calculateYoga(5.0, 5.0); // sum = 10°
   assert.equal(y1.index, 0);
@@ -117,7 +121,7 @@ test('A07: Yoga calculation and auspiciousness categorization', () => {
   assert.equal(YOGA_NAMES.length, 27);
 });
 
-test('A07: Karana calculation: 4 fixed Karanas and 7 movable cycles', () => {
+test('Legacy regression (not independent acceptance): A07: Karana calculation: 4 fixed Karanas and 7 movable cycles', () => {
   // 1st half of Shukla Pratipada (0° to 6°) = Kintughna (Fixed)
   const k1 = calculateKarana(3.0, 0.0);
   assert.equal(k1.index, 0);
@@ -158,7 +162,7 @@ test('A07: Karana calculation: 4 fixed Karanas and 7 movable cycles', () => {
   assert.equal(FIXED_KARANAS.length, 4);
 });
 
-test('A07: Apparent Sunrise and Sunset with atmospheric refraction against PAC India tables', () => {
+test('Legacy regression (not independent acceptance): A07: Apparent Sunrise and Sunset with atmospheric refraction against quarantined claimed-PAC values', () => {
   // New Delhi on 2026-11-08 (Scenario 24)
   const fDelhi = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_24_SUNRISE_SUNSET_NEW_DELHI');
   assert.ok(fDelhi);
@@ -210,7 +214,7 @@ test('A07: Apparent Sunrise and Sunset with atmospheric refraction against PAC I
   assert.ok(Math.abs(solarKolkata.dayLengthHours - fKolkata.expected.dayLengthHours) < 0.1);
 });
 
-test('A07: Daytime Muhurtas: Rahu Kaal, Yamaganda, Gulika, Abhijit, and Brahma Muhurta', () => {
+test('Legacy regression (not independent acceptance): A07: Daytime Muhurtas: Rahu Kaal, Yamaganda, Gulika, Abhijit, and Brahma Muhurta', () => {
   // New Delhi on 2026-11-08: 2026-11-08 is a Sunday (weekday 0)
   const muhurtas = calculateDayMuhurtas(2026, 11, 8, 28.6139, 77.2090, 5.5);
 
@@ -239,7 +243,7 @@ test('A07: Daytime Muhurtas: Rahu Kaal, Yamaganda, Gulika, Abhijit, and Brahma M
   assert.equal(riseMin - brahmaStartMin, 96);
 });
 
-test('A07: Numerical root-finding boundary solver (findTransitionInstant) convergence', () => {
+test('Legacy regression (not independent acceptance): A07: Numerical root-finding boundary solver (findTransitionInstant) convergence', () => {
   const startJD = 2451545.0; // J2000.0
   const targetTithiAngle = 312.0; // Next tithi boundary (~9° from start)
 
@@ -262,7 +266,7 @@ test('A07: Numerical root-finding boundary solver (findTransitionInstant) conver
   assert.ok(Math.abs(angleAtRoot - targetTithiAngle) < 0.001);
 });
 
-test('A07: Comprehensive calculateFullPanchang report generation', () => {
+test('Legacy regression (not independent acceptance): A07: Comprehensive calculateFullPanchang report generation', () => {
   const report = calculateFullPanchang(2026, 11, 8, 12, 0, 0, 28.6139, 77.2090, 5.5, AyanamsaType.TRUE_LAHIRI, true);
 
   assert.equal(report.ayanamsaType, 'TRUE_LAHIRI');

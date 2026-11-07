@@ -1,0 +1,2 @@
+REFERENCE_VERIFICATION_FAILED: ValueError: EXTERNAL_REFERENCE_PENDING: direct NASA/USNO/IERS/PAC source-specific admission and required per-body/Panchang/solar coverage have not been independently established; see acquisition_attempts.json
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.

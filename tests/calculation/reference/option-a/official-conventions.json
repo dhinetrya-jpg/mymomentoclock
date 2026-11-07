@@ -1,0 +1,20 @@
+{
+  "publisher": "Astrodienst Swiss Ephemeris official repository documentation",
+  "revision": "175e1fcb3108bcd5c0d146c803f51dcf23508012",
+  "url": "https://raw.githubusercontent.com/aloistr/swisseph/175e1fcb3108bcd5c0d146c803f51dcf23508012/doc/swisseph.htm",
+  "sha256": "e1c56d9e7a3dda4ef1da7672046c22935aae8424a932d4b53442ddfd6141d4c3",
+  "inspected_at_utc": "2026-11-07T10:09:13.601860+00:00",
+  "reproduction": "git show 175e1fcb3108bcd5c0d146c803f51dcf23508012:doc/swisseph.htm",
+  "sections": [
+    "2.2.1 Mean Node",
+    "2.2.2 True Node",
+    "2.8.5 Spica/Citra and Lahiri",
+    "How to compare Swiss Lahiri with IAE",
+    "2.4 Planetary Centers of Body and Planetary Moons",
+    "Test6 Jupiter versus Jupiter Barycentre"
+  ],
+  "scope": "Authoritative definitions only, NOT independent numerical verification; published IAE comparisons use NONUT/SIDBIT_PREC_ORIG and must not be compared directly with native default true ayanamsa",
+  "direct_astro_com": "Not retried: previously inaccessible; official immutable Git publisher used",
+  "license": "Official project documentation; no third-party application implementation copied",
+  "native_target_policy": "Default Swiss flags return planetary-system barycenters, not physical centers of bodies; genuine JUP310 target599 must be rejected when native target5 is selected"
+}

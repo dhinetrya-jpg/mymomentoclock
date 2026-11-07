@@ -1,0 +1,6 @@
+# Scientific reference evaluator only; not an application/runtime dependency.
+skyfield==1.54
+jplephem==2.24
+numpy==2.5.4
+sgp4==2.27
+certifi==2026.10.23

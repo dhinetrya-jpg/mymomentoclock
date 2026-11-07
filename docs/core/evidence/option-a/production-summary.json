@@ -1,0 +1,286 @@
+{
+  "production_mode": "SWISS_FILE",
+  "target_policy": "DEFAULT_PLANETARY_SYSTEM_BARYCENTERS_NOT_COB",
+  "planetary": [
+    {
+      "body": "sun",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 3.9490618064519367e-07,
+      "median": 1.788670545010973e-07,
+      "p95_nearest_rank": 3.9490618064519367e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "sun",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 7.173138052694893e-08,
+      "median": 3.676809815885882e-08,
+      "p95_nearest_rank": 7.173138052694893e-08,
+      "tolerance": 1e-05,
+      "status": "PASS"
+    },
+    {
+      "body": "sun",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 5.3538400379693485e-09,
+      "median": 1.6751487419419675e-09,
+      "p95_nearest_rank": 5.3538400379693485e-09,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "sun",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 5.086796928122084e-07,
+      "median": 2.2680647371320362e-07,
+      "p95_nearest_rank": 5.086796928122084e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "moon",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 1.1371846539987018e-06,
+      "median": 6.026589147722916e-07,
+      "p95_nearest_rank": 1.1371846539987018e-06,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "moon",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 1.3266260978639366e-07,
+      "median": 2.9650573440953565e-08,
+      "p95_nearest_rank": 1.3266260978639366e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "moon",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 2.5141300066117145e-11,
+      "median": 1.2458669079035145e-11,
+      "p95_nearest_rank": 2.5141300066117145e-11,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "moon",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 6.122427128651964e-05,
+      "median": 2.0400686169708138e-05,
+      "p95_nearest_rank": 6.122427128651964e-05,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mercury",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 5.689703925781942e-07,
+      "median": 2.418078679511382e-07,
+      "p95_nearest_rank": 5.689703925781942e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mercury",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 1.0282833757813137e-06,
+      "median": 4.454276766319154e-07,
+      "p95_nearest_rank": 1.0282833757813137e-06,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mercury",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 6.035554056538217e-09,
+      "median": 2.60596699774851e-09,
+      "p95_nearest_rank": 6.035554056538217e-09,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "mercury",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 7.675564443587746e-06,
+      "median": 9.884679645910666e-07,
+      "p95_nearest_rank": 7.675564443587746e-06,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "venus",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 5.111867267260095e-07,
+      "median": 1.6105589395465358e-07,
+      "p95_nearest_rank": 5.111867267260095e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "venus",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 7.591245032578797e-08,
+      "median": 6.005869207514891e-08,
+      "p95_nearest_rank": 7.591245032578797e-08,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "venus",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 4.833533129300349e-09,
+      "median": 1.0908556280497805e-09,
+      "p95_nearest_rank": 4.833533129300349e-09,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "venus",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 1.819959358995149e-06,
+      "median": 1.452998479090084e-06,
+      "p95_nearest_rank": 1.819959358995149e-06,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mars",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 3.7201164104772033e-07,
+      "median": 1.7131733898168022e-07,
+      "p95_nearest_rank": 3.7201164104772033e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mars",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 1.850905126943303e-07,
+      "median": 9.262431377443647e-08,
+      "p95_nearest_rank": 1.850905126943303e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "mars",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 3.097402778706737e-09,
+      "median": 9.878708961963412e-10,
+      "p95_nearest_rank": 3.097402778706737e-09,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "mars",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 7.004726457759958e-07,
+      "median": 4.900817157094117e-07,
+      "p95_nearest_rank": 7.004726457759958e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "jupiter",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 7.047063945719856e-07,
+      "median": 4.255559247212659e-07,
+      "p95_nearest_rank": 7.047063945719856e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "jupiter",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 5.0629436474380896e-06,
+      "median": 3.1891741864020773e-06,
+      "p95_nearest_rank": 5.0629436474380896e-06,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "jupiter",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 1.69779905689893e-08,
+      "median": 1.625882184441707e-08,
+      "p95_nearest_rank": 1.69779905689893e-08,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "jupiter",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 1.7646923614056398e-07,
+      "median": 1.2438742169607053e-07,
+      "p95_nearest_rank": 1.7646923614056398e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "saturn",
+      "quantity": "tropical_longitude",
+      "samples": 8,
+      "maximum": 4.07748416364484e-07,
+      "median": 1.868498884505243e-07,
+      "p95_nearest_rank": 4.07748416364484e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "saturn",
+      "quantity": "latitude",
+      "samples": 8,
+      "maximum": 1.8405826285317062e-07,
+      "median": 5.7231297034832096e-08,
+      "p95_nearest_rank": 1.8405826285317062e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    },
+    {
+      "body": "saturn",
+      "quantity": "distance_au",
+      "samples": 8,
+      "maximum": 2.04434513761953e-08,
+      "median": 1.1977485669945054e-09,
+      "p95_nearest_rank": 2.04434513761953e-08,
+      "tolerance": 1e-06,
+      "status": "PASS"
+    },
+    {
+      "body": "saturn",
+      "quantity": "longitude_speed_deg_per_day",
+      "samples": 8,
+      "maximum": 5.110364905552833e-07,
+      "median": 2.8162518231865385e-07,
+      "p95_nearest_rank": 5.110364905552833e-07,
+      "tolerance": 0.0002,
+      "status": "PASS"
+    }
+  ]
+}

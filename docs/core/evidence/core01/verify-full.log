@@ -1,0 +1,1481 @@
+
+> mymomentoclock@1.0.0 verify:core-p0-01
+> sh scripts/verify-core-p0-01.sh
+
+WARNING: Running in rootless-mode without cgroups. Systemd is required to enable cgroups in rootless-mode.
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.052s
+
+OK
+
+> mymomentoclock@1.0.0 lint
+> tsc --noEmit
+
+
+> mymomentoclock@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.01 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-DcJTjljj.css                                      62.19 kB │ gzip:  10.08 kB
+dist/assets/index-BL70l2hT.js                                      335.92 kB │ gzip: 104.27 kB
+
+✓ built in 324ms
+
+> astroengine-frontend@1.0.0 lint
+> tsc --noEmit
+
+
+> astroengine-frontend@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.00 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-Cg3I8i12.css                                      61.33 kB │ gzip:   9.92 kB
+dist/assets/index-giIwx3tQ.js                                      335.87 kB │ gzip: 104.24 kB
+
+✓ built in 193ms
+✔ missing birthDate rejected (286.897205ms)
+✔ missing birthTime rejected (0.79261ms)
+✔ missing latitude rejected (0.105339ms)
+✔ missing longitude rejected (0.145671ms)
+✔ invalid birthDate: 2026-02-30 (0.299063ms)
+✔ invalid birthDate: 1900-02-29 (0.093101ms)
+✔ invalid birthTime: 25:90:00 (0.145471ms)
+✔ invalid birthTime: 12:00:60 (0.142837ms)
+✔ invalid latitude: 120 (0.306083ms)
+✔ invalid longitude: 250 (0.172911ms)
+✔ invalid latitude: NaN (0.140363ms)
+✔ invalid longitude: Infinity (0.119972ms)
+✔ invalid latitude: 22 (0.078559ms)
+✔ invalid timezoneOffset: undefined (0.058759ms)
+✔ invalid timezoneOffset: Infinity (0.237139ms)
+✔ invalid timezoneOffset: 5.5 (0.116917ms)
+✔ invalid ayanamsaType: invented (0.115975ms)
+✔ invalid birthTimeCertainty: UNKNOWN (0.088955ms)
+✔ Gregorian leap years and midnight accepted (0.213553ms)
+✔ unchanged valid chart numerics match pre-change fixture (1.569866ms)
+✔ midnight no longer aliases noon (0.562631ms)
+✔ name cannot change timing; no invented window (0.184419ms)
+✔ BTR zero milestones never substitutes example events (0.217919ms)
+✔ BTR cannot invent a fit without a verified Dasha method (0.482471ms)
+✔ genuine chart resolver has no fabricated graph payload (0.104809ms)
+✔ scope GENERAL_LOCATION_BASED renders safely (5.891106ms)
+✔ scope NATAL_SUPPORTED renders safely (0.258341ms)
+✔ scope NATAL_LIMITED renders safely (0.463472ms)
+✔ scope UNAVAILABLE renders safely (0.223348ms)
+✔ festival unavailable state renders without zero timing (2.445932ms)
+✔ BTR screen shows no sample life history (0.803987ms)
+✔ initial app never shows Kolkata natal defaults (1.593091ms)
+✔ HTTP chart validation and valid request (24.902542ms)
+✔ both BTR adapters reject invalid input and missing milestones (5.494856ms)
+✔ v1 BTR scores cannot certify (3.277295ms)
+✔ city errors, spelling normalization and all supported previews (22.887418ms)
+✔ stored profile endpoint never returns example vectors for any user (5.10788ms)
+✔ production cannot execute baseline demo UAT endpoint (1.196982ms)
+✔ existing diagnostics check actual conflicts without requiring fake success (1.537217ms)
+✔ dashboard and existing checkout render with a genuine chart (26.463841ms)
+✔ missing Gemini credential cannot fabricate fallback financial reading (2.934956ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 452.184132
+✔ Legacy regression (not independent acceptance): A03 / AUD-01: Machine-readable reference fixtures retains legacy metadata (not source authenticity or accepted tolerances) (1.072363ms)
+✔ Legacy regression (not independent acceptance): A05 / AUD-04: J2000.0 time-scale separation between UT1/UTC and TT/TDB rigorously validated (0.298021ms)
+✔ Legacy regression (not independent acceptance): A05: Delta-T calculation preserves legacy Delta-T model comparison (not observed IERS validation) (0.170488ms)
+✔ Legacy regression (not independent acceptance): A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris within 1 arcsecond (0.143847ms)
+✔ Legacy regression (not independent acceptance): A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit offsets (0.110037ms)
+✔ Legacy regression (not independent acceptance): A04: Circular angular difference handles 0°/360° wraparound accurately (0.156157ms)
+✔ Legacy regression (not independent acceptance): A08: Boundary proximity check identifies classification uncertainty near step thresholds (0.361747ms)
+✔ Legacy regression (not independent acceptance): A05: India half-hour UTC offset (+5:30) and date rollover verified (1.303172ms)
+✔ Legacy regression (not independent acceptance): A05 / AUD-03: US/Canada DST transitions, ambiguous fall folds, and spring gaps validated (0.773741ms)
+✔ Legacy regression (not independent acceptance): A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day (0.189056ms)
+✔ Legacy regression (not independent acceptance): A05: Leap year rules and centurial boundaries strictly enforced (0.275466ms)
+✔ Legacy regression (not independent acceptance): A05: Midnight 00:00:00 and noon 12:00:00 differ by exactly 0.5 days with no aliasing (0.705437ms)
+✔ Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Ascendant, Whole Sign Houses, and Nakshatra/Pada boundaries (0.384662ms)
+✔ Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Divisional Charts D-2 (Hora), D-9 (Navamsha), and D-60 (Shashtyamsa) (0.230659ms)
+✔ Legacy regression (not independent acceptance): A04 / AUD-06: Quantitative error evaluation of Node analytical approximation against quarantined claimed-JPL values (0.507829ms)
+✔ Legacy regression (not independent acceptance): A07 / AUD-07: Implemented Panchang elements validated and unverified solar algorithms safely disabled (0.458273ms)
+✔ Legacy regression (not independent acceptance): A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs, and infinities (0.544233ms)
+✔ Legacy regression (not independent acceptance): A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION without false Swiss claims (0.539176ms)
+✔ Legacy regression (not independent acceptance): A02 / AUD-02 / AUD-09: Native Swiss Ephemeris schema contract, mode disclosure, and environmental limitations (0.365554ms)
+✔ Legacy regression (not independent acceptance): A12: Unimplemented/unauthorized capabilities remain safely disabled (0.227745ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18.132102
+✔ Legacy regression (not independent acceptance): A03: Independent reference dataset retains32 scenarios and recorded files (not authenticated sources) (1.501302ms)
+✔ Legacy regression (not independent acceptance): A04: Planetary comparisons at J2000 against quarantined claimed-JPL values DE440 unverified legacy values (1.297674ms)
+✔ Legacy regression (not independent acceptance): A04: Historical Indian birth date (Kolkata 1989) numerical planetary & Vedic placements (0.821052ms)
+✔ Legacy regression (not independent acceptance): A04: Modern Indian epoch (New Delhi 2026) ayanamsa, delta-T and Lagna validation (0.319924ms)
+✔ Legacy regression (not independent acceptance): A04: Indian metro coordinates Mumbai and Chennai validated (0.41616ms)
+✔ Legacy regression (not independent acceptance): A04: Distinction of calculation modes and prevention of false Swiss claims (0.408779ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13.191545
+✔ Legacy regression (not independent acceptance): A05: Timescale separation between UT and TT at J2000.0 (0.917529ms)
+✔ Legacy regression (not independent acceptance): A05: Delta-T values across historical and future epochs (0.113381ms)
+✔ Legacy regression (not independent acceptance): A05: IANA timezone resolution for North America (New York, Toronto, Vancouver) (23.247363ms)
+✔ Legacy regression (not independent acceptance): A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zones (7.626582ms)
+✔ Legacy regression (not independent acceptance): A05: Daylight saving transitions - Spring-forward gap rejection (NONEXISTENT_LOCAL_TIME) (3.267044ms)
+✔ Legacy regression (not independent acceptance): A05: Daylight saving transitions - Fall-back fold detection (AMBIGUOUS_LOCAL_TIME) (4.059444ms)
+✔ Legacy regression (not independent acceptance): A05: Calendar integrity - Leap year rules (2000 vs 1900 vs 2024) (0.598185ms)
+✔ Legacy regression (not independent acceptance): A05: Temporal boundary - Midnight vs noon separation (0.5 days difference, zero aliasing) (0.139421ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.3856
+✔ Legacy regression (not independent acceptance): A07: Tithi calculation across Shukla and Krishna Pakshas (1.267308ms)
+✔ Legacy regression (not independent acceptance): A07: Nakshatra and Pada calculation and boundary crossing (0.197669ms)
+✔ Legacy regression (not independent acceptance): A07: Yoga calculation and auspiciousness categorization (0.291251ms)
+✔ Legacy regression (not independent acceptance): A07: Karana calculation: 4 fixed Karanas and 7 movable cycles (0.417231ms)
+✔ Legacy regression (not independent acceptance): A07: Apparent Sunrise and Sunset with atmospheric refraction against quarantined claimed-PAC values (1.220597ms)
+✔ Legacy regression (not independent acceptance): A07: Daytime Muhurtas: Rahu Kaal, Yamaganda, Gulika, Abhijit, and Brahma Muhurta (0.548971ms)
+✔ Legacy regression (not independent acceptance): A07: Numerical root-finding boundary solver (findTransitionInstant) convergence (1.539154ms)
+✔ Legacy regression (not independent acceptance): A07: Comprehensive calculateFullPanchang report generation (1.411596ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15.531601
+✔ analytical Panchang cannot certify itself and uses the requested epoch, not wall clock (4.628094ms)
+✔ half-open Tithi and all fixed/movable Karana boundaries (0.738779ms)
+✔ preview solar times carry UTC dates and both polar events are unavailable (0.900513ms)
+✔ transition solver unwraps true crossings and fails rather than inventing missing roots (0.427156ms)
+✔ civil resolution does not invent Delta-T, TT or UT1 from UTC (20.890536ms)
+✔ divisional maps use the supplied longitude rather than rounded display degrees (3.718257ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40.348043
+{"diagnostic_policy":{"status":"DIAGNOSTIC_NOT_INDEPENDENT_ACCURACY_ACCEPTANCE","upstreamLongitudeBandDegrees":0.0002,"legacyFramePolicy":"NO_RESIDUAL_WHEN_FRAME_NOT_ESTABLISHED","timeModel":"NOMINAL_UTC_USED_AS_MODEL_ARGUMENT; EXTERNAL_UT1_TT_CORRECTIONS_NOT_ESTABLISHED","referenceStatus":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE"},"summary":{"body":"sun","mode":"ANALYTICAL_APPROXIMATION","sample_count":2,"maximum_deg":0.0030967999999802487,"mean_deg":0.0030897500000151013,"median_deg":0.0030897500000151013,"p95_nearest_rank_deg":0.0030967999999802487,"outside_upstream_band_count":2,"native_comparison_performed":false},"measurements":[{"reference_id":"SKYFIELD_SUN_20051001_07","utc":"2005-10-01T07:00:00Z","reference_source":"skyfield-horizons-tests","source_sha256":"da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a","reference_frame":"APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE","reference_deg":188.2011122,"actual_analytical_apparent_deg":188.204209,"signed_residual_deg":0.0030967999999802487,"absolute_residual_deg":0.0030967999999802487,"unchanged_upstream_band_deg":0.0002,"band_relation":"OUTSIDE_UPSTREAM_BAND","scientific_acceptance":"NOT_ACCEPTED_TIME_MODEL_AND_REFERENCE_SCOPE_LIMITED"},{"reference_id":"SKYFIELD_SUN_20051001_08","utc":"2005-10-01T08:00:00Z","reference_source":"skyfield-horizons-tests","source_sha256":"da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a","reference_frame":"APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE","reference_deg":188.2420983,"actual_analytical_apparent_deg":188.245181,"signed_residual_deg":0.003082700000049954,"absolute_residual_deg":0.003082700000049954,"unchanged_upstream_band_deg":0.0002,"band_relation":"OUTSIDE_UPSTREAM_BAND","scientific_acceptance":"NOT_ACCEPTED_TIME_MODEL_AND_REFERENCE_SCOPE_LIMITED"}]}
+{"diagnostic_policy":{"status":"DIAGNOSTIC_NOT_INDEPENDENT_ACCURACY_ACCEPTANCE","upstreamLongitudeBandDegrees":0.0002,"legacyFramePolicy":"NO_RESIDUAL_WHEN_FRAME_NOT_ESTABLISHED","timeModel":"NOMINAL_UTC_USED_AS_MODEL_ARGUMENT; EXTERNAL_UT1_TT_CORRECTIONS_NOT_ESTABLISHED","referenceStatus":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE"},"legacy_reconstructions":[{"reference_id":"SKYFIELD_MARS_19560114","utc":"1956-01-14T06:00:00Z","legacy_sidereal_deg":187.5059,"model_ayanamsa_deg":23.24291228688912,"reconstructed_tropical_deg":210.74881228688912,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Mars barycenter","reason":"MARS_BARYCENTER_REFERENCE_VS_UNESTABLISHED_LEGACY_GEOCENTRIC_REDUCTION","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"},{"reference_id":"SKYFIELD_SUN_20051001_07","utc":"2005-10-01T07:00:00Z","legacy_sidereal_deg":164.2731,"model_ayanamsa_deg":23.937402709039024,"reconstructed_tropical_deg":188.21050270903902,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Sun","reason":"APPARENT_CORRECTIONS_NOT_ESTABLISHED_FOR_LEGACY_CHART","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"},{"reference_id":"SKYFIELD_SUN_20051001_08","utc":"2005-10-01T08:00:00Z","legacy_sidereal_deg":164.314,"model_ayanamsa_deg":23.93740430266358,"reconstructed_tropical_deg":188.25140430266356,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Sun","reason":"APPARENT_CORRECTIONS_NOT_ESTABLISHED_FOR_LEGACY_CHART","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"}]}
+✔ diagnostic: source-bound preview apparent Sun measurements; no accuracy acceptance (1.68507ms)
+✔ diagnostic: legacy sidereal conversion is explicit, incompatible-frame residuals remain unavailable (2.248392ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11.106638
+✔ versioned activity work cannot activate personal results (14.399301ms)
+✔ versioned activity purchases cannot activate personal results (0.280835ms)
+✔ versioned activity travel cannot activate personal results (0.486937ms)
+✔ versioned activity learning cannot activate personal results (0.207193ms)
+✔ versioned activity family cannot activate personal results (0.251291ms)
+✔ versioned activity finance cannot activate personal results (0.300295ms)
+✔ strict request schema rejects profiles, facts, approval flags and invalid civil data (0.724797ms)
+✔ default gateway always returns typed unavailable without personal echoes (64.116405ms)
+✔ query parameters and oversized bodies are rejected (18.034944ms)
+✔ capability and registry remain explicitly blocked (8.634578ms)
+✔ upstream fixtures, fake approval or response birth details cannot leak through gateway (5.024244ms)
+✔ upstream blocked response is projected and stripped of extras (4.878083ms)
+✔ daily screen has no stored natal defaults or verified recommendation (10.815349ms)
+✔ timeline renders DST elapsed hours and escapes explanation markup (3.205161ms)
+✔ mirrored timing client and UI are identical (0.391652ms)
+✔ remote public URLs cannot become personal-data transport (0.56142ms)
+✔ browser client rejects verified claims, invalid windows and mismatched provenance (3.869096ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 142.896622
+✔ default unavailable: /api/payment/orders (52.442708ms)
+✔ default unavailable: /api/payment/orders/other (7.88933ms)
+✔ default unavailable: /api/payment/entitlements (3.705929ms)
+✔ no approval or unready identity cannot call transport (6.523043ms)
+✔ forged identity/header does not forward (3.089205ms)
+✔ body and query tampering rejected before forwarding (24.693972ms)
+✔ transport receives verified bearer, fixed safe contract and no caller IDs (4.366138ms)
+✔ failures never fall back to paid (3.391473ms)
+✔ entitlement response strips internal identifiers (3.07244ms)
+✔ mutual TLS transport verifies both peers and sends bounded safe requests (275.130171ms)
+✔ production entry contains no test adapter activation or identity fallback (0.313094ms)
+✔ both checkout models keep browser callbacks from authorizing access (0.323951ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 391.4685
+✔ both default checkout views remain unavailable without SDK loading or a guessed price (9.137959ms)
+✔ sandbox presentation is clearly test mode and never renders a confirmed payment initially (1.277373ms)
+✔ sandbox environment flags without a real identity cannot enable checkout (68.826893ms)
+✔ live provider checkout keys are never forwarded by the sandbox boundary (26.281019ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.591677
+✔ session exchange sets secure HttpOnly host-only cookie and never returns bearer to browser JSON (72.058615ms)
+✔ cookie mutation requires exact Origin, double-submit token and downstream session binding (20.729803ms)
+✔ duplicate session cookies and forged public identities do not authenticate (5.539013ms)
+✔ logout revokes through Go and clears host session cookies (4.820185ms)
+✔ account deactivation requires explicit confirmation and never accepts another customer ID (5.648689ms)
+✔ signed readiness is artifact/config bound; no default production approval exists (4.158514ms)
+✔ blocked G01 prevents production permit (0.624535ms)
+✔ blocked G02 prevents production permit (0.545435ms)
+✔ blocked G03 prevents production permit (0.599027ms)
+✔ blocked G04 prevents production permit (0.593799ms)
+✔ blocked G05 prevents production permit (0.526546ms)
+✔ blocked G06 prevents production permit (0.617043ms)
+✔ blocked G07 prevents production permit (0.553097ms)
+✔ blocked G08 prevents production permit (0.653939ms)
+✔ blocked G09 prevents production permit (0.519967ms)
+✔ blocked G10 prevents production permit (0.432695ms)
+✔ blocked G11 prevents production permit (0.426275ms)
+✔ blocked G12 prevents production permit (0.317801ms)
+✔ blocked G13 prevents production permit (0.435259ms)
+✔ blocked G14 prevents production permit (0.315147ms)
+✔ blocked G15 prevents production permit (0.332663ms)
+✔ blocked G16 prevents production permit (0.524804ms)
+✔ blocked G17 prevents production permit (0.32367ms)
+✔ blocked G18 prevents production permit (0.547219ms)
+✔ blocked G19 prevents production permit (0.564434ms)
+✔ blocked G20 prevents production permit (0.537804ms)
+✔ blocked G21 prevents production permit (0.354607ms)
+✔ blocked G22 prevents production permit (0.39002ms)
+✔ blocked G23 prevents production permit (0.336369ms)
+✔ blocked G24 prevents production permit (0.305853ms)
+✔ blocked G25 prevents production permit (0.600149ms)
+✔ blocked G26 prevents production permit (0.514108ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 135.404183
+✔ explicit offset -3.5 preserves J2000 instant (229.387708ms)
+✔ explicit offset 5.75 preserves J2000 instant (0.657986ms)
+✔ explicit offset 14 preserves J2000 instant (0.232362ms)
+✔ explicit offset -12 preserves J2000 instant (0.200464ms)
+✔ engine cannot silently choose a timezone (0.98466ms)
+✔ milestones reject duplicate (0.688692ms)
+✔ milestones reject pre-birth (0.120021ms)
+✔ milestones reject future (0.118179ms)
+✔ milestones reject invalid date (0.256428ms)
+✔ milestones reject invalid confidence (0.197549ms)
+✔ unsupported resolver returns no score or resolution claim (2.113208ms)
+✔ create order fails closed for missing forged and expired credentials (25.603535ms)
+✔ unknown order fails closed for missing forged and expired credentials (7.099043ms)
+✔ v1 webhook fails closed for missing forged and expired credentials (8.469447ms)
+✔ session lookup fails closed for missing forged and expired credentials (5.809147ms)
+✔ SSE fails closed for missing forged and expired credentials (5.126509ms)
+✔ graph hydration fails closed for missing forged and expired credentials (6.79224ms)
+✔ resolver fails closed for missing forged and expired credentials (5.51426ms)
+✔ malformed JSON and oversized bodies fail safely (6.392385ms)
+✔ production diagnostics and payment simulation stay hidden (4.756298ms)
+✔ a supplied AI key cannot bypass consent/provenance boundary (5.802461ms)
+✔ chart provenance discloses analytical preview and uncertainty (10.259377ms)
+✔ missing timezone is never inferred from city or zone label (1.986827ms)
+✔ rate limiting is bounded without retaining client identities (405.820455ms)
+✔ chart outputs never fabricate strength or motion metrics (0.397812ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 791.285128
+go version go1.26.10 linux/amd64
+ok  	astroengine-core	0.004s
+ok  	astroengine-core	1.011s
+ok  	astroengine-core	0.002s
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+=== RUN   TestProtectedOperationsFailClosed
+--- PASS: TestProtectedOperationsFailClosed (0.00s)
+=== RUN   TestMalformedAndOversizedRequests
+--- PASS: TestMalformedAndOversizedRequests (0.00s)
+=== RUN   TestProductionDiagnosticsHidden
+--- PASS: TestProductionDiagnosticsHidden (0.00s)
+PASS
+ok  	astroengine-core/backend/cmd/server	0.007s
+=== RUN   TestPublishedExternalNativePlanetaryComparisons
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_MARS_19560114
+    external_reference_cgo_test.go:86: NOT_ADMITTED Mars barycenter vs native center and pre1972 UTC conventions lack established equivalence; no false numerical PASS
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_SUN_20051001_07
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.000017629589734724505,"actual":188.20112982958975,"body":"sun","expected":188.2011122,"id":"SKYFIELD_SUN_20051001_07","mode":"MOSHIER","quantity":"tropical_longitude","signed_residual_deg":0.000017629589734724505,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.0002,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.000007681767046389082,"actual":0.00005648176704638908,"body":"sun","expected":0.0000488,"id":"SKYFIELD_SUN_20051001_07","mode":"MOSHIER","quantity":"latitude","signed_residual_deg":0.000007681767046389082,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.00001,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_SUN_20051001_08
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.00001767117245776717,"actual":188.24211597117247,"body":"sun","expected":188.2420983,"id":"SKYFIELD_SUN_20051001_08","mode":"MOSHIER","quantity":"tropical_longitude","signed_residual_deg":0.00001767117245776717,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.0002,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.00000775206172447538,"actual":0.00005515206172447538,"body":"sun","expected":0.0000474,"id":"SKYFIELD_SUN_20051001_08","mode":"MOSHIER","quantity":"latitude","signed_residual_deg":0.00000775206172447538,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.00001,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_MARS_19560114
+    external_reference_cgo_test.go:86: NOT_ADMITTED Mars barycenter vs native center and pre1972 UTC conventions lack established equivalence; no false numerical PASS
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_SUN_20051001_07
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.000013161603021671908,"actual":188.20112536160303,"body":"sun","expected":188.2011122,"id":"SKYFIELD_SUN_20051001_07","mode":"SWISS_FILE","quantity":"tropical_longitude","signed_residual_deg":0.000013161603021671908,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.0002,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.000004264866051209241,"actual":0.00005306486605120924,"body":"sun","expected":0.0000488,"id":"SKYFIELD_SUN_20051001_07","mode":"SWISS_FILE","quantity":"latitude","signed_residual_deg":0.000004264866051209241,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.00001,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+=== RUN   TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_SUN_20051001_08
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.00001316782220328605,"actual":188.2421114678222,"body":"sun","expected":188.2420983,"id":"SKYFIELD_SUN_20051001_08","mode":"SWISS_FILE","quantity":"tropical_longitude","signed_residual_deg":0.00001316782220328605,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.0002,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+    external_reference_cgo_test.go:116: CORE01_NUMERICAL_RESULT {"absolute_error_deg":0.0000043183857655600615,"actual":0.00005171838576556006,"body":"sun","expected":0.0000474,"id":"SKYFIELD_SUN_20051001_08","mode":"SWISS_FILE","quantity":"latitude","signed_residual_deg":0.0000043183857655600615,"source_id":"skyfield-horizons-tests","source_scope":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE","status":"PASS","tolerance_deg":0.00001,"tolerance_source":"immutable upstream preexisting test; not fitted to local result"}
+--- PASS: TestPublishedExternalNativePlanetaryComparisons (0.01s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_MARS_19560114 (0.00s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_SUN_20051001_07 (0.00s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/MOSHIER/SKYFIELD_SUN_20051001_08 (0.00s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_MARS_19560114 (0.00s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_SUN_20051001_07 (0.00s)
+    --- PASS: TestPublishedExternalNativePlanetaryComparisons/SWISS_FILE/SKYFIELD_SUN_20051001_08 (0.00s)
+=== RUN   TestPublishedERFANativeEpochs
+=== RUN   TestPublishedERFANativeEpochs/ERFA_CAL2JD_20030601
+    external_reference_cgo_test.go:198: CORE01_TEMPORAL_RESULT {"absolute_error_seconds":0,"actual_jd":2452791.5,"expected_jd":2452791.5,"id":"ERFA_CAL2JD_20030601","operation":"CAL2JD","source_id":"erfa-published-vectors","status":"PASS","tolerance_seconds":0}
+=== RUN   TestPublishedERFANativeEpochs/ERFA_UTCTAI
+    external_reference_cgo_test.go:198: CORE01_TEMPORAL_RESULT {"absolute_error_seconds":0,"actual_jd":2453751.3924826384,"expected_jd":2453751.3924826384,"id":"ERFA_UTCTAI","operation":"UTCTAI","source_id":"erfa-published-vectors","status":"PASS","tolerance_seconds":0.00004031953522338867}
+=== RUN   TestPublishedERFANativeEpochs/ERFA_TAITT
+    external_reference_cgo_test.go:198: CORE01_TEMPORAL_RESULT {"absolute_error_seconds":0,"actual_jd":2453751.392855139,"expected_jd":2453751.392855139,"id":"ERFA_TAITT","operation":"TAITT","source_id":"erfa-published-vectors","status":"PASS","tolerance_seconds":0.00004031953522338867}
+=== RUN   TestPublishedERFANativeEpochs/ERFA_UTCUT1
+    external_reference_cgo_test.go:198: CORE01_TEMPORAL_RESULT {"absolute_error_seconds":0,"actual_jd":2453751.392104561,"expected_jd":2453751.392104561,"id":"ERFA_UTCUT1","operation":"UTCUT1","source_id":"erfa-published-vectors","status":"PASS","tolerance_seconds":0.00004031953522338867}
+=== RUN   TestPublishedERFANativeEpochs/ERFA_DTF2D_LEAP_19940630
+    external_reference_cgo_test.go:198: CORE01_TEMPORAL_RESULT {"absolute_error_seconds":0,"actual_jd":2449534.49999,"expected_jd":2449534.49999,"id":"ERFA_DTF2D_LEAP_19940630","operation":"DTF2D","source_id":"erfa-published-vectors","status":"PASS","tolerance_seconds":0.08644023313522338}
+--- PASS: TestPublishedERFANativeEpochs (0.00s)
+    --- PASS: TestPublishedERFANativeEpochs/ERFA_CAL2JD_20030601 (0.00s)
+    --- PASS: TestPublishedERFANativeEpochs/ERFA_UTCTAI (0.00s)
+    --- PASS: TestPublishedERFANativeEpochs/ERFA_TAITT (0.00s)
+    --- PASS: TestPublishedERFANativeEpochs/ERFA_UTCUT1 (0.00s)
+    --- PASS: TestPublishedERFANativeEpochs/ERFA_DTF2D_LEAP_19940630 (0.00s)
+=== RUN   TestRealNativePanchangDayAndCoverage
+    native_test.go:62: native_model_only date=2026-03-08 mode=MOSHIER factors=8 transitions=4 solar=EVENTS_AVAILABLE
+--- PASS: TestRealNativePanchangDayAndCoverage (0.19s)
+=== RUN   TestRealNativeBirthUncertaintyAndConventions
+--- PASS: TestRealNativeBirthUncertaintyAndConventions (0.00s)
+=== RUN   TestNativePolarDailyWithoutInventedAscendant
+--- PASS: TestNativePolarDailyWithoutInventedAscendant (0.23s)
+=== RUN   TestMathematicalPanchangAndChartBoundaries
+--- PASS: TestMathematicalPanchangAndChartBoundaries (0.01s)
+=== RUN   TestUnwrappedSolverAndFailureBounds
+--- PASS: TestUnwrappedSolverAndFailureBounds (0.00s)
+=== RUN   TestNativeHTTPStrictClosedContracts
+--- PASS: TestNativeHTTPStrictClosedContracts (0.00s)
+=== RUN   TestTraditionalIntervalsAreMeasurementsNotApprovedGuidance
+--- PASS: TestTraditionalIntervalsAreMeasurementsNotApprovedGuidance (0.00s)
+=== RUN   TestRationalSectorRepresentationPolicy
+--- PASS: TestRationalSectorRepresentationPolicy (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/astronomy	0.458s
+=== RUN   TestNoFabricatedDashaOrCertification
+--- PASS: TestNoFabricatedDashaOrCertification (0.00s)
+=== RUN   TestMilestoneValidation
+--- PASS: TestMilestoneValidation (0.00s)
+=== RUN   TestCanonicalNodeMilestoneContract
+--- PASS: TestCanonicalNodeMilestoneContract (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/calibration	0.006s
+=== RUN   TestNativeEphemeris
+--- PASS: TestNativeEphemeris (0.00s)
+=== RUN   TestNativeNormalizationWithTimezone
+--- PASS: TestNativeNormalizationWithTimezone (0.00s)
+=== RUN   TestNativeConcurrentDeterminism
+--- PASS: TestNativeConcurrentDeterminism (0.00s)
+=== RUN   TestLegacyScenarioCalendarOnly
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_01_J2000_EPOCH
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_02_HISTORICAL_INDIAN_KOLKATA_1989
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_03_MODERN_INDIAN_DELHI_2026
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_04_INDIAN_METRO_MUMBAI_2026
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_05_INDIAN_METRO_CHENNAI_2026
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_06_US_NEW_YORK_WINTER_EST
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_07_US_NEW_YORK_SUMMER_EDT
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_08_US_NEW_YORK_SPRING_FORWARD_GAP
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_09_US_NEW_YORK_FALL_BACK_FOLD
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_10_CANADA_TORONTO_SUMMER_EDT
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_11_CANADA_VANCOUVER_WINTER_PST
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_12_CALENDAR_LEAP_DAY_2000
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_13_CALENDAR_CENTURY_NON_LEAP_1900
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_14_TEMPORAL_MIDNIGHT_NOON_SEPARATION
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_15_SOLAR_VERNAL_EQUINOX_2026
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_16_SOLAR_SUMMER_SOLSTICE_2026
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_17_INTERNATIONAL_DATE_LINE_FIJI
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_18_EQUATORIAL_LOCATION_KIGALI
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_19_HIGH_LATITUDE_TROMSO_ARCTIC
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_20_ZODIAC_SIGN_BOUNDARY_ARIES_TAURUS
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_21_ZODIAC_WRAPAROUND_GANDANTA
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_22_NAKSHATRA_BOUNDARY_ASHWINI_BHARANI
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_23_TITHI_TRANSITION_PRATIPADA_DWITIYA
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_24_SUNRISE_SUNSET_NEW_DELHI
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_25_SUNRISE_SUNSET_KOLKATA
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_26_MOON_PHASE_FULL_MOON_PURNIMA
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_27_MOON_PHASE_NEW_MOON_AMAVASYA
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_28_PLANETARY_RETROGRADE_MARS_2025
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_29_AYANAMSA_TRUE_LAHIRI_PAC
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_30_AYANAMSA_KP_OFFSET
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_31_AYANAMSA_RAMAN_OFFSET
+=== RUN   TestLegacyScenarioCalendarOnly/SCENARIO_32_FRACTIONAL_UTC_OFFSET_NEPAL
+--- PASS: TestLegacyScenarioCalendarOnly (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_01_J2000_EPOCH (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_02_HISTORICAL_INDIAN_KOLKATA_1989 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_03_MODERN_INDIAN_DELHI_2026 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_04_INDIAN_METRO_MUMBAI_2026 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_05_INDIAN_METRO_CHENNAI_2026 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_06_US_NEW_YORK_WINTER_EST (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_07_US_NEW_YORK_SUMMER_EDT (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_08_US_NEW_YORK_SPRING_FORWARD_GAP (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_09_US_NEW_YORK_FALL_BACK_FOLD (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_10_CANADA_TORONTO_SUMMER_EDT (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_11_CANADA_VANCOUVER_WINTER_PST (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_12_CALENDAR_LEAP_DAY_2000 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_13_CALENDAR_CENTURY_NON_LEAP_1900 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_14_TEMPORAL_MIDNIGHT_NOON_SEPARATION (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_15_SOLAR_VERNAL_EQUINOX_2026 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_16_SOLAR_SUMMER_SOLSTICE_2026 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_17_INTERNATIONAL_DATE_LINE_FIJI (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_18_EQUATORIAL_LOCATION_KIGALI (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_19_HIGH_LATITUDE_TROMSO_ARCTIC (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_20_ZODIAC_SIGN_BOUNDARY_ARIES_TAURUS (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_21_ZODIAC_WRAPAROUND_GANDANTA (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_22_NAKSHATRA_BOUNDARY_ASHWINI_BHARANI (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_23_TITHI_TRANSITION_PRATIPADA_DWITIYA (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_24_SUNRISE_SUNSET_NEW_DELHI (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_25_SUNRISE_SUNSET_KOLKATA (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_26_MOON_PHASE_FULL_MOON_PURNIMA (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_27_MOON_PHASE_NEW_MOON_AMAVASYA (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_28_PLANETARY_RETROGRADE_MARS_2025 (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_29_AYANAMSA_TRUE_LAHIRI_PAC (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_30_AYANAMSA_KP_OFFSET (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_31_AYANAMSA_RAMAN_OFFSET (0.00s)
+    --- PASS: TestLegacyScenarioCalendarOnly/SCENARIO_32_FRACTIONAL_UTC_OFFSET_NEPAL (0.00s)
+=== RUN   TestNativeConfigurationFailures
+--- PASS: TestNativeConfigurationFailures (0.00s)
+=== RUN   TestUTCLabelNoCGORefusal
+--- PASS: TestUTCLabelNoCGORefusal (0.00s)
+=== RUN   TestCanonicalNativeEpochAndBodies
+    native_operational_cgo_test.go:48: {"contract_version":"astronomy-native-v1","epoch":{"utc":"2000-01-01T12:00:00Z","julian_day_utc_nominal":2451545,"julian_day_tt":2451545.0007428704,"julian_day_ut1":2451545.00000411,"tt_minus_utc_seconds":64.1840010881424,"dut1_seconds":0.3550976514816284,"delta_t_seconds":63.82890343666077,"ut1_source":"SWISS_DELTAT_MODEL_ESTIMATE","tt_source":"SWISS_BUILTIN_LEAP_TABLE_NOT_EXTERNALLY_VERIFIED"},"requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","source_commit":"175e1fcb3108bcd5c0d146c803f51dcf23508012","data_file_status":"NOT_USED_MOSHIER","coordinate_convention":"GEOCENTRIC_APPARENT_ECLIPTIC_OF_DATE; SWISS_DEFAULT_ABERRATION_NUTATION","ayanamsa_convention":"SWISS_SE_SIDM_LAHIRI","ayanamsa_degrees":23.853222486194408,"planets":{"jupiter":{"tropical_longitude":25.253030476953455,"sidereal_longitude":1.3998079907590317,"latitude":-1.2621728142466617,"distance_au":4.621181401415442,"longitude_speed_deg_per_day":0.040761316407126796,"latitude_speed_deg_per_day":0.005173355826744151,"distance_speed_au_per_day":0.015520829807419673,"sidereal_longitude_speed_deg_per_day":0.04072121139720007,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"mars":{"tropical_longitude":327.9633165065077,"sidereal_longitude":304.1100940203133,"latitude":-1.067782897014795,"distance_au":1.8496874555933314,"longitude_speed_deg_per_day":0.7756727705263342,"latitude_speed_deg_per_day":0.012475505065244695,"distance_speed_au_per_day":0.005424806620065144,"sidereal_longitude_speed_deg_per_day":0.7756326420902595,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"mean_node":{"tropical_longitude":125.04064583898813,"sidereal_longitude":101.1874233527937,"latitude":0,"distance_au":0.0025695552897999903,"longitude_speed_deg_per_day":-0.05295180109900147,"latitude_speed_deg_per_day":0,"distance_speed_au_per_day":0,"sidereal_longitude_speed_deg_per_day":-0.05299201973306629,"retrograde":true,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"MEAN_LUNAR_ASCENDING_NODE"},"mercury":{"tropical_longitude":271.8892814035699,"sidereal_longitude":248.0360589173755,"latitude":-0.9948255825787484,"distance_au":1.4154695009953797,"longitude_speed_deg_per_day":1.5562541123490177,"latitude_speed_deg_per_day":-0.09749182083061297,"distance_speed_au_per_day":0.004619834774347037,"sidereal_longitude_speed_deg_per_day":1.5562138969698696,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"moon":{"tropical_longitude":223.32382484474917,"sidereal_longitude":199.47060235855474,"latitude":5.170814737161284,"distance_au":0.0026899773180392383,"longitude_speed_deg_per_day":12.021182111328633,"latitude_speed_deg_per_day":-0.17806428688664416,"distance_speed_au_per_day":0.00001857749850747989,"sidereal_longitude_speed_deg_per_day":12.0211422683593,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"saturn":{"tropical_longitude":40.39563887401931,"sidereal_longitude":16.542416387824897,"latitude":-2.4448225351097244,"distance_au":8.652796036107745,"longitude_speed_deg_per_day":-0.019944768167150965,"latitude_speed_deg_per_day":0.004743165782951988,"distance_speed_au_per_day":0.014379429038439112,"sidereal_longitude_speed_deg_per_day":-0.019984801330632407,"retrograde":true,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"sun":{"tropical_longitude":280.3689238651328,"sidereal_longitude":256.51570137893833,"latitude":0.0002323264860602005,"distance_au":0.9833276447899747,"longitude_speed_deg_per_day":1.0194320960759964,"latitude_speed_deg_per_day":-8.922540305454229e-7,"distance_speed_au_per_day":-0.000007339392804610341,"sidereal_longitude_speed_deg_per_day":1.0193918774281074,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"},"true_node":{"tropical_longitude":123.95289520034021,"sidereal_longitude":100.09967271414581,"latitude":0,"distance_au":0.0024453796746337804,"longitude_speed_deg_per_day":-0.05438214699506169,"latitude_speed_deg_per_day":0,"distance_speed_au_per_day":0.000011591023068138247,"sidereal_longitude_speed_deg_per_day":-0.05442236728865317,"retrograde":true,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"OSCULATING_TRUE_LUNAR_ASCENDING_NODE"},"venus":{"tropical_longitude":241.5658032952332,"sidereal_longitude":217.71258080903877,"latitude":2.0663478754619966,"distance_au":1.1375794059909379,"longitude_speed_deg_per_day":1.209039736972286,"latitude_speed_deg_per_day":-0.028073575519586207,"distance_speed_au_per_day":0.006485874437637892,"sidereal_longitude_speed_deg_per_day":1.2089996163746186,"retrograde":false,"requested_flags":260,"returned_flags":260,"sidereal_returned_flags":65860,"definition":"GEOCENTRIC_APPARENT_BODY"}},"houses":{"tropical_ascendant":107.2046706040351,"sidereal_ascendant":83.35144811784069,"sidereal_cusps":[60,90,120,150,180,210,240,270,300,330,0,30],"system":"WHOLE_SIGN_SWISS_W"},"validation_status":"NOT_INDEPENDENTLY_VERIFIED","precision_status":"NUMERICAL_OUTPUT_NOT_EXTERNAL_ERROR_BUDGET","limitations":["Swiss builtin leap seconds and Delta-T are model inputs unless independently sourced DUT1 is supplied.","Native numerical output is not proof of independent astronomical accuracy or traditional interpretation."]}
+    native_operational_cgo_test.go:48: {"contract_version":"astronomy-native-v1","epoch":{"utc":"2000-01-01T12:00:00Z","julian_day_utc_nominal":2451545,"julian_day_tt":2451545.0007428704,"julian_day_ut1":2451545.00000411,"tt_minus_utc_seconds":64.1840010881424,"dut1_seconds":0.3550976514816284,"delta_t_seconds":63.82890343666077,"ut1_source":"SWISS_DELTAT_MODEL_ESTIMATE","tt_source":"SWISS_BUILTIN_LEAP_TABLE_NOT_EXTERNALLY_VERIFIED"},"requested_mode":"SWISS_FILE","actual_mode":"SWISS_FILE","library_version":"2.10.03","source_commit":"175e1fcb3108bcd5c0d146c803f51dcf23508012","data_file_status":"CONFIGURED_HASHES_VERIFIED","data_file_sha256":{"semo_18.se1":"1ca07bd67c24374d77226180c20a4f9996cba013697894810518e7eb582ca4f7","sepl_18.se1":"ca1393ceab3a44fbc895887cf789c68819ae6a1cbc9b22225872dbe4ccd99a66"},"coordinate_convention":"GEOCENTRIC_APPARENT_ECLIPTIC_OF_DATE; SWISS_DEFAULT_ABERRATION_NUTATION","ayanamsa_convention":"SWISS_SE_SIDM_LAHIRI","ayanamsa_degrees":23.853222486194408,"planets":{"jupiter":{"tropical_longitude":25.253087346468288,"sidereal_longitude":1.3998648602738812,"latitude":-1.2621878275720273,"distance_au":4.621175136962717,"longitude_speed_deg_per_day":0.04076116156239636,"latitude_speed_deg_per_day":0.005173483444949672,"distance_speed_au_per_day":0.01552083672176683,"sidereal_longitude_speed_deg_per_day":0.04072105666671615,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"mars":{"tropical_longitude":327.96330571380315,"sidereal_longitude":304.11008322760875,"latitude":-1.0677853902868144,"distance_au":1.8496878599172089,"longitude_speed_deg_per_day":0.7756739602724328,"latitude_speed_deg_per_day":0.012475682278357757,"distance_speed_au_per_day":0.005424815472509572,"sidereal_longitude_speed_deg_per_day":0.7756338317637744,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"mean_node":{"tropical_longitude":125.04064583898813,"sidereal_longitude":101.1874233527937,"latitude":0,"distance_au":0.0025695552897999903,"longitude_speed_deg_per_day":-0.05295180109900147,"latitude_speed_deg_per_day":0,"distance_speed_au_per_day":0,"sidereal_longitude_speed_deg_per_day":-0.05299201973306629,"retrograde":true,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"MEAN_LUNAR_ASCENDING_NODE"},"mercury":{"tropical_longitude":271.8892834423562,"sidereal_longitude":248.0360609561618,"latitude":-0.9948290196700481,"distance_au":1.4154694674989667,"longitude_speed_deg_per_day":1.5562581424573214,"latitude_speed_deg_per_day":-0.09749161663930943,"distance_speed_au_per_day":0.004619772496445195,"sidereal_longitude_speed_deg_per_day":1.5562179270753187,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"moon":{"tropical_longitude":223.32380085302708,"sidereal_longitude":199.47057836683263,"latitude":5.170739806820168,"distance_au":0.0026899892350248115,"longitude_speed_deg_per_day":12.021303158438936,"latitude_speed_deg_per_day":-0.17804125449240363,"distance_speed_au_per_day":0.00001858037495277151,"sidereal_longitude_speed_deg_per_day":12.021263315482871,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"saturn":{"tropical_longitude":40.39566341322231,"sidereal_longitude":16.5424409270279,"latitude":-2.4448547099826716,"distance_au":8.652796396558648,"longitude_speed_deg_per_day":-0.01994513376104265,"latitude_speed_deg_per_day":0.0047432556242753875,"distance_speed_au_per_day":0.014379442238822754,"sidereal_longitude_speed_deg_per_day":-0.01998516688490173,"retrograde":true,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"sun":{"tropical_longitude":280.36892285969753,"sidereal_longitude":256.51570037350314,"latitude":0.00022735344914254308,"distance_au":0.9833276253322939,"longitude_speed_deg_per_day":1.0194341633431199,"latitude_speed_deg_per_day":-5.877034588490372e-7,"distance_speed_au_per_day":-0.0000073507592352207915,"sidereal_longitude_speed_deg_per_day":1.0193939447006493,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"},"true_node":{"tropical_longitude":123.95402261360633,"sidereal_longitude":100.10080012741193,"latitude":0,"distance_au":0.0024454819876932768,"longitude_speed_deg_per_day":-0.054738535292085264,"latitude_speed_deg_per_day":0,"distance_speed_au_per_day":0.000011563601743587548,"sidereal_longitude_speed_deg_per_day":-0.05477875436955667,"retrograde":true,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"OSCULATING_TRUE_LUNAR_ASCENDING_NODE"},"venus":{"tropical_longitude":241.5657933520424,"sidereal_longitude":217.71257086584797,"latitude":2.066348932533074,"distance_au":1.1375792406429401,"longitude_speed_deg_per_day":1.2090430123736984,"latitude_speed_deg_per_day":-0.02807386985518514,"distance_speed_au_per_day":0.006485851504648839,"sidereal_longitude_speed_deg_per_day":1.2090028916776963,"retrograde":false,"requested_flags":258,"returned_flags":258,"sidereal_returned_flags":65858,"definition":"GEOCENTRIC_APPARENT_BODY"}},"houses":{"tropical_ascendant":107.2046706040351,"sidereal_ascendant":83.35144811784069,"sidereal_cusps":[60,90,120,150,180,210,240,270,300,330,0,30],"system":"WHOLE_SIGN_SWISS_W"},"validation_status":"NOT_INDEPENDENTLY_VERIFIED","precision_status":"NUMERICAL_OUTPUT_NOT_EXTERNAL_ERROR_BUDGET","limitations":["Swiss builtin leap seconds and Delta-T are model inputs unless independently sourced DUT1 is supplied.","Native numerical output is not proof of independent astronomical accuracy or traditional interpretation."]}
+--- PASS: TestCanonicalNativeEpochAndBodies (0.00s)
+=== RUN   TestNativeFileIntegrityAndNoFallback
+--- PASS: TestNativeFileIntegrityAndNoFallback (0.00s)
+=== RUN   TestNativeConcurrentModeIsolation
+--- PASS: TestNativeConcurrentModeIsolation (0.01s)
+=== RUN   TestNativeSolarEventsAndPolar
+    native_operational_cgo_test.go:128: Asia/Kolkata {"contract_version":"astronomy-native-v1","sunrise_utc":"2024-03-20T00:10:31.153285503Z","sunset_utc":"2024-03-20T12:17:41.353647709Z","solar_noon_utc":"2024-03-20T06:13:56.331291497Z","status":"EVENTS_AVAILABLE","requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","sunset_after_sunrise_utc":"2024-03-20T12:17:41.353687942Z","sunrise_to_sunset_seconds":43630.200402439,"daylight_intervals":[{"start":"2024-03-20T00:10:31.153285503Z","end":"2024-03-20T12:17:41.353647709Z"}],"daylight_seconds":43630.200362206,"refraction":"SWISS_PRESSURE_FROM_ELEVATION_TEMPERATURE_15_C_NOT_OBSERVED","solar_limb":"UPPER_LIMB_WITH_SWISS_SOLAR_SEMIDIAMETER","elevation_meters":0,"validation_status":"NOT_INDEPENDENTLY_VERIFIED","limitations":["Solar event atmospheric/elevation models are explicit assumptions, not measured weather.","Swiss rise/transit uses its internal Delta-T model; convergence does not prove external sub-minute accuracy.","Daylight duration is the union clipped to the requested civil day; sunset_after_sunrise may fall on the following civil date. Flat astronomical horizon, no terrain or observed weather."]}
+    native_operational_cgo_test.go:128: America/New_York {"contract_version":"astronomy-native-v1","sunrise_utc":"2026-03-08T11:18:52.523784041Z","sunset_utc":"2026-03-08T22:55:07.208360732Z","solar_noon_utc":"2026-03-08T17:06:40.285148621Z","status":"EVENTS_AVAILABLE","requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","sunset_after_sunrise_utc":"2026-03-08T22:55:07.208521664Z","sunrise_to_sunset_seconds":41774.684737623,"daylight_intervals":[{"start":"2026-03-08T11:18:52.523784041Z","end":"2026-03-08T22:55:07.208360732Z"}],"daylight_seconds":41774.684576691,"refraction":"SWISS_PRESSURE_FROM_ELEVATION_TEMPERATURE_15_C_NOT_OBSERVED","solar_limb":"UPPER_LIMB_WITH_SWISS_SOLAR_SEMIDIAMETER","elevation_meters":0,"validation_status":"NOT_INDEPENDENTLY_VERIFIED","limitations":["Solar event atmospheric/elevation models are explicit assumptions, not measured weather.","Swiss rise/transit uses its internal Delta-T model; convergence does not prove external sub-minute accuracy.","Daylight duration is the union clipped to the requested civil day; sunset_after_sunrise may fall on the following civil date. Flat astronomical horizon, no terrain or observed weather."]}
+    native_operational_cgo_test.go:128: Arctic/Longyearbyen {"contract_version":"astronomy-native-v1","solar_noon_utc":"2024-06-21T10:59:18.628481627Z","status":"POLAR_DAY","requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","daylight_intervals":[{"start":"2024-06-20T22:00:00Z","end":"2024-06-21T22:00:00Z"}],"daylight_seconds":86400,"refraction":"SWISS_PRESSURE_FROM_ELEVATION_TEMPERATURE_15_C_NOT_OBSERVED","solar_limb":"UPPER_LIMB_WITH_SWISS_SOLAR_SEMIDIAMETER","elevation_meters":0,"validation_status":"NOT_INDEPENDENTLY_VERIFIED","limitations":["Solar event atmospheric/elevation models are explicit assumptions, not measured weather.","Swiss rise/transit uses its internal Delta-T model; convergence does not prove external sub-minute accuracy.","Daylight duration is the union clipped to the requested civil day; sunset_after_sunrise may fall on the following civil date. Flat astronomical horizon, no terrain or observed weather."]}
+    native_operational_cgo_test.go:128: Arctic/Longyearbyen {"contract_version":"astronomy-native-v1","solar_noon_utc":"2024-12-21T10:55:39.94666636Z","status":"POLAR_NIGHT","requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","daylight_intervals":[],"daylight_seconds":0,"refraction":"SWISS_PRESSURE_FROM_ELEVATION_TEMPERATURE_15_C_NOT_OBSERVED","solar_limb":"UPPER_LIMB_WITH_SWISS_SOLAR_SEMIDIAMETER","elevation_meters":0,"validation_status":"NOT_INDEPENDENTLY_VERIFIED","limitations":["Solar event atmospheric/elevation models are explicit assumptions, not measured weather.","Swiss rise/transit uses its internal Delta-T model; convergence does not prove external sub-minute accuracy.","Daylight duration is the union clipped to the requested civil day; sunset_after_sunrise may fall on the following civil date. Flat astronomical horizon, no terrain or observed weather."]}
+--- PASS: TestNativeSolarEventsAndPolar (0.02s)
+=== RUN   TestNativeUTCLeapLabels
+    native_operational_cgo_test.go:157: {"utc_label":"1994-06-30T23:59:60.13599Z","julian_day_utc_quasi":2449534.49999,"julian_day_tt":2449534.500698148,"julian_day_ut1":2449534.499999277,"delta_t_seconds":60.382452607154846,"utc_day_length_seconds":86401,"leap_second_label":true,"ut1_source":"SWISS_DELTAT_MODEL_ESTIMATE","tt_source":"SWISS_BUILTIN_LEAP_TABLE_NOT_EXTERNALLY_VERIFIED","validation_status":"NOT_INDEPENDENTLY_VERIFIED"}
+--- PASS: TestNativeUTCLeapLabels (0.00s)
+=== RUN   TestNativeCrossMidnightDaylight
+    native_operational_cgo_test.go:181: {"contract_version":"astronomy-native-v1","sunrise_utc":"2024-06-21T10:58:21.451563835Z","sunset_utc":"2024-06-21T08:47:16.279177666Z","solar_noon_utc":"2024-06-21T21:52:52.442217171Z","status":"DAYLIGHT_CROSSES_MIDNIGHT","requested_mode":"MOSHIER","actual_mode":"MOSHIER","library_version":"2.10.03","sunset_after_sunrise_utc":"2024-06-22T08:47:14.39308852Z","sunrise_to_sunset_seconds":78532.941524685,"daylight_intervals":[{"start":"2024-06-21T08:00:00Z","end":"2024-06-21T08:47:16.279177666Z"},{"start":"2024-06-21T10:58:21.451563835Z","end":"2024-06-22T08:00:00Z"}],"daylight_seconds":78534.827613831,"refraction":"SWISS_PRESSURE_FROM_ELEVATION_TEMPERATURE_15_C_NOT_OBSERVED","solar_limb":"UPPER_LIMB_WITH_SWISS_SOLAR_SEMIDIAMETER","elevation_meters":0,"validation_status":"NOT_INDEPENDENTLY_VERIFIED","limitations":["Solar event atmospheric/elevation models are explicit assumptions, not measured weather.","Swiss rise/transit uses its internal Delta-T model; convergence does not prove external sub-minute accuracy.","Daylight duration is the union clipped to the requested civil day; sunset_after_sunrise may fall on the following civil date. Flat astronomical horizon, no terrain or observed weather."]}
+--- PASS: TestNativeCrossMidnightDaylight (0.00s)
+=== RUN   TestBirthValidation
+=== RUN   TestBirthValidation/missing_date
+=== RUN   TestBirthValidation/missing_time
+=== RUN   TestBirthValidation/missing_coordinates
+=== RUN   TestBirthValidation/invalid_leap_day
+=== RUN   TestBirthValidation/invalid_time
+=== RUN   TestBirthValidation/invalid_latitude
+=== RUN   TestBirthValidation/nan
+=== RUN   TestBirthValidation/infinity
+=== RUN   TestBirthValidation/unknown_time
+=== RUN   TestBirthValidation/missing_zone
+=== RUN   TestBirthValidation/machine-local_zone
+=== RUN   TestBirthValidation/invalid_zone
+=== RUN   TestBirthValidation/DST_gap
+=== RUN   TestBirthValidation/DST_fold
+--- PASS: TestBirthValidation (0.00s)
+    --- PASS: TestBirthValidation/missing_date (0.00s)
+    --- PASS: TestBirthValidation/missing_time (0.00s)
+    --- PASS: TestBirthValidation/missing_coordinates (0.00s)
+    --- PASS: TestBirthValidation/invalid_leap_day (0.00s)
+    --- PASS: TestBirthValidation/invalid_time (0.00s)
+    --- PASS: TestBirthValidation/invalid_latitude (0.00s)
+    --- PASS: TestBirthValidation/nan (0.00s)
+    --- PASS: TestBirthValidation/infinity (0.00s)
+    --- PASS: TestBirthValidation/unknown_time (0.00s)
+    --- PASS: TestBirthValidation/missing_zone (0.00s)
+    --- PASS: TestBirthValidation/machine-local_zone (0.00s)
+    --- PASS: TestBirthValidation/invalid_zone (0.00s)
+    --- PASS: TestBirthValidation/DST_gap (0.00s)
+    --- PASS: TestBirthValidation/DST_fold (0.00s)
+=== RUN   TestTimezoneArithmetic
+--- PASS: TestTimezoneArithmetic (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/ephemeris	0.047s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+=== RUN   TestTransitionMatrix
+=== RUN   TestTransitionMatrix/CREATED/CREATED
+=== RUN   TestTransitionMatrix/CREATED/PENDING
+=== RUN   TestTransitionMatrix/CREATED/COMPLETED
+=== RUN   TestTransitionMatrix/CREATED/FAILED
+=== RUN   TestTransitionMatrix/CREATED/CANCELLED
+=== RUN   TestTransitionMatrix/CREATED/EXPIRED
+=== RUN   TestTransitionMatrix/CREATED/REFUNDED
+=== RUN   TestTransitionMatrix/CREATED/REVERSED
+=== RUN   TestTransitionMatrix/CREATED/AUTHORIZED
+=== RUN   TestTransitionMatrix/CREATED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/CREATED/UNKNOWN
+=== RUN   TestTransitionMatrix/PENDING/CREATED
+=== RUN   TestTransitionMatrix/PENDING/PENDING
+=== RUN   TestTransitionMatrix/PENDING/COMPLETED
+=== RUN   TestTransitionMatrix/PENDING/FAILED
+=== RUN   TestTransitionMatrix/PENDING/CANCELLED
+=== RUN   TestTransitionMatrix/PENDING/EXPIRED
+=== RUN   TestTransitionMatrix/PENDING/REFUNDED
+=== RUN   TestTransitionMatrix/PENDING/REVERSED
+=== RUN   TestTransitionMatrix/PENDING/AUTHORIZED
+=== RUN   TestTransitionMatrix/PENDING/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/PENDING/UNKNOWN
+=== RUN   TestTransitionMatrix/COMPLETED/CREATED
+=== RUN   TestTransitionMatrix/COMPLETED/PENDING
+=== RUN   TestTransitionMatrix/COMPLETED/COMPLETED
+=== RUN   TestTransitionMatrix/COMPLETED/FAILED
+=== RUN   TestTransitionMatrix/COMPLETED/CANCELLED
+=== RUN   TestTransitionMatrix/COMPLETED/EXPIRED
+=== RUN   TestTransitionMatrix/COMPLETED/REFUNDED
+=== RUN   TestTransitionMatrix/COMPLETED/REVERSED
+=== RUN   TestTransitionMatrix/COMPLETED/AUTHORIZED
+=== RUN   TestTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/COMPLETED/UNKNOWN
+=== RUN   TestTransitionMatrix/FAILED/CREATED
+=== RUN   TestTransitionMatrix/FAILED/PENDING
+=== RUN   TestTransitionMatrix/FAILED/COMPLETED
+=== RUN   TestTransitionMatrix/FAILED/FAILED
+=== RUN   TestTransitionMatrix/FAILED/CANCELLED
+=== RUN   TestTransitionMatrix/FAILED/EXPIRED
+=== RUN   TestTransitionMatrix/FAILED/REFUNDED
+=== RUN   TestTransitionMatrix/FAILED/REVERSED
+=== RUN   TestTransitionMatrix/FAILED/AUTHORIZED
+=== RUN   TestTransitionMatrix/FAILED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/FAILED/UNKNOWN
+=== RUN   TestTransitionMatrix/CANCELLED/CREATED
+=== RUN   TestTransitionMatrix/CANCELLED/PENDING
+=== RUN   TestTransitionMatrix/CANCELLED/COMPLETED
+=== RUN   TestTransitionMatrix/CANCELLED/FAILED
+=== RUN   TestTransitionMatrix/CANCELLED/CANCELLED
+=== RUN   TestTransitionMatrix/CANCELLED/EXPIRED
+=== RUN   TestTransitionMatrix/CANCELLED/REFUNDED
+=== RUN   TestTransitionMatrix/CANCELLED/REVERSED
+=== RUN   TestTransitionMatrix/CANCELLED/AUTHORIZED
+=== RUN   TestTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/CANCELLED/UNKNOWN
+=== RUN   TestTransitionMatrix/EXPIRED/CREATED
+=== RUN   TestTransitionMatrix/EXPIRED/PENDING
+=== RUN   TestTransitionMatrix/EXPIRED/COMPLETED
+=== RUN   TestTransitionMatrix/EXPIRED/FAILED
+=== RUN   TestTransitionMatrix/EXPIRED/CANCELLED
+=== RUN   TestTransitionMatrix/EXPIRED/EXPIRED
+=== RUN   TestTransitionMatrix/EXPIRED/REFUNDED
+=== RUN   TestTransitionMatrix/EXPIRED/REVERSED
+=== RUN   TestTransitionMatrix/EXPIRED/AUTHORIZED
+=== RUN   TestTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/EXPIRED/UNKNOWN
+=== RUN   TestTransitionMatrix/REFUNDED/CREATED
+=== RUN   TestTransitionMatrix/REFUNDED/PENDING
+=== RUN   TestTransitionMatrix/REFUNDED/COMPLETED
+=== RUN   TestTransitionMatrix/REFUNDED/FAILED
+=== RUN   TestTransitionMatrix/REFUNDED/CANCELLED
+=== RUN   TestTransitionMatrix/REFUNDED/EXPIRED
+=== RUN   TestTransitionMatrix/REFUNDED/REFUNDED
+=== RUN   TestTransitionMatrix/REFUNDED/REVERSED
+=== RUN   TestTransitionMatrix/REFUNDED/AUTHORIZED
+=== RUN   TestTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/REFUNDED/UNKNOWN
+=== RUN   TestTransitionMatrix/REVERSED/CREATED
+=== RUN   TestTransitionMatrix/REVERSED/PENDING
+=== RUN   TestTransitionMatrix/REVERSED/COMPLETED
+=== RUN   TestTransitionMatrix/REVERSED/FAILED
+=== RUN   TestTransitionMatrix/REVERSED/CANCELLED
+=== RUN   TestTransitionMatrix/REVERSED/EXPIRED
+=== RUN   TestTransitionMatrix/REVERSED/REFUNDED
+=== RUN   TestTransitionMatrix/REVERSED/REVERSED
+=== RUN   TestTransitionMatrix/REVERSED/AUTHORIZED
+=== RUN   TestTransitionMatrix/REVERSED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/REVERSED/UNKNOWN
+=== RUN   TestTransitionMatrix/AUTHORIZED/CREATED
+=== RUN   TestTransitionMatrix/AUTHORIZED/PENDING
+=== RUN   TestTransitionMatrix/AUTHORIZED/COMPLETED
+=== RUN   TestTransitionMatrix/AUTHORIZED/FAILED
+=== RUN   TestTransitionMatrix/AUTHORIZED/CANCELLED
+=== RUN   TestTransitionMatrix/AUTHORIZED/EXPIRED
+=== RUN   TestTransitionMatrix/AUTHORIZED/REFUNDED
+=== RUN   TestTransitionMatrix/AUTHORIZED/REVERSED
+=== RUN   TestTransitionMatrix/AUTHORIZED/AUTHORIZED
+=== RUN   TestTransitionMatrix/AUTHORIZED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/AUTHORIZED/UNKNOWN
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/CREATED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/PENDING
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/COMPLETED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/FAILED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/CANCELLED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/EXPIRED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/REFUNDED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/REVERSED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/AUTHORIZED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/PARTIALLY_REFUNDED/UNKNOWN
+=== RUN   TestTransitionMatrix/UNKNOWN/CREATED
+=== RUN   TestTransitionMatrix/UNKNOWN/PENDING
+=== RUN   TestTransitionMatrix/UNKNOWN/COMPLETED
+=== RUN   TestTransitionMatrix/UNKNOWN/FAILED
+=== RUN   TestTransitionMatrix/UNKNOWN/CANCELLED
+=== RUN   TestTransitionMatrix/UNKNOWN/EXPIRED
+=== RUN   TestTransitionMatrix/UNKNOWN/REFUNDED
+=== RUN   TestTransitionMatrix/UNKNOWN/REVERSED
+=== RUN   TestTransitionMatrix/UNKNOWN/AUTHORIZED
+=== RUN   TestTransitionMatrix/UNKNOWN/PARTIALLY_REFUNDED
+=== RUN   TestTransitionMatrix/UNKNOWN/UNKNOWN
+--- PASS: TestTransitionMatrix (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CREATED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PENDING/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/COMPLETED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/FAILED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/CANCELLED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/EXPIRED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REFUNDED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/REVERSED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/AUTHORIZED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/PARTIALLY_REFUNDED/UNKNOWN (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/CREATED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/PENDING (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/COMPLETED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/FAILED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/CANCELLED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/EXPIRED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/REVERSED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/AUTHORIZED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/PARTIALLY_REFUNDED (0.00s)
+    --- PASS: TestTransitionMatrix/UNKNOWN/UNKNOWN (0.00s)
+=== RUN   TestPaymentApplication
+=== RUN   TestPaymentApplication/configuration_fails_closed
+=== RUN   TestPaymentApplication/retry-safe_catalog_snapshot_and_concurrent_creation
+=== RUN   TestPaymentApplication/unknown_unapproved_product_and_invalid_currency
+=== RUN   TestPaymentApplication/20_duplicates_and_post-commit_retry
+=== RUN   TestPaymentApplication/20_conflicting_event_IDs
+=== RUN   TestPaymentApplication/refund_versus_completion_is_deterministic
+=== RUN   TestPaymentApplication/failure_completion_out-of-order_and_payment_reuse
+=== RUN   TestPaymentApplication/multiple_purchases_refunds_and_expiration
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_event_insert
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_event_insert
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_order_update
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_commit
+=== RUN   TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_commit
+=== RUN   TestPaymentApplication/order_crash_and_provider_outage_recovery
+=== RUN   TestPaymentApplication/connection_loss_during_commit_and_cancellation
+=== RUN   TestPaymentApplication/unsigned_malformed_unknown_and_partial_refund
+=== RUN   TestPaymentApplication/latest_provider_refund_overrides_stale_completion
+=== RUN   TestPaymentApplication/reconciliation_durable_pending_and_bounded_backoff
+=== RUN   TestPaymentApplication/simultaneous_access_reads_and_revocation
+--- PASS: TestPaymentApplication (1.39s)
+    --- PASS: TestPaymentApplication/configuration_fails_closed (0.00s)
+    --- PASS: TestPaymentApplication/retry-safe_catalog_snapshot_and_concurrent_creation (0.07s)
+    --- PASS: TestPaymentApplication/unknown_unapproved_product_and_invalid_currency (0.00s)
+    --- PASS: TestPaymentApplication/20_duplicates_and_post-commit_retry (0.55s)
+    --- PASS: TestPaymentApplication/20_conflicting_event_IDs (0.07s)
+    --- PASS: TestPaymentApplication/refund_versus_completion_is_deterministic (0.02s)
+    --- PASS: TestPaymentApplication/failure_completion_out-of-order_and_payment_reuse (0.06s)
+    --- PASS: TestPaymentApplication/multiple_purchases_refunds_and_expiration (0.05s)
+    --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries (0.20s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_event_insert (0.02s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_event_insert (0.01s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_order_update (0.02s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/before_commit (0.02s)
+        --- PASS: TestPaymentApplication/crash_consistency_at_transaction_boundaries/after_commit (0.13s)
+    --- PASS: TestPaymentApplication/order_crash_and_provider_outage_recovery (0.02s)
+    --- PASS: TestPaymentApplication/connection_loss_during_commit_and_cancellation (0.02s)
+    --- PASS: TestPaymentApplication/unsigned_malformed_unknown_and_partial_refund (0.02s)
+    --- PASS: TestPaymentApplication/latest_provider_refund_overrides_stale_completion (0.01s)
+    --- PASS: TestPaymentApplication/reconciliation_durable_pending_and_bounded_backoff (0.09s)
+    --- PASS: TestPaymentApplication/simultaneous_access_reads_and_revocation (0.07s)
+=== RUN   TestApplicationHTTPOverMutualTLS
+2026/11/07 06:57:39 http: TLS handshake error from 127.0.0.1:59408: tls: client didn't provide a certificate
+--- PASS: TestApplicationHTTPOverMutualTLS (0.36s)
+=== RUN   TestDurableTransitionMatrix
+=== RUN   TestDurableTransitionMatrix/CREATED/CREATED
+=== RUN   TestDurableTransitionMatrix/CREATED/PENDING
+=== RUN   TestDurableTransitionMatrix/CREATED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/CREATED/FAILED
+=== RUN   TestDurableTransitionMatrix/CREATED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/CREATED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/CREATED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/CREATED/REVERSED
+=== RUN   TestDurableTransitionMatrix/CREATED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/PENDING/CREATED
+=== RUN   TestDurableTransitionMatrix/PENDING/PENDING
+=== RUN   TestDurableTransitionMatrix/PENDING/COMPLETED
+=== RUN   TestDurableTransitionMatrix/PENDING/FAILED
+=== RUN   TestDurableTransitionMatrix/PENDING/CANCELLED
+=== RUN   TestDurableTransitionMatrix/PENDING/EXPIRED
+=== RUN   TestDurableTransitionMatrix/PENDING/REFUNDED
+=== RUN   TestDurableTransitionMatrix/PENDING/REVERSED
+=== RUN   TestDurableTransitionMatrix/PENDING/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/CREATED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/PENDING
+=== RUN   TestDurableTransitionMatrix/COMPLETED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/FAILED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/REVERSED
+=== RUN   TestDurableTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/FAILED/CREATED
+=== RUN   TestDurableTransitionMatrix/FAILED/PENDING
+=== RUN   TestDurableTransitionMatrix/FAILED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/FAILED/FAILED
+=== RUN   TestDurableTransitionMatrix/FAILED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/FAILED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/FAILED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/FAILED/REVERSED
+=== RUN   TestDurableTransitionMatrix/FAILED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/CREATED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/PENDING
+=== RUN   TestDurableTransitionMatrix/CANCELLED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/FAILED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/REVERSED
+=== RUN   TestDurableTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/CREATED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/PENDING
+=== RUN   TestDurableTransitionMatrix/EXPIRED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/FAILED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/REVERSED
+=== RUN   TestDurableTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/CREATED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/PENDING
+=== RUN   TestDurableTransitionMatrix/REFUNDED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/FAILED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/REVERSED
+=== RUN   TestDurableTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED
+=== RUN   TestDurableTransitionMatrix/REVERSED/CREATED
+=== RUN   TestDurableTransitionMatrix/REVERSED/PENDING
+=== RUN   TestDurableTransitionMatrix/REVERSED/COMPLETED
+=== RUN   TestDurableTransitionMatrix/REVERSED/FAILED
+=== RUN   TestDurableTransitionMatrix/REVERSED/CANCELLED
+=== RUN   TestDurableTransitionMatrix/REVERSED/EXPIRED
+=== RUN   TestDurableTransitionMatrix/REVERSED/REFUNDED
+=== RUN   TestDurableTransitionMatrix/REVERSED/REVERSED
+=== RUN   TestDurableTransitionMatrix/REVERSED/PARTIALLY_REFUNDED
+--- PASS: TestDurableTransitionMatrix (0.61s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/PENDING (0.02s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CREATED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/PENDING/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/COMPLETED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/FAILED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/CANCELLED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/EXPIRED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REFUNDED/PARTIALLY_REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/CREATED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/PENDING (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/COMPLETED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/FAILED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/CANCELLED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/EXPIRED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/REFUNDED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/REVERSED (0.01s)
+    --- PASS: TestDurableTransitionMatrix/REVERSED/PARTIALLY_REFUNDED (0.01s)
+=== RUN   TestSchemaConstraintsAndLeastPrivilege
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/amount
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/currency
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/state
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/revision
+=== RUN   TestSchemaConstraintsAndLeastPrivilege/owner
+--- PASS: TestSchemaConstraintsAndLeastPrivilege (0.04s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/amount (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/currency (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/state (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/revision (0.00s)
+    --- PASS: TestSchemaConstraintsAndLeastPrivilege/owner (0.00s)
+=== RUN   TestDatabaseConfigurationAndReadiness
+--- PASS: TestDatabaseConfigurationAndReadiness (0.03s)
+=== RUN   TestVerifiedDatabaseTLS
+--- PASS: TestVerifiedDatabaseTLS (0.01s)
+=== RUN   TestPendingAndExpiryWithoutPaymentID
+--- PASS: TestPendingAndExpiryWithoutPaymentID (0.05s)
+=== RUN   TestCatalogManifest
+--- PASS: TestCatalogManifest (0.00s)
+=== RUN   TestNodeGoPostgresLifecycle
+    application_test.go:908: Node -> mutual TLS -> Go -> PostgreSQL lifecycle passed: idempotent order, ownership, completion, one grant, duplicate, refund and revocation
+--- PASS: TestNodeGoPostgresLifecycle (0.56s)
+=== RUN   TestRazorpayLatticeNoInventedRevision
+--- PASS: TestRazorpayLatticeNoInventedRevision (0.07s)
+=== RUN   TestLegacyFingerprintCompatibility
+--- PASS: TestLegacyFingerprintCompatibility (0.00s)
+=== RUN   TestCommercialCatalogValidation
+--- PASS: TestCommercialCatalogValidation (0.00s)
+=== RUN   TestCommercialOrdersAndProtection
+--- PASS: TestCommercialOrdersAndProtection (0.04s)
+=== RUN   TestWorkerLimitsAndDeadLetter
+--- PASS: TestWorkerLimitsAndDeadLetter (0.03s)
+=== RUN   TestWorkerConcurrentClaims
+--- PASS: TestWorkerConcurrentClaims (0.08s)
+=== RUN   TestFixedTelemetryNoIdentifiers
+--- PASS: TestFixedTelemetryNoIdentifiers (0.00s)
+=== RUN   TestPendingRiskNotificationCannotGrantBeforeReview
+--- PASS: TestPendingRiskNotificationCannotGrantBeforeReview (0.04s)
+=== RUN   TestBackoffCannotOverflowAtMaximumPolicy
+--- PASS: TestBackoffCannotOverflowAtMaximumPolicy (0.00s)
+=== RUN   TestTransactionalPayments
+=== RUN   TestTransactionalPayments/no_entitlement_before_verified_event
+=== RUN   TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing
+=== RUN   TestTransactionalPayments/unknown_order
+=== RUN   TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches
+=== RUN   TestTransactionalPayments/concurrent_duplicate_granted_once
+=== RUN   TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order
+=== RUN   TestTransactionalPayments/failed_then_successful_payment_and_refund
+=== RUN   TestTransactionalPayments/missing_provider_and_storage_fail_closed
+=== RUN   TestTransactionalPayments/reversal_removes_entitlement
+=== RUN   TestTransactionalPayments/restart_marker_persisted
+--- PASS: TestTransactionalPayments (0.22s)
+    --- PASS: TestTransactionalPayments/no_entitlement_before_verified_event (0.00s)
+    --- PASS: TestTransactionalPayments/server_catalog_rejects_unapproved_or_invalid_pricing (0.00s)
+    --- PASS: TestTransactionalPayments/unknown_order (0.00s)
+    --- PASS: TestTransactionalPayments/amount_currency_customer_and_provider_order_mismatches (0.01s)
+    --- PASS: TestTransactionalPayments/concurrent_duplicate_granted_once (0.08s)
+    --- PASS: TestTransactionalPayments/payment_IDs_cannot_fulfill_another_order (0.01s)
+    --- PASS: TestTransactionalPayments/failed_then_successful_payment_and_refund (0.01s)
+    --- PASS: TestTransactionalPayments/missing_provider_and_storage_fail_closed (0.00s)
+    --- PASS: TestTransactionalPayments/reversal_removes_entitlement (0.01s)
+    --- PASS: TestTransactionalPayments/restart_marker_persisted (0.05s)
+=== RUN   TestRecoveryAfterRestart
+    store_test.go:250: executed only after external database restart
+--- SKIP: TestRecoveryAfterRestart (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment	3.527s
+=== RUN   TestPinnedOIDCVerification
+=== RUN   TestPinnedOIDCVerification/subject
+=== RUN   TestPinnedOIDCVerification/multiple_audiences
+=== RUN   TestPinnedOIDCVerification/future
+=== RUN   TestPinnedOIDCVerification/excess_lifetime
+=== RUN   TestPinnedOIDCVerification/issuer
+=== RUN   TestPinnedOIDCVerification/audience
+=== RUN   TestPinnedOIDCVerification/expired
+=== RUN   TestPinnedOIDCVerification/nonce
+=== RUN   TestPinnedOIDCVerification/missing_expiry
+=== RUN   TestPinnedOIDCVerification/missing_issued
+--- PASS: TestPinnedOIDCVerification (0.19s)
+    --- PASS: TestPinnedOIDCVerification/subject (0.00s)
+    --- PASS: TestPinnedOIDCVerification/multiple_audiences (0.00s)
+    --- PASS: TestPinnedOIDCVerification/future (0.00s)
+    --- PASS: TestPinnedOIDCVerification/excess_lifetime (0.00s)
+    --- PASS: TestPinnedOIDCVerification/issuer (0.00s)
+    --- PASS: TestPinnedOIDCVerification/audience (0.00s)
+    --- PASS: TestPinnedOIDCVerification/expired (0.00s)
+    --- PASS: TestPinnedOIDCVerification/nonce (0.00s)
+    --- PASS: TestPinnedOIDCVerification/missing_expiry (0.00s)
+    --- PASS: TestPinnedOIDCVerification/missing_issued (0.00s)
+=== RUN   TestDurableSessions
+--- PASS: TestDurableSessions (0.73s)
+=== RUN   TestSessionRecoveryAfterRestart
+    auth_test.go:256: explicit post-restart check
+--- SKIP: TestSessionRecoveryAfterRestart (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment/authn	0.928s
+=== RUN   TestConfigurationAndMissingDependenciesFailClosed
+--- PASS: TestConfigurationAndMissingDependenciesFailClosed (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/payment/commercial	0.028s
+=== RUN   TestCommercialAuthenticatedLifecycle
+    commercial_integration_test.go:198: {"local_fixture_only":true,"concurrent_requests":20,"duplicate_order_p95_ms":90.04,"duplicate_order_mean_ms":68.59,"full_flow_ms":193.55,"ownership":"passed","csrf_and_session":"passed","dispute_hold_refund":"passed","provider_orders":1}
+--- PASS: TestCommercialAuthenticatedLifecycle (1.18s)
+=== RUN   TestProviderPostgresNodeLifecycle
+    integration_test.go:304: Node -> mutual TLS -> Go -> PostgreSQL lifecycle passed: idempotent order, ownership, completion, one grant, duplicate, refund and revocation
+--- PASS: TestProviderPostgresNodeLifecycle (0.71s)
+=== RUN   TestRazorpayRecoveryAfterRestart
+    integration_test.go:348: explicit post-restart invocation
+--- SKIP: TestRazorpayRecoveryAfterRestart (0.00s)
+=== RUN   TestProductionIsolationAndRotation
+--- PASS: TestProductionIsolationAndRotation (0.00s)
+=== RUN   TestVerifiedDisputeBecomesReviewNotification
+--- PASS: TestVerifiedDisputeBecomesReviewNotification (0.00s)
+=== RUN   TestConfig
+--- PASS: TestConfig (0.00s)
+=== RUN   TestRawWebhook
+=== RUN   TestRawWebhook/wrong-currency
+=== RUN   TestRawWebhook/wrong-order
+=== RUN   TestRawWebhook/wrong-merchant
+=== RUN   TestRawWebhook/authorized-not-captured
+=== RUN   TestRawWebhook/wrong-amount
+=== RUN   TestRawWebhook/unsupported
+=== RUN   TestRawWebhook/malformed
+--- PASS: TestRawWebhook (0.00s)
+    --- PASS: TestRawWebhook/wrong-currency (0.00s)
+    --- PASS: TestRawWebhook/wrong-order (0.00s)
+    --- PASS: TestRawWebhook/wrong-merchant (0.00s)
+    --- PASS: TestRawWebhook/authorized-not-captured (0.00s)
+    --- PASS: TestRawWebhook/wrong-amount (0.00s)
+    --- PASS: TestRawWebhook/unsupported (0.00s)
+    --- PASS: TestRawWebhook/malformed (0.00s)
+=== RUN   TestCreateRecoveryAndNoPostRetry
+--- PASS: TestCreateRecoveryAndNoPostRetry (0.00s)
+=== RUN   TestAuthoritativeStates
+=== RUN   TestAuthoritativeStates/authorizedfalse_0
+=== RUN   TestAuthoritativeStates/failedfalse_0
+=== RUN   TestAuthoritativeStates/capturedtrue_0
+=== RUN   TestAuthoritativeStates/refundedtrue_12345
+=== RUN   TestAuthoritativeStates/capturedtrue_100
+=== RUN   TestAuthoritativeStates/capturedfalse_0
+=== RUN   TestAuthoritativeStates/unknowntrue_0
+--- PASS: TestAuthoritativeStates (0.00s)
+    --- PASS: TestAuthoritativeStates/authorizedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/failedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedtrue_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/refundedtrue_12345 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedtrue_100 (0.00s)
+    --- PASS: TestAuthoritativeStates/capturedfalse_0 (0.00s)
+    --- PASS: TestAuthoritativeStates/unknowntrue_0 (0.00s)
+=== RUN   TestSafeRetriesAndTimeout
+--- PASS: TestSafeRetriesAndTimeout (0.10s)
+PASS
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	2.010s
+=== RUN   TestSignedArtifactGates
+=== RUN   TestSignedArtifactGates/G01_blocks
+=== RUN   TestSignedArtifactGates/G02_blocks
+=== RUN   TestSignedArtifactGates/G03_blocks
+=== RUN   TestSignedArtifactGates/G04_blocks
+=== RUN   TestSignedArtifactGates/G05_blocks
+=== RUN   TestSignedArtifactGates/G06_blocks
+=== RUN   TestSignedArtifactGates/G07_blocks
+=== RUN   TestSignedArtifactGates/G08_blocks
+=== RUN   TestSignedArtifactGates/G09_blocks
+=== RUN   TestSignedArtifactGates/G10_blocks
+=== RUN   TestSignedArtifactGates/G11_blocks
+=== RUN   TestSignedArtifactGates/G12_blocks
+=== RUN   TestSignedArtifactGates/G13_blocks
+=== RUN   TestSignedArtifactGates/G14_blocks
+=== RUN   TestSignedArtifactGates/G15_blocks
+=== RUN   TestSignedArtifactGates/G16_blocks
+=== RUN   TestSignedArtifactGates/G17_blocks
+=== RUN   TestSignedArtifactGates/G18_blocks
+=== RUN   TestSignedArtifactGates/G19_blocks
+=== RUN   TestSignedArtifactGates/G20_blocks
+=== RUN   TestSignedArtifactGates/G21_blocks
+=== RUN   TestSignedArtifactGates/G22_blocks
+=== RUN   TestSignedArtifactGates/G23_blocks
+=== RUN   TestSignedArtifactGates/G24_blocks
+=== RUN   TestSignedArtifactGates/G25_blocks
+=== RUN   TestSignedArtifactGates/G26_blocks
+--- PASS: TestSignedArtifactGates (0.01s)
+    --- PASS: TestSignedArtifactGates/G01_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G02_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G03_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G04_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G05_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G06_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G07_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G08_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G09_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G10_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G11_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G12_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G13_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G14_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G15_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G16_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G17_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G18_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G19_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G20_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G21_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G22_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G23_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G24_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G25_blocks (0.00s)
+    --- PASS: TestSignedArtifactGates/G26_blocks (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/payment/release	0.016s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+=== RUN   TestNodeMTLSGoTimingBoundary
+    cross_service_test.go:86: Node → verified mTLS → real Go civil-time/gate: India24h, US23h, Canada25h; DST fold/offset, invalid date, uncertainty and no fixture leakage passed. No astronomical accuracy claim.
+--- PASS: TestNodeMTLSGoTimingBoundary (0.44s)
+=== RUN   TestLocalDaysAndBirthDST
+=== RUN   TestLocalDaysAndBirthDST/Asia/Kolkata2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/America/New_York2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/America/Toronto2026-11-01
+=== RUN   TestLocalDaysAndBirthDST/America/Vancouver2026-03-08
+=== RUN   TestLocalDaysAndBirthDST/Australia/Lord_Howe2026-10-04
+--- PASS: TestLocalDaysAndBirthDST (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/Asia/Kolkata2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/New_York2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/Toronto2026-11-01 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/America/Vancouver2026-03-08 (0.00s)
+    --- PASS: TestLocalDaysAndBirthDST/Australia/Lord_Howe2026-10-04 (0.00s)
+=== RUN   TestStrictInputAndUncertainty
+--- PASS: TestStrictInputAndUncertainty (0.00s)
+=== RUN   TestIntervalAlgebraAndMidnight
+--- PASS: TestIntervalAlgebraAndMidnight (0.00s)
+=== RUN   TestDeterministicExclusionRankingAndTies
+--- PASS: TestDeterministicExclusionRankingAndTies (0.00s)
+=== RUN   TestMissingEvidenceModesAndPolar
+--- PASS: TestMissingEvidenceModesAndPolar (0.00s)
+=== RUN   TestRuleRegistryAndSnapshot
+--- PASS: TestRuleRegistryAndSnapshot (0.00s)
+=== RUN   TestHTTPContractsFailClosed
+--- PASS: TestHTTPContractsFailClosed (0.00s)
+=== RUN   TestPriorityOverlapsTiesAndEmptyWindows
+--- PASS: TestPriorityOverlapsTiesAndEmptyWindows (0.00s)
+=== RUN   TestMidnightCrossingAndSkippedCivilDate
+--- PASS: TestMidnightCrossingAndSkippedCivilDate (0.00s)
+=== RUN   TestRealAstronomyCannotBypassTimingAdmission
+--- PASS: TestRealAstronomyCannotBypassTimingAdmission (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/timing	0.451s
+=== RUN   TestUnavailableProviderCannotFulfill
+--- PASS: TestUnavailableProviderCannotFulfill (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/webhook	0.002s
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+ok  	astroengine-core/backend/cmd/server	1.035s
+ok  	astroengine-core/backend/internal/astronomy	1.383s
+ok  	astroengine-core/backend/internal/calibration	1.012s
+ok  	astroengine-core/backend/internal/ephemeris	1.053s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	4.963s
+ok  	astroengine-core/backend/internal/payment/authn	1.706s
+ok  	astroengine-core/backend/internal/payment/commercial	1.025s
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	3.670s
+ok  	astroengine-core/backend/internal/payment/release	1.065s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/timing	1.418s
+ok  	astroengine-core/backend/internal/webhook	1.011s
+?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+ok  	astroengine-core/backend/cmd/server	0.021s
+ok  	astroengine-core/backend/internal/astronomy	0.016s
+ok  	astroengine-core/backend/internal/calibration	0.007s
+ok  	astroengine-core/backend/internal/ephemeris	0.003s
+?   	astroengine-core/backend/internal/graph	[no test files]
+?   	astroengine-core/backend/internal/metrics	[no test files]
+ok  	astroengine-core/backend/internal/payment	3.605s
+ok  	astroengine-core/backend/internal/payment/authn	0.823s
+ok  	astroengine-core/backend/internal/payment/commercial	0.368s
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	1.966s
+ok  	astroengine-core/backend/internal/payment/release	0.013s
+?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+?   	astroengine-core/backend/internal/resolver	[no test files]
+?   	astroengine-core/backend/internal/rvm	[no test files]
+ok  	astroengine-core/backend/internal/timing	0.381s
+ok  	astroengine-core/backend/internal/webhook	0.005s
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+=== RUN   TestRecoveryAfterRestart
+--- PASS: TestRecoveryAfterRestart (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/payment	0.020s
+=== RUN   TestRazorpayRecoveryAfterRestart
+--- PASS: TestRazorpayRecoveryAfterRestart (0.03s)
+PASS
+ok  	astroengine-core/backend/internal/payment/providers/razorpay	0.032s
+=== RUN   TestSessionRecoveryAfterRestart
+--- PASS: TestSessionRecoveryAfterRestart (0.09s)
+PASS
+ok  	astroengine-core/backend/internal/payment/authn	0.094s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 2.77kB 0.0s done
+#1 DONE 0.2s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.8s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#4 ...
+
+#5 [internal] load metadata for docker.io/library/golang:1.26-bookworm
+#5 DONE 0.5s
+
+#4 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#4 DONE 0.5s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 174B done
+#6 DONE 0.0s
+
+#7 [runtime 1/5] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#7 DONE 0.0s
+
+#8 [builder 1/9] FROM docker.io/library/golang:1.26-bookworm@sha256:5de7c99eb78ca5e515a4c340235d0955ec5964a5071c492c15503d7c267da473
+#8 DONE 0.0s
+
+#9 [builder 2/9] WORKDIR /app
+#9 CACHED
+
+#10 [internal] load build context
+#10 transferring context: 2.81MB 0.0s done
+#10 DONE 0.0s
+
+#11 [builder 3/9] COPY --chmod=0555 scripts/install-swisseph.sh /usr/local/bin/install-swisseph
+#11 DONE 8.8s
+
+#12 [builder 4/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi;     sh /usr/local/bin/install-swisseph
+#12 3.707 From https://github.com/aloistr/swisseph
+#12 3.707  * branch            175e1fcb3108bcd5c0d146c803f51dcf23508012 -> FETCH_HEAD
+#12 3.779 make: Entering directory '/tmp/tmp.Lr1OygC2Td/source'
+#12 3.779 cc	 -c -O2 -Wall -fPIC    swedate.c
+#12 3.779 cc	 -c -O2 -Wall -fPIC    swehouse.c
+#12 3.885 cc	 -c -O2 -Wall -fPIC    swejpl.c
+#12 4.129 cc	 -c -O2 -Wall -fPIC    swemmoon.c
+#12 4.385 cc	 -c -O2 -Wall -fPIC    swemplan.c
+#12 4.481 cc	 -c -O2 -Wall -fPIC    sweph.c
+#12 4.704 cc	 -c -O2 -Wall -fPIC    swephlib.c
+#12 5.574 cc	 -c -O2 -Wall -fPIC    swecl.c
+#12 6.281 cc	 -c -O2 -Wall -fPIC    swehel.c
+#12 6.948 ar r libswe.a	swedate.o swehouse.o swejpl.o swemmoon.o swemplan.o sweph.o swephlib.o swecl.o swehel.o
+#12 6.948 ar: creating libswe.a
+#12 6.951 make: Leaving directory '/tmp/tmp.Lr1OygC2Td/source'
+#12 DONE 7.0s
+
+#13 [builder 5/9] COPY backend/go.mod backend/go.sum ./backend/
+#13 DONE 1.7s
+
+#14 [builder 6/9] WORKDIR /app/backend
+#14 DONE 1.7s
+
+#15 [builder 7/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     go mod download
+#15 DONE 4.6s
+
+#16 [builder 8/9] COPY backend/ ./
+#16 DONE 1.5s
+
+#17 [builder 9/9] RUN --mount=type=bind,source=tests/calculation/reference,target=/app/tests/calculation/reference,readonly     CGO_ENABLED=1 go test -mod=readonly ./... &&     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/astroengine_server ./cmd/server
+#17 17.07 ?   	astroengine-core/backend/cmd/payment-commercial	[no test files]
+#17 17.07 ?   	astroengine-core/backend/cmd/payment-observer	[no test files]
+#17 18.41 ok  	astroengine-core/backend/cmd/server	0.061s
+#17 19.03 ok  	astroengine-core/backend/internal/astronomy	0.618s
+#17 19.03 ok  	astroengine-core/backend/internal/calibration	0.007s
+#17 19.03 ok  	astroengine-core/backend/internal/ephemeris	0.034s
+#17 19.03 ?   	astroengine-core/backend/internal/graph	[no test files]
+#17 20.05 ?   	astroengine-core/backend/internal/metrics	[no test files]
+#17 20.07 ok  	astroengine-core/backend/internal/payment	0.013s
+#17 20.27 ok  	astroengine-core/backend/internal/payment/authn	0.213s
+#17 20.27 ok  	astroengine-core/backend/internal/payment/commercial	0.011s
+#17 20.27 ok  	astroengine-core/backend/internal/payment/providers/razorpay	0.120s
+#17 20.27 ok  	astroengine-core/backend/internal/payment/release	0.014s
+#17 20.27 ?   	astroengine-core/backend/internal/payment/sandbox	[no test files]
+#17 20.27 ?   	astroengine-core/backend/internal/resolver	[no test files]
+#17 20.27 ?   	astroengine-core/backend/internal/rvm	[no test files]
+#17 20.27 ok  	astroengine-core/backend/internal/timing	0.008s
+#17 20.27 ok  	astroengine-core/backend/internal/webhook	0.003s
+#17 DONE 31.8s
+
+#18 [runtime 2/5] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     apt-get update && apt-get install -y --no-install-recommends ca-certificates libstdc++6 tzdata &&     rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [runtime 3/5] WORKDIR /app
+#19 CACHED
+
+#20 [runtime 4/5] COPY --from=builder /app/astroengine_server ./astroengine_server
+#20 DONE 2.3s
+
+#21 [runtime 5/5] COPY --from=builder /usr/local/share/licenses/swisseph /usr/share/licenses/swisseph
+#21 DONE 0.2s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 0.2s done
+#22 writing image sha256:429b1e2165f922f9c08aea67c2a6f98cbc70934a7300a3cf53ff3bcb5f893981 done
+#22 naming to docker.io/library/mymomentoclock:core01-verify-native done
+#22 DONE 0.2s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.web
+#1 transferring dockerfile: 1.54kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.2s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/node:22-bookworm-slim
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 174B done
+#5 DONE 0.0s
+
+#6 [build 1/6] FROM docker.io/library/node:22-bookworm-slim
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 10.63MB 0.2s done
+#7 DONE 0.2s
+
+#8 [build 2/6] WORKDIR /app
+#8 CACHED
+
+#9 [build 3/6] COPY package.json package-lock.json ./
+#9 DONE 3.1s
+
+#10 [build 4/6] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca; fi;     npm ci --no-audit --no-fund
+#10 2.217 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+#10 6.230
+#10 6.230 added 185 packages in 6s
+#10 6.231 npm notice
+#10 6.231 npm notice New major version of npm available! 10.9.9 -> 12.2.2
+#10 6.231 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+#10 6.231 npm notice To update run: npm install -g npm@12.2.2
+#10 6.231 npm notice
+#10 DONE 6.3s
+
+#11 [build 5/6] COPY . .
+#11 DONE 0.7s
+
+#12 [build 6/6] RUN npm run lint && npm run build
+#12 0.966
+#12 0.966 > mymomentoclock@1.0.0 lint
+#12 0.966 > tsc --noEmit
+#12 0.966
+#12 1.390
+#12 1.390 > mymomentoclock@1.0.0 build
+#12 1.390 > vite build
+#12 1.390
+#12 1.604 vite v8.3.5 building client environment for production...
+#12 1.615 transforming...
+#12 1.786 ✓ 47 modules transformed.
+#12 1.805 rendering chunks...
+#12 1.843 computing gzip size...
+#12 1.848 dist/index.html                                                      1.01 kB │ gzip:   0.45 kB
+#12 1.848 dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+#12 1.848 dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+#12 1.848 dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+#12 1.848 dist/assets/index-D_W5_b-9.css                                      62.67 kB │ gzip:  10.12 kB
+#12 1.848 dist/assets/index-DC7CWbky.js                                      335.92 kB │ gzip: 104.27 kB
+#12 1.848
+#12 1.849 ✓ built in 243ms
+#12 DONE 1.9s
+
+#13 [runtime 3/8] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#13 CACHED
+
+#14 [runtime 4/8] COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
+#14 ERROR: mkdir /home/dockerd/.local/share/docker/vfs/dir/180e68029ec2d0babefa58327a917a0a3f93da8d3783875cb4e5512ae95362d2/usr/lib/x86_64-linux-gnu/perl-base: no space left on device
+------
+ > [runtime 4/8] COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./:
+------
+Dockerfile.web:16
+--------------------
+  14 |     # tsx is currently a devDependency but is required by the start script.
+  15 |     COPY --from=build --chown=node:node /app/node_modules ./node_modules
+  16 | >>> COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
+  17 |     COPY --from=build --chown=node:node /app/server.ts ./server.ts
+  18 |     COPY --from=build --chown=node:node /app/server ./server
+--------------------
+ERROR: failed to build: failed to solve: ResourceExhausted: mkdir /home/dockerd/.local/share/docker/vfs/dir/180e68029ec2d0babefa58327a917a0a3f93da8d3783875cb4e5512ae95362d2/usr/lib/x86_64-linux-gnu/perl-base: no space left on device

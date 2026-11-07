@@ -1,4 +1,4 @@
-import { validateBirthInput } from './calculationValidation';
+import { validateBirthInput, CalculationInputError } from './calculationValidation';
 /**
  * MymomentOclock Mathematical & Astronomical Specification Core
  * Supports True Lahiri (Chitrapaksha), KP, and Raman Ayanamsas.
@@ -361,11 +361,22 @@ export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, asc
  * Odd signs: 0-15° ruled by Sun (Leo), 15-30° ruled by Moon (Cancer)
  * Even signs: 0-15° ruled by Moon (Cancer), 15-30° ruled by Sun (Leo)
  */
+// Division boundaries must not use the2-decimal display degree. The available
+// preview longitude still has finite model/rounding error; this is not accuracy acceptance.
+function divisionDegree(p:PlanetPosition):number {
+  if(Number.isFinite(p.longitude)&&Number.isInteger(p.signIndex)){
+    const degree=p.longitude-p.signIndex*30;
+    if(degree>=0&&degree<30)return degree;
+    throw new CalculationInputError('DIVISION_BOUNDARY_UNRESOLVED','Rounded longitude and sign disagree at a boundary; use a validated native position.');
+  }
+  throw new CalculationInputError('INVALID_PLANET_POSITION','Supply a finite longitude and consistent sign for divisional mapping.');
+}
+
 export function calculateD2Hora(planets: PlanetPosition[]): Record<string, string> {
   const result: Record<string, string> = {};
   planets.forEach(p => {
     const isOddSign = p.signIndex % 2 === 0; // Aries=0 (odd sign in Vedic 1-indexed count)
-    const firstHalf = p.degreeInSign < 15.0;
+    const firstHalf = divisionDegree(p) < 15.0;
     if (isOddSign) {
       result[p.name] = firstHalf ? 'Sun (Leo - Active/Wealth Solar)' : 'Moon (Cancer - Receptive/Lunar)';
     } else {
@@ -389,7 +400,7 @@ export function calculateD9Navamsha(planets: PlanetPosition[]): Record<string, {
   const elementStartSigns = [0, 9, 6, 3]; // Fire->Aries, Earth->Cap, Air->Libra, Water->Cancer
 
   planets.forEach(p => {
-    const segment = Math.floor(p.degreeInSign / (30.0 / 9.0)); // 0 to 8
+    const segment = Math.floor(divisionDegree(p) / (30.0 / 9.0)); // 0 to 8
     const element = p.signIndex % 4; // 0=Fire, 1=Earth, 2=Air, 3=Water
     const startSign = elementStartSigns[element];
     const navamshaSignIdx = (startSign + segment) % 12;
@@ -409,7 +420,7 @@ export function calculateD9Navamsha(planets: PlanetPosition[]): Record<string, {
  */
 export function calculateD60Shashtyamsa(planets: PlanetPosition[]): ShashtyamsaData[] {
   return planets.map(p => {
-    const partIndex = Math.min(59, Math.floor(p.degreeInSign / 0.5));
+    const partIndex = Math.min(59, Math.floor(divisionDegree(p) / 0.5));
     const isOdd = p.signIndex % 2 === 0;
     const deityName = isOdd ? D60_DEITIES_ODD[partIndex] : D60_DEITIES_ODD[59 - partIndex];
 

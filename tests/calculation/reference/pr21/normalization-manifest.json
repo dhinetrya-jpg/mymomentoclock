@@ -1,0 +1,4 @@
+{
+  "reproduction": "scripts/core-pr21-reference.py generate; independent evaluator uses no Swiss outputs",
+  "sha256": "9f01aa138b9d415bf8011de8a21bc85f251898a71874b3391cdcedf8b7929862"
+}
