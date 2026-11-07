@@ -29,3 +29,11 @@ The versioned astronomy payload contains real natal positions/classifications, d
 Complete repository-relative inventory is in `CORE_P0_01_FILES_CHANGED.txt`; selected safe execution evidence and full residual statistics are in `evidence/core01/`. No private ephemeral keys, database credentials, session tokens or real customer birth records are committed.
 
 Tested functional implementation commit: `f46d2dc8ce511677dd4d86c31d9b22b3eec68be5`. Subsequent commits may only add evidence/handoff metadata; exact delivered HEAD is verified in the final response.
+
+## GitHub delivery
+
+Branch: `fix/core-p0-01-complete-acceptance`, pushed to origin. Starting commit: `cc3ab8245ea5d6bced19f5fed200da1528d13154`. Functional implementation: `f46d2dc8ce511677dd4d86c31d9b22b3eec68be5`. Evidence commit: `86a6ffadb8346ad2055c3b6a35ac8abb8e3dd481`. Final delivered HEAD is reported separately to avoid a self-referencing commit hash.
+
+Draft PR creation was attempted with `gh pr create --draft`; GitHub GraphQL returned `Forbidden`. No PR was created by this attempt. Manual creation link: https://github.com/dhinetrya-jpg/mymomentoclock/pull/new/fix/core-p0-01-complete-acceptance . This is a creation link, not an existing PR.
+
+`gh run list --branch fix/core-p0-01-complete-acceptance --limit 5 --json url,headSha,status,conclusion` returned API `Forbidden`. Remote CI status is unverified; no remote PASS is claimed. No merge, deployment, environment publication or customer timing activation was performed.
