@@ -38,6 +38,21 @@ CORE-P0-02 real provider is technically available for scientific inspection and 
 | Current IANA rules | Official maintainer e29969d3f327f129ec4aebaa9c7aee96c46f8e3b | Original LICENSE retained (public-domain rules with file-specific exceptions); preserve applicable notices |
 | Existing ERFA and source captures | Original pinned references remain | Existing license/provenance artifacts retained; numerical attribution does not grant blanket commercial legal approval |
 
+## PR21 Git delivery and CI observation
+
+Existing PR: https://github.com/dhinetrya-jpg/mymomentoclock/pull/21 . Existing branch: `fix/core-p0-01-complete-acceptance`. Starting PR ref and branch were fetched and both verified as `110ea5c2699f917bd928908516e1a92f8d33191a`. Tested implementation/evidence commit: `fac9687fd62f839ddf5f6af81df03643ab1a1480`, pushed to the same branch. Subsequent handoff-only commit adds metadata/evidence; exact delivered remote SHA and final-head live CI conclusions are reported in the final response (avoids self-referencing commit hashes).
+
+GitHub API requests remain403, but normal PR/checks and workflow pages work. The SHA-bound observer verifies full PR head plus every workflow run title's commit prefix and retains no session-channel data. All four baseline workflows were independently observed SUCCESS. The first source-head observation below is timestamped historical evidence of four IN PROGRESS workflows, not a claim of final-head CI success. Continue observing the final head after the metadata push; do not substitute baseline or local results.
+
+| Source-head workflow | URL | Observed status at 2026-11-07T09:28:27.836519+00:00 |
+|---|---|---|
+|Docker Image Build Test|https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846820|This job is in progress|
+|CI - Lint & Build|https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846876|This job is in progress|
+|Phase 1 native and durable payment security|https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846915|This job is in progress|
+|MymomentOclock API Smoke and Optional Load Validation|https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846921|This job is in progress|
+
+Complete changed-file inventory: `CORE_P0_01_PR21_FILES_CHANGED.txt`. All original publisher captures and license notices are preserved; selected safe execution logs are in `evidence/pr21/`. Working branch only; no merge, deployment or environment publication. No payment/auth/entitlement/ranking implementation changes.
+
 ## Historical implementation snapshot (superseded where above differs)
 
 As of2026-11-07 (Asia/Kolkata). **CORE-P0-01 PARTIAL — BLOCKERS REMAIN.** Engineering is ready for review; independent scientific acceptance and customer timing release are NO-GO.

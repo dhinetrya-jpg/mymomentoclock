@@ -34,7 +34,7 @@ Task graph: source acquisition + native/time contracts → planetary/solar/Panch
 |A07|PARTIAL|Dated elongation roots, noon and polar cases|42 boundaries + 14 noon; rise/set diagnostics only|PARTIAL|
 |A08|PASS|Honest metadata retained|Actual modes, modeled/caller DUT1 and admission refusal|PASS|
 |A09|PARTIAL|Nonroot/data readiness; optional JPL not a mandatory blocker|Container tests; commercial/data license decision pending|PARTIAL|
-|A10|PARTIAL|Fresh engineering runs and strict scientific gate|Execution logs; remote CI denied; strict science fails|PARTIAL|
+|A10|PARTIAL|Fresh engineering runs and strict scientific gate|Execution logs; API denied but normal checks-page observation recovered; strict science fails|PARTIAL|
 |A11|PARTIAL|Existing real provider retained|Same-engine/metadata/UTC/customer-admission tests|PARTIAL|
 |A12|PARTIAL|Adversarial audit exposes failed bands|No acceptance waiver or release activation|FAIL|
 

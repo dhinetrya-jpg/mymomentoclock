@@ -11,6 +11,7 @@ docs/core/CORE_P0_01_PR21_PLANETARY_VALIDATION.md
 docs/core/CORE_P0_01_PR21_REPAIR_MATRIX.md
 docs/core/evidence/pr21/README.md
 docs/core/evidence/pr21/ci-baseline.json
+docs/core/evidence/pr21/ci-implementation.json
 docs/core/evidence/pr21/go-integration.log
 docs/core/evidence/pr21/iers-time-and-race.log
 docs/core/evidence/pr21/license-inspection.log
