@@ -30,3 +30,5 @@ J2000 TT is not UTC noon; historical incompatible instants are rejected. Circula
 ### Corrected test expectation
 
 The first expanded API run expected a Vancouver November 2026 fold and failed (HTTP200 vs expected422). This was a test defect, not a parser defect. Fresh official IANA source revision `e29969d3f327f129ec4aebaa9c7aee96c46f8e3b`, original northamerica/License bytes and checksums prove Vancouver stays UTC-7 after the 2026 change. The regression now checks genuine 2024 Vancouver gap/fold and November 2026 unique 01:30 =08:30Z /24h local day. The older pinned IANA source is retained as historical, not used to override current rules.
+
+Final frame audit corrected the independent solar label to topocentric apparent Sun-center altitude (Skyfield almanac IAU2000B nutation); the evaluator already computed topocentric events. Regeneration proved every expected numerical value unchanged. Rise/set remain diagnostic, never an identical-definition PASS.

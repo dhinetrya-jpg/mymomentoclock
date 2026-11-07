@@ -29,7 +29,7 @@ Reference: original JPL DE421 SPK evaluated by Skyfield 1.54/jplephem 2.24. No S
 
 ## Event definitions and boundary scope
 
-Independent rise/set uses apparent geocentric Sun center altitude -0.8333333333333334°, zero elevation, fixed conventional horizon and no variable refraction. Native uses upper limb, pressure modeled from elevation, 15°C and its refraction model. These are NOT admitted as identical definitions. The 90s diagnostic band is not an acceptance tolerance. Solar noon is a matched meridian-transit event; UT1-model limitations remain disclosed. No real-weather or terrain accuracy claim.
+Independent rise/set uses apparent topocentric Sun center altitude -0.8333333333333334°, zero elevation, fixed conventional horizon and no variable refraction. Native uses upper limb, pressure modeled from elevation, 15°C and its refraction model. These are NOT admitted as identical definitions. The 90s diagnostic band is not an acceptance tolerance. Solar noon is a matched meridian-transit event; UT1-model limitations remain disclosed. No real-weather or terrain accuracy claim.
 
 Independent polar cases have no rise/set; native must refuse unavailable events and sunrise-derived intervals. Each native local-day length is checked against IANA bounds, including NY 23/25h. Actual API requests additionally cover Toronto 2026 gaps/folds and Vancouver 2024 gaps/folds plus unique November 2026, authenticated by current IANA source, Lord Howe 24.5h and Kathmandu/Kolkata fractional offsets.
 

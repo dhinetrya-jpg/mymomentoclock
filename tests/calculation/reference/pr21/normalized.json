@@ -92,7 +92,7 @@
         "sunrise": "2026-03-19T00:11:52.435699Z",
         "sunset": "2026-03-19T12:17:08.611132Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "Asia/Kolkata",
       "transitions": [
         {
@@ -128,7 +128,7 @@
         "sunrise": "2026-03-08T11:18:52.747173Z",
         "sunset": "2026-03-08T22:55:10.389649Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "America/New_York",
       "transitions": [
         {
@@ -158,7 +158,7 @@
         "sunrise": "2026-11-01T11:26:26.900935Z",
         "sunset": "2026-11-01T21:52:13.434356Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "America/New_York",
       "transitions": [
         {
@@ -194,7 +194,7 @@
         "sunrise": "2026-03-03T11:50:33.623122Z",
         "sunset": "2026-03-03T23:08:52.221200Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "America/Toronto",
       "transitions": [
         {
@@ -230,7 +230,7 @@
         "sunrise": "2026-03-19T14:16:57.818245Z",
         "sunset": "2026-03-20T02:24:11.070532Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "America/Vancouver",
       "transitions": [
         {
@@ -264,7 +264,7 @@
       "solar": {
         "solar_noon": "2026-06-21T10:45:59.056409Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "Europe/Oslo",
       "transitions": [
         {
@@ -298,7 +298,7 @@
       "solar": {
         "solar_noon": "2026-12-21T10:42:12.919032Z"
       },
-      "solar_definition": "geocentric apparent Sun center altitude -0.8333333333333334 deg, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
       "timezone": "Europe/Oslo",
       "transitions": [
         {
@@ -328,7 +328,7 @@
       ]
     }
   ],
-  "generator_sha256": "58b96bec83ffa04f10ef5db9db5f143d30c00c38866b6d10329b0af1eeb1664e",
+  "generator_sha256": "eae06e04ee6e315f4a0a69e0f9087c2124276a438d5df40d914c450448441cf3",
   "normalization": "Skyfield builtin timescale (no network update), apparent().frame_latlon(ecliptic_frame), central difference +/-60 TT seconds; almanac roots independent of Go solver.",
   "packages": {
     "jplephem": "2.24",
