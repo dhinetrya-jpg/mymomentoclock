@@ -1,0 +1,15 @@
+{
+  "version": "pr21-independent-v1",
+  "declared_before_native_measurement": true,
+  "planetary_tolerances": {
+    "tropical_longitude": 0.0002,
+    "latitude": 0.0002,
+    "sun_latitude": 0.00001,
+    "distance_au": 0.000001,
+    "longitude_speed_deg_per_day": 0.0002
+  },
+  "event_tolerances_seconds": {"tithi": 10, "karana": 10, "solar_noon": 2, "sunrise_diagnostic": 90, "sunset_diagnostic": 90},
+  "ascendant_tolerance_degrees": 0.0002,
+  "rationale": "Existing admitted Sun longitude/latitude bands preserved. New DE421/Skyfield vs native-model comparison bands: 0.72 arcsecond angles, 149.6 km distance, 0.72 arcsecond/day central-difference speed. These are declared comparison budgets, NOT source uncertainties or observed accuracy guarantees. Event root numerical precision 0.05 second, comparison budget 10 seconds for elongation boundaries. Conventional -0.8333-degree solar horizon differs from native dynamic upper limb/refraction, so solar rise/set remain diagnostic only even inside 90 seconds. No threshold is fit to native residuals.",
+  "unadmitted": ["Jupiter/Saturn barycenters vs planet centers", "mean/true nodes", "Lahiri ayanamsa without independent matched definition", "sidereal Nakshatra/Pada/Yoga/D2/D9/D60 without admitted ayanamsa", "solar rise/set as identical event definitions"]
+}

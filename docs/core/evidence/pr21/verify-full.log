@@ -1,0 +1,359 @@
+
+> mymomentoclock@1.0.0 verify:core-p0-01
+> sh scripts/verify-core-p0-01.sh
+
+WARNING: Running in rootless-mode without cgroups. Systemd is required to enable cgroups in rootless-mode.
+PASS PR21 kernel, generator/policy bindings, 45 body-epochs and 7 local days; unadmitted quantities remain blocked
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.037s
+
+OK
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.124s
+
+OK
+
+> mymomentoclock@1.0.0 lint
+> tsc --noEmit
+
+
+> mymomentoclock@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.01 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-CxzwVRBg.css                                      62.22 kB │ gzip:  10.08 kB
+dist/assets/index-B_aHjPB4.js                                      335.92 kB │ gzip: 104.27 kB
+
+✓ built in 345ms
+
+> astroengine-frontend@1.0.0 lint
+> tsc --noEmit
+
+
+> astroengine-frontend@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.00 kB │ gzip:   0.45 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-Cg3I8i12.css                                      61.33 kB │ gzip:   9.92 kB
+dist/assets/index-giIwx3tQ.js                                      335.87 kB │ gzip: 104.24 kB
+
+✓ built in 244ms
+✔ missing birthDate rejected (224.579222ms)
+✔ missing birthTime rejected (0.162766ms)
+✔ missing latitude rejected (0.093241ms)
+✔ missing longitude rejected (0.101524ms)
+✔ invalid birthDate: 2026-02-30 (0.174063ms)
+✔ invalid birthDate: 1900-02-29 (0.123156ms)
+✔ invalid birthTime: 25:90:00 (0.141864ms)
+✔ invalid birthTime: 12:00:60 (0.137858ms)
+✔ invalid latitude: 120 (0.144018ms)
+✔ invalid longitude: 250 (0.131759ms)
+✔ invalid latitude: NaN (0.116396ms)
+✔ invalid longitude: Infinity (0.096416ms)
+✔ invalid latitude: 22 (0.105259ms)
+✔ invalid timezoneOffset: undefined (0.094312ms)
+✔ invalid timezoneOffset: Infinity (0.091598ms)
+✔ invalid timezoneOffset: 5.5 (0.068393ms)
+✔ invalid ayanamsaType: invented (0.089515ms)
+✔ invalid birthTimeCertainty: UNKNOWN (0.092019ms)
+✔ Gregorian leap years and midnight accepted (0.124228ms)
+✔ unchanged valid chart numerics match pre-change fixture (1.128515ms)
+✔ midnight no longer aliases noon (0.354336ms)
+✔ name cannot change timing; no invented window (0.192881ms)
+✔ BTR zero milestones never substitutes example events (0.268225ms)
+✔ BTR cannot invent a fit without a verified Dasha method (0.541959ms)
+✔ genuine chart resolver has no fabricated graph payload (0.138028ms)
+✔ scope GENERAL_LOCATION_BASED renders safely (4.645639ms)
+✔ scope NATAL_SUPPORTED renders safely (0.203608ms)
+✔ scope NATAL_LIMITED renders safely (0.224018ms)
+✔ scope UNAVAILABLE renders safely (0.233593ms)
+✔ festival unavailable state renders without zero timing (1.829594ms)
+✔ BTR screen shows no sample life history (0.796613ms)
+✔ initial app never shows Kolkata natal defaults (1.561599ms)
+✔ HTTP chart validation and valid request (21.403683ms)
+✔ both BTR adapters reject invalid input and missing milestones (6.577642ms)
+✔ v1 BTR scores cannot certify (2.658211ms)
+✔ city errors, spelling normalization and all supported previews (17.942379ms)
+✔ stored profile endpoint never returns example vectors for any user (3.965822ms)
+✔ production cannot execute baseline demo UAT endpoint (1.009695ms)
+✔ existing diagnostics check actual conflicts without requiring fake success (1.341036ms)
+✔ dashboard and existing checkout render with a genuine chart (25.553878ms)
+✔ missing Gemini credential cannot fabricate fallback financial reading (2.66744ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 371.427442
+✔ Legacy regression (not independent acceptance): A03 / AUD-01: Machine-readable reference fixtures retains legacy metadata (not source authenticity or accepted tolerances) (1.064609ms)
+✔ Legacy regression (not independent acceptance): A05 / AUD-04: J2000.0 time-scale separation between UT1/UTC and TT/TDB rigorously validated (0.228706ms)
+✔ Legacy regression (not independent acceptance): A05: Delta-T calculation preserves legacy Delta-T model comparison (not observed IERS validation) (0.155575ms)
+✔ Legacy regression (not independent acceptance): A06: Lahiri Ayanamsa at J2000.0 agrees with Indian Astronomical Ephemeris within 1 arcsecond (0.140332ms)
+✔ Legacy regression (not independent acceptance): A06: Ayanamsa selection supports True Lahiri, KP, and Raman with explicit offsets (0.106931ms)
+✔ Legacy regression (not independent acceptance): A04: Circular angular difference handles 0°/360° wraparound accurately (0.151659ms)
+✔ Legacy regression (not independent acceptance): A08: Boundary proximity check identifies classification uncertainty near step thresholds (0.236797ms)
+✔ Legacy regression (not independent acceptance): A05: India half-hour UTC offset (+5:30) and date rollover verified (1.090388ms)
+✔ Legacy regression (not independent acceptance): A05 / AUD-03: US/Canada DST transitions, ambiguous fall folds, and spring gaps validated (0.540437ms)
+✔ Legacy regression (not independent acceptance): A05: Date line and extreme longitudes (Fiji +12:00) preserve UT Julian Day (0.2117ms)
+✔ Legacy regression (not independent acceptance): A05: Leap year rules and centurial boundaries strictly enforced (0.253263ms)
+✔ Legacy regression (not independent acceptance): A05: Midnight 00:00:00 and noon 12:00:00 differ by exactly 0.5 days with no aliasing (0.110257ms)
+✔ Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Ascendant, Whole Sign Houses, and Nakshatra/Pada boundaries (0.356368ms)
+✔ Legacy regression (not independent acceptance): A06 / AUD-05: Numerical verification of Divisional Charts D-2 (Hora), D-9 (Navamsha), and D-60 (Shashtyamsa) (0.189876ms)
+✔ Legacy regression (not independent acceptance): A04 / AUD-06: Quantitative error evaluation of Node analytical approximation against quarantined claimed-JPL values (0.396769ms)
+✔ Legacy regression (not independent acceptance): A07 / AUD-07: Implemented Panchang elements validated and unverified solar algorithms safely disabled (0.325782ms)
+✔ Legacy regression (not independent acceptance): A08: Coordinates validation rejects out-of-bound latitude/longitude, NaNs, and infinities (0.344881ms)
+✔ Legacy regression (not independent acceptance): A09: Precision metadata honestly discloses ANALYTICAL_APPROXIMATION without false Swiss claims (0.237439ms)
+✔ Legacy regression (not independent acceptance): A02 / AUD-02 / AUD-09: Native Swiss Ephemeris schema contract, mode disclosure, and environmental limitations (0.182606ms)
+✔ Legacy regression (not independent acceptance): A12: Unimplemented/unauthorized capabilities remain safely disabled (0.09292ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14.518255
+✔ Legacy regression (not independent acceptance): A03: Independent reference dataset retains32 scenarios and recorded files (not authenticated sources) (1.643553ms)
+✔ Legacy regression (not independent acceptance): A04: Planetary comparisons at J2000 against quarantined claimed-JPL values DE440 unverified legacy values (1.64118ms)
+✔ Legacy regression (not independent acceptance): A04: Historical Indian birth date (Kolkata 1989) numerical planetary & Vedic placements (0.550402ms)
+✔ Legacy regression (not independent acceptance): A04: Modern Indian epoch (New Delhi 2026) ayanamsa, delta-T and Lagna validation (0.227704ms)
+✔ Legacy regression (not independent acceptance): A04: Indian metro coordinates Mumbai and Chennai validated (0.360234ms)
+✔ Legacy regression (not independent acceptance): A04: Distinction of calculation modes and prevention of false Swiss claims (0.333584ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14.165878
+✔ Legacy regression (not independent acceptance): A05: Timescale separation between UT and TT at J2000.0 (0.936034ms)
+✔ Legacy regression (not independent acceptance): A05: Delta-T values across historical and future epochs (0.118969ms)
+✔ Legacy regression (not independent acceptance): A05: IANA timezone resolution for North America (New York, Toronto, Vancouver) (22.606254ms)
+✔ Legacy regression (not independent acceptance): A05: IANA timezone resolution for Asia/Kolkata, fractional and southern zones (6.617257ms)
+✔ Legacy regression (not independent acceptance): A05: Daylight saving transitions - Spring-forward gap rejection (NONEXISTENT_LOCAL_TIME) (2.665086ms)
+✔ Legacy regression (not independent acceptance): A05: Daylight saving transitions - Fall-back fold detection (AMBIGUOUS_LOCAL_TIME) (2.695132ms)
+✔ Legacy regression (not independent acceptance): A05: Calendar integrity - Leap year rules (2000 vs 1900 vs 2024) (0.519895ms)
+✔ Legacy regression (not independent acceptance): A05: Temporal boundary - Midnight vs noon separation (0.5 days difference, zero aliasing) (0.127543ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.994221
+✔ Legacy regression (not independent acceptance): A07: Tithi calculation across Shukla and Krishna Pakshas (1.824666ms)
+✔ Legacy regression (not independent acceptance): A07: Nakshatra and Pada calculation and boundary crossing (0.18562ms)
+✔ Legacy regression (not independent acceptance): A07: Yoga calculation and auspiciousness categorization (0.219712ms)
+✔ Legacy regression (not independent acceptance): A07: Karana calculation: 4 fixed Karanas and 7 movable cycles (0.206963ms)
+✔ Legacy regression (not independent acceptance): A07: Apparent Sunrise and Sunset with atmospheric refraction against quarantined claimed-PAC values (1.035024ms)
+✔ Legacy regression (not independent acceptance): A07: Daytime Muhurtas: Rahu Kaal, Yamaganda, Gulika, Abhijit, and Brahma Muhurta (0.532164ms)
+✔ Legacy regression (not independent acceptance): A07: Numerical root-finding boundary solver (findTransitionInstant) convergence (1.486296ms)
+✔ Legacy regression (not independent acceptance): A07: Comprehensive calculateFullPanchang report generation (0.97288ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13.280214
+✔ analytical Panchang cannot certify itself and uses the requested epoch, not wall clock (5.885273ms)
+✔ half-open Tithi and all fixed/movable Karana boundaries (0.93971ms)
+✔ preview solar times carry UTC dates and both polar events are unavailable (0.898507ms)
+✔ transition solver unwraps true crossings and fails rather than inventing missing roots (0.42353ms)
+✔ civil resolution does not invent Delta-T, TT or UT1 from UTC (21.032327ms)
+✔ divisional maps use the supplied longitude rather than rounded display degrees (2.164741ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40.607354
+{"diagnostic_policy":{"status":"DIAGNOSTIC_NOT_INDEPENDENT_ACCURACY_ACCEPTANCE","upstreamLongitudeBandDegrees":0.0002,"legacyFramePolicy":"NO_RESIDUAL_WHEN_FRAME_NOT_ESTABLISHED","timeModel":"NOMINAL_UTC_USED_AS_MODEL_ARGUMENT; EXTERNAL_UT1_TT_CORRECTIONS_NOT_ESTABLISHED","referenceStatus":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE"},"summary":{"body":"sun","mode":"ANALYTICAL_APPROXIMATION","sample_count":2,"maximum_deg":0.0030967999999802487,"mean_deg":0.0030897500000151013,"median_deg":0.0030897500000151013,"p95_nearest_rank_deg":0.0030967999999802487,"outside_upstream_band_count":2,"native_comparison_performed":false},"measurements":[{"reference_id":"SKYFIELD_SUN_20051001_07","utc":"2005-10-01T07:00:00Z","reference_source":"skyfield-horizons-tests","source_sha256":"da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a","reference_frame":"APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE","reference_deg":188.2011122,"actual_analytical_apparent_deg":188.204209,"signed_residual_deg":0.0030967999999802487,"absolute_residual_deg":0.0030967999999802487,"unchanged_upstream_band_deg":0.0002,"band_relation":"OUTSIDE_UPSTREAM_BAND","scientific_acceptance":"NOT_ACCEPTED_TIME_MODEL_AND_REFERENCE_SCOPE_LIMITED"},{"reference_id":"SKYFIELD_SUN_20051001_08","utc":"2005-10-01T08:00:00Z","reference_source":"skyfield-horizons-tests","source_sha256":"da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a","reference_frame":"APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE","reference_deg":188.2420983,"actual_analytical_apparent_deg":188.245181,"signed_residual_deg":0.003082700000049954,"absolute_residual_deg":0.003082700000049954,"unchanged_upstream_band_deg":0.0002,"band_relation":"OUTSIDE_UPSTREAM_BAND","scientific_acceptance":"NOT_ACCEPTED_TIME_MODEL_AND_REFERENCE_SCOPE_LIMITED"}]}
+{"diagnostic_policy":{"status":"DIAGNOSTIC_NOT_INDEPENDENT_ACCURACY_ACCEPTANCE","upstreamLongitudeBandDegrees":0.0002,"legacyFramePolicy":"NO_RESIDUAL_WHEN_FRAME_NOT_ESTABLISHED","timeModel":"NOMINAL_UTC_USED_AS_MODEL_ARGUMENT; EXTERNAL_UT1_TT_CORRECTIONS_NOT_ESTABLISHED","referenceStatus":"UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE"},"legacy_reconstructions":[{"reference_id":"SKYFIELD_MARS_19560114","utc":"1956-01-14T06:00:00Z","legacy_sidereal_deg":187.5059,"model_ayanamsa_deg":23.24291228688912,"reconstructed_tropical_deg":210.74881228688912,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Mars barycenter","reason":"MARS_BARYCENTER_REFERENCE_VS_UNESTABLISHED_LEGACY_GEOCENTRIC_REDUCTION","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"},{"reference_id":"SKYFIELD_SUN_20051001_07","utc":"2005-10-01T07:00:00Z","legacy_sidereal_deg":164.2731,"model_ayanamsa_deg":23.937402709039024,"reconstructed_tropical_deg":188.21050270903902,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Sun","reason":"APPARENT_CORRECTIONS_NOT_ESTABLISHED_FOR_LEGACY_CHART","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"},{"reference_id":"SKYFIELD_SUN_20051001_08","utc":"2005-10-01T08:00:00Z","legacy_sidereal_deg":164.314,"model_ayanamsa_deg":23.93740430266358,"reconstructed_tropical_deg":188.25140430266356,"sidereal_to_tropical_policy":"INVERT_SAME_LEGACY_MODEL_AYANAMSA; POSITION_QUANTIZED_TO_0.0001_DEG","frame_compatibility":"NOT_ESTABLISHED","source_body":"Sun","reason":"APPARENT_CORRECTIONS_NOT_ESTABLISHED_FOR_LEGACY_CHART","scientific_residual_deg":null,"scientific_acceptance":"BLOCKED"}]}
+✔ diagnostic: source-bound preview apparent Sun measurements; no accuracy acceptance (1.977027ms)
+✔ diagnostic: legacy sidereal conversion is explicit, incompatible-frame residuals remain unavailable (2.31631ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17.548574
+✔ versioned activity work cannot activate personal results (14.797378ms)
+✔ versioned activity purchases cannot activate personal results (0.287034ms)
+✔ versioned activity travel cannot activate personal results (0.206212ms)
+✔ versioned activity learning cannot activate personal results (0.214174ms)
+✔ versioned activity family cannot activate personal results (0.312522ms)
+✔ versioned activity finance cannot activate personal results (0.199621ms)
+✔ strict request schema rejects profiles, facts, approval flags and invalid civil data (1.646462ms)
+✔ default gateway always returns typed unavailable without personal echoes (96.398599ms)
+✔ query parameters and oversized bodies are rejected (21.608438ms)
+✔ capability and registry remain explicitly blocked (6.291776ms)
+✔ upstream fixtures, fake approval or response birth details cannot leak through gateway (4.166935ms)
+✔ upstream blocked response is projected and stripped of extras (4.356943ms)
+✔ daily screen has no stored natal defaults or verified recommendation (8.013308ms)
+✔ timeline renders DST elapsed hours and escapes explanation markup (2.319665ms)
+✔ mirrored timing client and UI are identical (0.272611ms)
+✔ remote public URLs cannot become personal-data transport (0.487617ms)
+✔ browser client rejects verified claims, invalid windows and mismatched provenance (3.243009ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.866487
+✔ default unavailable: /api/payment/orders (55.248014ms)
+✔ default unavailable: /api/payment/orders/other (7.946747ms)
+✔ default unavailable: /api/payment/entitlements (4.958151ms)
+✔ no approval or unready identity cannot call transport (8.546903ms)
+✔ forged identity/header does not forward (7.299845ms)
+✔ body and query tampering rejected before forwarding (21.926299ms)
+✔ transport receives verified bearer, fixed safe contract and no caller IDs (4.44132ms)
+✔ failures never fall back to paid (3.071951ms)
+✔ entitlement response strips internal identifiers (2.780791ms)
+✔ mutual TLS transport verifies both peers and sends bounded safe requests (162.431428ms)
+✔ production entry contains no test adapter activation or identity fallback (0.29793ms)
+✔ both checkout models keep browser callbacks from authorizing access (0.352993ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 285.459826
+✔ both default checkout views remain unavailable without SDK loading or a guessed price (7.725422ms)
+✔ sandbox presentation is clearly test mode and never renders a confirmed payment initially (1.570964ms)
+✔ sandbox environment flags without a real identity cannot enable checkout (43.160352ms)
+✔ live provider checkout keys are never forwarded by the sandbox boundary (10.45115ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.090788
+✔ session exchange sets secure HttpOnly host-only cookie and never returns bearer to browser JSON (59.071982ms)
+✔ cookie mutation requires exact Origin, double-submit token and downstream session binding (18.836049ms)
+✔ duplicate session cookies and forged public identities do not authenticate (6.010571ms)
+✔ logout revokes through Go and clears host session cookies (5.080316ms)
+✔ account deactivation requires explicit confirmation and never accepts another customer ID (5.563807ms)
+✔ signed readiness is artifact/config bound; no default production approval exists (2.950908ms)
+✔ blocked G01 prevents production permit (0.528639ms)
+✔ blocked G02 prevents production permit (0.402117ms)
+✔ blocked G03 prevents production permit (0.447426ms)
+✔ blocked G04 prevents production permit (0.593677ms)
+✔ blocked G05 prevents production permit (0.424461ms)
+✔ blocked G06 prevents production permit (0.448598ms)
+✔ blocked G07 prevents production permit (0.389629ms)
+✔ blocked G08 prevents production permit (0.65576ms)
+✔ blocked G09 prevents production permit (0.347374ms)
+✔ blocked G10 prevents production permit (0.360444ms)
+✔ blocked G11 prevents production permit (0.31756ms)
+✔ blocked G12 prevents production permit (0.311411ms)
+✔ blocked G13 prevents production permit (0.40438ms)
+✔ blocked G14 prevents production permit (0.312742ms)
+✔ blocked G15 prevents production permit (0.377601ms)
+✔ blocked G16 prevents production permit (0.315737ms)
+✔ blocked G17 prevents production permit (0.302968ms)
+✔ blocked G18 prevents production permit (0.392302ms)
+✔ blocked G19 prevents production permit (0.426354ms)
+✔ blocked G20 prevents production permit (0.415167ms)
+✔ blocked G21 prevents production permit (0.4761ms)
+✔ blocked G22 prevents production permit (0.472664ms)
+✔ blocked G23 prevents production permit (0.314165ms)
+✔ blocked G24 prevents production permit (0.358211ms)
+✔ blocked G25 prevents production permit (0.329187ms)
+✔ blocked G26 prevents production permit (0.383529ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 116.227979
+✔ explicit offset -3.5 preserves J2000 instant (174.20073ms)
+✔ explicit offset 5.75 preserves J2000 instant (0.609451ms)
+✔ explicit offset 14 preserves J2000 instant (0.176897ms)
+✔ explicit offset -12 preserves J2000 instant (0.180953ms)
+✔ engine cannot silently choose a timezone (0.705055ms)
+✔ milestones reject duplicate (0.601799ms)
+✔ milestones reject pre-birth (0.127353ms)
+✔ milestones reject future (0.556531ms)
+✔ milestones reject invalid date (0.136427ms)
+✔ milestones reject invalid confidence (0.100181ms)
+✔ unsupported resolver returns no score or resolution claim (0.953ms)
+✔ create order fails closed for missing forged and expired credentials (20.400849ms)
+✔ unknown order fails closed for missing forged and expired credentials (5.243943ms)
+✔ v1 webhook fails closed for missing forged and expired credentials (5.467495ms)
+✔ session lookup fails closed for missing forged and expired credentials (3.83174ms)
+✔ SSE fails closed for missing forged and expired credentials (3.005876ms)
+✔ graph hydration fails closed for missing forged and expired credentials (3.316817ms)
+✔ resolver fails closed for missing forged and expired credentials (4.462873ms)
+✔ malformed JSON and oversized bodies fail safely (4.263642ms)
+✔ production diagnostics and payment simulation stay hidden (4.337203ms)
+✔ a supplied AI key cannot bypass consent/provenance boundary (1.208256ms)
+✔ chart provenance discloses analytical preview and uncertainty (2.735484ms)
+✔ missing timezone is never inferred from city or zone label (1.962185ms)
+✔ rate limiting is bounded without retaining client identities (296.06854ms)
+✔ chart outputs never fabricate strength or motion metrics (0.618214ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 576.004216
+go version go1.26.10 linux/amd64
+ok  	astroengine-core	0.003s
+bytes: mkdir /tmp/go-build2845054857/b062/: no space left on device
+strings: mkdir /tmp/go-build2845054857/b068/: no space left on device
+math/rand: mkdir /tmp/go-build2845054857/b071/: no space left on device
+hash: mkdir /tmp/go-build2845054857/b079/: no space left on device
+crypto/internal/fips140deps/godebug: mkdir /tmp/go-build2845054857/b084/: no space left on device
+runtime/cgo: mkdir /tmp/go-build2845054857/b127/: no space left on device
+math/rand/v2: mkdir /tmp/go-build2845054857/b138/: no space left on device
+crypto/internal/fips140cache: mkdir /tmp/go-build2845054857/b153/: no space left on device
+internal/saferio: mkdir /tmp/go-build2845054857/b158/: no space left on device
+vendor/golang.org/x/net/dns/dnsmessage: mkdir /tmp/go-build2845054857/b187/: no space left on device
+internal/singleflight: mkdir /tmp/go-build2845054857/b189/: no space left on device
+unique: mkdir /tmp/go-build2845054857/b191/: no space left on device
+reflect: mkdir /tmp/go-build2845054857/b057/: no space left on device
+encoding/base64: mkdir /tmp/go-build2845054857/b107/: no space left on device
+internal/syscall/execenv: mkdir /tmp/go-build2845054857/b055/: no space left on device
+internal/syscall/unix: mkdir /tmp/go-build2845054857/b054/: no space left on device
+time: mkdir /tmp/go-build2845054857/b049/: no space left on device
+FAIL	astroengine-core [build failed]
+FAIL

@@ -8,6 +8,7 @@ docker_local(){ env -u DOCKER_HOST -u DOCKER_CONTEXT -u DOCKER_TLS -u DOCKER_TLS
 docker_local info >/dev/null
 python3 scripts/core-reference-acquire.py verify
 python3 scripts/core-reference-tests.py
+python3 scripts/core-pr21-tests.py
 npm run lint
 npm run build
 npm --prefix frontend run lint
@@ -19,12 +20,15 @@ done
 # Optional PHASE1_REUSE_TEST_IMAGE=1 reuses only the installed toolchain, never stale application binaries.
 sh scripts/test-phase1-go.sh
 # Native runtime and web image builds use the same verified code. Optional CA trust applies to networked build steps only.
+# Acceptance repair can explicitly rebuild all layers after disk/cache recovery.
+no_cache=''
+if [ "${CORE01_DOCKER_NO_CACHE:-}" = 1 ]; then no_cache='--no-cache'; fi
 if [ -n "${PHASE1_CA_BUNDLE:-}" ]; then
- docker_local build --secret "id=proxy_ca,src=$PHASE1_CA_BUNDLE" -t mymomentoclock:core01-verify-native .
- docker_local build --secret "id=proxy_ca,src=$PHASE1_CA_BUNDLE" -t mymomentoclock:core01-verify-web -f Dockerfile.web .
+ docker_local build $no_cache --secret "id=proxy_ca,src=$PHASE1_CA_BUNDLE" -t mymomentoclock:core01-verify-native .
+ docker_local build $no_cache --secret "id=proxy_ca,src=$PHASE1_CA_BUNDLE" -t mymomentoclock:core01-verify-web -f Dockerfile.web .
 else
- docker_local build -t mymomentoclock:core01-verify-native .
- docker_local build -t mymomentoclock:core01-verify-web -f Dockerfile.web .
+ docker_local build $no_cache -t mymomentoclock:core01-verify-native .
+ docker_local build $no_cache -t mymomentoclock:core01-verify-web -f Dockerfile.web .
 fi
 name="core01-verify-$(openssl rand -hex 6)"
 web_pid=''
@@ -47,4 +51,5 @@ node tests/payment/pay03-browser.mjs
 node tests/calculation/native_api_contract.mjs "http://127.0.0.1:$native_port"
 sh scripts/test-core-native-files.sh
 printf '%s\n' 'ENGINEERING_CHECKS_PASSED. Running independent scientific acceptance; engineering success cannot waive missing references.'
+sh scripts/test-core-pr21-acceptance.sh
 python3 scripts/core-reference-acquire.py accept

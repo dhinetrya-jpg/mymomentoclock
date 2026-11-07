@@ -1,5 +1,38 @@
 # CORE-P0-01 final test evidence
 
+## PR21 current acceptance update — 2026-11-07
+
+**FAILED — REQUIRED ACCEPTANCE TESTS FAIL.** This supersedes the earlier PARTIAL verdict and limited numerical scope preserved below as a historical snapshot. Current evidence: [planetary report](CORE_P0_01_PR21_PLANETARY_VALIDATION.md), [Panchang/solar report](CORE_P0_01_PR21_PANCHANG_SOLAR_VALIDATION.md), [repair matrix](CORE_P0_01_PR21_REPAIR_MATRIX.md).
+
+Independent JPL DE421/Skyfield evaluation admits 40 body/epochs per mode across five centers, exact TT J2000, historical 1975, modern, equinox/wrap, retrograde and full/new Moon. Each mode has 160 position/distance/speed scalar checks. SWISS_FILE passes all 160; MOSHIER Moon fails twice at unchanged 0.0002°: +0.000452369889814° (1975) and -0.000229132543495° (2026 full Moon). No expected value, tolerance or astronomical correction was fitted. Ten pre1972 mode/body records are NOT_ADMITTED due to UTC/UT1 epoch incompatibility.
+
+Additional dated evidence: 42 Tithi/Karana boundaries, 14 solar noons, 14 tropical ascendants and 16 time-scale scalars from four observed IERS Bulletin A records. Rise/set remain different-definition diagnostics. Matched sidereal offset/nodes/Jupiter/Saturn centers, complete Panchang/chart/traditional acceptance remain incomplete. This is independent evaluation against shared underlying JPL theory, not independent observational confirmation; numerical budgets are not source observational uncertainty.
+
+Optional native JPL mode is unsupported/NOT_TESTED with a real native kernel; its absence alone is not a mandatory release blocker. The reference SPK is not a compatible native Swiss JPL kernel. Native/data commercial-license choice and redistribution review still require owner/legal decisions. No legal approval is inferred.
+
+Default Go evaluator execution emits every scientific FAIL and is not an accuracy PASS. `sh scripts/test-core-pr21-acceptance.sh` sets `CORE01_STRICT_SCIENCE=1` and fails on numerical discrepancies. The top-level verifier calls strict acceptance after engineering checks. Customer timing remains disabled; provider Load refuses admission; ranking/payment/auth/entitlements are unchanged. No merge or deployment.
+
+## PR21 exact fresh executions
+
+- `python3 scripts/core-reference-acquire.py verify`: PASS original source bindings, kernel, generated package and direct IERS extraction/current IANA captures.
+- `python3 scripts/core-reference-tests.py`: 8 PASS. `python3 scripts/core-pr21-tests.py`: 10 PASS. Source/hash tests are not proof of astronomical accuracy.
+- `/tmp/pr21-venv/bin/python scripts/core-pr21-reference.py generate`: PASS pinned independent evaluator. Repeated generation compared byte-for-byte with `cmp`; no native calculations generate expected values.
+- `PHASE1_REUSE_TEST_IMAGE=1 PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt CHROMIUM_PATH=/usr/bin/chromium npm run verify:core-p0-01`: initial attempt passed both frontend lint/build and 181 Node assertions, then hit disk during root Go race compilation (`verify-full.log`).
+- `PHASE1_REUSE_TEST_IMAGE=1 PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt sh scripts/test-phase1-go.sh`: PASS both Go modules, normal/race/vet/CGO-disabled, actual TLS PostgreSQL integration, payment/auth and three restart tests (`go-integration.log`). Toolchain reused, current source always recompiled with count=1.
+- Focused newly added IERS test plus affected astronomy race/vet: PASS (`iers-time-and-race.log`).
+- `CORE01_DOCKER_NO_CACHE=1 PHASE1_REUSE_TEST_IMAGE=1 PHASE1_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt CHROMIUM_PATH=/usr/bin/chromium npm run verify:core-p0-01`: both frontends, 181 Node assertions, complete Go/PG checks, actual no-cache native + web Docker builds and browsers PASS. It then exposed a newly added incorrect November2026 Vancouver-fold expectation (`verify-clean-final.log`). The implementation was correct: current source confirms permanent UTC-7. Fixed only the new test; originals preserved.
+- `sh /tmp/pr21-runtime-resume.sh`: PASS fresh-image native/web/legacy API smoke, desktop/mobile browsers, eight timing browser states, twelve payment UI fixture states, expanded actual native day/gap/fold/fractional-offset/leap API tests in both modes, nonroot readonly real Swiss data and missing-file readiness503. Exact resumed script is preserved as `evidence/pr21/runtime-resume.sh`; results `runtime-final.log` include `ENGINEERING_CHECKS_PASSED`.
+- The same runtime invocation executes `sh scripts/test-core-pr21-acceptance.sh`: FAIL (exit1) at precisely two Moshier Moon longitude comparisons. All other admitted numerical comparisons pass; 10 pre1972 rows are NOT_ADMITTED. Exact final strict stage is extracted without altering records to `strict-acceptance.log`.
+- `python3 scripts/core-pr21-report.py docs/core/evidence/pr21/strict-acceptance.log --require-pass`: FAIL (exit1), 436 executed records, 2 numerical FAIL, 10 NOT_ADMITTED. Every record and per-mode max/median/nearest-rank p95 retained in `numerical-results.json` and generated planetary report.
+- `python3 scripts/core-reference-acquire.py accept`: BLOCKED/exit1 `EXTERNAL_REFERENCE_PENDING` (`source-acceptance.log`); no waiver for still missing quantities.
+- GitHub API GraphQL/REST returned403. The accessible normal checks page was read with `python3 scripts/core-pr21-ci-observe.py <sha> <output>` and exact PR-head/workflow-title binding; baseline four workflows SUCCESS. Final-head observation is recorded in final handoff separately.
+
+Initial native image attempt also hit VFS disk capacity (`native-docker-build.log`). Inspected unused regular build snapshots were cleared after preserving all tagged test images/application data; this recovered >30GB and permitted actual no-cache builds. No TLS verification was disabled. Final image IDs: native `88283f9ed400`, web `738f0fc341b8` (full build export digests in clean log).
+
+Engineering stages passed after repair/resume; no combined top-level invocation is claimed green. Strict scientific acceptance remains failed. No merge/deploy/live payment/provider sandbox or customer timing authorization occurred.
+
+## Historical implementation snapshot (superseded where above differs)
+
 2026-11-07 (Asia/Kolkata). Baseline `cc3ab8245ea5d6bced19f5fed200da1528d13154`. Source implementation and selected execution logs are committed. No production deployment, paid service, real payment or timing activation.
 
 ## Commands actually executed

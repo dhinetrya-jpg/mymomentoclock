@@ -1,0 +1,23 @@
+{
+  "publisher": "Official IANA tz maintainer repository, current source captured for Vancouver 2026 rule change",
+  "resources": [
+    {
+      "file": "originals/tz-current-northamerica",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/northamerica",
+      "final_url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/northamerica",
+      "http_status": 200,
+      "revision": "e29969d3f327f129ec4aebaa9c7aee96c46f8e3b",
+      "retrieved_at_utc": "2026-11-07T09:23:49.876387+00:00",
+      "sha256": "da7366f6e0862ed15cb787dd056dca3a255df2ec50d19ff0a9f54eeb1562083a"
+    },
+    {
+      "file": "originals/tz-current-LICENSE",
+      "url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/eggert/tz/e29969d3f327f129ec4aebaa9c7aee96c46f8e3b/LICENSE",
+      "http_status": 200,
+      "revision": "e29969d3f327f129ec4aebaa9c7aee96c46f8e3b",
+      "retrieved_at_utc": "2026-11-07T09:23:50.101858+00:00",
+      "sha256": "0613408568889f5739e5ae252b722a2659c02002839ad970a63dc5e9174b27cf"
+    }
+  ]
+}

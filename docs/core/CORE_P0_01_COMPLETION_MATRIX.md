@@ -19,21 +19,23 @@ Initial audit2026-11-06 (Asia/Kolkata), clean baseline main `cc3ab8245ea5d6bced1
 
 Task graph: source acquisition + native/time contracts → planetary/solar/Panchang outputs → mathematical chart/boundary/interval tests → source-compatible residual comparisons → guarded CORE02 provider → offline/full verification + container/CI observation → contradiction reconciliation and final A01–A12 disposition. Paid services, deployment, payment/auth and customer entitlements are outside this change.
 
-## Final disposition — 2026-11-07
+## PR21 current disposition — 2026-11-07
 
-| Gate | Initial | Work completed / executed evidence | Final |
-|---|---|---|---|
-| A01 |PARTIAL|Versioned23-capability machine inventory with implementation files/functions, conventions, modes and per-capability evidence gaps; GET capability API exercised |PASS |
-| A02 |PARTIAL|Real CGO nine-body/house/solar/leap/mode/hash/concurrency tests, SWISS_FILE and Moshier runtime; no supplied local JPL kernel |PARTIAL |
-| A03 |BLOCKED|12 immutable genuine upstream captures,3 published planetary/5 ERFA vectors,8 adversarial integrity tests; five direct institutional requests403; Mars not admitted |PARTIAL |
-| A04 |FAIL|8 actual native Sun scalar comparisons in two modes pass unchanged published bands; remaining bodies/quantities and J2000 contradictions lack compatible independent references |PARTIAL |
-| A05 |PARTIAL|5 genuine ERFA native time comparisons pass; actual native API DST India/US/Canada, fold offsets and leap labels; broad observed historical UT1/DeltaT not established |PARTIAL |
-| A06 |PARTIAL|Native ascendant/whole-sign and full-input D2/D9/halfdegree segmentation boundary tests; D60 suppressed with uncertain birth; real reference placements/traditional interpretation pending |PARTIAL |
-| A07 |PARTIAL|Actual native Panchang/solar UTC intervals, enclosure/boundary solver, polar/cross-midnight events; TS defects repaired; independent dated Panchang/solar observations and traditional approval absent |PARTIAL |
-| A08 |PARTIAL|Honest actual/requested modes/time/data/validation, no fake certainty, explicit preview and unapproved-rule status; API and source-admission rejection tests pass |PASS |
-| A09 |PARTIAL|Pinned native library/data, container build/nonroot/file-present/missing readiness and linkage tested; commercial licensing review and real JPL runtime pending |PARTIAL |
-| A10 |PARTIAL|181 Node assertions,8 provenance tests, full Go/race/vet/CGO-disabled/PG restart, builds/Docker/browser/API verified; one-command strict acceptance correctly blocked, remote CI unobserved |PARTIAL |
-| A11 |BLOCKED|Typed real astronomy inspection payload implemented; Load refuses unaccepted inputs, existing ranking/NativeEngine and customer release gate unchanged |PARTIAL |
-| A12 |FAIL|Skeptical source/contradiction audit, old unsupported claims superseded, measured results retained; mandatory independent coverage still incomplete |PARTIAL |
+**FAILED — REQUIRED ACCEPTANCE TESTS FAIL.** Earlier PARTIAL verdict is superseded by measured Moshier Moon failures.
 
-Final executive verdict: **CORE-P0-01 PARTIAL — BLOCKERS REMAIN**. PASS means the explicitly scoped requirement, not blanket astronomical acceptance. The source-acquisition `accept` command intentionally exits nonzero; no owner exception or production approval was fabricated. Exact commands/results and limitations are in FINAL_TEST_EVIDENCE and FINAL_HANDOFF.
+| Gate | Previous | Changes | Evidence | Final |
+|---|---|---|---|---|
+|A01|PASS|Inventory retained|Capability API tests|PASS|
+|A02|PARTIAL|Both actual supported modes; no fallback|Mode/hash/path/concurrency tests; optional JPL refusal only|PARTIAL|
+|A03|PARTIAL|Original DE421 and observed IERS acquired|18 integrity/adversarial tests; reproducible independent evaluator|PARTIAL|
+|A04|PARTIAL|40 admitted body/epochs per mode, 4 quantities|160 scalar checks per mode; Moshier Moon fails twice|FAIL|
+|A05|PARTIAL|TT J2000, IERS and expanded DST|16 IERS scalars; retained ERFA; actual API requests|PARTIAL|
+|A06|PARTIAL|Independent tropical ascendant|14 geometry comparisons; sidereal/varga evidence pending|PARTIAL|
+|A07|PARTIAL|Dated elongation roots, noon and polar cases|42 boundaries + 14 noon; rise/set diagnostics only|PARTIAL|
+|A08|PASS|Honest metadata retained|Actual modes, modeled/caller DUT1 and admission refusal|PASS|
+|A09|PARTIAL|Nonroot/data readiness; optional JPL not a mandatory blocker|Container tests; commercial/data license decision pending|PARTIAL|
+|A10|PARTIAL|Fresh engineering runs and strict scientific gate|Execution logs; remote CI denied; strict science fails|PARTIAL|
+|A11|PARTIAL|Existing real provider retained|Same-engine/metadata/UTC/customer-admission tests|PARTIAL|
+|A12|PARTIAL|Adversarial audit exposes failed bands|No acceptance waiver or release activation|FAIL|
+
+Detailed defects/actions: `CORE_P0_01_PR21_REPAIR_MATRIX.md`. No merge, deploy or customer timing authorization.

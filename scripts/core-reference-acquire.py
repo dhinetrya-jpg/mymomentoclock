@@ -112,7 +112,11 @@ def verify():
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('command',choices=['refresh','verify','normalize','accept']);args=parser.parse_args()
  if args.command=='refresh':refresh()
- elif args.command=='verify':verify()
+ elif args.command=='verify':
+  verify()
+  import subprocess
+  subprocess.run([sys.executable,str(ROOT/'scripts/core-pr21-reference.py'),'verify'],check=True)
+  subprocess.run([sys.executable,str(ROOT/'scripts/core-pr21-eop.py'),'verify'],check=True)
  elif args.command=='accept':
   verify();raise ValueError('EXTERNAL_REFERENCE_PENDING: direct NASA/USNO/IERS/PAC source-specific admission and required per-body/Panchang/solar coverage have not been independently established; see acquisition_attempts.json')
  else:normalize(json.loads((OUT/'acquisition_manifest.json').read_text())['resources'])
