@@ -7,7 +7,7 @@ const unavailable=(code:string)=>({status:'UNAVAILABLE',code,contract_version:'f
 function valid(input:any):boolean {
  if(!input||typeof input!=='object'||Array.isArray(input))return false;
  const required=['schema_version','birth_date','certainty','timezone','latitude','longitude'];
- const optional=['birth_time','uncertainty_minutes','utc_offset'];
+ const optional=['birth_time','uncertainty_minutes','utc_offset','earliest_time','latest_time','latest_date','earliest_utc_offset','latest_utc_offset'];
  if(!Object.keys(input).every(k=>required.includes(k)||optional.includes(k))||!required.every(k=>Object.hasOwn(input,k)))return false;
  if(input.schema_version!==1||typeof input.birth_date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(input.birth_date))return false;
  const d=new Date(input.birth_date+'T00:00:00Z');
@@ -15,6 +15,19 @@ function valid(input:any):boolean {
  if(!Number.isFinite(input.latitude)||Math.abs(input.latitude)>=89.999999||!Number.isFinite(input.longitude)||Math.abs(input.longitude)>180)return false;
  if(typeof input.timezone!=='string'||!input.timezone||input.timezone==='Local'||input.timezone.length>100||input.timezone.trim()!==input.timezone)return false;
  try {new Intl.DateTimeFormat('en',{timeZone:input.timezone})}catch{return false}
+ const hasRange=['earliest_time','latest_time','latest_date','earliest_utc_offset','latest_utc_offset'].some(k=>input[k]!==undefined);
+ const offsetOK=(n:any)=>n===undefined||(Number.isFinite(n)&&n>=-12&&n<=14);
+ if(input.certainty==='RANGE'){
+   if(input.birth_time!==undefined||input.uncertainty_minutes!==undefined||input.utc_offset!==undefined||!offsetOK(input.earliest_utc_offset)||!offsetOK(input.latest_utc_offset))return false;
+   if(typeof input.earliest_time!=='string'||typeof input.latest_time!=='string'||!/^([01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?$/.test(input.earliest_time)||!/^([01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?$/.test(input.latest_time))return false;
+   if(input.latest_date!==undefined){
+     if(typeof input.latest_date!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(input.latest_date))return false;
+     const last=new Date(input.latest_date+'T00:00:00Z');
+     if(!Number.isFinite(+last)||last.toISOString().slice(0,10)!==input.latest_date||(+last-(+d))!==0&&(+last-(+d))!==86400000)return false;
+   }
+   return true;
+ }
+ if(hasRange)return false;
  if(input.certainty==='UNKNOWN')return input.birth_time===undefined&&input.uncertainty_minutes===undefined&&input.utc_offset===undefined;
  if(!['EXACT','APPROXIMATE'].includes(input.certainty)||typeof input.birth_time!=='string'||!/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(input.birth_time))return false;
  if(input.utc_offset!==undefined&&(!Number.isFinite(input.utc_offset)||input.utc_offset< -12||input.utc_offset>14))return false;
@@ -23,8 +36,9 @@ function valid(input:any):boolean {
 }
 function validResponse(r:any,request:any):boolean{
  if(!r||r.schema_version!==1||r.contract_version!=='f01-sensitivity-v1'||r.status!=='COMPUTED_UNVERIFIED'||r.customer_timing_authorized!==false||r.btr_status!=='UNAVAILABLE_UNVALIDATED_DASHA_METHOD'||r.authority?.production_eligible!==false)return false;
- if(r.birth_input?.birth_date!==request.birth_date||r.birth_input?.certainty!==request.certainty||r.birth_input?.timezone!==request.timezone||r.birth_input?.latitude!==request.latitude||r.birth_input?.longitude!==request.longitude)return false;
+ if(r.birth_input!==undefined)return false;
  if(!Array.isArray(r.samples)||r.samples.length>17||r.samples.length<1||r.sample_count!==r.samples.length||!Array.isArray(r.factors)||r.factors.length>100||!Array.isArray(r.limitations)||r.limitations.length>20)return false;
+ if(!Array.isArray(r.transition_brackets)||r.transition_brackets.length>2048||!r.transition_brackets.every((b:any)=>typeof b.factor==='string'&&b.factor.length<80&&typeof b.from_value==='string'&&typeof b.to_value==='string'&&Number.isFinite(Date.parse(b.from_utc))&&Number.isFinite(Date.parse(b.to_utc))&&Date.parse(b.from_utc)<Date.parse(b.to_utc)&&b.evidence==='OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION'))return false;
  if(r.house_system!=='SWISS_S_SIDEREAL_LAHIRI'||!r.factors.every((f:any)=>typeof f.name==='string'&&f.name.length<=80&&['OBSERVED_STABLE_NOT_PROVEN','OBSERVED_VARIABLE','UNRESOLVED'].includes(f.classification)&&Array.isArray(f.observed_values)&&f.observed_values.length<=17))return false;
  return true;
 }
