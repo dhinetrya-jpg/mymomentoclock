@@ -32,7 +32,7 @@ jobs:
           cache: false
 
       - name: F01 contract tests without native-library fallback
-        run: cd backend && CGO_ENABLED=0 go test ./internal/uncertainty -count=1
+        run: cd backend && CGO_ENABLED=0 go test ./internal/uncertainty ./internal/f01reference -count=1
 
       - name: TypeScript Lint & Typecheck
         run: npm run lint
