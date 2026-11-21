@@ -251,6 +251,13 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  result.SampleCount=len(result.Samples)
  result.Factors=compare(values,len(result.Samples))
  result.TransitionBrackets=ObservedBrackets(result.Samples)
-
+ if len(result.TransitionBrackets)>0 {
+  refined,used,err:=RefineObservedBrackets(ctx,result.TransitionBrackets,func(ctx context.Context,at time.Time,factor string)(string,error){
+   return factorAt(ctx,at,factor,req.Latitude,req.Longitude,config)
+  })
+  if err!=nil{return Result{},err}
+  result.TransitionBrackets=refined
+  result.Limitations=append(result.Limitations,fmt.Sprintf("Midpoint boundary refinement used %d additional native samples (maximum %d); transition intervals are observational, not mathematically exhaustive.",used,MaxRefinementEvaluations))
+ }
  return result,nil
 }
