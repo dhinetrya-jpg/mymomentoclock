@@ -1,4 +1,5 @@
 import {timingGatewayFromEnvironment} from './server/timingBoundary';
+import {f01GatewayFromEnvironment} from './server/f01Boundary';
 import {commercialGatewayFromEnvironment} from './server/commercialGateway';
 import {createPaymentBoundary,sandboxPaymentBoundaryFromEnvironment} from './server/paymentBoundary';
 /** Authoritative web boundary: anonymous stateless previews; protected capabilities fail closed. */
@@ -79,6 +80,7 @@ app.get('/api/astro/muhurat',(req,res)=>{
 });
 app.use(['/assets/aistudio','/public/assets/aistudio'],(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'Historical implementation artifacts are not public content.'}));
 app.use('/api/v1/timing',timingGatewayFromEnvironment());
+app.use('/api/v1/f01',f01GatewayFromEnvironment());
 app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This API is not available.',request_id:res.locals.requestId}));
 const handleError=(err:any,_req:express.Request,res:express.Response,next:express.NextFunction)=>{
   if(res.headersSent)return next(err);
