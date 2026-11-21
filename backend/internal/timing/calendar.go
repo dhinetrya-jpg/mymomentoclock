@@ -17,7 +17,7 @@ func validPlace(p Place) bool {
 	if p.Timezone == "" || p.Timezone == "Local" || len(p.Timezone) > 100 || strings.TrimSpace(p.Timezone) != p.Timezone {
 		return false
 	}
-	_, err := time.LoadLocation(p.Timezone)
+	_, err := ephemeris.LoadCalculationLocation(p.Timezone)
 	return err == nil
 }
 func parseDate(s string, min, max int) (time.Time, error) {

@@ -1,0 +1,1245 @@
+{
+  "blocked": [
+    "Jupiter/Saturn barycenters vs planet centers",
+    "mean/true nodes",
+    "Lahiri ayanamsa without independent matched definition",
+    "sidereal Nakshatra/Pada/Yoga/D2/D9/D60 without admitted ayanamsa",
+    "solar rise/set as identical event definitions"
+  ],
+  "charts": [
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.05222999166700504,
+      "id": "KOLKATA",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "tropical_ascendant": 101.78365403686186,
+      "units": "degrees",
+      "utc": "2026-03-19T06:30:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.055755500000060465,
+      "id": "NEW_YORK_DST_GAP",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "tropical_ascendant": 84.63120476152389,
+      "units": "degrees",
+      "utc": "2026-03-08T16:00:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.08855177916672119,
+      "id": "NEW_YORK_DST_FOLD",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "tropical_ascendant": 290.07052699726063,
+      "units": "degrees",
+      "utc": "2026-11-01T17:00:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.05947292083362754,
+      "id": "TORONTO_FULL_MOON",
+      "latitude": 43.6532,
+      "longitude": -79.3832,
+      "tropical_ascendant": 91.39962363370952,
+      "units": "degrees",
+      "utc": "2026-03-03T17:00:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.051659783333505516,
+      "id": "VANCOUVER",
+      "latitude": 49.2827,
+      "longitude": -123.1207,
+      "tropical_ascendant": 98.3130857831912,
+      "units": "degrees",
+      "utc": "2026-03-19T19:00:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.042125041666636776,
+      "id": "TROMSO_POLAR_DAY",
+      "latitude": 69.6492,
+      "longitude": 18.9553,
+      "tropical_ascendant": 174.26281860630746,
+      "units": "degrees",
+      "utc": "2026-06-21T10:00:00Z"
+    },
+    {
+      "definition": "geometric eastern intersection of true ecliptic of date and local astronomical horizon; Skyfield GAST, IAU2006 obliquity plus IAU2000A nutation; DUT1 modeled Skyfield builtin, not observed",
+      "dut1_seconds": 0.08761175416661615,
+      "id": "TROMSO_POLAR_NIGHT",
+      "latitude": 69.6492,
+      "longitude": 18.9553,
+      "tropical_ascendant": 336.10673849201066,
+      "units": "degrees",
+      "utc": "2026-12-21T11:00:00Z"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-03-19",
+      "day_seconds": 86400.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "KOLKATA",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "solar": {
+        "solar_noon": "2026-03-19T06:14:20.611882Z",
+        "sunrise": "2026-03-19T00:11:52.435699Z",
+        "sunset": "2026-03-19T12:17:08.611132Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "Asia/Kolkata",
+      "transitions": [
+        {
+          "at_utc": "2026-03-19T01:23:28.734625Z",
+          "kind": "tithi",
+          "new_index": 0,
+          "target_angle_degrees": 0.0
+        },
+        {
+          "at_utc": "2026-03-19T01:23:28.734625Z",
+          "kind": "karana",
+          "new_index": 0,
+          "target_angle_degrees": 0.0
+        },
+        {
+          "at_utc": "2026-03-19T12:26:12.999247Z",
+          "kind": "karana",
+          "new_index": 1,
+          "target_angle_degrees": 6.0
+        }
+      ]
+    },
+    {
+      "date": "2026-03-08",
+      "day_seconds": 82800.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "NEW_YORK_DST_GAP",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "solar": {
+        "solar_noon": "2026-03-08T17:06:41.977368Z",
+        "sunrise": "2026-03-08T11:18:52.747173Z",
+        "sunset": "2026-03-08T22:55:10.389649Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "America/New_York",
+      "transitions": [
+        {
+          "at_utc": "2026-03-08T15:41:33.920585Z",
+          "kind": "tithi",
+          "new_index": 20,
+          "target_angle_degrees": 240.0
+        },
+        {
+          "at_utc": "2026-03-08T15:41:33.920585Z",
+          "kind": "karana",
+          "new_index": 40,
+          "target_angle_degrees": 240.0
+        }
+      ]
+    },
+    {
+      "date": "2026-11-01",
+      "day_seconds": 90000.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "NEW_YORK_DST_FOLD",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "solar": {
+        "solar_noon": "2026-11-01T16:39:35.657805Z",
+        "sunrise": "2026-11-01T11:26:26.900935Z",
+        "sunset": "2026-11-01T21:52:13.434356Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "America/New_York",
+      "transitions": [
+        {
+          "at_utc": "2026-11-01T09:22:10.794445Z",
+          "kind": "tithi",
+          "new_index": 22,
+          "target_angle_degrees": 264.0
+        },
+        {
+          "at_utc": "2026-11-01T09:22:10.794445Z",
+          "kind": "karana",
+          "new_index": 44,
+          "target_angle_degrees": 264.0
+        },
+        {
+          "at_utc": "2026-11-01T20:28:27.075983Z",
+          "kind": "karana",
+          "new_index": 45,
+          "target_angle_degrees": 270.0
+        }
+      ]
+    },
+    {
+      "date": "2026-03-03",
+      "day_seconds": 86400.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "TORONTO_FULL_MOON",
+      "latitude": 43.6532,
+      "longitude": -79.3832,
+      "solar": {
+        "solar_noon": "2026-03-03T17:29:21.927506Z",
+        "sunrise": "2026-03-03T11:50:33.623122Z",
+        "sunset": "2026-03-03T23:08:52.221200Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "America/Toronto",
+      "transitions": [
+        {
+          "at_utc": "2026-03-03T11:37:53.740421Z",
+          "kind": "tithi",
+          "new_index": 15,
+          "target_angle_degrees": 180.0
+        },
+        {
+          "at_utc": "2026-03-03T11:37:53.740421Z",
+          "kind": "karana",
+          "new_index": 30,
+          "target_angle_degrees": 180.0
+        },
+        {
+          "at_utc": "2026-03-03T23:24:41.208570Z",
+          "kind": "karana",
+          "new_index": 31,
+          "target_angle_degrees": 186.0
+        }
+      ]
+    },
+    {
+      "date": "2026-03-19",
+      "day_seconds": 86400.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "VANCOUVER",
+      "latitude": 49.2827,
+      "longitude": -123.1207,
+      "solar": {
+        "solar_noon": "2026-03-19T20:20:06.614847Z",
+        "sunrise": "2026-03-19T14:16:57.818245Z",
+        "sunset": "2026-03-20T02:24:11.070532Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "America/Vancouver",
+      "transitions": [
+        {
+          "at_utc": "2026-03-19T23:22:48.044106Z",
+          "kind": "tithi",
+          "new_index": 1,
+          "target_angle_degrees": 12.0
+        },
+        {
+          "at_utc": "2026-03-19T12:26:13.000213Z",
+          "kind": "karana",
+          "new_index": 1,
+          "target_angle_degrees": 6.0
+        },
+        {
+          "at_utc": "2026-03-19T23:22:48.044106Z",
+          "kind": "karana",
+          "new_index": 2,
+          "target_angle_degrees": 12.0
+        }
+      ]
+    },
+    {
+      "date": "2026-06-21",
+      "day_seconds": 86400.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "TROMSO_POLAR_DAY",
+      "latitude": 69.6492,
+      "longitude": 18.9553,
+      "solar": {
+        "solar_noon": "2026-06-21T10:45:59.056409Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "Europe/Oslo",
+      "transitions": [
+        {
+          "at_utc": "2026-06-21T09:51:09.644680Z",
+          "kind": "tithi",
+          "new_index": 7,
+          "target_angle_degrees": 84.0
+        },
+        {
+          "at_utc": "2026-06-21T09:51:09.644680Z",
+          "kind": "karana",
+          "new_index": 14,
+          "target_angle_degrees": 84.0
+        },
+        {
+          "at_utc": "2026-06-21T21:55:24.523080Z",
+          "kind": "karana",
+          "new_index": 15,
+          "target_angle_degrees": 90.0
+        }
+      ]
+    },
+    {
+      "date": "2026-12-21",
+      "day_seconds": 86400.0,
+      "dut1_source": "Skyfield builtin DeltaT predictions; NOT observed IERS EOP",
+      "elevation_meters": 0,
+      "id": "TROMSO_POLAR_NIGHT",
+      "latitude": 69.6492,
+      "longitude": 18.9553,
+      "solar": {
+        "solar_noon": "2026-12-21T10:42:12.919032Z"
+      },
+      "solar_definition": "topocentric apparent Sun center altitude -0.8333333333333334 deg; Skyfield almanac IAU2000B nutation, no variable refraction/elevation; diagnostic only against Swiss upper limb",
+      "timezone": "Europe/Oslo",
+      "transitions": [
+        {
+          "at_utc": "2026-12-21T12:06:52.133566Z",
+          "kind": "tithi",
+          "new_index": 12,
+          "target_angle_degrees": 144.0
+        },
+        {
+          "at_utc": "2026-12-21T01:30:53.220969Z",
+          "kind": "karana",
+          "new_index": 23,
+          "target_angle_degrees": 138.0
+        },
+        {
+          "at_utc": "2026-12-21T12:06:52.133566Z",
+          "kind": "karana",
+          "new_index": 24,
+          "target_angle_degrees": 144.0
+        },
+        {
+          "at_utc": "2026-12-21T22:34:13.012200Z",
+          "kind": "karana",
+          "new_index": 25,
+          "target_angle_degrees": 150.0
+        }
+      ]
+    }
+  ],
+  "generator_sha256": "eae06e04ee6e315f4a0a69e0f9087c2124276a438d5df40d914c450448441cf3",
+  "normalization": "Skyfield builtin timescale (no network update), apparent().frame_latlon(ecliptic_frame), central difference +/-60 TT seconds; almanac roots independent of Go solver.",
+  "packages": {
+    "jplephem": "2.24",
+    "numpy": "2.5.4",
+    "sgp4": "2.27",
+    "skyfield": "1.54"
+  },
+  "planetary": [
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "J2000_TT_sun",
+      "jd_tt": 2451545.0,
+      "quantities": {
+        "distance_au": 0.9833276319976679,
+        "latitude": 0.0002274302810729637,
+        "longitude_speed_deg_per_day": 1.0194335821734057,
+        "tropical_longitude": 280.3681652653129
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "J2000_TT_moon",
+      "jd_tt": 2451545.0,
+      "quantities": {
+        "distance_au": 0.0026899754540152454,
+        "latitude": 5.17087187685204,
+        "longitude_speed_deg_per_day": 12.021433318893742,
+        "tropical_longitude": 223.3148699078895
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "J2000_TT_mercury",
+      "jd_tt": 2451545.0,
+      "quantities": {
+        "distance_au": 1.4154660376795376,
+        "latitude": -0.9947571747418268,
+        "longitude_speed_deg_per_day": 1.5562514912971892,
+        "tropical_longitude": 271.8881270588307
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "J2000_TT_venus",
+      "jd_tt": 2451545.0,
+      "quantities": {
+        "distance_au": 1.137574425501408,
+        "latitude": 2.0663698086408475,
+        "longitude_speed_deg_per_day": 1.209041432198319,
+        "tropical_longitude": 241.5648949235884
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "J2000_TT_mars",
+      "jd_tt": 2451545.0,
+      "quantities": {
+        "distance_au": 1.8496838344047648,
+        "latitude": -1.0677945111266407,
+        "longitude_speed_deg_per_day": 0.7756736339342751,
+        "tropical_longitude": 327.9627293313077
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1910_sun",
+      "jd_tt": 2418782.0004882407,
+      "quantities": {
+        "distance_au": 1.0049237579762764,
+        "latitude": 3.755026742774694e-05,
+        "longitude_speed_deg_per_day": 0.9755632979999973,
+        "tropical_longitude": 29.522334579022214
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1910_moon",
+      "jd_tt": 2418782.0004882407,
+      "quantities": {
+        "distance_au": 0.0026776973750301824,
+        "latitude": 4.999367295392873,
+        "longitude_speed_deg_per_day": 12.16160491589335,
+        "tropical_longitude": 165.05031212928517
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1910_mercury",
+      "jd_tt": 2418782.0004882407,
+      "quantities": {
+        "distance_au": 1.1349145167717825,
+        "latitude": 1.5948649178642977,
+        "longitude_speed_deg_per_day": 1.8240658076183536,
+        "tropical_longitude": 44.7821938059318
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1910_venus",
+      "jd_tt": 2418782.0004882407,
+      "quantities": {
+        "distance_au": 0.6635087119428081,
+        "latitude": 0.3284445919090752,
+        "longitude_speed_deg_per_day": 0.95174124449386,
+        "tropical_longitude": 343.3414599224847
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1910_mars",
+      "jd_tt": 2418782.0004882407,
+      "quantities": {
+        "distance_au": 2.0074320721973167,
+        "latitude": 1.3444742232315292,
+        "longitude_speed_deg_per_day": 0.619558614152993,
+        "tropical_longitude": 82.95486409269522
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1975_sun",
+      "jd_tt": 2442523.0005345372,
+      "quantities": {
+        "distance_au": 1.0046524403519521,
+        "latitude": -0.00017738334443871754,
+        "longitude_speed_deg_per_day": 0.9762486936097048,
+        "tropical_longitude": 29.79174807563241
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1975_moon",
+      "jd_tt": 2442523.0005345372,
+      "quantities": {
+        "distance_au": 0.002464615937752439,
+        "latitude": -5.045850879057945,
+        "longitude_speed_deg_per_day": 14.31341727273093,
+        "tropical_longitude": 136.9493980468194
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1975_mercury",
+      "jd_tt": 2442523.0005345372,
+      "quantities": {
+        "distance_au": 1.322463648108679,
+        "latitude": -0.3117660045092868,
+        "longitude_speed_deg_per_day": 2.125251872005265,
+        "tropical_longitude": 31.650167279302952
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1975_venus",
+      "jd_tt": 2442523.0005345372,
+      "quantities": {
+        "distance_au": 1.1584502848210945,
+        "latitude": 1.6280127964728015,
+        "longitude_speed_deg_per_day": 1.170921322132017,
+        "tropical_longitude": 67.72484744691582
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "HISTORICAL_1975_mars",
+      "jd_tt": 2442523.0005345372,
+      "quantities": {
+        "distance_au": 1.7503510986520938,
+        "latitude": -1.4110489608789778,
+        "longitude_speed_deg_per_day": 0.7612558523032931,
+        "tropical_longitude": 336.62436519224167
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "MODERN_2026_sun",
+      "jd_tt": 2461056.000800741,
+      "quantities": {
+        "distance_au": 0.9837077983267725,
+        "latitude": -0.00014577286992409433,
+        "longitude_speed_deg_per_day": 1.018808186440765,
+        "tropical_longitude": 295.34232818910175
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "MODERN_2026_moon",
+      "jd_tt": 2461056.000800741,
+      "quantities": {
+        "distance_au": 0.0027008120902770314,
+        "latitude": -5.074603215089704,
+        "longitude_speed_deg_per_day": 11.97346549555732,
+        "tropical_longitude": 258.07090343977416
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "MODERN_2026_mercury",
+      "jd_tt": 2461056.000800741,
+      "quantities": {
+        "distance_au": 1.430323501880402,
+        "latitude": -1.8120967877515808,
+        "longitude_speed_deg_per_day": 1.6245451095483077,
+        "tropical_longitude": 291.4417833291169
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "MODERN_2026_venus",
+      "jd_tt": 2461056.000800741,
+      "quantities": {
+        "distance_au": 1.7099398763851303,
+        "latitude": -0.9934585543011424,
+        "longitude_speed_deg_per_day": 1.2576267865415502,
+        "tropical_longitude": 297.44701910422026
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "MODERN_2026_mars",
+      "jd_tt": 2461056.000800741,
+      "quantities": {
+        "distance_au": 2.3975435394409192,
+        "latitude": -0.9731081914122246,
+        "longitude_speed_deg_per_day": 0.7755091835315397,
+        "tropical_longitude": 293.8679208909786
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_BEFORE_sun",
+      "jd_tt": 2461120.000800741,
+      "quantities": {
+        "distance_au": 0.9958856834833987,
+        "latitude": 8.681214544945944e-05,
+        "longitude_speed_deg_per_day": 0.994062052523077,
+        "tropical_longitude": 359.88543986287226
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_BEFORE_moon",
+      "jd_tt": 2461120.000800741,
+      "quantities": {
+        "distance_au": 0.002466705010959507,
+        "latitude": 3.3691354412564336,
+        "longitude_speed_deg_per_day": 14.31835126646547,
+        "tropical_longitude": 18.863999638307703
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_BEFORE_mercury",
+      "jd_tt": 2461120.000800741,
+      "quantities": {
+        "distance_au": 0.6860698422336071,
+        "latitude": 1.0634012205445091,
+        "longitude_speed_deg_per_day": -0.03127062036128336,
+        "tropical_longitude": 338.49566491949537
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": true,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_BEFORE_venus",
+      "jd_tt": 2461120.000800741,
+      "quantities": {
+        "distance_au": 1.6071853598443595,
+        "latitude": -0.8749943055225765,
+        "longitude_speed_deg_per_day": 1.2380212525977186,
+        "tropical_longitude": 17.442097305918004
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_BEFORE_mars",
+      "jd_tt": 2461120.000800741,
+      "quantities": {
+        "distance_au": 2.312703895382493,
+        "latitude": -1.0762053202271658,
+        "longitude_speed_deg_per_day": 0.7860541160926005,
+        "tropical_longitude": 344.09852465724487
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_AFTER_sun",
+      "jd_tt": 2461121.000800741,
+      "quantities": {
+        "distance_au": 0.9961619959309571,
+        "latitude": 0.00011266246475071327,
+        "longitude_speed_deg_per_day": 0.9934819233444614,
+        "tropical_longitude": 0.8792131641753116
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_AFTER_moon",
+      "jd_tt": 2461121.000800741,
+      "quantities": {
+        "distance_au": 0.002455851749037396,
+        "latitude": 4.259602646529352,
+        "longitude_speed_deg_per_day": 14.455683958310601,
+        "tropical_longitude": 33.25902208895938
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_AFTER_mercury",
+      "jd_tt": 2461121.000800741,
+      "quantities": {
+        "distance_au": 0.6978692736173757,
+        "latitude": 0.8198221088209371,
+        "longitude_speed_deg_per_day": 0.06690758129934693,
+        "tropical_longitude": 338.51379277815215
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_AFTER_venus",
+      "jd_tt": 2461121.000800741,
+      "quantities": {
+        "distance_au": 1.6041307559957014,
+        "latitude": -0.8410735058945279,
+        "longitude_speed_deg_per_day": 1.2375044982809413,
+        "tropical_longitude": 18.679861307085844
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "EQUINOX_WRAP_AFTER_mars",
+      "jd_tt": 2461121.000800741,
+      "quantities": {
+        "distance_au": 2.3111881813789465,
+        "latitude": -1.0740152463813626,
+        "longitude_speed_deg_per_day": 0.7858043204805654,
+        "tropical_longitude": 344.88445506545474
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "RETROGRADE_2026_sun",
+      "jd_tt": 2461108.000800741,
+      "quantities": {
+        "distance_au": 0.9926005295870608,
+        "latitude": -0.00016910098458202517,
+        "longitude_speed_deg_per_day": 1.0000118720836326,
+        "tropical_longitude": 347.9193279161206
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "RETROGRADE_2026_moon",
+      "jd_tt": 2461108.000800741,
+      "quantities": {
+        "distance_au": 0.002685166756920769,
+        "latitude": -4.865714984811843,
+        "longitude_speed_deg_per_day": 12.053929642390813,
+        "tropical_longitude": 226.22031884629075
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "RETROGRADE_2026_mercury",
+      "jd_tt": 2461108.000800741,
+      "quantities": {
+        "distance_au": 0.6216551336607868,
+        "latitude": 3.556658122872071,
+        "longitude_speed_deg_per_day": -1.0137373452653264,
+        "tropical_longitude": 345.8248354392586
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": true,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "RETROGRADE_2026_venus",
+      "jd_tt": 2461108.000800741,
+      "quantities": {
+        "distance_au": 1.640047224105875,
+        "latitude": -1.2157422354118115,
+        "longitude_speed_deg_per_day": 1.2434491444105333,
+        "tropical_longitude": 2.5518524184595694
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "RETROGRADE_2026_mars",
+      "jd_tt": 2461108.000800741,
+      "quantities": {
+        "distance_au": 2.3304793644806647,
+        "latitude": -1.093015906084069,
+        "longitude_speed_deg_per_day": 0.7877862518944312,
+        "tropical_longitude": 334.65285686723394
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "FULL_MOON_2026_sun",
+      "jd_tt": 2461103.000800741,
+      "quantities": {
+        "distance_au": 0.9913197189198052,
+        "latitude": -1.856508935353838e-05,
+        "longitude_speed_deg_per_day": 1.0023572965155836,
+        "tropical_longitude": 342.9135342077514
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "FULL_MOON_2026_moon",
+      "jd_tt": 2461103.000800741,
+      "quantities": {
+        "distance_au": 0.0025580038732708815,
+        "latitude": -0.38017620208140507,
+        "longitude_speed_deg_per_day": 13.288855353516738,
+        "tropical_longitude": 163.10216720847924
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "FULL_MOON_2026_mercury",
+      "jd_tt": 2461103.000800741,
+      "quantities": {
+        "distance_au": 0.6655726816200866,
+        "latitude": 3.592230575944127,
+        "longitude_speed_deg_per_day": -0.751093221742849,
+        "tropical_longitude": 350.4792773512671
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": true,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "FULL_MOON_2026_venus",
+      "jd_tt": 2461103.000800741,
+      "quantities": {
+        "distance_au": 1.6517743975148769,
+        "latitude": -1.317445552552634,
+        "longitude_speed_deg_per_day": 1.2454967950816354,
+        "tropical_longitude": 356.3295435085681
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "FULL_MOON_2026_mars",
+      "jd_tt": 2461103.000800741,
+      "quantities": {
+        "distance_au": 2.337700525090363,
+        "latitude": -1.0947628486623984,
+        "longitude_speed_deg_per_day": 0.7879046189782457,
+        "tropical_longitude": 330.71358907344177
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "NEW_MOON_2026_sun",
+      "jd_tt": 2461118.500800741,
+      "quantities": {
+        "distance_au": 0.9954706893466558,
+        "latitude": 3.728069655897108e-05,
+        "longitude_speed_deg_per_day": 0.9949061147563043,
+        "tropical_longitude": 358.3937099334633
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 10,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-19T00:00:00Z"
+    },
+    {
+      "body": "moon",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "NEW_MOON_2026_moon",
+      "jd_tt": 2461118.500800741,
+      "quantities": {
+        "distance_au": 0.0024969488792699348,
+        "latitude": 1.6843460830898196,
+        "longitude_speed_deg_per_day": 13.948042440952122,
+        "tropical_longitude": 357.64229339162165
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 301,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-19T00:00:00Z"
+    },
+    {
+      "body": "mercury",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "NEW_MOON_2026_mercury",
+      "jd_tt": 2461118.500800741,
+      "quantities": {
+        "distance_au": 0.6695108669882119,
+        "latitude": 1.4348759924532415,
+        "longitude_speed_deg_per_day": -0.18467174786110263,
+        "tropical_longitude": 338.6568246366287
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": true,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 199,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-19T00:00:00Z"
+    },
+    {
+      "body": "venus",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "NEW_MOON_2026_venus",
+      "jd_tt": 2461118.500800741,
+      "quantities": {
+        "distance_au": 1.6116737256247227,
+        "latitude": -0.9244072947207261,
+        "longitude_speed_deg_per_day": 1.2387768597227478,
+        "tropical_longitude": 15.5844961146458
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 299,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-19T00:00:00Z"
+    },
+    {
+      "body": "mars",
+      "center": "Earth center (399)",
+      "frame": "apparent geocentric true ecliptic/equinox of date",
+      "id": "NEW_MOON_2026_mars",
+      "jd_tt": 2461118.500800741,
+      "quantities": {
+        "distance_au": 2.314967265135937,
+        "latitude": -1.0792680423395478,
+        "longitude_speed_deg_per_day": 0.7864052745753725,
+        "tropical_longitude": 342.91917667838305
+      },
+      "reduction": "light time, aberration, gravitational deflection; IAU2000A nutation and IAU2006 precession via Skyfield ecliptic_frame",
+      "retrograde": false,
+      "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+      "target_center": 499,
+      "time_scale": "TT input; TDB kernel evaluation by Skyfield; UTC label from Skyfield builtin leap table",
+      "units": "degree, AU, degree/day",
+      "utc": "2026-03-19T00:00:00Z"
+    }
+  ],
+  "policy_sha256": "e26be2ef058f5f09f141d4cefc36391d1d0939d6148e6e25f6587e87f25b2ee0",
+  "schema_version": 1,
+  "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+  "source_uncertainty": "DE421 numerical ephemeris; no per-row observational error bars supplied. Comparison bands are declared engineering budgets, not claimed source uncertainty."
+}

@@ -1,0 +1,7 @@
+# CORE-P0-01 safe execution evidence
+
+As of2026-11-07 Asia/Kolkata; original source captures2026-11-06. Tested functional source `f46d2dc8ce511677dd4d86c31d9b22b3eec68be5`. Logs preserve observed assertions/failures, with trailing whitespace normalized. Original externally captured files in reference/acquired remain byte-for-byte unchanged; .gitattributes prevents their EOL/whitespace normalization and source SHA verification remains strict.
+
+verify-full.log records all181 Node assertions,8 provenance tests, full Go/race/vet/CGO-disabled/TLS PostgreSQL/restart and native image success, then VFS disk exhaustion during web export. web-docker-final.log and verify-runtime.log record repaired web build and remaining Docker/browser/API/nonroot/file-mode checks, followed by intentional strict EXTERNAL_REFERENCE_PENDING exit1. legacy-api-contracts.log records the additionally executed existing cross-service safety contracts. No failed initial invocation is called a full success.
+
+Native captured results include limited Sun/source and ERFA standards comparisons only; numerical-summary.json retains signed residuals/budgets/statistics. Other native model outputs are not independent accuracy evidence. Mars was explicitly not admitted; no body-center or time-scale mismatch was concealed by widening tolerances. No remote CI PASS, legal approval, real payment, production deployment or personal timing release. Private test keys, sessions and disposable database credentials are not included.

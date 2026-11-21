@@ -1,0 +1,82 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.77kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.5s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#4 ...
+
+#5 [internal] load metadata for docker.io/library/golang:1.26-bookworm
+#5 DONE 0.4s
+
+#4 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#4 DONE 0.5s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 174B done
+#6 DONE 0.0s
+
+#7 [builder 1/9] FROM docker.io/library/golang:1.26-bookworm@sha256:5de7c99eb78ca5e515a4c340235d0955ec5964a5071c492c15503d7c267da473
+#7 DONE 0.0s
+
+#8 [runtime 1/5] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 20.66MB 0.1s done
+#9 DONE 0.1s
+
+#10 [builder 2/9] WORKDIR /app
+#10 CACHED
+
+#11 [builder 3/9] COPY --chmod=0555 scripts/install-swisseph.sh /usr/local/bin/install-swisseph
+#11 CACHED
+
+#12 [builder 4/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi;     sh /usr/local/bin/install-swisseph
+#12 8.140 From https://github.com/aloistr/swisseph
+#12 8.140  * branch            175e1fcb3108bcd5c0d146c803f51dcf23508012 -> FETCH_HEAD
+#12 8.219 make: Entering directory '/tmp/tmp.BSG7LOga4s/source'
+#12 8.219 cc	 -c -O2 -Wall -fPIC    swedate.c
+#12 8.220 cc	 -c -O2 -Wall -fPIC    swehouse.c
+#12 8.350 cc	 -c -O2 -Wall -fPIC    swejpl.c
+#12 8.602 cc	 -c -O2 -Wall -fPIC    swemmoon.c
+#12 8.851 cc	 -c -O2 -Wall -fPIC    swemplan.c
+#12 8.921 cc	 -c -O2 -Wall -fPIC    sweph.c
+#12 9.113 cc	 -c -O2 -Wall -fPIC    swephlib.c
+#12 9.918 cc	 -c -O2 -Wall -fPIC    swecl.c
+#12 10.70 cc	 -c -O2 -Wall -fPIC    swehel.c
+#12 11.42 ar r libswe.a	swedate.o swehouse.o swejpl.o swemmoon.o swemplan.o sweph.o swephlib.o swecl.o swehel.o
+#12 11.42 ar: creating libswe.a
+#12 11.42 make: Leaving directory '/tmp/tmp.BSG7LOga4s/source'
+#12 DONE 11.4s
+
+#13 [builder 5/9] COPY backend/go.mod backend/go.sum ./backend/
+#13 DONE 5.1s
+
+#14 [builder 6/9] WORKDIR /app/backend
+#14 DONE 2.7s
+
+#15 [builder 7/9] RUN --mount=type=secret,id=proxy_ca     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi;     go mod download
+#15 DONE 5.2s
+
+#16 [builder 8/9] COPY backend/ ./
+#16 ERROR: failed to prepare p9rk045kt4kk8bj82x0yc4g8j as qwwlfjrc2g34dwl8uoaaaai8u: mkdir /home/dockerd/.local/share/docker/vfs/dir/qwwlfjrc2g34dwl8uoaaaai8u/usr/share/locale/nb/LC_TIME: no space left on device
+------
+ > [builder 8/9] COPY backend/ ./:
+------
+Dockerfile:14
+--------------------
+  12 |         if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
+  13 |         go mod download
+  14 | >>> COPY backend/ ./
+  15 |     RUN --mount=type=bind,source=tests/calculation/reference,target=/app/tests/calculation/reference,readonly \
+  16 |         CGO_ENABLED=1 go test -mod=readonly ./... && \
+--------------------
+ERROR: failed to build: failed to solve: ResourceExhausted: failed to prepare p9rk045kt4kk8bj82x0yc4g8j as qwwlfjrc2g34dwl8uoaaaai8u: mkdir /home/dockerd/.local/share/docker/vfs/dir/qwwlfjrc2g34dwl8uoaaaai8u/usr/share/locale/nb/LC_TIME: no space left on device

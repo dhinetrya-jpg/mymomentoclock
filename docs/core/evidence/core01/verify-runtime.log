@@ -1,0 +1,31 @@
+engine: health and functional production smoke checks passed
+web: health and functional production smoke checks passed
+browser 375px: chart, validation, division tabs, BTR, modal, festival, checkout, privacy and overflow passed
+browser 1280px: chart, validation, division tabs, BTR, modal, festival, checkout, privacy and overflow passed
+Daily timing 375px unavailable: passed; no accuracy or release claim.
+Daily timing 375px unknown: passed; no accuracy or release claim.
+Daily timing 375px synthetic: passed; no accuracy or release claim.
+Daily timing 375px invalid-response: passed; no accuracy or release claim.
+Daily timing 1280px unavailable: passed; no accuracy or release claim.
+Daily timing 1280px unknown: passed; no accuracy or release claim.
+Daily timing 1280px synthetic: passed; no accuracy or release claim.
+Daily timing 1280px invalid-response: passed; no accuracy or release claim.
+commercial UI 375px unauthenticated: passed (local fixture only)
+commercial UI 375px verify: passed (local fixture only)
+commercial UI 375px refunded: passed (local fixture only)
+commercial UI 375px review: passed (local fixture only)
+commercial UI 375px recovery: passed (local fixture only)
+commercial UI 375px cancel-retry: passed (local fixture only)
+commercial UI 1280px unauthenticated: passed (local fixture only)
+commercial UI 1280px verify: passed (local fixture only)
+commercial UI 1280px refunded: passed (local fixture only)
+commercial UI 1280px review: passed (local fixture only)
+commercial UI 1280px recovery: passed (local fixture only)
+commercial UI 1280px cancel-retry: passed (local fixture only)
+Actual native API:9bodies/time-scales, PanchangUTCintervals, India/US/Canada localdays, DSTgap/fold+offsets, leaplabel and timing-admission refusal passed. Accuracy scope remains limited.
+engine: health and functional production smoke checks passed
+Actual native API:9bodies/time-scales, PanchangUTCintervals, India/US/Canada localdays, DSTgap/fold+offsets, leaplabel and timing-admission refusal passed. Accuracy scope remains limited.
+Nonroot SWISS_FILE runtime, real public files, readonly mounts, then missing-file readiness refusal: passed.
+ENGINEERING_CHECKS_PASSED. Running independent scientific acceptance; engineering success cannot waive missing references.
+REFERENCE_VERIFICATION_FAILED: ValueError: EXTERNAL_REFERENCE_PENDING: direct NASA/USNO/IERS/PAC source-specific admission and required per-body/Panchang/solar coverage have not been independently established; see acquisition_attempts.json
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.

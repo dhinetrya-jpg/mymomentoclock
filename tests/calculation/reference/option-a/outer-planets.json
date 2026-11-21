@@ -1,0 +1,849 @@
+{
+  "coordinate_policy": "Geocentric apparent true ecliptic/equinox of date; same independent Skyfield DE421 reduction as existing five-body vectors; +/-60TTsec central difference speed",
+  "generator_sha256": "59afd4f5d0bb1de4aa2b0493005f4179722f425c5bd3ad205519d296030846d7",
+  "original_reference_alias_proofs": [
+    {
+      "epoch": "J2000_TT_sun",
+      "jd_tt": 2451545.0,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "J2000_TT_sun",
+      "jd_tt": 2451545.0,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "J2000_TT_sun",
+      "jd_tt": 2451545.0,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1910_sun",
+      "jd_tt": 2418782.0004882407,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1910_sun",
+      "jd_tt": 2418782.0004882407,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1910_sun",
+      "jd_tt": 2418782.0004882407,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1975_sun",
+      "jd_tt": 2442523.0005345372,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1975_sun",
+      "jd_tt": 2442523.0005345372,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "HISTORICAL_1975_sun",
+      "jd_tt": 2442523.0005345372,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "MODERN_2026_sun",
+      "jd_tt": 2461056.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "MODERN_2026_sun",
+      "jd_tt": 2461056.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "MODERN_2026_sun",
+      "jd_tt": 2461056.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_BEFORE_sun",
+      "jd_tt": 2461120.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_BEFORE_sun",
+      "jd_tt": 2461120.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_BEFORE_sun",
+      "jd_tt": 2461120.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_AFTER_sun",
+      "jd_tt": 2461121.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_AFTER_sun",
+      "jd_tt": 2461121.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "EQUINOX_WRAP_AFTER_sun",
+      "jd_tt": 2461121.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "RETROGRADE_2026_sun",
+      "jd_tt": 2461108.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "RETROGRADE_2026_sun",
+      "jd_tt": 2461108.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "RETROGRADE_2026_sun",
+      "jd_tt": 2461108.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "FULL_MOON_2026_sun",
+      "jd_tt": 2461103.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "FULL_MOON_2026_sun",
+      "jd_tt": 2461103.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "FULL_MOON_2026_sun",
+      "jd_tt": 2461103.000800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "NEW_MOON_2026_sun",
+      "jd_tt": 2461118.500800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 199,
+      "system_target": 1,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "NEW_MOON_2026_sun",
+      "jd_tt": 2461118.500800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 299,
+      "system_target": 2,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "epoch": "NEW_MOON_2026_sun",
+      "jd_tt": 2461118.500800741,
+      "meaning": "Original DE421 segment explicitly represents this center alias as a zero vector at every compared epoch and velocity sample; not a claim of physical Mars COB accuracy",
+      "position_offset_au": [
+        0,
+        0,
+        0
+      ],
+      "reference_body_alias": 499,
+      "system_target": 4,
+      "velocity_offset_au_per_day": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "body": "jupiter",
+      "id": "J2000_TT_jupiter",
+      "jd_tt": 2451545.0,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.621163606233335,
+        "latitude": -1.2621967358102357,
+        "longitude_speed_deg_per_day": 0.04075883271980274,
+        "tropical_longitude": 25.25305660247495
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "saturn",
+      "id": "J2000_TT_saturn",
+      "jd_tt": 2451545.0,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 8.652785688356996,
+        "latitude": -2.4448584207802533,
+        "longitude_speed_deg_per_day": -0.019946260292726947,
+        "tropical_longitude": 40.39567785873207
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2000-01-01T11:58:55.816000Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "HISTORICAL_1910_jupiter",
+      "jd_tt": 2418782.0004882407,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.51101551379145,
+        "latitude": 1.581989655278185,
+        "longitude_speed_deg_per_day": -0.11123985682161219,
+        "tropical_longitude": 187.16446476792916
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "HISTORICAL_1910_saturn",
+      "jd_tt": 2418782.0004882407,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.296326244504481,
+        "latitude": -2.244588858799567,
+        "longitude_speed_deg_per_day": 0.12702372072453727,
+        "tropical_longitude": 26.671293232069463
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "1910-04-20T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "HISTORICAL_1975_jupiter",
+      "jd_tt": 2442523.0005345372,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 5.873859925347935,
+        "latitude": -1.0941505544591268,
+        "longitude_speed_deg_per_day": 0.23294800440226027,
+        "tropical_longitude": 7.853113891163985
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "HISTORICAL_1975_saturn",
+      "jd_tt": 2442523.0005345372,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 9.272966102773912,
+        "latitude": -0.17639901352270915,
+        "longitude_speed_deg_per_day": 0.06468518568908621,
+        "tropical_longitude": 103.18764396544532
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "1975-04-20T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "MODERN_2026_jupiter",
+      "jd_tt": 2461056.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.23773305394639,
+        "latitude": 0.27268809488412266,
+        "longitude_speed_deg_per_day": -0.13357797995013243,
+        "tropical_longitude": 109.41676982301134
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "MODERN_2026_saturn",
+      "jd_tt": 2461056.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 9.938637450281579,
+        "latitude": -2.2144210129305932,
+        "longitude_speed_deg_per_day": 0.07919747917185305,
+        "tropical_longitude": 357.16761121819917
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-01-15T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "EQUINOX_WRAP_BEFORE_jupiter",
+      "jd_tt": 2461120.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.888048839750573,
+        "latitude": 0.36267772058876097,
+        "longitude_speed_deg_per_day": 0.030179373757164285,
+        "tropical_longitude": 105.22901577792726
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "EQUINOX_WRAP_BEFORE_saturn",
+      "jd_tt": 2461120.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.48647485203998,
+        "latitude": -2.1236941986666236,
+        "longitude_speed_deg_per_day": 0.12464456977340888,
+        "tropical_longitude": 4.113024358914444
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-20T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "EQUINOX_WRAP_AFTER_jupiter",
+      "jd_tt": 2461121.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.9036527805251025,
+        "latitude": 0.3634731358361519,
+        "longitude_speed_deg_per_day": 0.03336385771945061,
+        "tropical_longitude": 105.26078846140844
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "EQUINOX_WRAP_AFTER_saturn",
+      "jd_tt": 2461121.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.487544901296316,
+        "latitude": -2.1238462190025267,
+        "longitude_speed_deg_per_day": 0.12474070600774212,
+        "tropical_longitude": 4.237718301313475
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-21T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "RETROGRADE_2026_jupiter",
+      "jd_tt": 2461108.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.707642560596041,
+        "latitude": 0.35216049240511765,
+        "longitude_speed_deg_per_day": -0.008661783185743843,
+        "tropical_longitude": 105.09873335346333
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "RETROGRADE_2026_saturn",
+      "jd_tt": 2461108.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.454031825481295,
+        "latitude": -2.1258302765962833,
+        "longitude_speed_deg_per_day": 0.12212192774086361,
+        "tropical_longitude": 2.629444551881241
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-08T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "FULL_MOON_2026_jupiter",
+      "jd_tt": 2461103.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.637419012582024,
+        "latitude": 0.3471888672704025,
+        "longitude_speed_deg_per_day": -0.024996689426188823,
+        "tropical_longitude": 105.1829495342525
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "FULL_MOON_2026_saturn",
+      "jd_tt": 2461103.000800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.430016729845663,
+        "latitude": -2.128813024632527,
+        "longitude_speed_deg_per_day": 0.12024004465502003,
+        "tropical_longitude": 2.0234000240557912
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-03T12:00:00Z"
+    },
+    {
+      "body": "jupiter",
+      "id": "NEW_MOON_2026_jupiter",
+      "jd_tt": 2461118.500800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 4.864774927941606,
+        "latitude": 0.36146161877375266,
+        "longitude_speed_deg_per_day": 0.025385244866811263,
+        "tropical_longitude": 105.18734039938391
+      },
+      "target_code": 5,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-19T00:00:00Z"
+    },
+    {
+      "body": "saturn",
+      "id": "NEW_MOON_2026_saturn",
+      "jd_tt": 2461118.500800741,
+      "observer_code": 399,
+      "quantities": {
+        "distance_au": 10.484395824374493,
+        "latitude": -2.123564712877153,
+        "longitude_speed_deg_per_day": 0.12447529736164142,
+        "tropical_longitude": 3.9261810462322617
+      },
+      "target_code": 6,
+      "target_definition": "PLANETARY_SYSTEM_BARYCENTER",
+      "tolerances": {
+        "distance_au": 1e-06,
+        "latitude": 0.0002,
+        "longitude_speed_deg_per_day": 0.0002,
+        "tropical_longitude": 0.0002
+      },
+      "utc": "2026-03-19T00:00:00Z"
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+  "target_policy": "Default Swiss 2.10.03 planet flags use planetary-system barycenters; observer Earth center. No COB flag/additional center files requested. Official documentation sections2.4 and Test6 confirm. JUP310 target599 remains non-admitted as a comparison to native target5.",
+  "uncertainty": "Original DE421 SPK has no per-row observational uncertainty; original PR21 comparison budgets unchanged, no physical confidence claim"
+}

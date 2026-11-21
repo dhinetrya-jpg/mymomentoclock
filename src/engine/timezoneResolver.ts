@@ -6,9 +6,15 @@ import { CalculationInputError, validGregorianDate } from './calculationValidati
 export interface ResolvedTimeResult {
   utcDate: Date;
   isoUtc: string;
+  /** @deprecated Nominal UTC calendar JD; not UT1. */
   julianDayUT: number;
-  julianDayTT: number;
-  deltaTSeconds: number;
+  julianDayUTC: number;
+  julianDayUT1: number|null;
+  julianDayTT: number|null;
+  deltaTSeconds: number|null;
+  dut1Seconds: number|null;
+  timescaleStatus:'UTC_ONLY'|'CALLER_SUPPLIED_UT1'|'CALLER_SUPPLIED_UT1_DELTA_T';
+  independentValidationStatus:'NOT_PERFORMED';
   offsetHours: number;
   timezone: string;
   isAmbiguous: boolean;
@@ -21,6 +27,7 @@ export interface ResolvedTimeResult {
  * JD(TT) = JD(UT) + DeltaT / 86400
  */
 export function calculateJulianDayTT(jdUT: number, deltaTSeconds: number): number {
+  if(!Number.isFinite(jdUT)||!Number.isFinite(deltaTSeconds))throw new CalculationInputError('INVALID_TIME_SCALE','Supply finite JD(UT1) and Delta-T values.');
   return jdUT + deltaTSeconds / 86400;
 }
 
@@ -44,7 +51,7 @@ function formatInZone(date: Date, timeZone: string): string {
   parts.forEach(p => {
     partMap[p.type] = p.value;
   });
-  return `${partMap.year}-${partMap.month}-${partMap.day} ${partMap.hour}:${partMap.minute}:${partMap.second}`;
+  return `${partMap.year.padStart(4,'0')}-${partMap.month}-${partMap.day} ${partMap.hour}:${partMap.minute}:${partMap.second}`;
 }
 
 /**
@@ -57,8 +64,12 @@ export function resolveIanaTimezone(
   birthTime: string,
   timezone: string,
   callerOffset?: number,
-  deltaTSeconds: number = 69.184
+  deltaTSeconds?: number,
+  dut1Seconds?: number
 ): ResolvedTimeResult {
+  if(deltaTSeconds!==undefined&&!Number.isFinite(deltaTSeconds)||dut1Seconds!==undefined&&(!Number.isFinite(dut1Seconds)||Math.abs(dut1Seconds)>0.9))throw new CalculationInputError('INVALID_TIME_SCALE','Supply a finite Delta-T and DUT1 within the UTC definition.');
+  if(callerOffset!==undefined&&(typeof callerOffset!=='number'||!Number.isFinite(callerOffset)))throw new CalculationInputError('INVALID_TIMEZONE','Supply a finite numeric UTC offset.');
+  if(timezone==='Local')throw new CalculationInputError('INVALID_TIMEZONE','Supply an explicit IANA timezone.');
   if (!birthDate || !birthTime) {
     throw new CalculationInputError('MISSING_REQUIRED_BIRTH_DATA', 'Birth date and time are required.');
   }
@@ -75,7 +86,7 @@ export function resolveIanaTimezone(
   const wallClockTarget = `${birthDate} ${rawTime}`;
 
   // If caller supplied explicit numeric offset
-  if (callerOffset !== undefined && callerOffset !== null && !Number.isNaN(callerOffset)) {
+  if (callerOffset !== undefined) {
     if (callerOffset < -12 || callerOffset > 14) {
       throw new CalculationInputError('INVALID_TIMEZONE', 'Supply the UTC offset in hours (−12 to +14).');
     }
@@ -84,7 +95,7 @@ export function resolveIanaTimezone(
     const [hour, min, sec] = rawTime.split(':').map(Number);
 
     // Compute UTC time in milliseconds
-    const naiveUtcMs = Date.UTC(year, month - 1, day, hour, min, sec);
+    const naiveUtcMs = civilUtcMillis(year,month,day,hour,min,sec);
     const targetUtcMs = naiveUtcMs - Math.round(callerOffset * 3600 * 1000);
     const utcDate = new Date(targetUtcMs);
 
@@ -95,24 +106,23 @@ export function resolveIanaTimezone(
         if (formatted !== wallClockTarget) {
           throw new CalculationInputError(
             'INVALID_TIMEZONE',
-            `Supplied timezone offset ${callerOffset} does not match ${timezone} at ${wallClockTarget}`
+            'Supplied UTC offset does not match the IANA zone at that civil time.'
           );
         }
       } catch (e) {
         if (e instanceof CalculationInputError) throw e;
-        throw new CalculationInputError('INVALID_TIMEZONE', `Invalid IANA timezone: ${timezone}`);
+        throw new CalculationInputError('INVALID_TIMEZONE', 'Invalid IANA timezone.');
       }
     }
 
     const jdUT = calculateJdFromDate(utcDate);
-    const jdTT = calculateJulianDayTT(jdUT, deltaTSeconds);
+    const scales=timeScales(jdUT,deltaTSeconds,dut1Seconds);
 
     return {
       utcDate,
       isoUtc: utcDate.toISOString(),
       julianDayUT: jdUT,
-      julianDayTT: jdTT,
-      deltaTSeconds,
+      ...scales,
       offsetHours: callerOffset,
       timezone: timezone || 'UTC_OFFSET',
       isAmbiguous: false,
@@ -129,12 +139,12 @@ export function resolveIanaTimezone(
     // Validate timezone name
     new Intl.DateTimeFormat(undefined, { timeZone: timezone });
   } catch (_e) {
-    throw new CalculationInputError('INVALID_TIMEZONE', `Unknown or unsupported IANA timezone: ${timezone}`);
+    throw new CalculationInputError('INVALID_TIMEZONE', 'Unknown or unsupported IANA timezone.');
   }
 
   const [year, month, day] = birthDate.split('-').map(Number);
   const [hour, min, sec] = rawTime.split(':').map(Number);
-  const naiveUtcMs = Date.UTC(year, month - 1, day, hour, min, sec);
+  const naiveUtcMs = civilUtcMillis(year,month,day,hour,min,sec);
 
   // Probe possible offsets within +/- 48 hours to collect potential transition states
   const candidateOffsets = new Set<number>();
@@ -145,7 +155,7 @@ export function resolveIanaTimezone(
     const [pDate, pTime] = formatted.split(' ');
     const [pY, pM, pD] = pDate.split('-').map(Number);
     const [pH, pMin, pS] = pTime.split(':').map(Number);
-    const localMs = Date.UTC(pY, pM - 1, pD, pH, pMin, pS);
+    const localMs = civilUtcMillis(pY,pM,pD,pH,pMin,pS);
     const offsetSec = Math.round((localMs - probe.getTime()) / 1000);
     candidateOffsets.add(offsetSec);
   }
@@ -165,27 +175,26 @@ export function resolveIanaTimezone(
   if (matchingDates.length === 0) {
     throw new CalculationInputError(
       'NONEXISTENT_LOCAL_TIME',
-      `Local wall-clock time '${wallClockTarget}' does not exist in timezone '${timezone}' due to daylight saving transition gap.`
+      'The supplied civil time does not exist in that IANA timezone.'
     );
   }
 
   if (matchingDates.length > 1) {
     throw new CalculationInputError(
       'AMBIGUOUS_LOCAL_TIME',
-      `Local wall-clock time '${wallClockTarget}' is ambiguous in timezone '${timezone}' due to daylight saving fall-back fold. Provide explicit UTC offset.`
+      'The supplied civil time is repeated in that IANA timezone. Provide its explicit UTC offset.'
     );
   }
 
   const resolved = matchingDates[0];
   const jdUT = calculateJdFromDate(resolved.utc);
-  const jdTT = calculateJulianDayTT(jdUT, deltaTSeconds);
+  const scales=timeScales(jdUT,deltaTSeconds,dut1Seconds);
 
   return {
     utcDate: resolved.utc,
     isoUtc: resolved.utc.toISOString(),
     julianDayUT: jdUT,
-    julianDayTT: jdTT,
-    deltaTSeconds,
+    ...scales,
     offsetHours: resolved.offsetHours,
     timezone,
     isAmbiguous: false,
@@ -213,4 +222,12 @@ function calculateJdFromDate(d: Date): number {
   const F = Math.floor(30.6001 * (mCalc + 1));
 
   return C + day + E + F + hour / 24.0 - 1524.5;
+}
+
+// Date.UTC treats years0–99 as1900–1999; avoid that legacy coercion.
+function civilUtcMillis(year:number,month:number,day:number,hour:number,minute:number,second:number){const d=new Date(0);d.setUTCFullYear(year,month-1,day);d.setUTCHours(hour,minute,second,0);return d.getTime();}
+function timeScales(jdUTC:number,deltaTSeconds?:number,dut1Seconds?:number){
+ const ut1=dut1Seconds===undefined?null:jdUTC+dut1Seconds/86400;
+ const tt=ut1===null||deltaTSeconds===undefined?null:calculateJulianDayTT(ut1,deltaTSeconds);
+ return {julianDayUTC:jdUTC,julianDayUT1:ut1,julianDayTT:tt,deltaTSeconds:deltaTSeconds??null,dut1Seconds:dut1Seconds??null,timescaleStatus:(ut1===null?'UTC_ONLY':tt===null?'CALLER_SUPPLIED_UT1':'CALLER_SUPPLIED_UT1_DELTA_T') as ResolvedTimeResult['timescaleStatus'],independentValidationStatus:'NOT_PERFORMED' as const};
 }

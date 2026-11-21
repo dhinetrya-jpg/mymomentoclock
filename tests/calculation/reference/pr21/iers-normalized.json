@@ -1,0 +1,63 @@
+{
+  "records": [
+    {
+      "date": "1975-04-20",
+      "delta_t_seconds": 45.7933866,
+      "dut1_seconds": 0.3906134,
+      "flag": "I",
+      "formal_error_seconds": 7.6e-06,
+      "mjd_utc": 42522.0,
+      "normalization": "IERS finals2000A fixed-width Bulletin A columns: MJD bytes7:15; observed flag57; UT1-UTC58:68; formal error68:78. Bulletin B columns are not mixed with A. TAI-UTC dates also checked against ERFA/Swiss leap behavior.",
+      "source_line": 839,
+      "source_sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+      "tai_minus_utc_seconds": 14,
+      "time_scale": "UTC at 00:00:00; UT1-UTC in seconds",
+      "tt_minus_utc_seconds": 46.184
+    },
+    {
+      "date": "2000-01-01",
+      "delta_t_seconds": 63.8285221,
+      "dut1_seconds": 0.3554779,
+      "flag": "I",
+      "formal_error_seconds": 9.9e-06,
+      "mjd_utc": 51544.0,
+      "normalization": "IERS finals2000A fixed-width Bulletin A columns: MJD bytes7:15; observed flag57; UT1-UTC58:68; formal error68:78. Bulletin B columns are not mixed with A. TAI-UTC dates also checked against ERFA/Swiss leap behavior.",
+      "source_line": 9861,
+      "source_sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+      "tai_minus_utc_seconds": 32,
+      "time_scale": "UTC at 00:00:00; UT1-UTC in seconds",
+      "tt_minus_utc_seconds": 64.184
+    },
+    {
+      "date": "2024-01-01",
+      "delta_t_seconds": 69.1752163,
+      "dut1_seconds": 0.0087837,
+      "flag": "I",
+      "formal_error_seconds": 8.4e-06,
+      "mjd_utc": 60310.0,
+      "normalization": "IERS finals2000A fixed-width Bulletin A columns: MJD bytes7:15; observed flag57; UT1-UTC58:68; formal error68:78. Bulletin B columns are not mixed with A. TAI-UTC dates also checked against ERFA/Swiss leap behavior.",
+      "source_line": 18627,
+      "source_sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+      "tai_minus_utc_seconds": 37,
+      "time_scale": "UTC at 00:00:00; UT1-UTC in seconds",
+      "tt_minus_utc_seconds": 69.184
+    },
+    {
+      "date": "2026-03-08",
+      "delta_t_seconds": 69.1208855,
+      "dut1_seconds": 0.0631145,
+      "flag": "I",
+      "formal_error_seconds": 2.26e-05,
+      "mjd_utc": 61107.0,
+      "normalization": "IERS finals2000A fixed-width Bulletin A columns: MJD bytes7:15; observed flag57; UT1-UTC58:68; formal error68:78. Bulletin B columns are not mixed with A. TAI-UTC dates also checked against ERFA/Swiss leap behavior.",
+      "source_line": 19424,
+      "source_sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+      "tai_minus_utc_seconds": 37,
+      "time_scale": "UTC at 00:00:00; UT1-UTC in seconds",
+      "tt_minus_utc_seconds": 69.184
+    }
+  ],
+  "schema_version": 1,
+  "tolerance_definition": "Predeclared 100 microseconds representation/comparison budget (two float64 JD ULPs near 2451545 ~80.5us plus input decimal resolution). Source EOP formal errors separately recorded; numerical agreement does not imply 100us physical Earth-orientation accuracy.",
+  "tolerance_seconds": 0.0001
+}

@@ -1,0 +1,18 @@
+{
+  "publisher": "NASA/JPL DE421; binary republished by official Skyfield repository",
+  "retrieval_url": "https://raw.githubusercontent.com/skyfielders/python-skyfield/31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4/ci/de421.bsp",
+  "final_url": "https://raw.githubusercontent.com/skyfielders/python-skyfield/31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4/ci/de421.bsp",
+  "revision": "31a6ed7584cd09b6e48e07546a4b5921e1cd5bb4",
+  "retrieved_at_utc": "2026-11-07T09:00:31.534002+00:00",
+  "sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+  "size_bytes": 16788480,
+  "http_status": 200,
+  "artifact": "originals/de421.bsp",
+  "independence": "JPL DE421 SPK evaluated by Skyfield/jplephem; no Swiss values used",
+  "limitations": [
+    "Redistributed JPL kernel, not a direct NASA server capture",
+    "Jupiter/Saturn centers absent; barycenters NOT admitted as centers",
+    "DE421 is independent evaluation, not independent observations or independent underlying solar-system theory"
+  ],
+  "spk_comments": "originals/de421-comments.txt"
+}

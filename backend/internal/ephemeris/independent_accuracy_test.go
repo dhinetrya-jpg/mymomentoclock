@@ -9,6 +9,7 @@ import (
 	"testing"
 )
 
+// Quarantined source numbers are not independent astronomical evidence. This suite checks only calendar/error regressions.
 // ReferenceDataset matches tests/calculation/reference/independent_reference_fixtures.json
 type ReferenceDataset struct {
 	DatasetTitle   string             `json:"dataset_title"`
@@ -59,7 +60,7 @@ func loadReferenceDataset(t *testing.T) *ReferenceDataset {
 		}
 	}
 	if err != nil {
-		t.Skipf("Reference dataset not found in path, skipping: %v", err)
+		t.Fatalf("Required legacy calendar dataset absent; package it explicitly: %v", err)
 		return nil
 	}
 	var dataset ReferenceDataset
@@ -69,7 +70,7 @@ func loadReferenceDataset(t *testing.T) *ReferenceDataset {
 	return &dataset
 }
 
-func TestIndependentAstronomicalAccuracy(t *testing.T) {
+func TestLegacyScenarioCalendarOnly(t *testing.T) {
 	dataset := loadReferenceDataset(t)
 	if dataset == nil {
 		return

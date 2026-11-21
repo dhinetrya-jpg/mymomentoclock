@@ -1,0 +1,147 @@
+{
+  "limitations": [
+    "No direct NASA, USNO, IERS, IANA-server or PAC response was admitted.",
+    "Skyfield vectors are upstream-published Horizons-derived tests, not direct NASA authenticity proof; Mars barycenter differs from Mars center.",
+    "No independently retrieved J2000 Moon/Mars/PAC/Panchang/solar values were obtained; those remain pending.",
+    "Swiss vendor files prove mode availability only, never independent accuracy.",
+    "ERFA fractional two-part JD tolerances require split-part comparison or a predeclared float64 representation budget."
+  ],
+  "normalizer_version": "core-reference-normalizer-v1",
+  "planetary": [
+    {
+      "body": "mars",
+      "center": "Earth center",
+      "ephemeris_context": "DE421",
+      "frame": "APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE",
+      "id": "SKYFIELD_MARS_19560114",
+      "independence": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "latitude_deg": 0.4753402,
+      "latitude_tolerance_deg": 1e-05,
+      "longitude_deg": 240.0965633,
+      "longitude_tolerance_deg": 0.0002,
+      "reference_body": "Mars barycenter",
+      "source_id": "skyfield-horizons-tests",
+      "source_locator": "test_ecliptic_for_epoch_of_date; lines 35-44",
+      "source_sha256": "da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a",
+      "time_scale": "UTC",
+      "utc": "1956-01-14T06:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center",
+      "ephemeris_context": "DE421",
+      "frame": "APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE",
+      "id": "SKYFIELD_SUN_20051001_07",
+      "independence": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "latitude_deg": 4.88e-05,
+      "latitude_tolerance_deg": 1e-05,
+      "longitude_deg": 188.2011122,
+      "longitude_tolerance_deg": 0.0002,
+      "reference_body": "Sun",
+      "source_id": "skyfield-horizons-tests",
+      "source_locator": "test_ecliptic_for_epoch_of_date_array; lines 44-55",
+      "source_sha256": "da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a",
+      "time_scale": "UTC",
+      "utc": "2005-10-01T07:00:00Z"
+    },
+    {
+      "body": "sun",
+      "center": "Earth center",
+      "ephemeris_context": "DE421",
+      "frame": "APPARENT_GEOCENTRIC_ECLIPTIC_OF_DATE",
+      "id": "SKYFIELD_SUN_20051001_08",
+      "independence": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "latitude_deg": 4.74e-05,
+      "latitude_tolerance_deg": 1e-05,
+      "longitude_deg": 188.2420983,
+      "longitude_tolerance_deg": 0.0002,
+      "reference_body": "Sun",
+      "source_id": "skyfield-horizons-tests",
+      "source_locator": "test_ecliptic_for_epoch_of_date_array; lines 44-55",
+      "source_sha256": "da7e163a764e2e4641e406d3b862f5f99caa8b412257ac17752dbbcd9e4c581a",
+      "time_scale": "UTC",
+      "utc": "2005-10-01T08:00:00Z"
+    }
+  ],
+  "schema_version": 1,
+  "temporal": [
+    {
+      "calendar": [
+        2003,
+        6,
+        1
+      ],
+      "expected_jd1": 2400000.5,
+      "expected_jd2": 52791.0,
+      "id": "ERFA_CAL2JD_20030601",
+      "independence": "INDEPENDENT_PUBLISHED_ERFA_STANDARD_TEST_VECTOR",
+      "operation": "CAL2JD",
+      "source_id": "erfa-published-vectors",
+      "source_locator": "cal2jd; lines 2789-2816",
+      "source_sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15",
+      "tolerance_days": 0
+    },
+    {
+      "expected_jd1": 2453750.5,
+      "expected_jd2": 0.8924826384444444,
+      "first_part_tolerance_days": 1e-06,
+      "id": "ERFA_UTCTAI",
+      "independence": "INDEPENDENT_PUBLISHED_ERFA_STANDARD_TEST_VECTOR",
+      "input_jd1": 2453750.5,
+      "input_jd2": 0.892100694,
+      "operation": "UTCTAI",
+      "source_id": "erfa-published-vectors",
+      "source_locator": "utctai; lines 9711-9737",
+      "source_sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15",
+      "tolerance_days": 1e-12
+    },
+    {
+      "expected_jd1": 2453750.5,
+      "expected_jd2": 0.892855139,
+      "first_part_tolerance_days": 1e-06,
+      "id": "ERFA_TAITT",
+      "independence": "INDEPENDENT_PUBLISHED_ERFA_STANDARD_TEST_VECTOR",
+      "input_jd1": 2453750.5,
+      "input_jd2": 0.892482639,
+      "operation": "TAITT",
+      "source_id": "erfa-published-vectors",
+      "source_locator": "taitt; lines 8907-8933",
+      "source_sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15",
+      "tolerance_days": 1e-12
+    },
+    {
+      "dut1_seconds": 0.3341,
+      "expected_jd1": 2453750.5,
+      "expected_jd2": 0.8921045608981482,
+      "first_part_tolerance_days": 1e-06,
+      "id": "ERFA_UTCUT1",
+      "independence": "INDEPENDENT_PUBLISHED_ERFA_STANDARD_TEST_VECTOR",
+      "input_jd1": 2453750.5,
+      "input_jd2": 0.892100694,
+      "operation": "UTCUT1",
+      "source_id": "erfa-published-vectors",
+      "source_locator": "utcut1; lines 9739-9765",
+      "source_sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15",
+      "tolerance_days": 1e-12
+    },
+    {
+      "calendar": [
+        1994,
+        6,
+        30,
+        23,
+        59,
+        60.13599
+      ],
+      "expected_jd": 2449534.49999,
+      "id": "ERFA_DTF2D_LEAP_19940630",
+      "independence": "INDEPENDENT_PUBLISHED_ERFA_STANDARD_TEST_VECTOR",
+      "operation": "DTF2D",
+      "scale": "UTC_QUASI_JD",
+      "source_id": "erfa-published-vectors",
+      "source_locator": "dtf2d; lines 3058-3083",
+      "source_sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15",
+      "tolerance_days": 1e-06
+    }
+  ]
+}

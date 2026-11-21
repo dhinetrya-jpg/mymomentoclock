@@ -1,0 +1,58 @@
+{
+  "attempts": [
+    {
+      "attempted_at_utc": "2026-11-06T15:18:18.385906+00:00",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "error_type": "URLError",
+      "id": "direct-nasa-horizons-mars-j2000",
+      "query_parameters": {
+        "ANG_FORMAT": "'DEG'",
+        "CENTER": "'500@399'",
+        "COMMAND": "'499'",
+        "CSV_FORMAT": "'YES'",
+        "EPHEM_TYPE": "'OBSERVER'",
+        "QUANTITIES": "'31'",
+        "START_TIME": "'2000-01-01 12:00'",
+        "STEP_SIZE": "'1m'",
+        "STOP_TIME": "'2000-01-01 12:01'",
+        "TIME_TYPE": "'UT'",
+        "format": "text"
+      },
+      "status": "EXTERNAL_REFERENCE_PENDING",
+      "url": "https://ssd-api.jpl.nasa.gov/horizons.api?format=text&COMMAND=%27499%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27500%40399%27&START_TIME=%272000-01-01+12%3A00%27&STOP_TIME=%272000-01-01+12%3A01%27&STEP_SIZE=%271m%27&QUANTITIES=%2731%27&CSV_FORMAT=%27YES%27&ANG_FORMAT=%27DEG%27&TIME_TYPE=%27UT%27"
+    },
+    {
+      "attempted_at_utc": "2026-11-06T15:18:18.390426+00:00",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "error_type": "URLError",
+      "id": "direct-usno-new-york-solar",
+      "status": "EXTERNAL_REFERENCE_PENDING",
+      "url": "https://aa.usno.navy.mil/api/rstt/oneday?date=2026-03-08&coords=40.7128,-74.006&tz=-5"
+    },
+    {
+      "attempted_at_utc": "2026-11-06T15:18:18.394637+00:00",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "error_type": "URLError",
+      "id": "direct-iers-earth-orientation",
+      "status": "EXTERNAL_REFERENCE_PENDING",
+      "url": "https://datacenter.iers.org/data/latestVersion/finals2000A.all"
+    },
+    {
+      "attempted_at_utc": "2026-11-06T15:18:18.398293+00:00",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "error_type": "URLError",
+      "id": "direct-iana-tzdata2024b",
+      "status": "EXTERNAL_REFERENCE_PENDING",
+      "url": "https://data.iana.org/time-zones/releases/tzdata2024b.tar.gz"
+    },
+    {
+      "attempted_at_utc": "2026-11-06T15:18:18.401795+00:00",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "error_type": "URLError",
+      "id": "direct-pac-publication-entry",
+      "status": "EXTERNAL_REFERENCE_PENDING",
+      "url": "https://mausam.imd.gov.in/imd_latest/contents/pac.php"
+    }
+  ],
+  "schema_version": 1
+}

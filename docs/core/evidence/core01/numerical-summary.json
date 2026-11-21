@@ -1,0 +1,232 @@
+{
+  "scope": "LIMITED_UPSTREAM_PUBLISHED_SUN_VECTORS_NOT_FULL_INDEPENDENT_ACCEPTANCE",
+  "statistics": [
+    {
+      "body": "sun",
+      "mode": "MOSHIER",
+      "quantity": "tropical_longitude",
+      "sample_count": 2,
+      "maximum_error_deg": 1.767117245776717e-05,
+      "mean_error_deg": 1.7650381096245837e-05,
+      "median_error_deg": 1.7650381096245837e-05,
+      "p95_nearest_rank_deg": 1.767117245776717e-05,
+      "failure_count": 0,
+      "tolerance_deg": 0.0002
+    },
+    {
+      "body": "sun",
+      "mode": "MOSHIER",
+      "quantity": "latitude",
+      "sample_count": 2,
+      "maximum_error_deg": 7.75206172447538e-06,
+      "mean_error_deg": 7.716914385432231e-06,
+      "median_error_deg": 7.716914385432231e-06,
+      "p95_nearest_rank_deg": 7.75206172447538e-06,
+      "failure_count": 0,
+      "tolerance_deg": 1e-05
+    },
+    {
+      "body": "sun",
+      "mode": "SWISS_FILE",
+      "quantity": "tropical_longitude",
+      "sample_count": 2,
+      "maximum_error_deg": 1.316782220328605e-05,
+      "mean_error_deg": 1.316471261247898e-05,
+      "median_error_deg": 1.316471261247898e-05,
+      "p95_nearest_rank_deg": 1.316782220328605e-05,
+      "failure_count": 0,
+      "tolerance_deg": 0.0002
+    },
+    {
+      "body": "sun",
+      "mode": "SWISS_FILE",
+      "quantity": "latitude",
+      "sample_count": 2,
+      "maximum_error_deg": 4.3183857655600615e-06,
+      "mean_error_deg": 4.291625908384651e-06,
+      "median_error_deg": 4.291625908384651e-06,
+      "p95_nearest_rank_deg": 4.3183857655600615e-06,
+      "failure_count": 0,
+      "tolerance_deg": 1e-05
+    }
+  ],
+  "comparisons": [
+    {
+      "absolute_error_deg": 1.7629589734724505e-05,
+      "actual": 188.20112982958975,
+      "body": "sun",
+      "expected": 188.2011122,
+      "id": "SKYFIELD_SUN_20051001_07",
+      "mode": "MOSHIER",
+      "quantity": "tropical_longitude",
+      "signed_residual_deg": 1.7629589734724505e-05,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 0.0002,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 7.681767046389082e-06,
+      "actual": 5.648176704638908e-05,
+      "body": "sun",
+      "expected": 4.88e-05,
+      "id": "SKYFIELD_SUN_20051001_07",
+      "mode": "MOSHIER",
+      "quantity": "latitude",
+      "signed_residual_deg": 7.681767046389082e-06,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 1e-05,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 1.767117245776717e-05,
+      "actual": 188.24211597117247,
+      "body": "sun",
+      "expected": 188.2420983,
+      "id": "SKYFIELD_SUN_20051001_08",
+      "mode": "MOSHIER",
+      "quantity": "tropical_longitude",
+      "signed_residual_deg": 1.767117245776717e-05,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 0.0002,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 7.75206172447538e-06,
+      "actual": 5.515206172447538e-05,
+      "body": "sun",
+      "expected": 4.74e-05,
+      "id": "SKYFIELD_SUN_20051001_08",
+      "mode": "MOSHIER",
+      "quantity": "latitude",
+      "signed_residual_deg": 7.75206172447538e-06,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 1e-05,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 1.3161603021671908e-05,
+      "actual": 188.20112536160303,
+      "body": "sun",
+      "expected": 188.2011122,
+      "id": "SKYFIELD_SUN_20051001_07",
+      "mode": "SWISS_FILE",
+      "quantity": "tropical_longitude",
+      "signed_residual_deg": 1.3161603021671908e-05,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 0.0002,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 4.264866051209241e-06,
+      "actual": 5.306486605120924e-05,
+      "body": "sun",
+      "expected": 4.88e-05,
+      "id": "SKYFIELD_SUN_20051001_07",
+      "mode": "SWISS_FILE",
+      "quantity": "latitude",
+      "signed_residual_deg": 4.264866051209241e-06,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 1e-05,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 1.316782220328605e-05,
+      "actual": 188.2421114678222,
+      "body": "sun",
+      "expected": 188.2420983,
+      "id": "SKYFIELD_SUN_20051001_08",
+      "mode": "SWISS_FILE",
+      "quantity": "tropical_longitude",
+      "signed_residual_deg": 1.316782220328605e-05,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 0.0002,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    },
+    {
+      "absolute_error_deg": 4.3183857655600615e-06,
+      "actual": 5.171838576556006e-05,
+      "body": "sun",
+      "expected": 4.74e-05,
+      "id": "SKYFIELD_SUN_20051001_08",
+      "mode": "SWISS_FILE",
+      "quantity": "latitude",
+      "signed_residual_deg": 4.3183857655600615e-06,
+      "source_id": "skyfield-horizons-tests",
+      "source_scope": "UPSTREAM_PUBLISHED_HORIZONS_DERIVED_NOT_DIRECT_NASA_CAPTURE",
+      "status": "PASS",
+      "tolerance_deg": 1e-05,
+      "tolerance_source": "immutable upstream preexisting test; not fitted to local result"
+    }
+  ],
+  "temporal_comparisons": [
+    {
+      "absolute_error_seconds": 0,
+      "actual_jd": 2452791.5,
+      "expected_jd": 2452791.5,
+      "id": "ERFA_CAL2JD_20030601",
+      "operation": "CAL2JD",
+      "source_id": "erfa-published-vectors",
+      "status": "PASS",
+      "tolerance_seconds": 0
+    },
+    {
+      "absolute_error_seconds": 0,
+      "actual_jd": 2453751.3924826384,
+      "expected_jd": 2453751.3924826384,
+      "id": "ERFA_UTCTAI",
+      "operation": "UTCTAI",
+      "source_id": "erfa-published-vectors",
+      "status": "PASS",
+      "tolerance_seconds": 4.031953522338867e-05
+    },
+    {
+      "absolute_error_seconds": 0,
+      "actual_jd": 2453751.392855139,
+      "expected_jd": 2453751.392855139,
+      "id": "ERFA_TAITT",
+      "operation": "TAITT",
+      "source_id": "erfa-published-vectors",
+      "status": "PASS",
+      "tolerance_seconds": 4.031953522338867e-05
+    },
+    {
+      "absolute_error_seconds": 0,
+      "actual_jd": 2453751.392104561,
+      "expected_jd": 2453751.392104561,
+      "id": "ERFA_UTCUT1",
+      "operation": "UTCUT1",
+      "source_id": "erfa-published-vectors",
+      "status": "PASS",
+      "tolerance_seconds": 4.031953522338867e-05
+    },
+    {
+      "absolute_error_seconds": 0,
+      "actual_jd": 2449534.49999,
+      "expected_jd": 2449534.49999,
+      "id": "ERFA_DTF2D_LEAP_19940630",
+      "operation": "DTF2D",
+      "source_id": "erfa-published-vectors",
+      "status": "PASS",
+      "tolerance_seconds": 0.08644023313522338
+    }
+  ],
+  "not_admitted": [
+    "Mars barycenter/native-center and pre1972 compatibility",
+    "Other bodies/quantities/ayanamsa/houses/solar/Panchang dated references",
+    "JPL real kernel not available"
+  ]
+}

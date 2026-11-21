@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "status": "QUARANTINED_NOT_INDEPENDENT_EVIDENCE",
+  "reason": "No original institutional response, reproducible retrieval or verified coordinate/time-scale chain. Historical numbers retained for contradiction audit, never source-admitted by headers or metadata.",
+  "files": [
+    {
+      "path": "tests/calculation/astronomical_reference_fixtures.json",
+      "sha256": "b44f35043f286364d2d105c4062c0a0b6fb7398c193430aef30ace0845f314fe"
+    },
+    {
+      "path": "tests/calculation/reference/independent_reference_fixtures.json",
+      "sha256": "77becf66d6682d5568c3f5e5eb5f74330f8d13a7b689781b8223162f204e4c96"
+    },
+    {
+      "path": "tests/calculation/reference/source_manifest.json",
+      "sha256": "dd7062e178f513e663ab43e9860e948c04bac06509c3419b4e5c6cdafa009621"
+    },
+    {
+      "path": "tests/calculation/reference/raw/iae_pac_india_lahiri.txt",
+      "sha256": "0f60fe0c4944dc436688f89a8ed3b11c6236452e4e848bbb6b34c3af4186daae"
+    },
+    {
+      "path": "tests/calculation/reference/raw/iana_tzdata_2024b_transitions.txt",
+      "sha256": "3e54bc08ca329d74a81d10c3a2562d5b46a477248d01856186f2004fc5ea97b3"
+    },
+    {
+      "path": "tests/calculation/reference/raw/iers_bulletin_b_deltat.txt",
+      "sha256": "fb67da1b0c537da8512fef0b5970e7865a1e5bc87645b5663869173d0bd27804"
+    },
+    {
+      "path": "tests/calculation/reference/raw/jpl_j2000_de440.txt",
+      "sha256": "cc1df426a505eb9005f0df91ef456637b9995a8bb517df37eb9d0b56dd609842"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SCENARIO_01_J2000_EPOCH",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_02_HISTORICAL_INDIAN_KOLKATA_1989",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_03_MODERN_INDIAN_DELHI_2026",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_04_INDIAN_METRO_MUMBAI_2026",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_05_INDIAN_METRO_CHENNAI_2026",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_06_US_NEW_YORK_WINTER_EST",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_07_US_NEW_YORK_SUMMER_EDT",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_08_US_NEW_YORK_SPRING_FORWARD_GAP",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_09_US_NEW_YORK_FALL_BACK_FOLD",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_10_CANADA_TORONTO_SUMMER_EDT",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_11_CANADA_VANCOUVER_WINTER_PST",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "Vancouver input/UTCexpected were changed to2024 in baselinecc3ab82; scenario title/description may still refer to2026. Calendar regression tests use actual2024 input, not a claimed2026 external observation."
+    },
+    {
+      "id": "SCENARIO_12_CALENDAR_LEAP_DAY_2000",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_13_CALENDAR_CENTURY_NON_LEAP_1900",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_14_TEMPORAL_MIDNIGHT_NOON_SEPARATION",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_15_SOLAR_VERNAL_EQUINOX_2026",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_16_SOLAR_SUMMER_SOLSTICE_2026",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_17_INTERNATIONAL_DATE_LINE_FIJI",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_18_EQUATORIAL_LOCATION_KIGALI",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_19_HIGH_LATITUDE_TROMSO_ARCTIC",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_20_ZODIAC_SIGN_BOUNDARY_ARIES_TAURUS",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "ALGORITHM_OR_SEGMENT_CONVENTION_ONLY_NOT_ASTRONOMICAL_REFERENCE",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_21_ZODIAC_WRAPAROUND_GANDANTA",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "ALGORITHM_OR_SEGMENT_CONVENTION_ONLY_NOT_ASTRONOMICAL_REFERENCE",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_22_NAKSHATRA_BOUNDARY_ASHWINI_BHARANI",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "ALGORITHM_OR_SEGMENT_CONVENTION_ONLY_NOT_ASTRONOMICAL_REFERENCE",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_23_TITHI_TRANSITION_PRATIPADA_DWITIYA",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "ALGORITHM_OR_SEGMENT_CONVENTION_ONLY_NOT_ASTRONOMICAL_REFERENCE",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_24_SUNRISE_SUNSET_NEW_DELHI",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_25_SUNRISE_SUNSET_KOLKATA",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_26_MOON_PHASE_FULL_MOON_PURNIMA",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "INVALID_FOR_SELECTED_HALF_OPEN_CONVENTION",
+      "issue": "Legacy exact180degree expectedindex14 conflicts with [start,end)12degree sectors: index15 at the cut. Source value preserved, mathematical convention explicitly corrected in code/tests."
+    },
+    {
+      "id": "SCENARIO_27_MOON_PHASE_NEW_MOON_AMAVASYA",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "ALGORITHM_OR_SEGMENT_CONVENTION_ONLY_NOT_ASTRONOMICAL_REFERENCE",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_28_PLANETARY_RETROGRADE_MARS_2025",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_29_AYANAMSA_TRUE_LAHIRI_PAC",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_30_AYANAMSA_KP_OFFSET",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_31_AYANAMSA_RAMAN_OFFSET",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    },
+    {
+      "id": "SCENARIO_32_FRACTIONAL_UTC_OFFSET_NEPAL",
+      "claimed_status": "INDEPENDENT_VALIDATED",
+      "admission_status": "EXTERNAL_REFERENCE_PENDING",
+      "issue": "External raw evidence chain not established"
+    }
+  ]
+}

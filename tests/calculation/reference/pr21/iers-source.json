@@ -1,0 +1,25 @@
+{
+  "publisher": "IERS Bulletin A Earth orientation file, redistributed by official Astropy IERS-data project",
+  "resources": [
+    {
+      "url": "https://raw.githubusercontent.com/astropy/astropy-iers-data/0570742629cb352ae16a7aa159e0e807eff87272/astropy_iers_data/data/finals2000A.all",
+      "final_url": "https://raw.githubusercontent.com/astropy/astropy-iers-data/0570742629cb352ae16a7aa159e0e807eff87272/astropy_iers_data/data/finals2000A.all",
+      "http_status": 200,
+      "revision": "0570742629cb352ae16a7aa159e0e807eff87272",
+      "retrieved_at_utc": "2026-11-07T09:12:23.862225+00:00",
+      "sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+      "size_bytes": 3775228,
+      "file": "originals/iers-finals2000A.all"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/astropy/astropy-iers-data/0570742629cb352ae16a7aa159e0e807eff87272/LICENSE.rst",
+      "final_url": "https://raw.githubusercontent.com/astropy/astropy-iers-data/0570742629cb352ae16a7aa159e0e807eff87272/LICENSE.rst",
+      "http_status": 200,
+      "revision": "0570742629cb352ae16a7aa159e0e807eff87272",
+      "retrieved_at_utc": "2026-11-07T09:12:24.094975+00:00",
+      "sha256": "05d8ec3643773431cb5447b10711f119d79955470cdfbb8ca2e670a4432a153c",
+      "size_bytes": 1491,
+      "file": "originals/astropy-iers-LICENSE.rst"
+    }
+  ]
+}

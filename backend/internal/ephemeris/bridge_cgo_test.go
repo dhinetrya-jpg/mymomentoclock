@@ -15,7 +15,7 @@ func TestNativeEphemeris(t *testing.T) {
 		if err != nil {
 			t.Fatalf("planet %d: %v", id, err)
 		}
-		if p.LibraryVersion == "" || p.RequestedFlags == 0 || p.ReturnedFlags <= 0 || p.EphemerisMode == "" || p.Ayanamsa != "TRUE_LAHIRI" {
+		if p.LibraryVersion == "" || p.RequestedFlags == 0 || p.ReturnedFlags <= 0 || p.EphemerisMode == "" || p.Ayanamsa != "SWISS_SE_SIDM_LAHIRI" {
 			t.Fatalf("missing provenance: %+v", p)
 		}
 		if math.IsNaN(p.Longitude) || math.IsInf(p.Longitude, 0) || p.Longitude < 0 || p.Longitude >= 360 || p.Velocity == 0 {

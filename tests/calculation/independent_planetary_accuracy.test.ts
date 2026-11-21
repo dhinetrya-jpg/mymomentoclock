@@ -1,3 +1,10 @@
+/**
+ * QUARANTINED LEGACY REGRESSION ONLY.
+ * Existing declared-source fixtures have not been authenticated as original
+ * external responses. Metadata, source-looking headers and local hashes do not
+ * establish independent accuracy. These assertions preserve historical behavior;
+ * they do not pass a scientific acceptance gate or justify wider tolerances.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -23,7 +30,7 @@ const sourceManifest = JSON.parse(
   fs.readFileSync(new URL('./reference/source_manifest.json', import.meta.url), 'utf8')
 );
 
-test('A03: Independent reference dataset contains >= 30 verified scenarios and valid source manifest', () => {
+test('Legacy regression (not independent acceptance): A03: Independent reference dataset retains32 scenarios and recorded files (not authenticated sources)', () => {
   assert.ok(fixturesDataset.fixtures.length >= 30, `Expected >= 30 fixtures, got ${fixturesDataset.fixtures.length}`);
   assert.ok(sourceManifest.authoritative_sources.length >= 5);
   assert.equal(fixturesDataset.version, '2.0.0');
@@ -43,14 +50,14 @@ test('A03: Independent reference dataset contains >= 30 verified scenarios and v
   assert.ok(checkedFiles.size >= 4, 'Expected at least 4 immutable evidence files verified');
 });
 
-test('A04: Planetary comparisons at J2000 against JPL Horizons DE440 ground truth', () => {
+test('Legacy regression (not independent acceptance): A04: Planetary comparisons at J2000 against quarantined claimed-JPL values DE440 unverified legacy values', () => {
   const f = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_01_J2000_EPOCH');
   assert.ok(f);
 
   const chart = calculateFullChart('2000-01-01', '12:00:00', 0, 0, 'Equator', 0);
   assert.equal(chart.systemMetadata.calculationMode, 'ANALYTICAL_APPROXIMATION');
 
-  // Ground truth JPL Horizons apparent sidereal Lahiri longitudes:
+  // Unverified legacy values JPL Horizons apparent sidereal Lahiri longitudes:
   const jplExpected = {
     Sun: f.expected.sunSiderealLahiri, // 256.6035°
     Moon: f.expected.moonSiderealLahiri, // 194.4669°
@@ -70,7 +77,7 @@ test('A04: Planetary comparisons at J2000 against JPL Horizons DE440 ground trut
   assert.ok(sunAngularError < 0.1, `Sun analytical error ${sunAngularError}°`);
 });
 
-test('A04: Historical Indian birth date (Kolkata 1989) numerical planetary & Vedic placements', () => {
+test('Legacy regression (not independent acceptance): A04: Historical Indian birth date (Kolkata 1989) numerical planetary & Vedic placements', () => {
   const f = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_02_HISTORICAL_INDIAN_KOLKATA_1989');
   assert.ok(f);
 
@@ -101,7 +108,7 @@ test('A04: Historical Indian birth date (Kolkata 1989) numerical planetary & Ved
   assert.equal(moonD60.deityName, f.expected.moonD60ShashtyamsaDeity);
 });
 
-test('A04: Modern Indian epoch (New Delhi 2026) ayanamsa, delta-T and Lagna validation', () => {
+test('Legacy regression (not independent acceptance): A04: Modern Indian epoch (New Delhi 2026) ayanamsa, delta-T and Lagna validation', () => {
   const f = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_03_MODERN_INDIAN_DELHI_2026');
   assert.ok(f);
 
@@ -120,7 +127,7 @@ test('A04: Modern Indian epoch (New Delhi 2026) ayanamsa, delta-T and Lagna vali
   assert.equal(chart.ascendantSignName, f.expected.ascendantSign);
 });
 
-test('A04: Indian metro coordinates Mumbai and Chennai validated', () => {
+test('Legacy regression (not independent acceptance): A04: Indian metro coordinates Mumbai and Chennai validated', () => {
   // Mumbai
   const mumbai = fixturesDataset.fixtures.find((x: any) => x.fixture_id === 'SCENARIO_04_INDIAN_METRO_MUMBAI_2026');
   const chartMumbai = calculateFullChart(
@@ -147,7 +154,7 @@ test('A04: Indian metro coordinates Mumbai and Chennai validated', () => {
   assert.equal(sun.signName, chennai.expected.sunSiderealSign);
 });
 
-test('A04: Distinction of calculation modes and prevention of false Swiss claims', () => {
+test('Legacy regression (not independent acceptance): A04: Distinction of calculation modes and prevention of false Swiss claims', () => {
   const chart = calculateFullChart('2026-01-01', '12:00:00', 0, 0, '', 0);
 
   // Mode must be explicitly ANALYTICAL_APPROXIMATION

@@ -1,0 +1,13 @@
+PASS PR21 kernel, generator/policy bindings, 45 body-epochs and 7 local days; unadmitted quantities remain blocked
+PASS 4 observed IERS Bulletin A records, formal errors, original source bindings and direct extraction
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.039s
+
+OK
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.163s
+
+OK

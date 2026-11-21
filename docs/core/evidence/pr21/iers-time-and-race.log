@@ -1,0 +1,29 @@
+=== RUN   TestPR21ObservedIERSTimeScales
+=== RUN   TestPR21ObservedIERSTimeScales/1975-04-20
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0,"expected":0,"id":"1975-04-20","mode":"TIME_SCALE","quantity":"utc_jd_seconds","residual":0,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0.3906235098838806,"expected":0.3906134,"id":"1975-04-20","mode":"TIME_SCALE","quantity":"ut1_from_observed_dut1_seconds","residual":0.000010109883880615733,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":46.18401825428009,"expected":46.184,"id":"1975-04-20","mode":"TIME_SCALE","quantity":"tt_minus_utc_seconds","residual":0.00001825428009283314,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":45.79339474439621,"expected":45.7933866,"id":"1975-04-20","mode":"TIME_SCALE","quantity":"delta_t_seconds","residual":0.000008144396211662297,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+=== RUN   TestPR21ObservedIERSTimeScales/2000-01-01
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0,"expected":0,"id":"2000-01-01","mode":"TIME_SCALE","quantity":"utc_jd_seconds","residual":0,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0.3554597496986389,"expected":0.3554779,"id":"2000-01-01","mode":"TIME_SCALE","quantity":"ut1_from_observed_dut1_seconds","residual":-0.0000181503013610973,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":64.1840010881424,"expected":64.184,"id":"2000-01-01","mode":"TIME_SCALE","quantity":"tt_minus_utc_seconds","residual":0.0000010881423975206417,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":63.828541338443756,"expected":63.8285221,"id":"2000-01-01","mode":"TIME_SCALE","quantity":"delta_t_seconds","residual":0.000019238443755398293,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+=== RUN   TestPR21ObservedIERSTimeScales/2024-01-01
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0,"expected":0,"id":"2024-01-01","mode":"TIME_SCALE","quantity":"utc_jd_seconds","residual":0,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0.00877082347869873,"expected":0.0087837,"id":"2024-01-01","mode":"TIME_SCALE","quantity":"ut1_from_observed_dut1_seconds","residual":-0.00001287652130126972,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":69.18401420116425,"expected":69.184,"id":"2024-01-01","mode":"TIME_SCALE","quantity":"tt_minus_utc_seconds","residual":0.00001420116424810658,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":69.17524337768555,"expected":69.1752163,"id":"2024-01-01","mode":"TIME_SCALE","quantity":"delta_t_seconds","residual":0.00002707768554444101,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+=== RUN   TestPR21ObservedIERSTimeScales/2026-03-08
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0,"expected":0,"id":"2026-03-08","mode":"TIME_SCALE","quantity":"utc_jd_seconds","residual":0,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":0.06312578916549683,"expected":0.0631145,"id":"2026-03-08","mode":"TIME_SCALE","quantity":"ut1_from_observed_dut1_seconds","residual":0.00001128916549682224,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":69.18401420116425,"expected":69.184,"id":"2026-03-08","mode":"TIME_SCALE","quantity":"tt_minus_utc_seconds","residual":0.00001420116424810658,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+    pr21_reference_cgo_test.go:300: PR21_NUMERICAL_RESULT {"actual":69.12088841199875,"expected":69.1208855,"id":"2026-03-08","mode":"TIME_SCALE","quantity":"delta_t_seconds","residual":0.0000029119987488002153,"source":"IERS Bulletin A via immutable official Astropy IERS-data publication","status":"PASS","tolerance":0.0001}
+--- PASS: TestPR21ObservedIERSTimeScales (0.02s)
+    --- PASS: TestPR21ObservedIERSTimeScales/1975-04-20 (0.00s)
+    --- PASS: TestPR21ObservedIERSTimeScales/2000-01-01 (0.00s)
+    --- PASS: TestPR21ObservedIERSTimeScales/2024-01-01 (0.00s)
+    --- PASS: TestPR21ObservedIERSTimeScales/2026-03-08 (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/astronomy	0.026s
+ok  	astroengine-core/backend/internal/astronomy	10.594s

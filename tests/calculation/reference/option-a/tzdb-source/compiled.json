@@ -1,0 +1,7 @@
+{
+  "sha256": "888ee4330c2e3213bcb89e6ed3c6e43dc3995f4d81a4ead91b6cd27f7a6a2626",
+  "version": "IANA@e29969d3f327f129ec4aebaa9c7aee96c46f8e3b",
+  "compiler": "zic (Debian GLIBC 2.41-12+deb13u4) 2.41",
+  "policy": "fat TZif, default main data plus backward aliases, stored ZIP with sorted paths/fixed timestamps; immutable native input, no OS fallback",
+  "size_bytes": 759472
+}

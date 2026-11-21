@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-11-07T09:28:27.836519+00:00",
+  "url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/21/checks",
+  "http_status": 200,
+  "page_sha256": "cda05f1f1f15b3fc77f508949d12a253ad651b50069732cc7929df60613fa915",
+  "head_sha": "fac9687fd62f839ddf5f6af81df03643ab1a1480",
+  "checks": [
+    {
+      "run_title": "Fix/core p0 01 complete acceptance \u00b7 dhinetrya-jpg/mymomentoclock@fac9687 \u00b7 GitHub",
+      "run_page_sha256": "e6f37afdcbc898fb0e55bae601d9413b530101f0029bf1af0c8eede9b732f8d8",
+      "workflow": "Docker Image Build Test",
+      "url": "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846820",
+      "job_labels": [
+        "This job is in progress"
+      ],
+      "conclusion": "NOT_ALL_SUCCESS"
+    },
+    {
+      "run_title": "Fix/core p0 01 complete acceptance \u00b7 dhinetrya-jpg/mymomentoclock@fac9687 \u00b7 GitHub",
+      "run_page_sha256": "0ba1dd92ea6a74e8c1286657b854c650c5b7b19ae095839e871dbaac3c08cb92",
+      "workflow": "CI - Lint & Build",
+      "url": "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846876",
+      "job_labels": [
+        "This job is in progress"
+      ],
+      "conclusion": "NOT_ALL_SUCCESS"
+    },
+    {
+      "run_title": "Fix/core p0 01 complete acceptance \u00b7 dhinetrya-jpg/mymomentoclock@fac9687 \u00b7 GitHub",
+      "run_page_sha256": "a86db80d9302560edd75c037458c705b84454e25db046a2363283935d2b5d890",
+      "workflow": "Phase 1 native and durable payment security",
+      "url": "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846915",
+      "job_labels": [
+        "This job is in progress"
+      ],
+      "conclusion": "NOT_ALL_SUCCESS"
+    },
+    {
+      "run_title": "Fix/core p0 01 complete acceptance \u00b7 dhinetrya-jpg/mymomentoclock@fac9687 \u00b7 GitHub",
+      "run_page_sha256": "144c48df8730c537d254400b3ef36b3f86cfd66a0711dcf6769893a17af1c944",
+      "workflow": "MymomentOclock API Smoke and Optional Load Validation",
+      "url": "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/42359846921",
+      "job_labels": [
+        "This job is in progress"
+      ],
+      "conclusion": "NOT_ALL_SUCCESS"
+    }
+  ],
+  "scope": "Observed GitHub PR checks HTML for exact head, not inferred from local tests. No session/channel data retained.",
+  "all_workflows_success": false
+}

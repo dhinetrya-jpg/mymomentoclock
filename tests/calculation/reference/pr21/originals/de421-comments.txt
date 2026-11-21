@@ -1,0 +1,15 @@
+; de421.bsp LOG FILE
+;
+; Created 2008-02-12/11:33:34.00.
+;
+; BEGIN NIOSPK COMMANDS
+
+LEAPSECONDS_FILE    = naif0007.tls
+SPK_FILE            = de421.bsp
+  SPK_LOG_FILE      = de421_spk_conversion.log
+  NOTE              = NIOSPK 6.1.0 Conversion
+  SOURCE_NIO_FILE   = de421.nio
+    BEGIN_TIME      = CAL-ET 1899 JUL 29 00:00:00.000
+    END_TIME        = CAL-ET 2053 OCT 09 00:00:00.000
+
+; END NIOSPK COMMANDS

@@ -2,8 +2,7 @@
 FROM golang:1.26-bookworm AS builder
 WORKDIR /app
 # This image includes gcc, g++, make and git. Optional CA mount supports managed proxies.
-COPY scripts/install-swisseph.sh /usr/local/bin/install-swisseph
-RUN chmod +x /usr/local/bin/install-swisseph
+COPY --chmod=0555 scripts/install-swisseph.sh /usr/local/bin/install-swisseph
 RUN --mount=type=secret,id=proxy_ca \
     if [ -f /run/secrets/proxy_ca ]; then export GIT_SSL_CAINFO=/run/secrets/proxy_ca; fi; \
     sh /usr/local/bin/install-swisseph
@@ -13,7 +12,8 @@ RUN --mount=type=secret,id=proxy_ca \
     if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
     go mod download
 COPY backend/ ./
-RUN CGO_ENABLED=1 go test -mod=readonly ./... && \
+RUN --mount=type=bind,source=tests/calculation/reference,target=/app/tests/calculation/reference,readonly \
+    CGO_ENABLED=1 go test -mod=readonly ./... && \
     CGO_ENABLED=1 go build -mod=readonly -trimpath -o /app/astroengine_server ./cmd/server
 
 # Optional CI target compiles the root legacy module and executes its real tests.

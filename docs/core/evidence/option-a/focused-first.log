@@ -1,0 +1,8 @@
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+# astroengine-core/backend/cmd/server
+internal/payment/authn/auth.go:17:2: github.com/golang-jwt/jwt/v5@v5.3.1: Get "https://proxy.golang.org/github.com/golang-jwt/jwt/v5/@v/v5.3.1.zip": tls: failed to verify certificate: x509: certificate signed by unknown authority
+FAIL	astroengine-core/backend/cmd/server [setup failed]
+ok  	astroengine-core/backend/internal/astronomy	6.950s
+ok  	astroengine-core/backend/internal/ephemeris	0.033s
+ok  	astroengine-core/backend/internal/timing	0.007s
+FAIL

@@ -1,0 +1,5 @@
+go: downloading github.com/golang-jwt/jwt/v5 v5.3.1
+ok  	astroengine-core/backend/internal/astronomy	10.659s
+ok  	astroengine-core/backend/internal/ephemeris	0.052s
+ok  	astroengine-core/backend/internal/timing	0.855s
+ok  	astroengine-core/backend/cmd/server	0.008s
