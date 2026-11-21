@@ -1,4 +1,4 @@
-package f01crossengine
+package crossengine
 
 import (
  "astroengine-core/backend/internal/astronomy"
