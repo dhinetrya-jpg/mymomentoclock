@@ -19,9 +19,9 @@ function valid(input:any):boolean {
  const offsetOK=(n:any)=>n===undefined||(Number.isFinite(n)&&n>=-12&&n<=14);
  if(input.certainty==='RANGE'){
    if(input.birth_time!==undefined||input.uncertainty_minutes!==undefined||input.utc_offset!==undefined||!offsetOK(input.earliest_utc_offset)||!offsetOK(input.latest_utc_offset))return false;
-   if(typeof input.earliest_time!=='string'||typeof input.latest_time!=='string'||!/^([01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?$/.test(input.earliest_time)||!/^([01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?$/.test(input.latest_time))return false;
+   if(typeof input.earliest_time!=='string'||typeof input.latest_time!=='string'||!/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(input.earliest_time)||!/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(input.latest_time))return false;
    if(input.latest_date!==undefined){
-     if(typeof input.latest_date!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(input.latest_date))return false;
+     if(typeof input.latest_date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(input.latest_date))return false;
      const last=new Date(input.latest_date+'T00:00:00Z');
      if(!Number.isFinite(+last)||last.toISOString().slice(0,10)!==input.latest_date||(+last-(+d))!==0&&(+last-(+d))!==86400000)return false;
    }
