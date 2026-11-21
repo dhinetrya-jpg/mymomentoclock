@@ -12,7 +12,7 @@ func TestSripatiMembershipAndWrap(t *testing.T) {
  var cusps [12]float64
  for i:=0;i<12;i++ { cusps[i]=math.Mod(345+float64(i*30),360) }
  cases:=[]struct{degree float64;want int}{
-  {345,1},{359.999,1},{15,2},{44.999,2},{314.999,12},{math.Mod(345+330,360),12},
+  {345,1},{359.999,1},{15,2},{44.999,2},{344.999,12},{math.Mod(345+330,360),12},
  }
  for _,c:=range cases {
   got,e:=SripatiHouse(c.degree,cusps)
