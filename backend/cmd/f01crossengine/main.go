@@ -3,7 +3,7 @@ package main
 import (
  "astroengine-core/backend/internal/astronomy"
  "astroengine-core/backend/internal/ephemeris"
- "astroengine-core/backend/internal/f01crossengine"
+ f01crossengine "astroengine-core/backend/internal/f01crossengine"
  "encoding/json"
  "fmt"
  "os"
