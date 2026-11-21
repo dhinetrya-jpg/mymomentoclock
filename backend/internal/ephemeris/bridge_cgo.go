@@ -11,7 +11,7 @@ extern PlanetCoordinate compute_celestial_position_safe(double jd,int32_t id);
 typedef struct {double tt,ut1;int error;} MMOEpoch;
 typedef struct {int year,month,day,hour,minute;double second;int error;} MMOCalendar;
 typedef struct {double tropical[6],sidereal[6];int32_t tropical_flags,sidereal_flags;int error;} MMOPlanet;
-typedef struct {MMOPlanet planets[9];double ayanamsa;double tropical_ascendant,sidereal_ascendant,cusps[12];char version[256];int error,house_error;} MMOSnapshot;
+typedef struct {MMOPlanet planets[9];double ayanamsa;double tropical_ascendant,sidereal_ascendant,cusps[12],sripati_cusps[12];char version[256];int error,house_error,sripati_error;} MMOSnapshot;
 typedef struct {double rise,set,noon,lower,upper_altitude,lower_altitude,set_after_rise;int rise_status,set_status,noon_status,lower_status,set_after_rise_status;int32_t returned_flags;char version[256];int error;} MMOSolar;
 extern MMOEpoch mmo_utc_to_jd(int,int,int,int,int,double);
 extern MMOCalendar mmo_ut1_to_utc(double);
@@ -125,6 +125,13 @@ func nativeSnapshotAt(epoch NativeEpoch, cfg NativeConfig, place *NativePlace) (
 		h := &NativeHouses{TropicalAscendant: float64(r.tropical_ascendant), SiderealAscendant: float64(r.sidereal_ascendant), System: "WHOLE_SIGN_SWISS_W"}
 		for i := 0; i < 12; i++ {
 			h.SiderealCusps[i] = float64(r.cusps[i])
+		}
+		if r.sripati_error == 0 {
+			for i := 0; i < 12; i++ {
+				h.SiderealSripatiCusps[i] = float64(r.sripati_cusps[i])
+			}
+			h.SripatiAvailable = true
+			h.SripatiSystem = "SWISS_S_SIDEREAL_LAHIRI"
 		}
 		result.Houses = h
 	}
