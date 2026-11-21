@@ -9,6 +9,7 @@ import (
 	"astroengine-core/backend/internal/payment/commercial"
 	paymentsandbox "astroengine-core/backend/internal/payment/sandbox"
 	"astroengine-core/backend/internal/timing"
+	"astroengine-core/backend/internal/uncertainty"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
@@ -81,7 +82,11 @@ func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler
 	astronomyConfig, astronomyConfigError := astronomy.ConfigFromEnvironment()
 	if astronomyConfigError == nil {
 		mux.Handle("/api/v1/astronomy/", astronomy.Handler(astronomyConfig))
+		mux.Handle("/api/v1/f01/", uncertainty.Handler(astronomyConfig))
 	} else {
+		mux.HandleFunc("/api/v1/f01/", func(w http.ResponseWriter, r *http.Request) {
+			failure(w, 503, "ASTRONOMY_CONFIGURATION_INVALID", "Reviewed native configuration is unavailable.")
+		})
 		mux.HandleFunc("/api/v1/astronomy/", func(w http.ResponseWriter, r *http.Request) {
 			failure(w, 503, "ASTRONOMY_CONFIGURATION_INVALID", "Reviewed native configuration is unavailable.")
 		})
