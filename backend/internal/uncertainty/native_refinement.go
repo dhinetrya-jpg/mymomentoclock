@@ -5,7 +5,6 @@ import (
  "astroengine-core/backend/internal/ephemeris"
  "context"
  "fmt"
- "math"
  "strings"
  "time"
 )
@@ -58,8 +57,3 @@ func factorAt(ctx context.Context,at time.Time,factor string,lat,lon float64,con
  return "",issue("F01_UNKNOWN_FACTOR")
 }
 
-// Keep a mechanically visible, conservative rounding convention: endpoints
-// are reported to seconds, not a precision inferred from fractional JD.
-func normalizedRefinementTime(t time.Time)time.Time{
- return time.Unix(int64(math.Floor(float64(t.UnixNano())/1e9)),0).UTC()
-}
