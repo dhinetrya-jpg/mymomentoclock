@@ -26,9 +26,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_regression_pass_final_independent_review_pending",
+      "status": "verified_scoped_engineering",
       "acceptance_criteria": "Reject malformed upstream scalars and out-of-request intervals; project geometry keys",
-      "evidence_required": "adversarial F01 contracts, lint, exact-head independent audit"
+      "evidence_required": "adversarial F01 contracts, lint, exact-head independent audit",
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+      "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "F01-REFERENCE-INTEGRITY",
@@ -37,9 +41,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_regression_pass_final_independent_review_pending",
+      "status": "verified_scoped_engineering",
       "acceptance_criteria": "Reject non-12 arrays, oversized manifests and claims unbound to original chart bytes",
-      "evidence_required": "targeted parser/admission regressions and exact-head audit"
+      "evidence_required": "targeted parser/admission regressions and exact-head audit",
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+      "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "F01-P0-05",
@@ -59,10 +67,10 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "local_checks_pass_independent_release_audit_pending",
+      "status": "local_integrated_checks_verified_scientific_gaps_remain",
       "acceptance_criteria": "Reexecute existing native/safety checks without promoting partial domain coverage",
       "evidence_required": "exact-head executable results and original external provenance",
-      "evidence": "evidence/INTEGRATED_GO_POSTGRES.txt; scientific gaps remain in INVENTORY_AUDIT.md"
+      "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "CORE02-RULES",
@@ -125,12 +133,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_scoped_pending_fresh_independent_review",
+      "status": "local_regressions_verified_narrow_scope",
       "acceptance_criteria": "Four certainty modes, private noncertified sensitivity and no customer timing authorization",
       "evidence_required": "exact-head source inspection and applicable executable/native evidence",
       "source": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established"
     },
     {
       "id": "F01-P0-01",
@@ -139,12 +148,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_scoped_pending_fresh_independent_review",
+      "status": "local_regressions_verified_narrow_scope",
       "acceptance_criteria": "Bounded observed-transition refinement; no exhaustive stability assertion",
       "evidence_required": "exact-head source inspection and applicable executable/native evidence",
       "source": "docs/features/F01_P0_01_TRANSITION_REFINEMENT.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established"
     },
     {
       "id": "F01-P0-02",
@@ -153,12 +163,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_scoped_pending_fresh_independent_review",
+      "status": "local_regressions_verified_narrow_scope",
       "acceptance_criteria": "All12 internal cusp geometry checks within predeclared1e-6 degrees; no independent astronomy claim",
       "evidence_required": "exact-head source inspection and applicable executable/native evidence",
       "source": "docs/features/F01_P0_02_SRIPATI_GEOMETRY_VALIDATION.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established"
     },
     {
       "id": "F01-P0-03",
@@ -167,12 +178,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_scoped_pending_fresh_independent_review",
+      "status": "framework_integrity_verified_real_references_blocked",
       "acceptance_criteria": "Offline admitted-source comparisons fail closed on missing references",
       "evidence_required": "exact-head source inspection and applicable executable/native evidence",
       "source": "docs/features/F01_P0_03_EXTERNAL_REFERENCE_ADMISSION.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "evidence": "evidence/ENGINEERING_AUDIT_PASS.md; evidence/EMPTY_REFERENCE_CLI.txt"
     },
     {
       "id": "F01-P0-04",
@@ -181,12 +193,13 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_scoped_pending_fresh_independent_review",
+      "status": "diagnostic_integrity_verified_remains_unadmitted",
       "acceptance_criteria": "Reproducible eight-case second-pipeline diagnostic with all12 residuals; never scientific acceptance",
       "evidence_required": "exact-head source inspection and applicable executable/native evidence",
       "source": "docs/features/F01_P0_04_CROSS_ENGINE_NUMERICAL_DIAGNOSTICS.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "evidence": "evidence/DIAGNOSTIC_INTEGRITY.txt; evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "F01-DIAGNOSTIC-INTEGRITY",
@@ -195,12 +208,14 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_regression_pass_final_independent_review_pending",
+      "status": "verified_scoped_engineering",
       "acceptance_criteria": "Exactly12 non-null source cusps and unambiguous bounded diagnostic JSON",
       "evidence_required": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
       "source": "backend/internal/f01crossengine/diagnostic.go",
-      "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+      "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "CFR-001",
@@ -959,180 +974,210 @@
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G1 Repository with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_VERIFIED_REMOTE_HANDOFF_PENDING",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G2",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G2 Input with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_SCOPED_VERIFIED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G3",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G3 BTR with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G4",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G4 Resolver with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G5",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G5 Profiles with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_IDENTITY_UNAVAILABLE",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G6",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G6 Graph with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G7",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G7 Muhurat with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_RULES_BLOCKED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G8",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G8 Astronomy with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_ENGINE_VERIFIED_INDEPENDENT_SCIENTIFIC_ACCEPTANCE_PARTIAL",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G9",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G9 Payment with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_PROVIDER_UNAVAILABLE",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G10",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G10 Entitlements with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_DURABILITY_FIXTURES_VERIFIED_GENUINE_IDENTITY_PROVIDER_PATH_BLOCKED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G11",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G11 Operations with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_RUNTIME_PARTIAL_HOSTED_ACCESS_TLS_UNVERIFIED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G12",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G12 Regression with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_SCOPED_VERIFIED_NOT_CAPACITY_CERTIFICATION",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G13",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G13 UX with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_DESKTOP_MOBILE_SCOPED_VERIFIED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G14",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G14 Privacy with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_STATELESS_BOUNDARIES_VERIFIED_HOSTED_PERSISTENCE_UNVERIFIED",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "PHASE1-G15",
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "historical_gate_pending_current_reconciliation",
+      "status": "current_scoped_gate_reconciled",
       "acceptance_criteria": "Reconcile G15 Documentation with later work; safely disabled capability is not delivered functionality",
       "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
       "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
       "implemented": "repository-scoped implementation only; see source",
-      "independently_verified": false
+      "independently_verified": false,
+      "current_scoped_status": "LOCAL_EVIDENCE_RECONCILED_APPROVED_MATRIX_MISSING",
+      "evidence": "GATE_RECONCILIATION.json"
     },
     {
       "id": "F01-NATIVE-MTLS",
@@ -1141,11 +1186,13 @@
       "dependencies": [
         "F01-PRIVACY"
       ],
-      "status": "implemented_local_pass_independent_review_pending",
+      "status": "verified_scoped_engineering",
       "acceptance_criteria": "Actual Node gateway over verified mTLS to pinned native SWISS_FILE F01 succeeds for four certainty modes; malformed requests/certless clients refused; raw samples omitted",
       "evidence_required": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
       "implemented": true,
-      "independently_verified": false
+      "independently_verified": true,
+      "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+      "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
     },
     {
       "id": "OPS-POD-CREDENTIALS",
@@ -1154,13 +1201,15 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_static_verified_independent_review_pending",
+      "status": "verified_scoped_engineering",
       "acceptance_criteria": "API pod template disables automatic Kubernetes service-account token mount without opening routes",
       "evidence_required": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
       "implemented": true,
-      "independently_verified": false
+      "independently_verified": true,
+      "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+      "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
     }
   ],
-  "next_eligible_action": "Native mTLS F01 cross-service verification, then exact-head independent audit and owner-gate reconciliation",
+  "next_eligible_action": "Review final evidence/handoff; then obtain approved matrix/rule sources and private hosting/access/data policy. Admit only independently qualified original references. Reopen implementation only when dependencies resolve or a new concrete defect is found.",
   "private_scope_policy": "Live activation approval does not gate a disabled stateless preview. Hosted full-product readiness requires approved inventory and actual access/TLS/runtime/domain evidence; persistence/commerce gates apply only when in scope."
 }

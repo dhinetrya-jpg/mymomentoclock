@@ -1,0 +1,56 @@
+{
+  "main": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+  "pr27_state": "MERGED",
+  "pr27_head": "33b9a70d56c5ecd764e23761d13d322a9a6a1db9",
+  "recent_merges": [
+    {
+      "sha": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "subject": "Merge pull request #27 from dhinetrya-jpg/feat/f01-p0-04-cross-engine-numerical-evidence"
+    },
+    {
+      "sha": "b101a034f45b9883a270e5f79c8df0f5727dfebc",
+      "subject": "Merge pull request #26 from dhinetrya-jpg/feat/f01-p0-03-external-reference-admission"
+    },
+    {
+      "sha": "bfcc0e70b0bca6909f062fdceda9310937715676",
+      "subject": "Merge pull request #25 from dhinetrya-jpg/fix/pages-deployment-artifact-retry"
+    },
+    {
+      "sha": "948fff580f2a38a24efebe5155ae49e4ca26e500",
+      "subject": "Merge pull request #24 from dhinetrya-jpg/feat/f01-p0-02-sripati-geometry-validation"
+    },
+    {
+      "sha": "166bbb74c064eecaee8f94c4fd9d26b1b1e0d73d",
+      "subject": "Merge pull request #23 from dhinetrya-jpg/feat/f01-p0-01-transition-refinement"
+    },
+    {
+      "sha": "d0de4854ce34d58f237ae8c63df46cca11e409ef",
+      "subject": "Merge pull request #22 from dhinetrya-jpg/feat/f01-birth-time-uncertainty-chalit"
+    },
+    {
+      "sha": "66dd0077334d7bd5152da9ec7077e0b30880ad4c",
+      "subject": "Merge pull request #21 from dhinetrya-jpg/fix/core-p0-01-complete-acceptance"
+    },
+    {
+      "sha": "c45388b10c05d8bd8fabd24c4572e600d6ec106b",
+      "subject": "Merge pull request #18 from dhinetrya-jpg/fix/core-p0-02-personalized-timing"
+    },
+    {
+      "sha": "a5e3664c969dc4fd2d045d7353b21a8b96ec031e",
+      "subject": "Merge pull request #17 from dhinetrya-jpg/main"
+    },
+    {
+      "sha": "49f891b595db612753eebcd78be53d88543ff85f",
+      "subject": "Merge pull request #16 from dhinetrya-jpg/fix/core-p0-02-personalized-timing"
+    },
+    {
+      "sha": "4050fd27d35b740c301b2c2a088ea3b54059d69a",
+      "subject": "Merge pull request #14 from dhinetrya-jpg/fix/pay-p0-03-live-commercial-readiness"
+    },
+    {
+      "sha": "e8c65c1fb21d31a781d5d9314cf2722983558e2c",
+      "subject": "Merge pull request #13 from dhinetrya-jpg/fix/pay-p0-02-provider-sandbox-integration"
+    }
+  ],
+  "newer_implementation_heads_observed": false
+}

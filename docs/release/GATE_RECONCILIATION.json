@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "code_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+  "full_private_readiness": "NOT_ESTABLISHED",
+  "scope": "local stateless disabled engineering preview; no hosted deployment, real sandbox or production activation",
+  "gates": [
+    {
+      "id": "G1",
+      "name": "Local isolated integration and exact-source review",
+      "current_scoped_status": "LOCAL_VERIFIED_REMOTE_HANDOFF_PENDING",
+      "evidence": [
+        "evidence/BASELINE_GITHUB_CI.json",
+        "evidence/ENGINEERING_AUDIT_PASS.md"
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Input normalization and refusal",
+      "current_scoped_status": "LOCAL_SCOPED_VERIFIED",
+      "evidence": [
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G3",
+      "name": "BTR",
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": [
+        "evidence/BROWSER_PHASE1.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "Resolver",
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": [
+        "evidence/BOUNDARY_REGRESSIONS.txt",
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt"
+      ]
+    },
+    {
+      "id": "G5",
+      "name": "Protected profiles",
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_IDENTITY_UNAVAILABLE",
+      "evidence": [
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G6",
+      "name": "Graph",
+      "current_scoped_status": "SAFETY_VERIFIED_FUNCTIONALITY_DISABLED",
+      "evidence": [
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G7",
+      "name": "Personal timing",
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_RULES_BLOCKED",
+      "evidence": [
+        "evidence/BROWSER_TIMING_FIXTURES.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G8",
+      "name": "Astronomy",
+      "current_scoped_status": "LOCAL_ENGINE_VERIFIED_INDEPENDENT_SCIENTIFIC_ACCEPTANCE_PARTIAL",
+      "evidence": [
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt",
+        "evidence/F01_REFERENCE_RESEARCH.md",
+        "evidence/EMPTY_REFERENCE_CLI.txt"
+      ]
+    },
+    {
+      "id": "G9",
+      "name": "Payments",
+      "current_scoped_status": "SAFETY_VERIFIED_REAL_PROVIDER_UNAVAILABLE",
+      "evidence": [
+        "evidence/BROWSER_PAYMENT_FIXTURES.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt"
+      ]
+    },
+    {
+      "id": "G10",
+      "name": "Entitlements",
+      "current_scoped_status": "LOCAL_DURABILITY_FIXTURES_VERIFIED_GENUINE_IDENTITY_PROVIDER_PATH_BLOCKED",
+      "evidence": [
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt"
+      ]
+    },
+    {
+      "id": "G11",
+      "name": "Operations",
+      "current_scoped_status": "LOCAL_WEB_NATIVE_RUNTIME_VERIFIED_HOSTED_ACCESS_TLS_UNVERIFIED",
+      "evidence": [
+        "evidence/WEB_CONTAINER_SMOKE.txt",
+        "evidence/PRIVATE_OPERATIONS_RESEARCH.md",
+        "evidence/NATIVE_CONTAINER_SMOKE.txt"
+      ]
+    },
+    {
+      "id": "G12",
+      "name": "Regression",
+      "current_scoped_status": "LOCAL_SCOPED_VERIFIED_NOT_CAPACITY_CERTIFICATION",
+      "evidence": [
+        "evidence/CALCULATION_REGRESSIONS.txt",
+        "evidence/BOUNDARY_REGRESSIONS.txt",
+        "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt"
+      ]
+    },
+    {
+      "id": "G13",
+      "name": "UX",
+      "current_scoped_status": "LOCAL_DESKTOP_MOBILE_SCOPED_VERIFIED",
+      "evidence": [
+        "evidence/BROWSER_PHASE1.txt",
+        "evidence/BROWSER_TIMING_FIXTURES.txt",
+        "evidence/BROWSER_PAYMENT_FIXTURES.txt"
+      ]
+    },
+    {
+      "id": "G14",
+      "name": "Privacy",
+      "current_scoped_status": "LOCAL_STATELESS_BOUNDARIES_VERIFIED_HOSTED_PERSISTENCE_UNVERIFIED",
+      "evidence": [
+        "evidence/F01_BOUNDARY_REGRESSIONS.txt",
+        "evidence/NATIVE_F01_MTLS.txt",
+        "evidence/BROWSER_PHASE1.txt"
+      ]
+    },
+    {
+      "id": "G15",
+      "name": "Documentation",
+      "current_scoped_status": "LOCAL_EVIDENCE_RECONCILED_APPROVED_MATRIX_MISSING",
+      "evidence": [
+        "BACKLOG.json",
+        "SOURCE_REGISTER.json",
+        "EXECUTION_LOG.md"
+      ]
+    }
+  ],
+  "limits": [
+    "Safety refusal is not delivered disabled functionality",
+    "Synthetic providers/rules are not genuine external acceptance",
+    "Live activation gates apply only when activation is in scope",
+    "Hosted access/TLS and data-specific retention/restore remain unresolved"
+  ]
+}

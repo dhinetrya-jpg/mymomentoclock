@@ -110,3 +110,27 @@ Automatically selected OPS-POD-CREDENTIALS: inactive Kubernetes API pod template
 now sets automountServiceAccountToken:false. It has no Kubernetes API requirement.
 Static YAML parsed and all three documents retained. No cluster configuration
 was applied, no RBAC/CNI enforcement or deployed security claim made.
+
+## Stage 7 — independently accepted engineering integration
+
+Exact code commit `2b5458a4565349cbdf5de3c1fb98e20f97bd054e`: independent
+engineering PASS. Both original alias findings are closed with unchanged
+independent reproductions; no concrete blocking finding remains in changed scope.
+Report ENGINEERING_AUDIT_PASS.md identifies review execution versus inspected
+broader logs. Full-product readiness remains unestablished. Updated backlog and
+Phase1 gate reconciliation distinguish safety refusal, delivered behavior,
+local fixture verification and blocked external/domain/hosted acceptance.
+
+Fresh native and web Docker artifacts built successfully at this code. Web
+image ab0aaafd9c718aaa30809e51db28675c6e0051500666f2baeeab215a083cd17d
+passes loopback read-only/nonroot smoke. Native image
+46304edf1709d70c805ff615d90bf85aa69e0ef2f8eceba83954394d71e6bcf9 passes
+existing9-body/time-scale/Panchang/localday/DST/leap/refusal runtime checks and
+corrupt/missing required file503 with no fallback. No image pushed/deployed.
+
+No approved-source/domain/hosting-dependent task is silently activated. Asked
+for approved matrix/rulebook location and private hosting/access/data scope;
+no answer inferred from elapsed time. Further eligible work resumes when those
+inputs resolve or review identifies a new concrete defect. Next action now:
+review evidence-only handoff commit, push isolated integration branch, attempt
+draft PR under existing GitHub permissions, record actual remote/CI outcome.

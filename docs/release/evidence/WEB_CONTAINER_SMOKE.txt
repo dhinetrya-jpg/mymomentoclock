@@ -1,0 +1,6 @@
+Reviewed source commit:2b5458a4565349cbdf5de3c1fb98e20f97bd054e
+Command: node tests/deployment/smoke.mjs web LOCAL_LOOPBACK_CONTAINER_URL
+web: health and functional production smoke checks passed
+IMAGE=sha256:ab0aaafd9c718aaa30809e51db28675c6e0051500666f2baeeab215a083cd17d USER=node READONLY=true
+Container: --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m --cap-drop ALL --security-opt no-new-privileges; loopback port only; removed after test.
+This is a transcript of the executed local smoke, not deployment or hosted private access verification.
