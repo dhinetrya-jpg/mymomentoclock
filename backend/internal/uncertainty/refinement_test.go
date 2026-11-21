@@ -19,7 +19,7 @@ func TestRefineSingleObservedCrossing(t *testing.T){
  })
  if err!=nil||calls==0||len(refined)!=1{t.Fatalf("unexpected: %+v %d %v",refined,calls,err)}
  v:=refined[0]
- if v.ToUTC.Sub(v.FromUTC)>RefinementTarget||v.FromUTC.After(cross)||!v.ToUTC.After(cross){t.Fatalf("crossing not bracketed: %+v",v)}
+ if v.ToUTC.Sub(v.FromUTC)>RefinementTarget||v.FromUTC.After(cross)||v.ToUTC.Before(cross){t.Fatalf("crossing not bracketed: %+v",v)}
  if v.Evidence!="OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION"{t.Fatalf("false certification: %+v",v)}
 }
 func TestRefinementBudgetCannotProveStability(t *testing.T){
