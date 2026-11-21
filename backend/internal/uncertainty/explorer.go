@@ -45,6 +45,7 @@ type TransitionBracket struct {
  FromUTC time.Time `json:"from_utc"`
  ToUTC time.Time `json:"to_utc"`
  Evidence string `json:"evidence"`
+ IntermediateValue string `json:"intermediate_value,omitempty"`
 }
 type Sample struct {
  BirthUTC time.Time `json:"birth_utc"`
@@ -257,6 +258,17 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   })
   if err!=nil{return Result{},err}
   result.TransitionBrackets=refined
+  for _,b:=range refined {
+   if b.Evidence!="OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED" {continue}
+   for i:=range result.Factors {
+    if result.Factors[i].Name!=b.Factor {continue}
+    result.Factors[i].Classification="UNRESOLVED"
+    result.Factors[i].Note="Additional intermediate state detected; the observed crossing cannot be treated as a two-state transition."
+    seen:=false
+    for _,v:=range result.Factors[i].ObservedValues {if v==b.IntermediateValue {seen=true}}
+    if !seen {result.Factors[i].ObservedValues=append(result.Factors[i].ObservedValues,b.IntermediateValue);sort.Strings(result.Factors[i].ObservedValues)}
+   }
+  }
   result.Limitations=append(result.Limitations,fmt.Sprintf("Midpoint boundary refinement used %d additional native samples (maximum %d); transition intervals are observational, not mathematically exhaustive.",used,MaxRefinementEvaluations))
  }
  return result,nil
