@@ -74,6 +74,7 @@ type Result struct {
  Factors []Factor `json:"factors"`
  TransitionBrackets []TransitionBracket `json:"transition_brackets"`
  HouseSystem string `json:"house_system"`
+ GeometryCheck ephemeris.SripatiGeometryResult `json:"geometry_check"`
  Authority astronomy.AuthorityContract `json:"authority"`
  CustomerTimingAuthorized bool `json:"customer_timing_authorized"`
  BTRStatus string `json:"btr_status"`
@@ -185,6 +186,7 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  "Sample agreement cannot prove stability between samples; all sample-stable factors remain unproven. Native file checks bound sampling to 17 points.",
  "Rashi and Sripati house placements are distinct; they are not blended into an invented score.",
  "D60 and birth-time selection by retrospective milestones are disabled.",
+ "Sripati internal geometry is cross-checked against Porphyry midpoints, but independent astronomical reference validation remains outstanding.",
  "Transition brackets only show changes between two observed instants, not exact change times or a proof that no other transitions occurred.",
  "Customer timing and activity recommendations remain disabled pending scientific, traditional, and licensing approval.",
  }}
@@ -210,6 +212,12 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   if s.Native.Houses==nil{return Result{},issue("F01_HOUSES_UNAVAILABLE")}
   h:=s.Native.Houses
   if !h.SripatiAvailable {return Result{},issue("F01_SRIPATI_UNAVAILABLE")}
+  geometry,checkErr:=ephemeris.CheckSripatiGeometry(h)
+  if checkErr!=nil{return Result{},issue("F01_GEOMETRY_CHECK_FAILED")}
+  if i==0{result.GeometryCheck=geometry}
+  if geometry.MaxAngularErrorDegrees>result.GeometryCheck.MaxAngularErrorDegrees {
+   result.GeometryCheck.MaxAngularErrorDegrees=geometry.MaxAngularErrorDegrees
+  }
   sample:=Sample{BirthUTC:t.UTC(),AscendantSign:fmt.Sprint(int(math.Floor(normalized(h.SiderealAscendant)/30))),Placements:map[string]Pair{},FactorValues:map[string]string{}}
   add("ascendant.rashi",sample.AscendantSign)
   sample.FactorValues["ascendant.rashi"]=sample.AscendantSign

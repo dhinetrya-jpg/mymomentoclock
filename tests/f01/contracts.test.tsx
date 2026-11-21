@@ -57,3 +57,31 @@ test('public F01 URL is not allowed as an internal service',()=>{
  assert.throws(()=>f01GatewayFromEnvironment(),/CONFIGURATION/);
  }finally{if(old===undefined)delete process.env.F01_INTERNAL_URL;else process.env.F01_INTERNAL_URL=old;}
 });
+
+test('geometry cross-check is mandatory and cannot be promoted to independent proof',()=>serve(async base=>{
+ const response=await post(base,request);
+ assert.equal(response.status,503);
+ assert.equal((await response.json()).code,'F01_RESULT_NOT_ACCEPTED');
+},async()=>({status:200,body:{
+ schema_version:1,contract_version:'f01-sensitivity-v1',status:'COMPUTED_UNVERIFIED',
+ customer_timing_authorized:false,btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD',
+ authority:{production_eligible:false},house_system:'SWISS_S_SIDEREAL_LAHIRI',
+ sample_count:1,samples:[{}],factors:[],transition_brackets:[],limitations:[],
+ geometry_check:{status:'INDEPENDENTLY_VERIFIED',tolerance_degrees:0.000001,max_angular_error_degrees:0,source:'fabricated'}
+}})));
+test('valid geometry evidence is projected without raw chart or personal data',()=>serve(async base=>{
+ const response=await post(base,request);
+ assert.equal(response.status,200);
+ const result=await response.json();
+ assert.equal(result.geometry_check.status,'GEOMETRY_CONSISTENT_NOT_EXTERNALLY_VERIFIED');
+ assert.equal(result.samples,undefined);
+ assert.equal(result.birth_input,undefined);
+ assert.equal(result.customer_timing_authorized,false);
+},async()=>({status:200,body:{
+ schema_version:1,contract_version:'f01-sensitivity-v1',status:'COMPUTED_UNVERIFIED',
+ customer_timing_authorized:false,btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD',
+ authority:{production_eligible:false},house_system:'SWISS_S_SIDEREAL_LAHIRI',
+ sample_count:1,samples:[{private_birth:'secret'}],factors:[],transition_brackets:[],limitations:[],
+ geometry_check:{status:'GEOMETRY_CONSISTENT_NOT_EXTERNALLY_VERIFIED',tolerance_degrees:0.000001,max_angular_error_degrees:0,source:'INTERNAL_PORPHYRY_MIDPOINT_CROSSCHECK_NOT_INDEPENDENT_ASTRONOMICAL_REFERENCE'},
+ hidden_birth:{name:'secret'}
+}})));

@@ -60,6 +60,8 @@ type NativeHouses struct {
 	SiderealAscendant float64     `json:"sidereal_ascendant"`
 	SiderealCusps        [12]float64 `json:"sidereal_cusps"`
 	SiderealSripatiCusps [12]float64 `json:"sidereal_sripati_cusps,omitempty"`
+	SiderealPorphyryCusps [12]float64 `json:"sidereal_porphyry_cusps,omitempty"`
+	PorphyryAvailable bool `json:"porphyry_available"`
 	SripatiAvailable     bool       `json:"sripati_available"`
 	SripatiSystem        string     `json:"sripati_system,omitempty"`
 	System               string     `json:"system"`
