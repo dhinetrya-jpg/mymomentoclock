@@ -58,8 +58,11 @@ type NativePlanet struct {
 type NativeHouses struct {
 	TropicalAscendant float64     `json:"tropical_ascendant"`
 	SiderealAscendant float64     `json:"sidereal_ascendant"`
-	SiderealCusps     [12]float64 `json:"sidereal_cusps"`
-	System            string      `json:"system"`
+	SiderealCusps        [12]float64 `json:"sidereal_cusps"`
+	SiderealSripatiCusps [12]float64 `json:"sidereal_sripati_cusps,omitempty"`
+	SripatiAvailable     bool       `json:"sripati_available"`
+	SripatiSystem        string     `json:"sripati_system,omitempty"`
+	System               string     `json:"system"`
 }
 type NativeSnapshotResult struct {
 	AuthorityRole        string                  `json:"authority_role"`

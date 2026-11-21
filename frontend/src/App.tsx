@@ -1,4 +1,5 @@
 import {DailyTiming} from './components/DailyTiming';
+import {BirthTimeExplorer} from './components/BirthTimeExplorer';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -113,6 +114,7 @@ export default function App() {
 
         {/* Dynamic View Routing */}
         {activeTab === 'daily-timing' && <DailyTiming/>}
+        {activeTab === 'birth-time-explorer' && <BirthTimeExplorer/>}
         {!chart && ['dashboard','remediation'].includes(activeTab) && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
         {activeTab === 'funnel' && import.meta.env?.DEV && (
           <ConversionFunnelView

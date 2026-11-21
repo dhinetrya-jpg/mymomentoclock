@@ -73,7 +73,7 @@ extern "C" {
   if(!std::isfinite(r.second)||r.year<1)r.error=-1;return r;
  }
  typedef struct {double tropical[6],sidereal[6];int32_t tropical_flags,sidereal_flags;int error;} MMOPlanet;
- typedef struct {MMOPlanet planets[9];double ayanamsa;double tropical_ascendant,sidereal_ascendant,cusps[12];char version[AS_MAXCH];int error,house_error;} MMOSnapshot;
+ typedef struct {MMOPlanet planets[9];double ayanamsa;double tropical_ascendant,sidereal_ascendant,cusps[12],sripati_cusps[12];char version[AS_MAXCH];int error,house_error,sripati_error;} MMOSnapshot;
  MMOSnapshot mmo_snapshot(double tt,double ut1,int32_t flag,const char *path,const char *jpl,int houses,double latitude,double longitude) {
   std::lock_guard<std::mutex> lock(ephemeris_mutex);MMOSnapshot r{};
   native_configure(path,jpl);swe_set_tid_acc(SE_TIDAL_DEFAULT);swe_version(r.version);
@@ -93,6 +93,15 @@ extern "C" {
    r.tropical_ascendant=angles[0];
    if(swe_houses_ex(ut1,SEFLG_SIDEREAL,latitude,longitude,'W',cusps,angles)<0||!native_finite(cusps,13)||!native_finite(angles,10)){r.house_error=-1;return r;}
    r.sidereal_ascendant=angles[0];for(int i=0;i<12;i++)r.cusps[i]=cusps[i+1];
+   // Swiss 'S' means sidereal Sripati house boundaries (not whole-sign cusps).
+   // Do not substitute W if the requested house model cannot be computed.
+   double sripati[13]{},sripati_angles[10]{};
+   if(swe_houses_ex(ut1,SEFLG_SIDEREAL,latitude,longitude,'S',sripati,sripati_angles)<0
+      ||!native_finite(sripati,13)||!native_finite(sripati_angles,10)){
+     r.sripati_error=-1;
+   }else{
+     for(int i=0;i<12;i++)r.sripati_cusps[i]=sripati[i+1];
+   }
   }
   return r;
  }
