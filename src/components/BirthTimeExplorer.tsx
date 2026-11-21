@@ -2,7 +2,7 @@ import React,{useRef,useState,useEffect} from 'react';
 
 type Certainty='EXACT'|'APPROXIMATE'|'RANGE'|'UNKNOWN';
 type Factor={name:string;classification:'OBSERVED_STABLE_NOT_PROVEN'|'OBSERVED_VARIABLE'|'UNRESOLVED';observed_values:string[];note:string};
-type Result={schema_version:number;status:string;contract_version:string;start_utc:string;end_utc:string;sample_count:number;factors:Factor[];transition_brackets:Array<{factor:string;from_value:string;to_value:string;from_utc:string;to_utc:string; evidence:string}>;limitations:string[];customer_timing_authorized:false;btr_status:string;house_system:string};
+type Result={schema_version:number;status:string;contract_version:string;start_utc:string;end_utc:string;sample_count:number;factors:Factor[];transition_brackets:Array<{factor:string;from_value:string;to_value:string;from_utc:string;to_utc:string; evidence:string;intermediate_value?:string}>;limitations:string[];customer_timing_authorized:false;btr_status:string;house_system:string};
 const label=(value:string)=>value==='OBSERVED_VARIABLE'?'Varies in samples':value==='UNRESOLVED'?'Unresolved':'Same in samples — not proven stable';
 const classes=(value:string)=>value==='OBSERVED_VARIABLE'?'border-amber-500/70':'border-rose-900/60';
 const rashiNames=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
@@ -93,7 +93,7 @@ export function BirthTimeExplorer(){
    </div>
    <section className="rounded-lg border border-rose-900 p-4 space-y-2"><h2 className="font-serif text-lg text-amber-300">Observed change intervals</h2>
  <p className="text-sm">Changes are bracketed by the samples, not exact transition times. Unobserved changes remain possible.</p>
- {result.transition_brackets.length===0?<p>No changes observed. Stability is not proven.</p>:<ul className="space-y-1 text-sm">{result.transition_brackets.slice(0,60).map((t,i)=><li key={i}>{t.factor}: {t.from_value} to {t.to_value}, between {t.from_utc} and {t.to_utc}</li>)}</ul>}
+ {result.transition_brackets.length===0?<p>No changes observed. Stability is not proven.</p>:<ul className="space-y-1 text-sm">{result.transition_brackets.slice(0,60).map((t,i)=><li key={i}>{t.factor}: {t.from_value} to {t.to_value}, between {t.from_utc} and {t.to_utc}{t.intermediate_value?` (intermediate state: ${t.intermediate_value}; unresolved)` : ''}</li>)}</ul>}
  {result.transition_brackets.length>60&&<p>Additional brackets are omitted from this view.</p>}
  </section>
  <section className="rounded-lg border border-rose-900 p-4 space-y-2"><h2 className="font-serif text-lg text-amber-300">Limitations</h2><ul className="list-disc space-y-1 pl-5 text-sm">{result.limitations.map((v,i)=><li key={i}>{v}</li>)}</ul></section>
