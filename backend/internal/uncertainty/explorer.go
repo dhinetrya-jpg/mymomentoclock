@@ -199,6 +199,8 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   if ctx.Err()!=nil{return Result{},issue("F01_TIMEOUT")}
   t:=start
   if count>1 {t=start.Add(time.Duration(int64(interval)*int64(i)/int64(count-1)))}
+  // ComputeSnapshot accepts whole-second civil labels. Report exactly the instant evaluated.
+  t=t.Truncate(time.Second)
   s,e:=astronomy.ComputeSnapshot(ctx,astronomy.SnapshotRequest{SchemaVersion:1,Civil:ephemeris.NormalizationRequest{
     BirthDate:t.UTC().Format("2006-01-02"),BirthTime:t.UTC().Format("15:04:05"),
     Timezone:"UTC",Latitude:&place.Latitude,Longitude:&place.Longitude,BirthTimeCertainty:"APPROXIMATE",
