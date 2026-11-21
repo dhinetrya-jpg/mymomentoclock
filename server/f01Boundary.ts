@@ -24,8 +24,8 @@ function valid(input:any):boolean {
 function validResponse(r:any,request:any):boolean{
  if(!r||r.schema_version!==1||r.contract_version!=='f01-sensitivity-v1'||r.status!=='COMPUTED_UNVERIFIED'||r.customer_timing_authorized!==false||r.btr_status!=='UNAVAILABLE_UNVALIDATED_DASHA_METHOD'||r.authority?.production_eligible!==false)return false;
  if(r.birth_input?.birth_date!==request.birth_date||r.birth_input?.certainty!==request.certainty||r.birth_input?.timezone!==request.timezone||r.birth_input?.latitude!==request.latitude||r.birth_input?.longitude!==request.longitude)return false;
- if(!Array.isArray(r.samples)||r.samples.length>97||r.samples.length<1||r.sample_count!==r.samples.length||!Array.isArray(r.factors)||r.factors.length>100||!Array.isArray(r.limitations)||r.limitations.length>20)return false;
- if(r.house_system!=='SWISS_S_SIDEREAL_LAHIRI'||!r.factors.every((f:any)=>typeof f.name==='string'&&f.name.length<=80&&['OBSERVED_STABLE_NOT_PROVEN','OBSERVED_VARIABLE','UNRESOLVED'].includes(f.classification)&&Array.isArray(f.observed_values)&&f.observed_values.length<=97))return false;
+ if(!Array.isArray(r.samples)||r.samples.length>17||r.samples.length<1||r.sample_count!==r.samples.length||!Array.isArray(r.factors)||r.factors.length>100||!Array.isArray(r.limitations)||r.limitations.length>20)return false;
+ if(r.house_system!=='SWISS_S_SIDEREAL_LAHIRI'||!r.factors.every((f:any)=>typeof f.name==='string'&&f.name.length<=80&&['OBSERVED_STABLE_NOT_PROVEN','OBSERVED_VARIABLE','UNRESOLVED'].includes(f.classification)&&Array.isArray(f.observed_values)&&f.observed_values.length<=17))return false;
  return true;
 }
 type Transport=(data:any)=>Promise<{status:number;body:any}>;
