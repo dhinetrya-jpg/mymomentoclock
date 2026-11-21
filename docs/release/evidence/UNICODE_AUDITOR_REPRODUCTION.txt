@@ -1,0 +1,4 @@
+=== RUN   TestAuditUnicodeCaseAlias
+--- PASS: TestAuditUnicodeCaseAlias (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/f01reference	0.011s

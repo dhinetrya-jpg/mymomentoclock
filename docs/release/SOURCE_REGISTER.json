@@ -132,6 +132,12 @@
       "source": "current user directive",
       "version": "2026-11-22 Asia/Calcutta, full approved product through private release readiness",
       "authority": "workflow and Research/Audit delegation authorization; retains production/live-payment restrictions; does not supply missing feature definitions"
+    },
+    {
+      "path": "deploy/kubernetes/04-api-ingress.yaml",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "b9aba5593a486f205745c9c8fd68a997c14709fc38f1eabba4f5d2c98848acff",
+      "authority": "inactive deployment template, not runtime/deployment evidence"
     }
   ],
   "missing": {

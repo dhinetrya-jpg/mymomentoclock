@@ -1,0 +1,7 @@
+{
+  "scope": "static template only, no cluster apply",
+  "deployment": "mymomentoclock-api",
+  "automountServiceAccountToken": false,
+  "documents_parsed": 3,
+  "result": "PASS"
+}

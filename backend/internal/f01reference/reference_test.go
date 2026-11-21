@@ -287,3 +287,28 @@ func TestCaseAliasedChartClaimsCannotOverrideCanonicalKeys(t *testing.T) {
 		t.Fatal("case-aliased original accepted")
 	}
 }
+
+func TestUnicodeCaseAliasesCannotOverrideEvidence(t *testing.T) {
+	ref, root := fixture(t)
+	raw, e := json.Marshal(Dataset{SchemaVersion: Schema, DatasetPurpose: "F01_INDEPENDENT_SRIPATI_NUMERICAL_COMPARISON", References: []Reference{ref}})
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, replacement := range []string{`"houſe_system":"SRIPATI_S_CUSP_START_1_BASED"`, `"house_system":"BAD","houſe_system":"SRIPATI_S_CUSP_START_1_BASED"`, `"house_system":"BAD","hou\u017fe_system":"SRIPATI_S_CUSP_START_1_BASED"`} {
+		assertLoadFails(t, []byte(strings.Replace(string(raw), `"house_system":"SRIPATI_S_CUSP_START_1_BASED"`, replacement, 1)))
+	}
+	path := filepath.Join(root, "originals", ref.OriginalFile)
+	source, e := os.ReadFile(path)
+	if e != nil {
+		t.Fatal(e)
+	}
+	source = []byte(strings.Replace(string(source), `"house_system":"SRIPATI_S_CUSP_START_1_BASED"`, `"house_system":"BAD","houſe_system":"SRIPATI_S_CUSP_START_1_BASED"`, 1))
+	if e = os.WriteFile(path, source, 0600); e != nil {
+		t.Fatal(e)
+	}
+	sum := sha256.Sum256(source)
+	ref.OriginalSHA256 = hex.EncodeToString(sum[:])
+	if e = Admit(ref, root); e == nil {
+		t.Fatal("Unicode alias in original accepted")
+	}
+}

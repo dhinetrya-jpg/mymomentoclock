@@ -87,3 +87,26 @@ not a deployed private service or independent astronomy. Initial run:0.44s.
 
 Reference/diagnostic case-alias and metadata regressions pass. The integration
 source is being pinned for a fresh full isolated regression and independent audit.
+
+## Stage 6 — second independent finding and private gate applicability
+
+Audit of exact `2ebe669574a4b470bb4c8b2c3ebda7587e1eff90`: FAIL, residual P2
+R1 Unicode long-s case alias. The reviewer independently reproduced Go's Unicode
+case-folding bypass of a lowercase-only check. Require ASCII snake_case schema
+keys (matching diagnostic parser) and regress literal/escaped Unicode keys in
+both manifest and original chart. Preserve second failed report as
+AUDIT_UNICODE_FAIL.md. Fresh final integrated script on that pinned source passes,
+including native mTLS F01 and PostgreSQL restart. Targeted repaired-source tests
+and a fresh exact-head review must supersede this failed verdict.
+
+Private operations Research distinguishes disabled stateless preview from full
+hosted product and commerce. Missing live activation approval alone does not
+block a disabled preview. Hosted access/TLS/runtime and the approved feature
+inventory remain unverified. Actual F01 deployment needs reviewed mTLS wiring;
+local integration does not deploy it. Financial restore/provider gates apply
+only when those capabilities are in scope. Full private readiness is unestablished.
+
+Automatically selected OPS-POD-CREDENTIALS: inactive Kubernetes API pod template
+now sets automountServiceAccountToken:false. It has no Kubernetes API requirement.
+Static YAML parsed and all three documents retained. No cluster configuration
+was applied, no RBAC/CNI enforcement or deployed security claim made.

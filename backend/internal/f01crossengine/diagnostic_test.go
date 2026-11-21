@@ -125,6 +125,7 @@ func TestDecodeRejectsAmbiguousOrOversizedJSON(t *testing.T) {
 		"missing latitude":             bytes.Replace(original, []byte(`"latitude":28,`), nil, 1),
 		"null longitude":               bytes.Replace(original, []byte(`"longitude":77`), []byte(`"longitude":null`), 1),
 		"null ascendant":               bytes.Replace(original, []byte(`"sidereal_ascendant_deg":23`), []byte(`"sidereal_ascendant_deg":null`), 1),
+		"Unicode alias":                bytes.Replace(original, []byte(`"source_package":`), []byte(`"ſource_package":`), 1),
 		"uppercase root":               bytes.Replace(original, []byte(`"schema_version":2`), []byte(`"SCHEMA_VERSION":2`), 1),
 		"uppercase package":            bytes.Replace(original, []byte(`"name":"jyotipy"`), []byte(`"NAME":"jyotipy"`), 1),
 		"thirteenth cusp":              bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":[0,30,60,90,120,150,180,210,240,270,300,330,42]`), 1),

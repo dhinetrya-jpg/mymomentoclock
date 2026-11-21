@@ -140,6 +140,7 @@ type Report struct {
 var filePattern = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9._-]{0,80}\.(json)$`)
 var idPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_-]{0,60}$`)
 var hashPattern = regexp.MustCompile(`^[a-f0-9]{64}$`)
+var canonicalKeyPattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 
 func canonical(v float64) float64 {
 	return math.Mod(math.Mod(v, 360)+360, 360)
@@ -290,7 +291,7 @@ func rejectDuplicateKeys(d *json.Decoder, depth int) error {
 				return e
 			}
 			name := key.(string)
-			if name != strings.ToLower(name) {
+			if !canonicalKeyPattern.MatchString(name) {
 				return errors.New("REFERENCE_NONCANONICAL_JSON_KEY")
 			}
 			if seen[name] {

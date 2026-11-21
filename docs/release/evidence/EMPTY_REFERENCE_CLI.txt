@@ -1,0 +1,3 @@
+BLOCKED_NO_ADMITTED_EXTERNAL_REFERENCES
+{"status":"BLOCKED_NO_ADMITTED_EXTERNAL_REFERENCES","accepted":0,"passed":0,"failed":0,"comparisons":[],"limitations":["External reference agreement is numerical comparison, not astrological predictive accuracy.","Swiss internal Porphyry/Sripati cross-checks are not external reference evidence.","No customer release or birth-time rectification is authorized by this report."]}
+CLI_EXIT=2

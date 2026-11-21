@@ -1146,7 +1146,21 @@
       "evidence_required": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
       "implemented": true,
       "independently_verified": false
+    },
+    {
+      "id": "OPS-POD-CREDENTIALS",
+      "priority": "P2",
+      "classification": "implementation",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_static_verified_independent_review_pending",
+      "acceptance_criteria": "API pod template disables automatic Kubernetes service-account token mount without opening routes",
+      "evidence_required": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
+      "implemented": true,
+      "independently_verified": false
     }
   ],
-  "next_eligible_action": "Native mTLS F01 cross-service verification, then exact-head independent audit and owner-gate reconciliation"
+  "next_eligible_action": "Native mTLS F01 cross-service verification, then exact-head independent audit and owner-gate reconciliation",
+  "private_scope_policy": "Live activation approval does not gate a disabled stateless preview. Hosted full-product readiness requires approved inventory and actual access/TLS/runtime/domain evidence; persistence/commerce gates apply only when in scope."
 }

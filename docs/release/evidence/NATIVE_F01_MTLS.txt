@@ -1,0 +1,13 @@
+=== RUN   TestNodeMTLSGoF01Boundary
+    cross_service_cgo_test.go:95: EXACT: real pinned SWISS_FILE → verified mTLS → Node fixed projection; 1 samples, no customer authorization
+        APPROXIMATE: real pinned SWISS_FILE → verified mTLS → Node fixed projection; 17 samples, no customer authorization
+        RANGE: real pinned SWISS_FILE → verified mTLS → Node fixed projection; 17 samples, no customer authorization
+        UNKNOWN: real pinned SWISS_FILE → verified mTLS → Node fixed projection; 17 samples, no customer authorization
+        Malformed requests and missing client certificate refused; raw natal samples/authority excluded. Exploratory geometry only; no independent scientific admission.
+--- PASS: TestNodeMTLSGoF01Boundary (0.52s)
+PASS
+ok  	astroengine-core/backend/internal/uncertainty	0.528s
+=== RUN   TestAuditCaseAliases
+--- PASS: TestAuditCaseAliases (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/f01reference	0.003s
