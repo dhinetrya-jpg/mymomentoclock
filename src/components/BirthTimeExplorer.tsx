@@ -5,6 +5,18 @@ type Factor={name:string;classification:'OBSERVED_STABLE_NOT_PROVEN'|'OBSERVED_V
 type Result={schema_version:number;status:string;contract_version:string;start_utc:string;end_utc:string;sample_count:number;factors:Factor[];transition_brackets:Array<{factor:string;from_value:string;to_value:string;from_utc:string;to_utc:string; evidence:string}>;limitations:string[];customer_timing_authorized:false;btr_status:string;house_system:string};
 const label=(value:string)=>value==='OBSERVED_VARIABLE'?'Varies in samples':value==='UNRESOLVED'?'Unresolved':'Same in samples — not proven stable';
 const classes=(value:string)=>value==='OBSERVED_VARIABLE'?'border-amber-500/70':'border-rose-900/60';
+const rashiNames=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const meaning=(factor:string,value:string)=>{
+ if(value==='UNAVAILABLE')return 'Not available';
+ const number=Number(value);
+ if(!Number.isInteger(number))return value;
+ if(factor.endsWith('.rashi')||factor.endsWith('.d9'))return rashiNames[number]??value;
+ if(factor.includes('house'))return 'House '+number;
+ if(factor.endsWith('.rashi_chalit_difference'))return value==='true'?'Different placements':'Same house placement';
+ return value;
+};
+const factorTitle=(key:string)=>key.split('.').map(v=>v.replace(/_/g,' ')).join(' — ');
+
 
 export function BirthTimeExplorer(){
  const [certainty,setCertainty]=useState<Certainty>('APPROXIMATE');
@@ -23,6 +35,7 @@ export function BirthTimeExplorer(){
  const [result,setResult]=useState<Result|null>(null);
  const [busy,setBusy]=useState(false);
  const [error,setError]=useState('');
+ const [showAll,setShowAll]=useState(false);
  const abort=useRef<AbortController|null>(null);
  useEffect(()=>()=>abort.current?.abort(),[]);
  const update=()=>{setResult(null);setError('')};
@@ -70,10 +83,12 @@ export function BirthTimeExplorer(){
   {error&&<div role="alert" className="rounded-lg border border-amber-600 p-4">Unable to calculate: {error}. Checked configurations or astronomical data may be unavailable. No estimate was substituted.</div>}
   {result&&<div aria-live="polite" className="space-y-4">
    <div role="status" className="rounded-xl border border-amber-600 p-4"><strong>Exploratory calculation — not independently approved</strong><p className="text-sm mt-2">Sampled {result.sample_count} birth instants from {new Date(result.start_utc).toLocaleString()} to {new Date(result.end_utc).toLocaleString()}. These dates are shown in your browser timezone; calculations use UTC and the supplied birth timezone.</p><p className="mt-2 text-xs">House system: {result.house_system}. Rectification: unavailable. Personal timing: disabled.</p></div>
-   <h2 className="font-serif text-xl text-amber-300">Rashi and Bhava Chalit comparison</h2>
+   <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-serif text-xl text-amber-300">Rashi and Bhava Chalit comparison</h2>
+   <button type="button" className="rounded border border-rose-700 px-3 py-2 text-sm" onClick={()=>setShowAll(!showAll)}>{showAll?'Show observed changes only':'Show every sampled factor'}</button></div>
    <p className="text-sm">A matching value across the sample grid is not proof that it never changes between samples. Confirmed transitions and certified stability require additional independent validation.</p>
+   {!showAll&&!result.factors.some(f=>f.classification==='OBSERVED_VARIABLE')&&<p className="text-sm">No sampled classification changes were observed. This does not prove a factor is stable. Use “Show every sampled factor” for details.</p>}
    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-   {result.factors.map(f=><article key={f.name} className={'rounded-xl border p-4 '+classes(f.classification)}><h3 className="font-medium break-words">{f.name.replace(/_/g,' ').replace(/\./g,' — ')}</h3><p className="mt-1 text-sm text-amber-300">{label(f.classification)}</p><p className="mt-2 text-sm">Values observed: {f.observed_values.join(', ')}</p><p className="mt-2 text-xs text-rose-200/70">{f.note}</p></article>)}
+   {result.factors.filter(f=>showAll||f.classification==='OBSERVED_VARIABLE').slice(0,60).map(f=><article key={f.name} className={'rounded-xl border p-4 '+classes(f.classification)}><h3 className="font-medium break-words">{factorTitle(f.name)}</h3><p className="mt-1 text-sm text-amber-300">{label(f.classification)}</p><p className="mt-2 text-sm">Values observed: {f.observed_values.map(v=>meaning(f.name,v)).join(', ')}</p><p className="mt-2 text-xs text-rose-200/70">{f.note}</p></article>)}
    </div>
    <section className="rounded-lg border border-rose-900 p-4 space-y-2"><h2 className="font-serif text-lg text-amber-300">Observed change intervals</h2>
  <p className="text-sm">Changes are bracketed by the samples, not exact transition times. Unobserved changes remain possible.</p>
