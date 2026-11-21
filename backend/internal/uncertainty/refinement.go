@@ -25,7 +25,7 @@ func RefineObservedBrackets(ctx context.Context, observations []TransitionBracke
   for i:=range out {
    if used>=MaxRefinementEvaluations {break}
    b:=&out[i]
-   if b.ToUTC.Sub(b.FromUTC)<=RefinementTarget {continue}
+   if b.Evidence=="OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED"||b.ToUTC.Sub(b.FromUTC)<=RefinementTarget {continue}
    width:=b.ToUTC.Sub(b.FromUTC)
    middle:=b.FromUTC.Add(width/2).Truncate(time.Second)
    if !middle.After(b.FromUTC)||!middle.Before(b.ToUTC){continue}
