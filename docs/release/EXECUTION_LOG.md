@@ -44,3 +44,46 @@ sandbox verification or independent domain certification.
 Pin this stage in Git for exact-head independent review. An audit verdict is
 not yet available. Next eligible action remains review, integrated checks and
 specific finding repair; release status stays NOT_ESTABLISHED.
+
+## Stage 4 — independent finding and repair
+
+Independent audit of `b12f7e4b88a60a20897549f979a4f216385e7ead`:
+FAIL, P2 R1: case-insensitive Go field matching allowed `latitude`/`LATITUDE`
+conflicts to bypass duplicate detection. Original report retained as
+AUDIT_INITIAL_FAIL.md. Canonical lowercase keys now required recursively;
+regression covers both manifest and original chart. Auditor's unchanged
+reproduction passes with corrected container overlay paths
+(AUDITOR_REPRODUCTION_FIXED.txt); targeted native/race/vet/noCGO suite passes.
+
+Automatically selected next eligible finding: diagnostic parser also accepted
+truncated/padded cusp arrays and capped-reader trailing content. It now rejects
+nonexact12/null values, missing/null numeric chart metadata, duplicate/case-aliased
+keys and oversized input. Its diagnostic/unadmitted status is unchanged.
+
+Integrated existing Go/PostgreSQL script: initial attempt failed because an
+absolute host dependency symlink was absent inside Docker, not because of
+application behavior. Replaced it with the same lockfile-matched dependencies
+and retried unchanged script: PASS, including both modules, native/noCGO,
+race/vet, Node/Go/PostgreSQL lifecycle and explicit database restart recovery.
+No provider sandbox or production database used. Original legacy cross-mode
+Moshier residual failures remain diagnostic; tests do not promote them.
+Source acquisition/adversarial integrity scripts pass. Desktop/mobile Phase1,
+local payment UI fixture and timing refusal/synthetic browser suites pass.
+Both frontends typecheck and build. Evidence is scoped, not domain approval.
+
+Next eligible action: native mTLS F01 regression, final exact-head independent
+review and release-gate reconciliation. All scientific/owner/operations blockers
+remain open; private release readiness remains NOT_ESTABLISHED.
+
+## Stage 5 — real native boundary verification
+
+Automatically selected missing native F01 boundary regression. Added a generated
+private test CA/client certificate and actual Node gateway → verified mTLS → Go
+handler → pinned SWISS_FILE path. All four certainty modes compute successfully
+(EXACT1 sample, others17), with noncertified geometry/status, no customer
+authorization and raw samples omitted. Malformed requests fail at both boundaries;
+missing client certificates fail the handshake. This verifies local integration,
+not a deployed private service or independent astronomy. Initial run:0.44s.
+
+Reference/diagnostic case-alias and metadata regressions pass. The integration
+source is being pinned for a fresh full isolated regression and independent audit.

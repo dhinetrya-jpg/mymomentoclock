@@ -290,6 +290,9 @@ func rejectDuplicateKeys(d *json.Decoder, depth int) error {
 				return e
 			}
 			name := key.(string)
+			if name != strings.ToLower(name) {
+				return errors.New("REFERENCE_NONCANONICAL_JSON_KEY")
+			}
 			if seen[name] {
 				return errors.New("REFERENCE_DUPLICATE_JSON_KEY")
 			}

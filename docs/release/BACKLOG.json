@@ -26,7 +26,7 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "implemented_pending_independent_review",
+      "status": "implemented_regression_pass_final_independent_review_pending",
       "acceptance_criteria": "Reject malformed upstream scalars and out-of-request intervals; project geometry keys",
       "evidence_required": "adversarial F01 contracts, lint, exact-head independent audit"
     },
@@ -37,7 +37,7 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "in_progress",
+      "status": "implemented_regression_pass_final_independent_review_pending",
       "acceptance_criteria": "Reject non-12 arrays, oversized manifests and claims unbound to original chart bytes",
       "evidence_required": "targeted parser/admission regressions and exact-head audit"
     },
@@ -59,9 +59,10 @@
       "dependencies": [
         "AUDIT-BASE"
       ],
-      "status": "eligible",
+      "status": "local_checks_pass_independent_release_audit_pending",
       "acceptance_criteria": "Reexecute existing native/safety checks without promoting partial domain coverage",
-      "evidence_required": "exact-head executable results and original external provenance"
+      "evidence_required": "exact-head executable results and original external provenance",
+      "evidence": "evidence/INTEGRATED_GO_POSTGRES.txt; scientific gaps remain in INVENTORY_AUDIT.md"
     },
     {
       "id": "CORE02-RULES",
@@ -116,6 +117,1036 @@
       "status": "blocked_dependencies",
       "acceptance_criteria": "No open release blockers at exact integration SHA",
       "evidence_required": "independent integrated end-to-end audit and applicable release gates"
+    },
+    {
+      "id": "F01-BASE",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_scoped_pending_fresh_independent_review",
+      "acceptance_criteria": "Four certainty modes, private noncertified sensitivity and no customer timing authorization",
+      "evidence_required": "exact-head source inspection and applicable executable/native evidence",
+      "source": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-P0-01",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_scoped_pending_fresh_independent_review",
+      "acceptance_criteria": "Bounded observed-transition refinement; no exhaustive stability assertion",
+      "evidence_required": "exact-head source inspection and applicable executable/native evidence",
+      "source": "docs/features/F01_P0_01_TRANSITION_REFINEMENT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-P0-02",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_scoped_pending_fresh_independent_review",
+      "acceptance_criteria": "All12 internal cusp geometry checks within predeclared1e-6 degrees; no independent astronomy claim",
+      "evidence_required": "exact-head source inspection and applicable executable/native evidence",
+      "source": "docs/features/F01_P0_02_SRIPATI_GEOMETRY_VALIDATION.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-P0-03",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_scoped_pending_fresh_independent_review",
+      "acceptance_criteria": "Offline admitted-source comparisons fail closed on missing references",
+      "evidence_required": "exact-head source inspection and applicable executable/native evidence",
+      "source": "docs/features/F01_P0_03_EXTERNAL_REFERENCE_ADMISSION.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-P0-04",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_scoped_pending_fresh_independent_review",
+      "acceptance_criteria": "Reproducible eight-case second-pipeline diagnostic with all12 residuals; never scientific acceptance",
+      "evidence_required": "exact-head source inspection and applicable executable/native evidence",
+      "source": "docs/features/F01_P0_04_CROSS_ENGINE_NUMERICAL_DIAGNOSTICS.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-DIAGNOSTIC-INTEGRITY",
+      "priority": "P1",
+      "classification": "implementation",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_regression_pass_final_independent_review_pending",
+      "acceptance_criteria": "Exactly12 non-null source cusps and unambiguous bounded diagnostic JSON",
+      "evidence_required": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
+      "source": "backend/internal/f01crossengine/diagnostic.go",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-001",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "historical_partial_definition_needs_reconciliation",
+      "acceptance_criteria": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-002",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "historical_partial_definition_needs_reconciliation",
+      "acceptance_criteria": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-003",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "historical_partial_definition_needs_reconciliation",
+      "acceptance_criteria": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-004",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "historical_partial_definition_needs_reconciliation",
+      "acceptance_criteria": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-005",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-006",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-007",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-008",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-009",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-010",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-011",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-012",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-013",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-014",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-015",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-016",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-017",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CFR-018",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_authoritative_definition",
+      "acceptance_criteria": "Obtain authoritative item definition; no scope inferred",
+      "evidence_required": "original approved remediation spec, current source and independent executable acceptance",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-WORK_INTERVIEWS",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for WORK_INTERVIEWS",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-PURCHASE_TRANSACTION",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for PURCHASE_TRANSACTION",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-TRAVEL",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for TRAVEL",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-LEARNING_EXAM",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for LEARNING_EXAM",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-FAMILY_PERSONAL",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for FAMILY_PERSONAL",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "CORE02-FINANCE_TRADING",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Source/version/passage, predicates, exclusions and uncertainty approved for FINANCE_TRADING",
+      "evidence_required": "approved real rule registry and independent traditional validation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PAY03-G01",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Real identity integrated and verified",
+      "evidence_required": "Vendor-neutral adapter tested; no owner-selected real issuer/SDK or genuine identity evidence.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G02",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Approved product catalog configured",
+      "evidence_required": "No owner-approved catalog; INR500 is proposal only.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G03",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Production provider adapter implemented",
+      "evidence_required": "Separate production constructor and sealed merchant authorization; local contract tests only.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G04",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Environment isolation verified",
+      "evidence_required": "Key-prefix, provider namespace, session issuer/environment and explicit database binding tested locally.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G05",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Live credentials securely provisionable",
+      "evidence_required": "Mounted-file provisioning implemented; actual live secret-manager/access/rotation review absent.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G06",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Secure checkout integration implemented",
+      "evidence_required": "Cookie/CSRF, hosted SDK and server-only verification tested; actual identity/catalog remain blocked.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G07",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Raw webhook signature verification tested",
+      "evidence_required": "Raw HMAC/replay/account/value binding and explicit rotation overlap tested locally.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G08",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Provider state mapping verified",
+      "evidence_required": "Supported local capture/refund lattice tested; current hosted docs403 and genuine API evidence absent.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G09",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "PostgreSQL fulfillment verified",
+      "evidence_required": "Real TLS PostgreSQL transactions/concurrency/rollback/restart verified.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G10",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Entitlement enforcement verified",
+      "evidence_required": "Durable guard tested on delivered fixture; actual premium product is G23.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G11",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Refund handling verified",
+      "evidence_required": "Full refund revocation/partial review tested locally; no real refund/policy approval.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G12",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Dispute/reversal handling verified",
+      "evidence_required": "Conservative signed-dispute risk hold tested; current final reversal/won/lost semantics/genuine events absent.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G13",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Reconciliation worker verified",
+      "evidence_required": "Leases/SKIP LOCKED/jitter/attempt limits/dead-letter/restart tested.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G14",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Operational monitoring implemented",
+      "evidence_required": "Private fixed metrics, durable gauges, read-only CLI and proposed alerts; no deployed monitoring claim.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G15",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Security tests passed",
+      "evidence_required": "Scoped local security suites and second-pass sweep; not independent penetration certification.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G16",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_local_pass_pending_current_gate_review",
+      "acceptance_criteria": "Full regression passed",
+      "evidence_required": "Exact local commands and artifact/browser results in TEST_REPORT; no remote CI claim.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "PASS"
+    },
+    {
+      "id": "PAY03-G17",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Genuine provider sandbox order verified",
+      "evidence_required": "No credentials/approval: zero genuine order calls.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G18",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Genuine provider sandbox payment verified",
+      "evidence_required": "No genuine provider payment performed.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G19",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Genuine signed provider webhook verified",
+      "evidence_required": "No genuine public signed provider webhook delivered.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G20",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Genuine sandbox refund verified where supported",
+      "evidence_required": "No genuine provider sandbox refund performed.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G21",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Merchant account approved",
+      "evidence_required": "Merchant/KYC/live/settlement approval absent.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G22",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Legal/commercial policies approved",
+      "evidence_required": "Owner/legal/tax/refund/privacy/support approvals absent.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G23",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Premium product functionality validated",
+      "evidence_required": "No approved real premium delivery list; compiled registry empty.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "PAY03-G24",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "not_tested",
+      "acceptance_criteria": "Deployment configuration reviewed",
+      "evidence_required": "Review specification and separate artifacts supplied; actual infrastructure not deployed/reviewed.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "NOT_TESTED"
+    },
+    {
+      "id": "PAY03-G25",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "not_tested",
+      "acceptance_criteria": "Backup/restore and incident response validated",
+      "evidence_required": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "NOT_TESTED"
+    },
+    {
+      "id": "PAY03-G26",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_external_dependency",
+      "acceptance_criteria": "Authorized production release approval recorded",
+      "evidence_required": "No authorized release approval, signed manifest or owner trust key provisioned.",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false,
+      "historical_status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "id": "METHOD-DASHA",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_approved_method",
+      "acceptance_criteria": "Versioned approved substantive method and domain validation for DASHA",
+      "evidence_required": "original approved method, deterministic implementation and independent examples",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "METHOD-CERTIFIED_BTR",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_approved_method",
+      "acceptance_criteria": "Versioned approved substantive method and domain validation for CERTIFIED_BTR",
+      "evidence_required": "original approved method, deterministic implementation and independent examples",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "METHOD-RESOLVER",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_approved_method",
+      "acceptance_criteria": "Versioned approved substantive method and domain validation for RESOLVER",
+      "evidence_required": "original approved method, deterministic implementation and independent examples",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "METHOD-GRAPH",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_approved_method",
+      "acceptance_criteria": "Versioned approved substantive method and domain validation for GRAPH",
+      "evidence_required": "original approved method, deterministic implementation and independent examples",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "METHOD-REMEDIES",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_approved_method",
+      "acceptance_criteria": "Versioned approved substantive method and domain validation for REMEDIES",
+      "evidence_required": "original approved method, deterministic implementation and independent examples",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G1",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G1 Repository with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G2",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G2 Input with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G3",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G3 BTR with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G4",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G4 Resolver with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G5",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G5 Profiles with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G6",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G6 Graph with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G7",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G7 Muhurat with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G8",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G8 Astronomy with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G9",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G9 Payment with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G10",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G10 Entitlements with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G11",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G11 Operations with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G12",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G12 Regression with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G13",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G13 UX with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G14",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G14 Privacy with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "PHASE1-G15",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "historical_gate_pending_current_reconciliation",
+      "acceptance_criteria": "Reconcile G15 Documentation with later work; safely disabled capability is not delivered functionality",
+      "evidence_required": "fresh integrated audit plus original owner/domain inputs where applicable",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "implemented": "repository-scoped implementation only; see source",
+      "independently_verified": false
+    },
+    {
+      "id": "F01-NATIVE-MTLS",
+      "priority": "P1",
+      "classification": "implementation",
+      "dependencies": [
+        "F01-PRIVACY"
+      ],
+      "status": "implemented_local_pass_independent_review_pending",
+      "acceptance_criteria": "Actual Node gateway over verified mTLS to pinned native SWISS_FILE F01 succeeds for four certainty modes; malformed requests/certless clients refused; raw samples omitted",
+      "evidence_required": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
+      "implemented": true,
+      "independently_verified": false
     }
-  ]
+  ],
+  "next_eligible_action": "Native mTLS F01 cross-service verification, then exact-head independent audit and owner-gate reconciliation"
 }

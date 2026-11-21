@@ -263,3 +263,27 @@ func TestOriginalSymlinksRejected(t *testing.T) {
 		t.Fatal("symlink original accepted")
 	}
 }
+
+func TestCaseAliasedChartClaimsCannotOverrideCanonicalKeys(t *testing.T) {
+	ref, root := fixture(t)
+	raw, e := json.Marshal(Dataset{SchemaVersion: Schema, DatasetPurpose: "F01_INDEPENDENT_SRIPATI_NUMERICAL_COMPARISON", References: []Reference{ref}})
+	if e != nil {
+		t.Fatal(e)
+	}
+	assertLoadFails(t, []byte(strings.Replace(string(raw), `"latitude":22.57`, `"latitude":999,"LATITUDE":22.57`, 1)))
+	assertLoadFails(t, []byte(strings.Replace(string(raw), `"schema_version":2`, `"SCHEMA_VERSION":2`, 1)))
+	path := filepath.Join(root, "originals", ref.OriginalFile)
+	source, e := os.ReadFile(path)
+	if e != nil {
+		t.Fatal(e)
+	}
+	source = []byte(strings.Replace(string(source), `"latitude":22.57`, `"latitude":999,"LATITUDE":22.57`, 1))
+	if e = os.WriteFile(path, source, 0600); e != nil {
+		t.Fatal(e)
+	}
+	sum := sha256.Sum256(source)
+	ref.OriginalSHA256 = hex.EncodeToString(sum[:])
+	if e = Admit(ref, root); e == nil {
+		t.Fatal("case-aliased original accepted")
+	}
+}

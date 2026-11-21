@@ -73,6 +73,65 @@
       "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
       "sha256": "3cd081c158f2ce5441681aa4bed3c239e91b924c8186a69913f4b75db118fb92",
       "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "/workspace/attachments/037e8ec7-abfa-4c73-9ce1-dfd17e2ffbd2/Pasted text.txt",
+      "sha256": "9a7c70d2b74ab96bc1153540e179602674bb80be8c727ef227b3d3c2f42632b4",
+      "version_label": "# CODEX MASTER IMPLEMENTATION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/4b4c6d01-d9a7-4e69-987a-405eb423392e/Pasted text.txt",
+      "sha256": "1221a0d7327f32f93450760342ae35fe530d5482eebc1ed338ccbf43c1b803eb",
+      "version_label": "# CODEX MASTER PROMPT \u2014 MYMOMENTOCLOCK",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/4d14b4e8-316c-4fcc-9fcd-7d6ab2b59c8d/Pasted text.txt",
+      "sha256": "c8722347d635368a3e0de38846b576362b111580ec506e654297107a56d049ee",
+      "version_label": "# CODEX MASTER PROMPT \u2014 FINALIZE CORE-P0-01",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/51d185ac-045b-4cb0-a9bc-a5573f35de5c/Pasted text.txt",
+      "sha256": "70def775a0fa68a398b046748bbb29bc050ea1136a50d794c820c88c9c5836db",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX MASTER PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/8d870992-bdac-4788-a4d6-2649dedc5262/Pasted text.txt",
+      "sha256": "f4bfd06fa58a17c9b4756c2bde51a23bde1c9bf96f73e2c66415059197867d94",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX PAYMENT WORKSTREAM 01",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/adfcca9e-1d25-4202-9e7f-3b086a38c3bb/Pasted text.txt",
+      "sha256": "d6d3cd6bd0048e4090025367ddec0f9521fd30aa8b924d2ec6284adb511579b6",
+      "version_label": "# CODEX \u2014 PR #21 TARGETED ACCEPTANCE REPAIR",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/bac95297-b976-46ab-b17d-c3fe361c760c/Pasted text.txt",
+      "sha256": "30948ef435bf918c52165ab71623564d303332faa7aa000f33b034e5ae4bebaf",
+      "version_label": "# CODEX MASTER EXECUTION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/bbf0dd00-6412-4d0c-9484-933e958849f7/Pasted text.txt",
+      "sha256": "80e0de0a8897cfbaa36d6c46e434b53948b0dce0d9757b4e46e9236ce6de9042",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX MASTER IMPLEMENTATION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/be262430-e9de-48b8-8777-ca4910c4e94c/Pasted text.txt",
+      "sha256": "271b42aa14bb497f1a3e47ad9cd26ab77223eaaac2929423546a832ae9264610",
+      "version_label": "# CODEX MASTER EXECUTION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "source": "current user directive",
+      "version": "2026-11-22 Asia/Calcutta, full approved product through private release readiness",
+      "authority": "workflow and Research/Audit delegation authorization; retains production/live-payment restrictions; does not supply missing feature definitions"
     }
   ],
   "missing": {

@@ -1,0 +1,41 @@
+COMMAND: scripts/core-reference-acquire.py verify
+PASS PR21 kernel, generator/policy bindings, 45 body-epochs and 7 local days; unadmitted quantities remain blocked
+PASS 4 observed IERS Bulletin A records, formal errors, original source bindings and direct extraction
+PASS offline provenance:12 originals,3 upstream-published planetary vectors,5 ERFA temporal vectors. Direct institutional acceptance remains pending.
+EXIT: 0
+COMMAND: scripts/core-reference-tests.py
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.088s
+
+OK
+EXIT: 0
+COMMAND: scripts/core-pr21-tests.py
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.211s
+
+OK
+EXIT: 0
+COMMAND: scripts/core-option-a-jupiter.py verify
+PASS immutable Jupiter-center source/normalization; one epoch, not broad Jupiter/Saturn acceptance
+EXIT: 0
+COMMAND: scripts/core-option-a-outer-planets.py verify
+PASS matched target5/6 barycenter source and explicit zero-transform admission for original1/2/4 aliases
+EXIT: 0
+COMMAND: scripts/core-option-a-reuse.py verify
+PASS attributed upstream rule outputs/license bindings; shared-engine agreement is not independent astronomy
+EXIT: 0
+COMMAND: scripts/core-option-a-timezones.py verify
+PASS pinned native IANA data/ZIP; version e29969d3f327f129ec4aebaa9c7aee96c46f8e3b sha 888ee4330c2e3213bcb89e6ed3c6e43dc3995f4d81a4ead91b6cd27f7a6a2626
+EXIT: 0
+COMMAND: scripts/core-option-a-events.py verify
+PASS independent dated midnight/sunrise-adjacent Tithi fixtures and source bindings
+EXIT: 0
+COMMAND: scripts/core-option-a-tests.py
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.101s
+
+OK
+EXIT: 0

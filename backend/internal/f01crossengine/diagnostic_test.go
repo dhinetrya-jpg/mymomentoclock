@@ -1,6 +1,8 @@
 package crossengine
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"math"
 	"os"
@@ -91,5 +93,60 @@ func TestTimestampAndDimensions(t *testing.T) {
 	t1, e := time.Parse(time.RFC3339, data.Cases[0].UTC)
 	if e != nil || t1.Location() != time.UTC {
 		t.Fatal("UTC fixture broken")
+	}
+}
+
+func TestDecodeRejectsAmbiguousOrOversizedJSON(t *testing.T) {
+	data := example()
+	data.Conventions = SecondaryConventions{"JYOTIPY_LAHIRI", "UTC_CIVIL_FIELDS_AS_PYMEEUS_EPOCH_WITHOUT_DUT1_CORRECTION", "JYOTIPY_SRIPATI_TROPICAL_THEN_SIDEREAL"}
+	for i := range data.Cases {
+		data.Cases[i].JulianDay = 2451545
+	}
+	original, err := json.Marshal(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), "capture.json")
+	decode := func(input []byte) error {
+		t.Helper()
+		if err := os.WriteFile(path, input, 0600); err != nil {
+			t.Fatal(err)
+		}
+		_, err := Decode(path)
+		return err
+	}
+	if err := decode(original); err != nil {
+		t.Fatalf("valid diagnostic refused: %v", err)
+	}
+	array := []byte(`"sidereal_sripati_cusps_deg":[0,30,60,90,120,150,180,210,240,270,300,330]`)
+	mutations := map[string][]byte{
+		"uppercase only":               bytes.Replace(original, []byte(`"latitude":28`), []byte(`"LATITUDE":28`), 1),
+		"mixed case alias":             bytes.Replace(original, []byte(`"latitude":28`), []byte(`"latitude":999,"LaTiTuDe":28`), 1),
+		"missing latitude":             bytes.Replace(original, []byte(`"latitude":28,`), nil, 1),
+		"null longitude":               bytes.Replace(original, []byte(`"longitude":77`), []byte(`"longitude":null`), 1),
+		"null ascendant":               bytes.Replace(original, []byte(`"sidereal_ascendant_deg":23`), []byte(`"sidereal_ascendant_deg":null`), 1),
+		"uppercase root":               bytes.Replace(original, []byte(`"schema_version":2`), []byte(`"SCHEMA_VERSION":2`), 1),
+		"uppercase package":            bytes.Replace(original, []byte(`"name":"jyotipy"`), []byte(`"NAME":"jyotipy"`), 1),
+		"thirteenth cusp":              bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":[0,30,60,90,120,150,180,210,240,270,300,330,42]`), 1),
+		"eleven cusps":                 bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":[0,30,60,90,120,150,180,210,240,270,300]`), 1),
+		"null cusp":                    bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":[null,30,60,90,120,150,180,210,240,270,300,330]`), 1),
+		"null array":                   bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":null`), 1),
+		"nonnumeric cusp":              bytes.Replace(original, array, []byte(`"sidereal_sripati_cusps_deg":["0",30,60,90,120,150,180,210,240,270,300,330]`), 1),
+		"duplicate root":               bytes.Replace(original, []byte(`"schema_version":2`), []byte(`"schema_version":1,"schema_version":2`), 1),
+		"duplicate nested":             bytes.Replace(original, []byte(`"name":"jyotipy"`), []byte(`"name":"wrong","name":"jyotipy"`), 1),
+		"escaped duplicate":            bytes.Replace(original, []byte(`"schema_version":2`), []byte(`"schema_version":1,"schema_\u0076ersion":2`), 1),
+		"trailing object":              append(append([]byte{}, original...), []byte(` {}`)...),
+		"oversized whitespace":         append(append([]byte{}, original...), bytes.Repeat([]byte(" "), 1<<20)...),
+		"trailing object beyond limit": append(append(append([]byte{}, original...), bytes.Repeat([]byte(" "), 1<<20)...), []byte(`{}`)...),
+	}
+	for name, input := range mutations {
+		t.Run(name, func(t *testing.T) {
+			if bytes.Equal(input, original) {
+				t.Fatal("mutation missed fixture")
+			}
+			if err := decode(input); err == nil {
+				t.Fatal("ambiguous diagnostic accepted")
+			}
+		})
 	}
 }
