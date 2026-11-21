@@ -1,0 +1,46 @@
+name: F01 Cross-Engine Diagnostic Evidence
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'backend/internal/f01crossengine/**'
+      - 'backend/cmd/f01crossengine/**'
+      - 'scripts/f01-cross-engine-capture.py'
+      - 'Dockerfile'
+      - '.github/workflows/f01-cross-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run pinned independent-astronomy input comparison
+        run: |
+          docker build --target f01-cross-engine-diagnostics -t f01-diagnostic:$GITHUB_SHA .
+      - name: Extract traceable diagnostic input and output
+        run: |
+          mkdir -p f01-evidence
+          id=$(docker create f01-diagnostic:$GITHUB_SHA)
+          trap 'docker rm -f "$id" >/dev/null 2>&1 || true' EXIT
+          docker cp "$id:/app/f01-cross-engine-input.json" f01-evidence/input.json
+          docker cp "$id:/app/f01-cross-engine-report.json" f01-evidence/comparison.json
+          python3 - <<'PY'
+          import json
+          with open('f01-evidence/comparison.json') as file:
+              r=json.load(file)
+          assert r['status']=='COMPARISON_COMPLETED_UNADMITTED'
+          assert r['scientific_acceptance']=='NOT_ESTABLISHED'
+          assert r['cases_compared']==8
+          print('Diagnostic comparison completed; no independent Sripati scientific acceptance claimed.')
+          PY
+      - name: Upload raw numerical comparison diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: f01-cross-engine-diagnostic
+          path: f01-evidence/
+          retention-days: 7
