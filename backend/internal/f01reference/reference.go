@@ -101,11 +101,13 @@ func Admit(ref Reference,sourceRoot string)error{
  if strings.TrimSpace(ref.SourceProducer)==""||strings.TrimSpace(ref.SourceMethod)==""||strings.TrimSpace(ref.SourceVersion)==""||len(ref.SourceProducer)>140||len(ref.SourceMethod)>140||len(ref.SourceVersion)>80{return errors.New("REFERENCE_PROVENANCE_MISSING")}
  metadata:=strings.ToLower(ref.SourceProducer+" "+ref.SourceMethod)
  if strings.Contains(metadata,"swiss ephemeris")||strings.Contains(metadata,"swisseph")||strings.Contains(metadata,"same implementation")||strings.Contains(metadata,"internal porphyry"){return errors.New("REFERENCE_NOT_INDEPENDENT")}
- if !strings.HasPrefix(ref.SourceURL,"https://")||len(ref.SourceURL)>1024{return errors.New("REFERENCE_SOURCE_URL_INVALID")}
+ if !strings.HasPrefix(ref.SourceURL,"https://")||len(ref.SourceURL)>1024||strings.Contains(strings.ToLower(ref.SourceURL),"swisseph"){return errors.New("REFERENCE_SOURCE_URL_INVALID")}
  if !filePattern.MatchString(ref.OriginalFile)||!hashPattern.MatchString(ref.OriginalSHA256){return errors.New("REFERENCE_ORIGINAL_HASH_INVALID")}
  if !validFinite(ref.ToleranceDegrees)||ref.ToleranceDegrees<=0||ref.ToleranceDegrees>0.1{return errors.New("REFERENCE_TOLERANCE_INVALID")}
  if !normalizedCycle(ref.ExpectedCusps){return errors.New("REFERENCE_CUSPS_INVALID")}
  p:=filepath.Join(sourceRoot,"originals",ref.OriginalFile)
+ stat,e:=os.Lstat(p)
+ if e!=nil||!stat.Mode().IsRegular()||stat.Size()<1||stat.Size()>10<<20{return errors.New("REFERENCE_ORIGINAL_INVALID")}
  raw,e:=os.ReadFile(p)
  if e!=nil{return fmt.Errorf("REFERENCE_ORIGINAL_UNAVAILABLE: %w",e)}
  if len(raw)==0||len(raw)>10<<20{return errors.New("REFERENCE_ORIGINAL_INVALID")}
