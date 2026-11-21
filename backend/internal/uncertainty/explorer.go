@@ -23,6 +23,7 @@ type Request struct {
  EarliestTime string `json:"earliest_time,omitempty"`
  LatestTime string `json:"latest_time,omitempty"`
  LatestDate string `json:"latest_date,omitempty"`
+ EarliestUTCOffset *float64 `json:"earliest_utc_offset,omitempty"`
  LatestUTCOffset *float64 `json:"latest_utc_offset,omitempty"`
  Certainty string `json:"certainty"`
  UncertaintyMinutes int `json:"uncertainty_minutes,omitempty"`
@@ -64,7 +65,7 @@ type Result struct {
  Status string `json:"status"`
  ContractVersion string `json:"contract_version"`
  TimezoneDatabase string `json:"timezone_database"`
- BirthInput Request `json:"birth_input"`
+ // The server does not echo sensitive birth data back into API responses.
  StartUTC time.Time `json:"start_utc"`
  EndUTC time.Time `json:"end_utc"`
  SampleCount int `json:"sample_count"`
@@ -131,14 +132,14 @@ func endpoints(r Request)(time.Time,time.Time,error){
        Latitude:&lat,Longitude:&lon,BirthTimeCertainty:"APPROXIMATE",
      },"")
    }
-   first,er:=makeTime(r.BirthDate,r.EarliestTime,nil)
+   first,er:=makeTime(r.BirthDate,r.EarliestTime,r.EarliestUTCOffset)
    if er!=nil {return time.Time{},time.Time{},er}
    last,er:=makeTime(latestDate,r.LatestTime,r.LatestUTCOffset)
    if er!=nil {return time.Time{},time.Time{},er}
    if !last.After(first)||last.Sub(first)>48*time.Hour{return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")}
    return first,last,nil
  }
- if r.EarliestTime!=""||r.LatestTime!=""||r.LatestDate!=""||r.LatestUTCOffset!=nil {
+ if r.EarliestTime!=""||r.LatestTime!=""||r.LatestDate!=""||r.EarliestUTCOffset!=nil||r.LatestUTCOffset!=nil {
    return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")
  }
  if r.Certainty=="UNKNOWN" {
@@ -178,7 +179,7 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  if e!=nil{return Result{},e}
  if config.Mode!="SWISS_FILE" {return Result{},issue("F01_REQUIRES_REVIEWED_SWISS_FILE_CONFIGURATION")}
  if e=astronomy.RequireProductionConfiguration(config);e!=nil{return Result{},e}
- result:=Result{SchemaVersion:1,Status:"COMPUTED_UNVERIFIED",ContractVersion:Version,TimezoneDatabase:ephemeris.TimezoneDatabaseVersion,BirthInput:req,StartUTC:start,EndUTC:end,HouseSystem:"SWISS_S_SIDEREAL_LAHIRI",Authority:astronomy.Authority(config),CustomerTimingAuthorized:false,BTRStatus:"UNAVAILABLE_UNVALIDATED_DASHA_METHOD",Samples:[]Sample{},Factors:[]Factor{},TransitionBrackets:[]TransitionBracket{},Limitations:[]string{
+ result:=Result{SchemaVersion:1,Status:"COMPUTED_UNVERIFIED",ContractVersion:Version,TimezoneDatabase:ephemeris.TimezoneDatabaseVersion,StartUTC:start,EndUTC:end,HouseSystem:"SWISS_S_SIDEREAL_LAHIRI",Authority:astronomy.Authority(config),CustomerTimingAuthorized:false,BTRStatus:"UNAVAILABLE_UNVALIDATED_DASHA_METHOD",Samples:[]Sample{},Factors:[]Factor{},TransitionBrackets:[]TransitionBracket{},Limitations:[]string{
  "Exploratory astronomical classifications, NOT birth-time rectification or proof of predictive accuracy.",
  "Sample agreement cannot prove stability between samples; all sample-stable factors remain unproven. Native file checks bound sampling to 17 points.",
  "Rashi and Sripati house placements are distinct; they are not blended into an invented score.",
@@ -199,12 +200,13 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   t:=start
   if count>1 {t=start.Add(time.Duration(int64(interval)*int64(i)/int64(count-1)))}
   s,e:=astronomy.ComputeSnapshot(ctx,astronomy.SnapshotRequest{SchemaVersion:1,Civil:ephemeris.NormalizationRequest{
-    BirthDate:t.In(time.UTC).Format("2006-01-02"),BirthTime:t.In(time.UTC).Format("15:04:05"),
+    BirthDate:t.UTC().Format("2006-01-02"),BirthTime:t.UTC().Format("15:04:05"),
     Timezone:"UTC",Latitude:&place.Latitude,Longitude:&place.Longitude,BirthTimeCertainty:"APPROXIMATE",
     RequiredMode:"SWISS_FILE"},ElevationMeters:0},config)
   if e!=nil{return Result{},e}
   if s.Native.Houses==nil{return Result{},issue("F01_HOUSES_UNAVAILABLE")}
   h:=s.Native.Houses
+  if !h.SripatiAvailable {return Result{},issue("F01_SRIPATI_UNAVAILABLE")}
   sample:=Sample{BirthUTC:t.UTC(),AscendantSign:fmt.Sprint(int(math.Floor(normalized(h.SiderealAscendant)/30))),Placements:map[string]Pair{},FactorValues:map[string]string{}}
   add("ascendant.rashi",sample.AscendantSign)
   sample.FactorValues["ascendant.rashi"]=sample.AscendantSign
@@ -247,8 +249,6 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  result.SampleCount=len(result.Samples)
  result.Factors=compare(values,len(result.Samples))
  result.TransitionBrackets=ObservedBrackets(result.Samples)
- if len(result.Samples)>0&&result.Samples[0].Placements["moon"].SripatiHouse==nil {
-   result.Limitations=append(result.Limitations,"Native Sripati house boundaries were unavailable; no house assignment was inferred.")
- }
+
  return result,nil
 }
