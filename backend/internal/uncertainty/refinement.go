@@ -42,6 +42,7 @@ func RefineObservedBrackets(ctx context.Context, observations []TransitionBracke
     // A third label shows that a simple two-state bisection is not a complete
     // transition model. Retain the original interval conservatively.
     b.Evidence="OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED"
+    b.IntermediateValue=value
    }
    if b.Evidence=="OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED" {
     continue
