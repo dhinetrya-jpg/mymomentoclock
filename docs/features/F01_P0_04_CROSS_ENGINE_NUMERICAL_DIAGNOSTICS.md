@@ -6,7 +6,7 @@ This is a **real executable comparison**, not another fixture-only test. The pip
 
 Run GitHub Actions workflow `F01 Cross-Engine Diagnostic Evidence` (or build Docker target `f01-cross-engine-diagnostics`) and inspect artifact `f01-cross-engine-diagnostic` containing:
 - `input.json`: second-engine astronomical calculations for eight fixed dated geographic cases
-- `comparison.json`: per-chart worst cusp, actual angular difference, engine mode and version, scientific label
+- `comparison.json`: both engines’ values and the circular difference for each numbered cusp, per-chart worst cusp, native calculation conventions and data provenance, and scientific label
 - The evidence is **unadmitted** and cannot turn on any production or commercial functionality
 
 The Docker build target is not a production image and does not alter `runtime`, `default`, commercial payment, or GitHub Pages.
@@ -25,7 +25,7 @@ A successful workflow yields `COMPARISON_COMPLETED_UNADMITTED` and `scientific_a
 
 ## Reproducibility and limitations
 
-- Provider package versions are pinned: `jyotipy==0.2.1` and `PyMeeus==0.5.12`. Wheel content hashes are **not** currently pinned, so independent source provenance requires further hardening.
+- Provider package versions are pinned: `jyotipy==0.2.1` and `PyMeeus==0.5.12`. The JyotiPy wheel, PyMeeus source archive, and PyMeeus build dependencies are pinned by SHA-256. The capture records JyotiPy’s Lahiri offset and nominal UTC-derived Julian day. The comparison records Swiss’s Lahiri offset, epoch metadata, and house-system identifier.
 - The selected eight cases cover India, UK, US, Australia, equator, opposite hemispheres and several decades. These are *diagnostic dates*, not a statistically representative accuracy study.
 - Differences may arise from sidereal ayanamsa definitions, time scales, nutation, precession, angle derivation and house conventions. Each discrepancy needs individual analysis.
 - Exact external published cusp reference values with full provenance, independently implemented formulas, explicit time scales and predeclared error budgets remain required for F01 numerical scientific acceptance.

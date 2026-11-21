@@ -12,6 +12,7 @@ import math
 from datetime import datetime, timezone
 
 from jyotipy import BirthChart
+from jyotipy.ayanamsa import AyanamsaSystem
 
 CASES = (
     ("j2000_delhi", "2000-01-01T12:00:00Z", 28.6139, 77.2090),
@@ -33,23 +34,33 @@ def build():
     for name, utc, latitude, longitude in CASES:
         instant = datetime.fromisoformat(utc.replace("Z", "+00:00"))
         dt = instant.astimezone(timezone.utc).replace(tzinfo=None)
-        chart = BirthChart(dt, utc_offset_hours=0.0, latitude=latitude, longitude=longitude)
+        chart = BirthChart(
+            dt, utc_offset_hours=0.0, latitude=latitude, longitude=longitude,
+            ayanamsa=AyanamsaSystem.LAHIRI,
+        )
         cusps = chart.houses("sripati")
         if len(cusps) != 12 or any(not math.isfinite(v) or not (0 <= v < 360) for v in cusps):
             raise SystemExit("F01_EXTERNAL_CUSPS_INVALID")
         cases.append({
             "id": name, "utc": utc, "latitude": latitude, "longitude": longitude,
+            "ayanamsa_degrees": chart.ayanamsa_value,
+            "julian_day_used": chart.epoch.jde(),
             "sidereal_ascendant_deg": chart.ascendant,
             "sidereal_mc_deg": chart.midheaven,
             "sidereal_sripati_cusps_deg": [float(x) for x in cusps],
         })
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "diagnostic_mode": "CROSS_ENGINE_NOT_INDEPENDENT_SRIPATI_FORMULA",
         "astronomical_provider": "PYMEEUS_VSOP87_MEEUS",
         "house_formula_origin": "JYOTIPY_SRIPATI_TRANSCRIBED_FROM_SWISS_SOURCE",
         "source_package": {"name": "jyotipy", "version": jyotipy_version},
         "time_base_package": {"name": "PyMeeus", "version": pymeeus_version},
+        "conventions": {
+            "ayanamsa": "JYOTIPY_LAHIRI",
+            "time_basis": "UTC_CIVIL_FIELDS_AS_PYMEEUS_EPOCH_WITHOUT_DUT1_CORRECTION",
+            "house_system": "JYOTIPY_SRIPATI_TROPICAL_THEN_SIDEREAL",
+        },
         "cases": cases,
         "customer_timing_authorized": False,
         "scientific_acceptance": "NOT_ESTABLISHED",

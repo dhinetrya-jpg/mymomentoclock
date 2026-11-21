@@ -44,7 +44,10 @@ FROM builder AS f01-cross-engine-diagnostics
 WORKDIR /app/backend
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
 RUN python3 -m venv /opt/f01-python
-RUN /opt/f01-python/bin/pip install --no-cache-dir jyotipy==0.2.1 PyMeeus==0.5.12
+COPY scripts/f01-cross-engine*-requirements.txt /app/scripts/
+RUN /opt/f01-python/bin/pip install --no-cache-dir --require-hashes --only-binary=:all: -r /app/scripts/f01-cross-engine-build-requirements.txt && \
+    /opt/f01-python/bin/pip install --no-cache-dir --require-hashes --no-build-isolation --only-binary=jyotipy -r /app/scripts/f01-cross-engine-requirements.txt && \
+    /opt/f01-python/bin/pip check
 COPY scripts/f01-cross-engine-capture.py /app/scripts/f01-cross-engine-capture.py
 COPY tests/calculation/reference/acquired/native-data /app/f01-native-data
 RUN /opt/f01-python/bin/python /app/scripts/f01-cross-engine-capture.py --output /app/f01-cross-engine-input.json
