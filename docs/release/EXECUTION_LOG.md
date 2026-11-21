@@ -134,3 +134,12 @@ no answer inferred from elapsed time. Further eligible work resumes when those
 inputs resolve or review identifies a new concrete defect. Next action now:
 review evidence-only handoff commit, push isolated integration branch, attempt
 draft PR under existing GitHub permissions, record actual remote/CI outcome.
+
+## Stage 8 — GitHub handoff
+
+Integration9484ae2 independently attested PASS; only evidence/status documentation
+changed after accepted runtime source2b5458a. Pushed isolated branch and verified
+remote9484ae2; main unchanged03a5f5e. GraphQL and REST draft-PR creation both fail
+HTTP Forbidden; no PR or new branch workflow observed. Do not call baseline green
+CI the new branch's CI. HANDOFF.md retains branch/review URLs, limits and next action.
+Final handoff commit is documentation only and receives final exact-head confirmation.
