@@ -1,0 +1,72 @@
+name: F01 Cross-Engine Diagnostic Evidence
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'backend/internal/f01crossengine/**'
+      - 'backend/cmd/f01crossengine/**'
+      - 'scripts/f01-cross-engine*'
+      - 'Dockerfile'
+      - '.github/workflows/f01-cross-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run pinned independent-astronomy input comparison
+        run: |
+          docker build --target f01-cross-engine-diagnostics -t f01-diagnostic:$GITHUB_SHA .
+      - name: Extract traceable diagnostic input and output
+        run: |
+          mkdir -p f01-evidence
+          id=$(docker create f01-diagnostic:$GITHUB_SHA)
+          trap 'docker rm -f "$id" >/dev/null 2>&1 || true' EXIT
+          docker cp "$id:/app/f01-cross-engine-input.json" f01-evidence/input.json
+          docker cp "$id:/app/f01-cross-engine-report.json" f01-evidence/comparison.json
+          python3 - <<'PY'
+          import json
+          import math
+          with open('f01-evidence/input.json') as file:
+              capture=json.load(file)
+          with open('f01-evidence/comparison.json') as file:
+              r=json.load(file)
+          assert r['status']=='COMPARISON_COMPLETED_UNADMITTED'
+          assert r['scientific_acceptance']=='NOT_ESTABLISHED'
+          assert r['cases_compared']==8
+          assert capture['schema_version'] == 2
+          assert len(capture['cases']) == len(r['measurements']) == 8
+          assert r['customer_timing_authorized'] is False
+          for source, result in zip(capture['cases'], r['measurements'], strict=True):
+              assert (source['id'], source['utc']) == (result['id'], result['utc'])
+              assert len(result['cusps']) == 12
+              for number, (expected, cusp) in enumerate(zip(source['sidereal_sripati_cusps_deg'], result['cusps'], strict=True), 1):
+                  assert cusp['cusp_1_based'] == number and cusp['secondary_degrees'] == expected
+                  native = cusp['native_degrees']
+                  assert 0 <= native < 360
+                  distance = abs((native - expected + 180) % 360 - 180)
+                  assert math.isclose(distance, cusp['difference_degrees'], rel_tol=0, abs_tol=1e-12)
+              worst = max(result['cusps'], key=lambda cusp: cusp['difference_degrees'])
+              assert worst['cusp_1_based'] == result['worst_cusp_1_based']
+              assert worst['difference_degrees'] == result['maximum_cusp_difference_degrees']
+              trace = result['native_trace']
+              assert trace['house_system'] == 'SWISS_S_SIDEREAL_LAHIRI'
+              assert trace['epoch']['utc'] == source['utc']
+              assert trace['ayanamsa_convention'] and trace['coordinate_convention']
+              assert trace['source_commit'] and trace['data_file_sha256']
+          assert r['max_observed_difference_degrees'] == max(
+              m['maximum_cusp_difference_degrees'] for m in r['measurements']
+          )
+          print('Diagnostic comparison completed; no independent Sripati scientific acceptance claimed.')
+          PY
+      - name: Upload raw numerical comparison diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: f01-cross-engine-diagnostic
+          path: f01-evidence/
+          retention-days: 7

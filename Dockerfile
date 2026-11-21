@@ -37,6 +37,23 @@ EXPOSE 8080
 USER 65532:65532
 CMD ["./astroengine_server"]
 
+# Offline F01 comparison stage. Not used by production or customer APIs.
+# The independent astronomical input pipeline comes from PyMeeus, while JyotiPy
+# explicitly transcribes the Swiss Sripati formula. This is diagnostic evidence.
+FROM builder AS f01-cross-engine-diagnostics
+WORKDIR /app/backend
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+RUN python3 -m venv /opt/f01-python
+COPY scripts/f01-cross-engine*-requirements.txt /app/scripts/
+RUN /opt/f01-python/bin/pip install --no-cache-dir --require-hashes --only-binary=:all: -r /app/scripts/f01-cross-engine-build-requirements.txt && \
+    /opt/f01-python/bin/pip install --no-cache-dir --require-hashes --no-build-isolation --only-binary=jyotipy -r /app/scripts/f01-cross-engine-requirements.txt && \
+    /opt/f01-python/bin/pip check
+COPY scripts/f01-cross-engine-capture.py /app/scripts/f01-cross-engine-capture.py
+COPY tests/calculation/reference/acquired/native-data /app/f01-native-data
+RUN /opt/f01-python/bin/python /app/scripts/f01-cross-engine-capture.py --output /app/f01-cross-engine-input.json
+RUN F01_REFERENCE_EPHEMERIS_DIR=/app/f01-native-data go run ./cmd/f01crossengine /app/f01-cross-engine-input.json > /app/f01-cross-engine-report.json
+RUN python3 -c 'import json; r=json.load(open("/app/f01-cross-engine-report.json")); assert r["status"] == "COMPARISON_COMPLETED_UNADMITTED" and r["cases_compared"] == 8 and r["scientific_acceptance"] == "NOT_ESTABLISHED" and r["customer_timing_authorized"] is False'
+
 # Separate commercial artifact. An empty build trust root always refuses production.
 FROM builder AS commercial-builder
 ARG PAYMENT_OWNER_PUBLIC_KEY_HEX=""
