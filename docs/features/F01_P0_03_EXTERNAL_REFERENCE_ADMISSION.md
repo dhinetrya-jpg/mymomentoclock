@@ -54,3 +54,35 @@ Unit tests use explicitly fictional data and are **not included as admitted refe
 Collect externally calculated, reproducible examples with proper legal permission, numerical cusp outputs and original publication evidence at different historical dates, hemispheres, latitudes and near-boundary cases. Agree on acceptable external reference methods and tolerance budgets *before* looking at observed differences. Review and sign off provenance separately from numeric agreement.
 
 This PR is **framework complete**, not scientific acceptance complete. The checked-in manifest intentionally contains no claimed external fixtures.
+
+### Schema 2 integrity repair (private-release audit)
+
+Schema 1 is no longer admitted. Schema 2 requires exactly 12 non-null JSON
+numbers (the Go fixed-array decoder previously padded/truncated arrays), rejects
+duplicate keys and manifests larger than 1 MiB, and admits every source before
+executing any numerical comparison.
+
+The currently supported original is a UTF-8 JSON object containing exactly
+`utc`, `latitude`, `longitude`, `house_system`, `ayanamsa`, `sidereal_mode`,
+`time_scale`, `cusp_units` (`DEGREES`) and `expected_cusps`. Every value must match
+the manifest claim, in addition to the original-byte SHA-256 check. A publisher
+using another format needs a separately reviewed extractor; do not rewrite a
+published document as a new purported original to bypass this requirement.
+PDF, text and CSV originals are currently unsupported and fail closed.
+
+Each manifest reference also requires `qualification`: `astronomy_lineage`,
+`house_formula_lineage`, `review_evidence`, `source_precision_degrees`,
+`tolerance_basis`, `tolerance_declared_utc` and `first_comparison_utc`.
+Precision must be positive and no greater than the tolerance; declaration must
+precede first comparison. The basis must address source rounding, chart time,
+coordinates and model/convention uncertainty, with original evidence cited.
+Shared Swiss/JyotiPy lineage is rejected. These fields record review claims;
+strings, timestamps and substring checks do **not authenticate a reviewer or
+prove independence**. An independent auditor must inspect the original source,
+lineage and tolerance evidence before a case is added to the controlled manifest.
+
+No actual source has qualified. The production manifest remains empty. These
+repairs establish mechanical integrity only; source qualification, all-sky
+coverage and scientific/traditional acceptance remain blocked. See
+`docs/release/evidence/F01_REFERENCE_RESEARCH.md` for the original PR27 source
+inspection and narrower internal geometry verdict.

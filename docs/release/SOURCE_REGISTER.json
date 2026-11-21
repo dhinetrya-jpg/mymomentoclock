@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-22 Asia/Calcutta",
+  "sources": [
+    {
+      "path": "README.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "fc35539d75968d230a1819c8895920fcde1289e130034a1242c35ad532e2539b",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "ab21a6bd88600e252790e6a977eab11b82f262293f965ecb0c98f1015bb05717",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "7d7deddf52cfcbef2d9e7496defcac90b0b1dd5bbe9898e0b7f4a925e43a7726",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_01_OPTION_A_ARCHITECTURE.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "055e5429301161250a8d4f938f5ce1370ebea4043d31a16dfb5b07f406b0c94c",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_01_TOLERANCE_POLICY.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "24b1fe93c8bd85b7ec0633c8c48e5f5f00ed77364645710bafc5b99624263a47",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "35735bd6301b8ec63034722258d3ac81f1c0651345295375248f3051b16c9448",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "61bab214bef982b48ee9ba2303ab0f3781fdfc137fe33efc375507508afc50c1",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_01_TRANSITION_REFINEMENT.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "0d8a6b1048a096cf49570b00911aca487bb7b0a63b89be5d8e27b1b699a7f10d",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_02_SRIPATI_GEOMETRY_VALIDATION.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "a0499c885a83af945fb604f8e3b5447a76408d2ba3b28d2abacbf1203bcb04ff",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_03_EXTERNAL_REFERENCE_ADMISSION.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "ec34bcb232254550ace9394da5f7a42dfb13b3102711f8acd8ffa9e5009ebabe",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_04_CROSS_ENGINE_NUMERICAL_DIAGNOSTICS.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "cd029edb157e43f227c01649a6f12ff254e86b929932dc455850c27f216df58c",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "3cd081c158f2ce5441681aa4bed3c239e91b924c8186a69913f4b75db118fb92",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    }
+  ],
+  "missing": {
+    "approved_product_matrix": [
+      "full inventory completeness",
+      "CFR-005 through CFR-018 definitions"
+    ],
+    "traditional_activity_rulebook": [
+      "work/interviews",
+      "purchases/transactions",
+      "travel",
+      "learning/exams",
+      "family/personal",
+      "finance/trading"
+    ],
+    "approved_methods": [
+      "Dasha",
+      "certified BTR",
+      "resolver",
+      "graph",
+      "remedies"
+    ],
+    "independent_reference_originals": [
+      "end-to-end Sripati",
+      "same-convention sidereal/node/solar acceptance"
+    ],
+    "owner_operational_approvals": [
+      "merchant/provider identity",
+      "catalog/legal",
+      "identity ownership",
+      "private infrastructure/TLS",
+      "restore/PITR/on-call"
+    ]
+  }
+}

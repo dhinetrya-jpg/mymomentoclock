@@ -1,0 +1,20 @@
+✔ fail-closed without authenticated native transport (76.136134ms)
+✔ strict request shapes and validation (26.187939ms)
+✔ RANGE contract, DST offset fields and midnight rollover (10.085483ms)
+✔ reject forged upstream customer authorization and malformed evidence (4.206999ms)
+✔ responsive F01 screen does not imply certified rectification (8.80273ms)
+✔ mirror frontends retain matching F01 source (0.294018ms)
+✔ public F01 URL is not allowed as an internal service (0.57112ms)
+✔ geometry cross-check is mandatory and cannot be promoted to independent proof (4.296064ms)
+✔ valid geometry evidence is projected without raw chart or personal data (5.595063ms)
+✔ nested geometry metadata is never forwarded (8.111532ms)
+✔ reject non-scalar or unbound native interval and timezone metadata (38.55246ms)
+✔ native endpoints bind EXACT, RANGE, UNKNOWN and explicit DST offsets (27.762834ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 490.014054

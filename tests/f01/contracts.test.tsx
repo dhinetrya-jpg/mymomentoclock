@@ -81,7 +81,45 @@ test('valid geometry evidence is projected without raw chart or personal data',(
  schema_version:1,contract_version:'f01-sensitivity-v1',status:'COMPUTED_UNVERIFIED',
  customer_timing_authorized:false,btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD',
  authority:{production_eligible:false},house_system:'SWISS_S_SIDEREAL_LAHIRI',
- sample_count:1,samples:[{private_birth:'secret'}],factors:[],transition_brackets:[],limitations:[],
+ timezone_database:'IANA@e29969d3f327f129ec4aebaa9c7aee96c46f8e3b',start_utc:'2000-01-01T03:00:00Z',end_utc:'2000-01-01T04:00:00Z',sample_count:1,samples:[{private_birth:'secret'}],factors:[],transition_brackets:[],limitations:[],
  geometry_check:{status:'GEOMETRY_CONSISTENT_NOT_EXTERNALLY_VERIFIED',tolerance_degrees:0.000001,max_angular_error_degrees:0,source:'INTERNAL_PORPHYRY_MIDPOINT_CROSSCHECK_NOT_INDEPENDENT_ASTRONOMICAL_REFERENCE'},
  hidden_birth:{name:'secret'}
 }})));
+
+function validNativeResult():any{return {
+ schema_version:1,contract_version:'f01-sensitivity-v1',status:'COMPUTED_UNVERIFIED',
+ customer_timing_authorized:false,btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD',
+ authority:{production_eligible:false},house_system:'SWISS_S_SIDEREAL_LAHIRI',
+ timezone_database:'IANA@e29969d3f327f129ec4aebaa9c7aee96c46f8e3b',
+ start_utc:'2000-01-01T03:00:00Z',end_utc:'2000-01-01T04:00:00Z',
+ sample_count:1,samples:[{}],factors:[],transition_brackets:[],limitations:[],
+ geometry_check:{status:'GEOMETRY_CONSISTENT_NOT_EXTERNALLY_VERIFIED',tolerance_degrees:0.000001,max_angular_error_degrees:0,source:'INTERNAL_PORPHYRY_MIDPOINT_CROSSCHECK_NOT_INDEPENDENT_ASTRONOMICAL_REFERENCE'}
+};}
+test('nested geometry metadata is never forwarded',()=>serve(async base=>{
+ const response=await post(base,request);assert.equal(response.status,200);
+ const result=await response.json();
+ assert.deepEqual(Object.keys(result.geometry_check).sort(),['max_angular_error_degrees','source','status','tolerance_degrees']);
+ assert.doesNotMatch(JSON.stringify(result),/private_birth|secret/);
+},async()=>{const body=validNativeResult();body.geometry_check.birth_input={private_birth:'secret'};return {status:200,body};}));
+test('reject non-scalar or unbound native interval and timezone metadata',async()=>{
+ for(const patch of [
+  {timezone_database:{birth_input:'secret'}},{timezone_database:'unknown'},
+  {start_utc:{birth_input:'secret'}},{end_utc:['secret']},
+  {start_utc:'2000-02-30T03:00:00Z'},
+  {start_utc:'2000-01-02T03:00:00Z',end_utc:'2000-01-02T04:00:00Z'},
+  {start_utc:'2000-01-01T03:00:00Z',end_utc:'2000-01-01T05:00:00Z'},
+  {transition_brackets:[{factor:'moon',from_value:'a',to_value:'b',from_utc:'1999-12-31T00:00:00Z',to_utc:'2000-01-01T03:30:00Z',evidence:'OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION'}]},
+ ])await serve(async base=>{const response=await post(base,request);assert.equal(response.status,503);assert.equal((await response.json()).code,'F01_RESULT_NOT_ACCEPTED');},async()=>({status:200,body:{...validNativeResult(),...patch}}));
+});
+test('native endpoints bind EXACT, RANGE, UNKNOWN and explicit DST offsets',async()=>{
+ const cases=[
+  [{...request,certainty:'EXACT',uncertainty_minutes:undefined},'2000-01-01T03:30:00Z','2000-01-01T03:30:00Z'],
+  [{schema_version:1,birth_date:'2000-01-01',certainty:'RANGE',earliest_time:'23:30',latest_time:'00:30',latest_date:'2000-01-02',timezone:'Asia/Kolkata',latitude:28.6,longitude:77.2},'2000-01-01T18:00:00Z','2000-01-01T19:00:00Z'],
+  [{schema_version:1,birth_date:'2024-11-03',certainty:'RANGE',earliest_time:'01:15',latest_time:'01:45',earliest_utc_offset:-4,latest_utc_offset:-5,timezone:'America/New_York',latitude:40,longitude:-74},'2024-11-03T05:15:00Z','2024-11-03T06:45:00Z'],
+  [{...request,certainty:'UNKNOWN',birth_time:undefined,uncertainty_minutes:undefined},'1999-12-31T18:30:00Z','2000-01-01T18:30:00Z'],
+ ] as const;
+ for(const [input,start_utc,end_utc] of cases){
+  await serve(async base=>assert.equal((await post(base,input)).status,200),async()=>({status:200,body:{...validNativeResult(),start_utc,end_utc}}));
+  await serve(async base=>assert.equal((await post(base,input)).status,503),async()=>({status:200,body:{...validNativeResult(),start_utc:new Date(Date.parse(start_utc)+86400000).toISOString(),end_utc:new Date(Date.parse(end_utc)+86400000).toISOString()}}));
+ }
+});

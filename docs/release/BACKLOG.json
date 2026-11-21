@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+  "integration_branch": "feat/private-release-readiness",
+  "readiness": "NOT_ESTABLISHED",
+  "restrictions": [
+    "no production deployment",
+    "no live payment activation",
+    "no fabricated reference admission"
+  ],
+  "features": [
+    {
+      "id": "AUDIT-BASE",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "verified_read_only",
+      "acceptance_criteria": "Pin main, PR27 state and newer heads; bind CI to SHA",
+      "evidence_required": "remote SHA and sanitized GitHub workflow observations",
+      "evidence": "evidence/BASELINE_GITHUB_CI.json"
+    },
+    {
+      "id": "F01-PRIVACY",
+      "priority": "P1",
+      "classification": "implementation",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "implemented_pending_independent_review",
+      "acceptance_criteria": "Reject malformed upstream scalars and out-of-request intervals; project geometry keys",
+      "evidence_required": "adversarial F01 contracts, lint, exact-head independent audit"
+    },
+    {
+      "id": "F01-REFERENCE-INTEGRITY",
+      "priority": "P1",
+      "classification": "implementation",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "in_progress",
+      "acceptance_criteria": "Reject non-12 arrays, oversized manifests and claims unbound to original chart bytes",
+      "evidence_required": "targeted parser/admission regressions and exact-head audit"
+    },
+    {
+      "id": "F01-P0-05",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [
+        "F01-REFERENCE-INTEGRITY"
+      ],
+      "status": "blocked_reference_qualification",
+      "acceptance_criteria": "All12 independently sourced cusps, matched conventions and predeclared source-based tolerance",
+      "evidence_required": "original source, lineage, metadata, precision, executable comparisons, independent review"
+    },
+    {
+      "id": "CORE01-INTEGRATED",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "status": "eligible",
+      "acceptance_criteria": "Reexecute existing native/safety checks without promoting partial domain coverage",
+      "evidence_required": "exact-head executable results and original external provenance"
+    },
+    {
+      "id": "CORE02-RULES",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [],
+      "status": "blocked_approved_rulebook",
+      "acceptance_criteria": "Approve source/version/predicates/uncertainty for six real activities",
+      "evidence_required": "owner-approved passages and independent traditional review"
+    },
+    {
+      "id": "PAY-SANDBOX",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_credentials_and_owner_gates",
+      "acceptance_criteria": "Genuine sandbox order/payment/webhook/refund with approved test identity",
+      "evidence_required": "provider event/order IDs and durable entitlement evidence; no live calls"
+    },
+    {
+      "id": "PRIVATE-OPERATIONS",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [],
+      "status": "blocked_infrastructure_decisions",
+      "acceptance_criteria": "Private TLS, retention, backup restore/PITR and on-call gates demonstrated",
+      "evidence_required": "actual private deployment and restore evidence"
+    },
+    {
+      "id": "PRODUCT-INVENTORY",
+      "priority": "P0",
+      "classification": "research",
+      "dependencies": [],
+      "status": "blocked_approved_matrix",
+      "acceptance_criteria": "Reconcile every approved feature including missing CFR005\u2013018 and methods",
+      "evidence_required": "versioned approved master matrix and methods"
+    },
+    {
+      "id": "INTEGRATED-READINESS",
+      "priority": "P0",
+      "classification": "audit",
+      "dependencies": [
+        "F01-PRIVACY",
+        "F01-REFERENCE-INTEGRITY",
+        "F01-P0-05",
+        "CORE01-INTEGRATED",
+        "CORE02-RULES",
+        "PAY-SANDBOX",
+        "PRIVATE-OPERATIONS",
+        "PRODUCT-INVENTORY"
+      ],
+      "status": "blocked_dependencies",
+      "acceptance_criteria": "No open release blockers at exact integration SHA",
+      "evidence_required": "independent integrated end-to-end audit and applicable release gates"
+    }
+  ]
+}
