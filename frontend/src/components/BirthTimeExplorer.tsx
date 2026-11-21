@@ -8,6 +8,7 @@ const classes=(value:string)=>value==='OBSERVED_VARIABLE'?'border-amber-500/70':
 const rashiNames=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
 const meaning=(factor:string,value:string)=>{
  if(value==='UNAVAILABLE')return 'Not available';
+ if(factor.endsWith('.rashi_chalit_difference'))return value==='true'?'Different placements':value==='false'?'Same house placement':value;
  const number=Number(value);
  if(!Number.isInteger(number))return value;
  if(factor.endsWith('.rashi')||factor.endsWith('.d9'))return rashiNames[number]??value;
