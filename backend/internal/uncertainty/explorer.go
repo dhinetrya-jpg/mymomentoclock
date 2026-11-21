@@ -139,15 +139,16 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  if e=astronomy.RequireProductionConfiguration(config);e!=nil{return Result{},e}
  result:=Result{SchemaVersion:1,Status:"COMPUTED_UNVERIFIED",ContractVersion:Version,TimezoneDatabase:ephemeris.TimezoneDatabaseVersion,BirthInput:req,StartUTC:start,EndUTC:end,HouseSystem:"SWISS_S_SIDEREAL_LAHIRI",Authority:astronomy.Authority(config),CustomerTimingAuthorized:false,BTRStatus:"UNAVAILABLE_UNVALIDATED_DASHA_METHOD",Samples:[]Sample{},Factors:[]Factor{},Limitations:[]string{
  "Exploratory astronomical classifications, NOT birth-time rectification or proof of predictive accuracy.",
- "Sample agreement cannot prove stability between samples; all sample-stable factors remain unproven.",
+ "Sample agreement cannot prove stability between samples; all sample-stable factors remain unproven. Native file checks bound sampling to 17 points.",
  "Rashi and Sripati house placements are distinct; they are not blended into an invented score.",
  "D60 and birth-time selection by retrospective milestones are disabled.",
  "Customer timing and activity recommendations remain disabled pending scientific, traditional, and licensing approval.",
  }}
- // Deliberately bounded to 97 astronomical calls. Avoid claiming exhaustive root coverage.
+ // Deliberately bounded to 17 astronomical calls because the pinned native provider
+ // independently checks full ephemeris data hashes per snapshot. No root coverage claim.
  interval:=end.Sub(start)
  count:=1
- if interval>0 {count=97}
+ if interval>0 {count=17}
  values:=map[string]map[string]bool{}
  add:=func(k,v string){if values[k]==nil{values[k]=map[string]bool{}};values[k][v]=true}
  place:=ephemeris.NativePlace{Latitude:req.Latitude,Longitude:req.Longitude}
@@ -164,12 +165,18 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   h:=s.Native.Houses
   sample:=Sample{BirthUTC:t.UTC(),AscendantSign:fmt.Sprint(int(math.Floor(normalized(h.SiderealAscendant)/30))),Placements:map[string]Pair{}}
   add("ascendant.rashi",sample.AscendantSign)
+  ascClassification,err:=astronomy.Classify(h.SiderealAscendant,&h.SiderealAscendant,false)
+  if err!=nil{return Result{},err}
+  add("ascendant.d9",fmt.Sprint(ascClassification.D9Sign))
+  add("ascendant.d2",fmt.Sprint(ascClassification.D2Sign))
   for planet,p:=range s.Native.Planets {
    placement,e:=astronomy.Classify(p.SiderealLongitude,&h.SiderealAscendant,false)
    if e!=nil{return Result{},e}
    pair:=Pair{Rashi:placement.RashiIndex,WholeSignHouse:placement.WholeSignHouse,Nakshatra:placement.Nakshatra,Pada:placement.Pada}
    add(planet+".rashi",fmt.Sprint(pair.Rashi))
    add(planet+".whole_sign_house",fmt.Sprint(pair.WholeSignHouse))
+   add(planet+".d9",fmt.Sprint(placement.D9Sign))
+   add(planet+".d2",fmt.Sprint(placement.D2Sign))
    if planet=="moon" {sample.MoonSign=fmt.Sprint(pair.Rashi);add("moon.nakshatra",fmt.Sprint(pair.Nakshatra));add("moon.pada",fmt.Sprint(pair.Pada))}
    if h.SripatiAvailable {
     house,err:=SripatiHouse(p.SiderealLongitude,h.SiderealSripatiCusps)
