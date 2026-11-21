@@ -20,6 +20,10 @@ type Request struct {
  SchemaVersion int `json:"schema_version"`
  BirthDate string `json:"birth_date"`
  BirthTime string `json:"birth_time,omitempty"`
+ EarliestTime string `json:"earliest_time,omitempty"`
+ LatestTime string `json:"latest_time,omitempty"`
+ LatestDate string `json:"latest_date,omitempty"`
+ LatestUTCOffset *float64 `json:"latest_utc_offset,omitempty"`
  Certainty string `json:"certainty"`
  UncertaintyMinutes int `json:"uncertainty_minutes,omitempty"`
  Timezone string `json:"timezone"`
@@ -33,11 +37,20 @@ type Factor struct {
  ObservedValues []string `json:"observed_values"`
  Note string `json:"note"`
 }
+type TransitionBracket struct {
+ Factor string `json:"factor"`
+ FromValue string `json:"from_value"`
+ ToValue string `json:"to_value"`
+ FromUTC time.Time `json:"from_utc"`
+ ToUTC time.Time `json:"to_utc"`
+ Evidence string `json:"evidence"`
+}
 type Sample struct {
  BirthUTC time.Time `json:"birth_utc"`
  AscendantSign string `json:"ascendant_sign"`
  MoonSign string `json:"moon_sign"`
  Placements map[string]Pair `json:"placements"`
+ FactorValues map[string]string `json:"factor_values"`
 }
 type Pair struct {
  Rashi int `json:"rashi_index_0_based"`
@@ -57,6 +70,7 @@ type Result struct {
  SampleCount int `json:"sample_count"`
  Samples []Sample `json:"samples"`
  Factors []Factor `json:"factors"`
+ TransitionBrackets []TransitionBracket `json:"transition_brackets"`
  HouseSystem string `json:"house_system"`
  Authority astronomy.AuthorityContract `json:"authority"`
  CustomerTimingAuthorized bool `json:"customer_timing_authorized"`
@@ -100,6 +114,33 @@ func endpoints(r Request)(time.Time,time.Time,error){
  loc,e:=ephemeris.LoadCalculationLocation(r.Timezone)
  if e!=nil{return time.Time{},time.Time{},issue("INVALID_TIMEZONE")}
  lat,lon:=r.Latitude,r.Longitude
+ if r.Certainty=="RANGE" {
+   if r.BirthTime!=""||r.UncertaintyMinutes!=0||r.UTCOffset!=nil||r.EarliestTime==""||r.LatestTime=="" {
+     return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")
+   }
+   latestDate:=r.LatestDate
+   if latestDate=="" {latestDate=r.BirthDate}
+   if _,e=validDate(latestDate);e!=nil{return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")}
+   if latestDate!=r.BirthDate {
+     d,_:=validDate(r.BirthDate);next:=d.AddDate(0,0,1).Format("2006-01-02")
+     if latestDate!=next{return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")}
+   }
+   makeTime:=func(date,clock string,offset *float64)(time.Time,error){
+     return ephemeris.ParseBirth(ephemeris.NormalizationRequest{
+       BirthDate:date,BirthTime:clock,Timezone:r.Timezone,TimezoneOffset:offset,
+       Latitude:&lat,Longitude:&lon,BirthTimeCertainty:"APPROXIMATE",
+     },"")
+   }
+   first,er:=makeTime(r.BirthDate,r.EarliestTime,nil)
+   if er!=nil {return time.Time{},time.Time{},er}
+   last,er:=makeTime(latestDate,r.LatestTime,r.LatestUTCOffset)
+   if er!=nil {return time.Time{},time.Time{},er}
+   if !last.After(first)||last.Sub(first)>48*time.Hour{return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")}
+   return first,last,nil
+ }
+ if r.EarliestTime!=""||r.LatestTime!=""||r.LatestDate!=""||r.LatestUTCOffset!=nil {
+   return time.Time{},time.Time{},issue("INVALID_BIRTH_RANGE")
+ }
  if r.Certainty=="UNKNOWN" {
   if r.BirthTime!=""||r.UncertaintyMinutes!=0||r.UTCOffset!=nil{return time.Time{},time.Time{},issue("INVALID_BIRTH_UNCERTAINTY")}
   d,_:=validDate(r.BirthDate)
@@ -137,11 +178,12 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  if e!=nil{return Result{},e}
  if config.Mode!="SWISS_FILE" {return Result{},issue("F01_REQUIRES_REVIEWED_SWISS_FILE_CONFIGURATION")}
  if e=astronomy.RequireProductionConfiguration(config);e!=nil{return Result{},e}
- result:=Result{SchemaVersion:1,Status:"COMPUTED_UNVERIFIED",ContractVersion:Version,TimezoneDatabase:ephemeris.TimezoneDatabaseVersion,BirthInput:req,StartUTC:start,EndUTC:end,HouseSystem:"SWISS_S_SIDEREAL_LAHIRI",Authority:astronomy.Authority(config),CustomerTimingAuthorized:false,BTRStatus:"UNAVAILABLE_UNVALIDATED_DASHA_METHOD",Samples:[]Sample{},Factors:[]Factor{},Limitations:[]string{
+ result:=Result{SchemaVersion:1,Status:"COMPUTED_UNVERIFIED",ContractVersion:Version,TimezoneDatabase:ephemeris.TimezoneDatabaseVersion,BirthInput:req,StartUTC:start,EndUTC:end,HouseSystem:"SWISS_S_SIDEREAL_LAHIRI",Authority:astronomy.Authority(config),CustomerTimingAuthorized:false,BTRStatus:"UNAVAILABLE_UNVALIDATED_DASHA_METHOD",Samples:[]Sample{},Factors:[]Factor{},TransitionBrackets:[]TransitionBracket{},Limitations:[]string{
  "Exploratory astronomical classifications, NOT birth-time rectification or proof of predictive accuracy.",
  "Sample agreement cannot prove stability between samples; all sample-stable factors remain unproven. Native file checks bound sampling to 17 points.",
  "Rashi and Sripati house placements are distinct; they are not blended into an invented score.",
  "D60 and birth-time selection by retrospective milestones are disabled.",
+ "Transition brackets only show changes between two observed instants, not exact change times or a proof that no other transitions occurred.",
  "Customer timing and activity recommendations remain disabled pending scientific, traditional, and licensing approval.",
  }}
  // Deliberately bounded to 17 astronomical calls because the pinned native provider
@@ -163,28 +205,40 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
   if e!=nil{return Result{},e}
   if s.Native.Houses==nil{return Result{},issue("F01_HOUSES_UNAVAILABLE")}
   h:=s.Native.Houses
-  sample:=Sample{BirthUTC:t.UTC(),AscendantSign:fmt.Sprint(int(math.Floor(normalized(h.SiderealAscendant)/30))),Placements:map[string]Pair{}}
+  sample:=Sample{BirthUTC:t.UTC(),AscendantSign:fmt.Sprint(int(math.Floor(normalized(h.SiderealAscendant)/30))),Placements:map[string]Pair{},FactorValues:map[string]string{}}
   add("ascendant.rashi",sample.AscendantSign)
+  sample.FactorValues["ascendant.rashi"]=sample.AscendantSign
   ascClassification,err:=astronomy.Classify(h.SiderealAscendant,&h.SiderealAscendant,false)
   if err!=nil{return Result{},err}
   add("ascendant.d9",fmt.Sprint(ascClassification.D9Sign))
+  sample.FactorValues["ascendant.d9"]=fmt.Sprint(ascClassification.D9Sign)
   add("ascendant.d2",fmt.Sprint(ascClassification.D2Sign))
+  sample.FactorValues["ascendant.d2"]=fmt.Sprint(ascClassification.D2Sign)
   for planet,p:=range s.Native.Planets {
    placement,e:=astronomy.Classify(p.SiderealLongitude,&h.SiderealAscendant,false)
    if e!=nil{return Result{},e}
    pair:=Pair{Rashi:placement.RashiIndex,WholeSignHouse:placement.WholeSignHouse,Nakshatra:placement.Nakshatra,Pada:placement.Pada}
    add(planet+".rashi",fmt.Sprint(pair.Rashi))
+   sample.FactorValues[planet+".rashi"]=fmt.Sprint(pair.Rashi)
    add(planet+".whole_sign_house",fmt.Sprint(pair.WholeSignHouse))
+   sample.FactorValues[planet+".whole_sign_house"]=fmt.Sprint(pair.WholeSignHouse)
    add(planet+".d9",fmt.Sprint(placement.D9Sign))
+   sample.FactorValues[planet+".d9"]=fmt.Sprint(placement.D9Sign)
    add(planet+".d2",fmt.Sprint(placement.D2Sign))
-   if planet=="moon" {sample.MoonSign=fmt.Sprint(pair.Rashi);add("moon.nakshatra",fmt.Sprint(pair.Nakshatra));add("moon.pada",fmt.Sprint(pair.Pada))}
+   sample.FactorValues[planet+".d2"]=fmt.Sprint(placement.D2Sign)
+   if planet=="moon" {sample.MoonSign=fmt.Sprint(pair.Rashi);add("moon.nakshatra",fmt.Sprint(pair.Nakshatra));add("moon.pada",fmt.Sprint(pair.Pada));sample.FactorValues["moon.nakshatra"]=fmt.Sprint(pair.Nakshatra);sample.FactorValues["moon.pada"]=fmt.Sprint(pair.Pada)}
    if h.SripatiAvailable {
     house,err:=SripatiHouse(p.SiderealLongitude,h.SiderealSripatiCusps)
     if err!=nil{return Result{},err}
     pair.SripatiHouse=&house
     add(planet+".sripati_house",fmt.Sprint(house))
+    sample.FactorValues[planet+".sripati_house"]=fmt.Sprint(house)
+    mismatch:=fmt.Sprint(house!=pair.WholeSignHouse)
+    add(planet+".rashi_chalit_difference",mismatch)
+    sample.FactorValues[planet+".rashi_chalit_difference"]=mismatch
    }else {
     add(planet+".sripati_house","UNAVAILABLE")
+    sample.FactorValues[planet+".sripati_house"]="UNAVAILABLE"
    }
    sample.Placements[planet]=pair
   }
@@ -192,6 +246,7 @@ func Examine(ctx context.Context,req Request,config ephemeris.NativeConfig)(Resu
  }
  result.SampleCount=len(result.Samples)
  result.Factors=compare(values,len(result.Samples))
+ result.TransitionBrackets=ObservedBrackets(result.Samples)
  if len(result.Samples)>0&&result.Samples[0].Placements["moon"].SripatiHouse==nil {
    result.Limitations=append(result.Limitations,"Native Sripati house boundaries were unavailable; no house assignment was inferred.")
  }
