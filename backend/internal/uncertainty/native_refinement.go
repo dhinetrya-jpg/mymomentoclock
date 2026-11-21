@@ -23,6 +23,7 @@ func factorAt(ctx context.Context,at time.Time,factor string,lat,lon float64,con
  if err!=nil{return "",err}
  h:=snapshot.Native.Houses
  if h==nil||!h.SripatiAvailable{return "",issue("F01_SRIPATI_UNAVAILABLE")}
+ if _,err:=ephemeris.CheckSripatiGeometry(h);err!=nil{return "",issue("F01_GEOMETRY_CHECK_FAILED")}
  parts:=strings.Split(factor,".")
  if len(parts)!=2{return "",issue("F01_UNKNOWN_FACTOR")}
  if parts[0]=="ascendant" {
