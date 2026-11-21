@@ -9,14 +9,14 @@ const classes=(value:string)=>value==='OBSERVED_VARIABLE'?'border-amber-500/70':
 export function BirthTimeExplorer(){
  const [certainty,setCertainty]=useState<Certainty>('APPROXIMATE');
  const [date,setDate]=useState('');
- const [clock,setClock]=useState('09:00');
+ const [clock,setClock]=useState('');
  const [uncertainty,setUncertainty]=useState(30);
- const [timezone,setTimezone]=useState('Asia/Kolkata');
- const [lat,setLat]=useState('28.6139');
- const [lon,setLon]=useState('77.2090');
+ const [timezone,setTimezone]=useState('');
+ const [lat,setLat]=useState('');
+ const [lon,setLon]=useState('');
  const [offset,setOffset]=useState('');
- const [earliest,setEarliest]=useState('08:00');
- const [latest,setLatest]=useState('10:00');
+ const [earliest,setEarliest]=useState('');
+ const [latest,setLatest]=useState('');
  const [latestDate,setLatestDate]=useState('');
  const [earliestOffset,setEarliestOffset]=useState('');
  const [latestOffset,setLatestOffset]=useState('');
