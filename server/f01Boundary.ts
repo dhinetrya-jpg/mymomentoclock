@@ -38,7 +38,7 @@ function validResponse(r:any,request:any):boolean{
  if(!r||r.schema_version!==1||r.contract_version!=='f01-sensitivity-v1'||r.status!=='COMPUTED_UNVERIFIED'||r.customer_timing_authorized!==false||r.btr_status!=='UNAVAILABLE_UNVALIDATED_DASHA_METHOD'||r.authority?.production_eligible!==false)return false;
  if(r.birth_input!==undefined)return false;
  if(!Array.isArray(r.samples)||r.samples.length>17||r.samples.length<1||r.sample_count!==r.samples.length||!Array.isArray(r.factors)||r.factors.length>100||!Array.isArray(r.limitations)||r.limitations.length>20||!r.limitations.every((s:any)=>typeof s==='string'&&s.length<=1000))return false;
- if(!Array.isArray(r.transition_brackets)||r.transition_brackets.length>2048||!r.transition_brackets.every((b:any)=>typeof b.factor==='string'&&b.factor.length<80&&typeof b.from_value==='string'&&typeof b.to_value==='string'&&Number.isFinite(Date.parse(b.from_utc))&&Number.isFinite(Date.parse(b.to_utc))&&Date.parse(b.from_utc)<Date.parse(b.to_utc)&&b.evidence==='OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION'))return false;
+ if(!Array.isArray(r.transition_brackets)||r.transition_brackets.length>2048||!r.transition_brackets.every((b:any)=>typeof b.factor==='string'&&b.factor.length<80&&typeof b.from_value==='string'&&typeof b.to_value==='string'&&(b.intermediate_value===undefined||(typeof b.intermediate_value==='string'&&b.intermediate_value.length<=50))&&Number.isFinite(Date.parse(b.from_utc))&&Number.isFinite(Date.parse(b.to_utc))&&Date.parse(b.from_utc)<Date.parse(b.to_utc)&&['OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION','OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED'].includes(b.evidence)))return false;
  if(r.house_system!=='SWISS_S_SIDEREAL_LAHIRI'||!r.factors.every((f:any)=>typeof f.name==='string'&&f.name.length<=80&&['OBSERVED_STABLE_NOT_PROVEN','OBSERVED_VARIABLE','UNRESOLVED'].includes(f.classification)&&typeof f.note==='string'&&f.note.length<=1000&&Array.isArray(f.observed_values)&&f.observed_values.length<=17&&f.observed_values.every((v:any)=>typeof v==='string'&&v.length<=50)))return false;
  return true;
 }
@@ -62,7 +62,7 @@ export function f01Gateway(transport?:Transport):RequestHandler{return async(req
    timezone_database:b.timezone_database,house_system:b.house_system,
    start_utc:b.start_utc,end_utc:b.end_utc,sample_count:b.sample_count,
    factors:b.factors.map((f:any)=>({name:f.name,classification:f.classification,observed_values:f.observed_values,note:f.note})),
-   transition_brackets:b.transition_brackets.map((t:any)=>({factor:t.factor,from_value:t.from_value,to_value:t.to_value,from_utc:t.from_utc,to_utc:t.to_utc,evidence:t.evidence})),
+   transition_brackets:b.transition_brackets.map((t:any)=>({factor:t.factor,from_value:t.from_value,to_value:t.to_value,from_utc:t.from_utc,to_utc:t.to_utc,evidence:t.evidence,...(t.intermediate_value?{intermediate_value:t.intermediate_value}:{})})),
    limitations:b.limitations,customer_timing_authorized:false,
    btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD'
   });
