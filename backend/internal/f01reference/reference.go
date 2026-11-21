@@ -65,7 +65,7 @@ type Report struct {
  Limitations []string `json:"limitations"`
 }
 
-var filePattern=regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9._-]{0,80}\\.(txt|json|csv|pdf)$`)
+var filePattern=regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9._-]{0,80}\.(txt|json|csv|pdf)$`)
 var idPattern=regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_-]{0,60}$`)
 var hashPattern=regexp.MustCompile(`^[a-f0-9]{64}$`)
 
@@ -148,6 +148,7 @@ func Run(dataset Dataset,sourceRoot string,compute func(Reference)([12]float64,e
  }}
  if dataset.SchemaVersion!=Schema||dataset.DatasetPurpose!="F01_INDEPENDENT_SRIPATI_NUMERICAL_COMPARISON"{return report,errors.New("REFERENCE_MANIFEST_INVALID")}
  if len(dataset.References)==0{return report,errors.New(StatusBlocked)}
+ if len(dataset.References)>50{return report,errors.New("REFERENCE_MANIFEST_TOO_LARGE")}
  seen:=map[string]bool{}
  for _,ref:=range dataset.References{
   if seen[ref.ID]{return report,errors.New("REFERENCE_DUPLICATE_ID")}
