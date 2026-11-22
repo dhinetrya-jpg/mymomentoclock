@@ -1,3 +1,4 @@
+import {privateShellPwa} from './tooling/pwa.ts';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -7,7 +8,7 @@ export default defineConfig(() => {
   return {
     base: process.env.VITE_BASE_PATH || './',
     publicDir: false as const, // historical implementation artifacts are not public product content
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), privateShellPwa()],
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname || '.', '.'),
