@@ -107,7 +107,7 @@
     }
   ],
   "readiness": "NO_GO_FULL_PRIVATE_PRODUCT",
-  "next_action": "Push tested feature/evidence branch; find/create exactly one PR to integration when API/connector works; verify controls+exact-head CI/review before merge; continue source-dependent backlog when owner inputs arrive",
+  "next_action": "When authorized API/connector is restored, inspect controls and find/create exactly one PR tointegration using preparedrequest; verify latestremoteheadCI/reviews and controlledmerge+integratedSHA. Untilthenwaitforapprovedsource/hosting/UAT/workloadinputs; no newunblockedsourcefinding identified.",
   "attempts": [
     {
       "stage": "scope_reconciliation",
@@ -145,5 +145,17 @@
   "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
   "integration_status": "NOT_INTEGRATED",
   "pr_url": null,
-  "remote_ci": "NOT_OBSERVED_NO_PR"
+  "remote_ci": "NOT_OBSERVED_NO_PR",
+  "remote_handoff": {
+    "branch_push": "SUCCEEDED",
+    "observed_pushed_head": "a7234f8739521622d4e00cefc72f77fc748dc056",
+    "observation_evidence": "evidence/REMOTE_OBSERVATION.json",
+    "pr_url": null,
+    "pr_creation": "NOT_SENT_POLICY_REJECTS_API_CONNECTION",
+    "connector": "NOT_EXPOSED",
+    "remote_ci": "NO_RUN_URL_OBSERVED",
+    "main_unchanged": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+    "integration_unchanged": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+    "current_tip": "Read git/remote; following handoff commit changes documentation only"
+  }
 }
