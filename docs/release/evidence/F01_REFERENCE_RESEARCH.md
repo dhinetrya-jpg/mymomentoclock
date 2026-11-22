@@ -168,7 +168,7 @@ by the override, both Julian dates match the tabulated offsets when
 rounded to one binary64 Julian day, and the provenance stays explicit.
 The observed UT1 and TT Julian days were 2451545.000004109 and
 2451545.0007428704. Recovering seconds from these values introduced
-about 5.99 microseconds and 1.09 microseconds of rounding respectively.
+about 3.99 microseconds and 1.09 microseconds of rounding respectively.
 The test derives its bound from half a Julian-day ULP (about 20.12
 microseconds at this date). This bound covers representation of the
 epoch only. An angular tolerance must also account for the frame,
@@ -177,7 +177,7 @@ location, time data, and verified sidereal convention.
 In LibEphemeris, the [native extended house provider](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/runtime/api/houses.rs#L389-L406)
 still uses bundled time conversions in the sidereal branch when the
 public session accepts a frame clock override. The lower-level
-[`houses_ex_via_callbacks` interface](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/houses/mod.rs#L399-L462)
+[`houses_ex_via_callbacks` interface](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/houses/serving.rs#L787-L805)
 can supply frame and ayanamsa callbacks for a controlled clock diagnostic.
 That route needs explicit call tracing and remains distinct from the
 stock session path. No LibEphemeris executable comparison was run.
