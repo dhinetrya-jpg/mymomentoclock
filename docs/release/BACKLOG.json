@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
-  "integration_branch": "feat/private-release-readiness",
+  "integration_branch": "integration",
   "readiness": "NOT_ESTABLISHED",
   "restrictions": [
     "no production deployment",
@@ -1208,8 +1208,98 @@
       "independently_verified": true,
       "verified_commit": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
       "audit_evidence": "evidence/ENGINEERING_AUDIT_PASS.md"
+    },
+    {
+      "id": "PWA-P0-01",
+      "priority": "P0",
+      "classification": "implementation",
+      "dependencies": [
+        "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
+      ],
+      "status": "verified_scoped_engineering_not_integrated",
+      "acceptance_criteria": "delivery/TRACEABILITY.json criteria for PWA-P0-01",
+      "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
+      "evidence": [
+        "delivery/evidence/INDEPENDENT_QA.md",
+        "delivery/evidence/INDEPENDENT_PWA.txt",
+        "delivery/evidence/SECURITY_PASS.md",
+        "delivery/evidence/CONTAINER_SMOKE.txt"
+      ],
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "UX-A11Y-P0-01",
+      "priority": "P0",
+      "classification": "implementation",
+      "dependencies": [
+        "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
+      ],
+      "status": "verified_scoped_engineering_not_integrated",
+      "acceptance_criteria": "delivery/TRACEABILITY.json criteria for UX-A11Y-P0-01",
+      "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
+      "evidence": [
+        "delivery/evidence/INDEPENDENT_QA.md",
+        "delivery/evidence/INDEPENDENT_ACCESSIBILITY.txt"
+      ],
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "UX-FAIL-P0-01",
+      "priority": "P0",
+      "classification": "implementation",
+      "dependencies": [
+        "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
+      ],
+      "status": "verified_scoped_engineering_not_integrated",
+      "acceptance_criteria": "delivery/TRACEABILITY.json criteria for UX-FAIL-P0-01",
+      "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
+      "evidence": [
+        "delivery/evidence/INDEPENDENT_QA.md",
+        "delivery/evidence/INDEPENDENT_F01_TIMEOUT.txt"
+      ],
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "REL-PUBLISH-GUARD",
+      "priority": "P0",
+      "classification": "implementation",
+      "dependencies": [
+        "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
+      ],
+      "status": "verified_scoped_engineering_not_integrated",
+      "acceptance_criteria": "delivery/TRACEABILITY.json criteria for REL-PUBLISH-GUARD",
+      "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
+      "evidence": [
+        "delivery/evidence/FINAL_PAGES_GUARD.txt",
+        "delivery/evidence/PAGES_GUARD_REGRESSION.txt",
+        "delivery/evidence/SECURITY_PASS.md"
+      ],
+      "implemented": true,
+      "independently_verified": true,
+      "verified_commit": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "integration_status": "NOT_INTEGRATED"
     }
   ],
-  "next_eligible_action": "Review final evidence/handoff; then obtain approved matrix/rule sources and private hosting/access/data policy. Admit only independently qualified original references. Reopen implementation only when dependencies resolve or a new concrete defect is found.",
-  "private_scope_policy": "Live activation approval does not gate a disabled stateless preview. Hosted full-product readiness requires approved inventory and actual access/TLS/runtime/domain evidence; persistence/commerce gates apply only when in scope."
+  "next_eligible_action": "Read delivery/STATE.json; complete controlled integration handoff when GitHub API/connector is available, then resolve precisely owned approved-source/hosting/UAT/workload dependencies.",
+  "private_scope_policy": "Live activation approval does not gate a disabled stateless preview. Hosted full-product readiness requires approved inventory and actual access/TLS/runtime/domain evidence; persistence/commerce gates apply only when in scope.",
+  "active_delivery": {
+    "traceability": "delivery/TRACEABILITY.json",
+    "state": "delivery/STATE.json",
+    "base_integration_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+    "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+    "feature_branch": "feat/private-product-execution",
+    "target_branch": "integration",
+    "status": "SCOPED_ENGINEERING_PASS_NOT_INTEGRATED"
+  },
+  "previous_integration_branch": "feat/private-release-readiness",
+  "working_feature_branch": "feat/private-product-execution"
 }

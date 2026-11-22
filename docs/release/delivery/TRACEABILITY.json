@@ -1,0 +1,2887 @@
+{
+  "schema_version": 1,
+  "inventory_completeness": "BLOCKED_APPROVED_MATRIX_CERS_ASCR_UNAVAILABLE",
+  "baseline_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+  "features": [
+    {
+      "feature_id": "AUDIT-BASE",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "See inherited status: verified_read_only",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "AUDIT-BASE-AC01",
+          "functional_acceptance": "Pin main, PR27 state and newer heads; bind CI to SHA",
+          "technical_acceptance": "remote SHA and sanitized GitHub workflow observations",
+          "verdict": "NOT_RUN",
+          "required_evidence": "remote SHA and sanitized GitHub workflow observations",
+          "tested_sha": null,
+          "evidence": "evidence/BASELINE_GITHUB_CI.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-PRIVACY",
+      "priority": "P1",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": true,
+      "verification_status": "PASS_SCOPED_HISTORICAL",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-PRIVACY-AC01",
+          "functional_acceptance": "Reject malformed upstream scalars and out-of-request intervals; project geometry keys",
+          "technical_acceptance": "adversarial F01 contracts, lint, exact-head independent audit",
+          "verdict": "PASS",
+          "required_evidence": "adversarial F01 contracts, lint, exact-head independent audit",
+          "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-REFERENCE-INTEGRITY",
+      "priority": "P1",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": true,
+      "verification_status": "PASS_SCOPED_HISTORICAL",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-REFERENCE-INTEGRITY-AC01",
+          "functional_acceptance": "Reject non-12 arrays, oversized manifests and claims unbound to original chart bytes",
+          "technical_acceptance": "targeted parser/admission regressions and exact-head audit",
+          "verdict": "PASS",
+          "required_evidence": "targeted parser/admission regressions and exact-head audit",
+          "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-P0-05",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "F01-REFERENCE-INTEGRITY"
+      ],
+      "implementation_status": "See inherited status: blocked_reference_qualification",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-P0-05-AC01",
+          "functional_acceptance": "All12 independently sourced cusps, matched conventions and predeclared source-based tolerance",
+          "technical_acceptance": "original source, lineage, metadata, precision, executable comparisons, independent review",
+          "verdict": "BLOCKED",
+          "required_evidence": "original source, lineage, metadata, precision, executable comparisons, independent review",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE01-INTEGRATED",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "See inherited status: local_integrated_checks_verified_scientific_gaps_remain",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE01-INTEGRATED-AC01",
+          "functional_acceptance": "Reexecute existing native/safety checks without promoting partial domain coverage",
+          "technical_acceptance": "exact-head executable results and original external provenance",
+          "verdict": "NOT_RUN",
+          "required_evidence": "exact-head executable results and original external provenance",
+          "tested_sha": null,
+          "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CORE02-RULES",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "See inherited status: blocked_approved_rulebook",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-RULES-AC01",
+          "functional_acceptance": "Approve source/version/predicates/uncertainty for six real activities",
+          "technical_acceptance": "owner-approved passages and independent traditional review",
+          "verdict": "BLOCKED",
+          "required_evidence": "owner-approved passages and independent traditional review",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY-SANDBOX",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "See inherited status: blocked_credentials_and_owner_gates",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY-SANDBOX-AC01",
+          "functional_acceptance": "Genuine sandbox order/payment/webhook/refund with approved test identity",
+          "technical_acceptance": "provider event/order IDs and durable entitlement evidence; no live calls",
+          "verdict": "BLOCKED",
+          "required_evidence": "provider event/order IDs and durable entitlement evidence; no live calls",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PRIVATE-OPERATIONS",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "See inherited status: blocked_infrastructure_decisions",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PRIVATE-OPERATIONS-AC01",
+          "functional_acceptance": "Private TLS, retention, backup restore/PITR and on-call gates demonstrated",
+          "technical_acceptance": "actual private deployment and restore evidence",
+          "verdict": "BLOCKED",
+          "required_evidence": "actual private deployment and restore evidence",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PRODUCT-INVENTORY",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "See inherited status: blocked_approved_matrix",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PRODUCT-INVENTORY-AC01",
+          "functional_acceptance": "Reconcile every approved feature including missing CFR005\u2013018 and methods",
+          "technical_acceptance": "versioned approved master matrix and methods",
+          "verdict": "BLOCKED",
+          "required_evidence": "versioned approved master matrix and methods",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "INTEGRATED-READINESS",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "F01-PRIVACY",
+        "F01-REFERENCE-INTEGRITY",
+        "F01-P0-05",
+        "CORE01-INTEGRATED",
+        "CORE02-RULES",
+        "PAY-SANDBOX",
+        "PRIVATE-OPERATIONS",
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "See inherited status: blocked_dependencies",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "INTEGRATED-READINESS-AC01",
+          "functional_acceptance": "No open release blockers at exact integration SHA",
+          "technical_acceptance": "independent integrated end-to-end audit and applicable release gates",
+          "verdict": "BLOCKED",
+          "required_evidence": "independent integrated end-to-end audit and applicable release gates",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "F01-BASE",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-BASE-AC01",
+          "functional_acceptance": "Four certainty modes, private noncertified sensitivity and no customer timing authorization",
+          "technical_acceptance": "exact-head source inspection and applicable executable/native evidence",
+          "verdict": "NOT_RUN",
+          "required_evidence": "exact-head source inspection and applicable executable/native evidence",
+          "tested_sha": null,
+          "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-P0-01",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/features/F01_P0_01_TRANSITION_REFINEMENT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-P0-01-AC01",
+          "functional_acceptance": "Bounded observed-transition refinement; no exhaustive stability assertion",
+          "technical_acceptance": "exact-head source inspection and applicable executable/native evidence",
+          "verdict": "NOT_RUN",
+          "required_evidence": "exact-head source inspection and applicable executable/native evidence",
+          "tested_sha": null,
+          "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-P0-02",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/features/F01_P0_02_SRIPATI_GEOMETRY_VALIDATION.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-P0-02-AC01",
+          "functional_acceptance": "All12 internal cusp geometry checks within predeclared1e-6 degrees; no independent astronomy claim",
+          "technical_acceptance": "exact-head source inspection and applicable executable/native evidence",
+          "verdict": "NOT_RUN",
+          "required_evidence": "exact-head source inspection and applicable executable/native evidence",
+          "tested_sha": null,
+          "evidence": "evidence/FINAL_INTEGRATED_GO_POSTGRES.txt; evidence/NATIVE_F01_MTLS.txt; scientific acceptance not established",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-P0-03",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/features/F01_P0_03_EXTERNAL_REFERENCE_ADMISSION.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-P0-03-AC01",
+          "functional_acceptance": "Offline admitted-source comparisons fail closed on missing references",
+          "technical_acceptance": "exact-head source inspection and applicable executable/native evidence",
+          "verdict": "BLOCKED",
+          "required_evidence": "exact-head source inspection and applicable executable/native evidence",
+          "tested_sha": null,
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md; evidence/EMPTY_REFERENCE_CLI.txt",
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "F01-P0-04",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/features/F01_P0_04_CROSS_ENGINE_NUMERICAL_DIAGNOSTICS.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-P0-04-AC01",
+          "functional_acceptance": "Reproducible eight-case second-pipeline diagnostic with all12 residuals; never scientific acceptance",
+          "technical_acceptance": "exact-head source inspection and applicable executable/native evidence",
+          "verdict": "NOT_RUN",
+          "required_evidence": "exact-head source inspection and applicable executable/native evidence",
+          "tested_sha": null,
+          "evidence": "evidence/DIAGNOSTIC_INTEGRITY.txt; evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-DIAGNOSTIC-INTEGRITY",
+      "priority": "P1",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "backend/internal/f01crossengine/diagnostic.go",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": true,
+      "verification_status": "PASS_SCOPED_HISTORICAL",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-DIAGNOSTIC-INTEGRITY-AC01",
+          "functional_acceptance": "Exactly12 non-null source cusps and unambiguous bounded diagnostic JSON",
+          "technical_acceptance": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
+          "verdict": "PASS",
+          "required_evidence": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
+          "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CFR-001",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-001-AC01",
+          "functional_acceptance": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "NOT_RUN",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CFR-002",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-002-AC01",
+          "functional_acceptance": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "NOT_RUN",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CFR-003",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-003-AC01",
+          "functional_acceptance": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "NOT_RUN",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CFR-004",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-004-AC01",
+          "functional_acceptance": "Reconcile original approved remediation item against later CORE/F01/PAY implementation",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "NOT_RUN",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "CFR-005",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-005-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-006",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-006-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-007",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-007-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-008",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-008-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-009",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-009-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-010",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-010-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-011",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-011-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-012",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-012-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-013",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-013-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-014",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-014-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-015",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-015-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-016",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-016-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-017",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-017-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CFR-018",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CFR-018-AC01",
+          "functional_acceptance": "Obtain authoritative item definition; no scope inferred",
+          "technical_acceptance": "original approved remediation spec, current source and independent executable acceptance",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved remediation spec, current source and independent executable acceptance",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-WORK_INTERVIEWS",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-WORK_INTERVIEWS-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for WORK_INTERVIEWS",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-PURCHASE_TRANSACTION",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-PURCHASE_TRANSACTION-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for PURCHASE_TRANSACTION",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-TRAVEL",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-TRAVEL-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for TRAVEL",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-LEARNING_EXAM",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-LEARNING_EXAM-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for LEARNING_EXAM",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-FAMILY_PERSONAL",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-FAMILY_PERSONAL-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for FAMILY_PERSONAL",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "CORE02-FINANCE_TRADING",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "CORE02-RULES"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "CORE02-FINANCE_TRADING-AC01",
+          "functional_acceptance": "Source/version/passage, predicates, exclusions and uncertainty approved for FINANCE_TRADING",
+          "technical_acceptance": "approved real rule registry and independent traditional validation",
+          "verdict": "BLOCKED",
+          "required_evidence": "approved real rule registry and independent traditional validation",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G01",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G01-AC01",
+          "functional_acceptance": "Real identity integrated and verified",
+          "technical_acceptance": "Vendor-neutral adapter tested; no owner-selected real issuer/SDK or genuine identity evidence.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Vendor-neutral adapter tested; no owner-selected real issuer/SDK or genuine identity evidence.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G02",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G02-AC01",
+          "functional_acceptance": "Approved product catalog configured",
+          "technical_acceptance": "No owner-approved catalog; INR500 is proposal only.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No owner-approved catalog; INR500 is proposal only.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G03",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G03-AC01",
+          "functional_acceptance": "Production provider adapter implemented",
+          "technical_acceptance": "Separate production constructor and sealed merchant authorization; local contract tests only.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Separate production constructor and sealed merchant authorization; local contract tests only.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G04",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G04-AC01",
+          "functional_acceptance": "Environment isolation verified",
+          "technical_acceptance": "Key-prefix, provider namespace, session issuer/environment and explicit database binding tested locally.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Key-prefix, provider namespace, session issuer/environment and explicit database binding tested locally.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G05",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G05-AC01",
+          "functional_acceptance": "Live credentials securely provisionable",
+          "technical_acceptance": "Mounted-file provisioning implemented; actual live secret-manager/access/rotation review absent.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Mounted-file provisioning implemented; actual live secret-manager/access/rotation review absent.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G06",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G06-AC01",
+          "functional_acceptance": "Secure checkout integration implemented",
+          "technical_acceptance": "Cookie/CSRF, hosted SDK and server-only verification tested; actual identity/catalog remain blocked.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Cookie/CSRF, hosted SDK and server-only verification tested; actual identity/catalog remain blocked.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G07",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G07-AC01",
+          "functional_acceptance": "Raw webhook signature verification tested",
+          "technical_acceptance": "Raw HMAC/replay/account/value binding and explicit rotation overlap tested locally.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Raw HMAC/replay/account/value binding and explicit rotation overlap tested locally.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G08",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G08-AC01",
+          "functional_acceptance": "Provider state mapping verified",
+          "technical_acceptance": "Supported local capture/refund lattice tested; current hosted docs403 and genuine API evidence absent.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Supported local capture/refund lattice tested; current hosted docs403 and genuine API evidence absent.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G09",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G09-AC01",
+          "functional_acceptance": "PostgreSQL fulfillment verified",
+          "technical_acceptance": "Real TLS PostgreSQL transactions/concurrency/rollback/restart verified.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Real TLS PostgreSQL transactions/concurrency/rollback/restart verified.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G10",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G10-AC01",
+          "functional_acceptance": "Entitlement enforcement verified",
+          "technical_acceptance": "Durable guard tested on delivered fixture; actual premium product is G23.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Durable guard tested on delivered fixture; actual premium product is G23.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G11",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G11-AC01",
+          "functional_acceptance": "Refund handling verified",
+          "technical_acceptance": "Full refund revocation/partial review tested locally; no real refund/policy approval.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Full refund revocation/partial review tested locally; no real refund/policy approval.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G12",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G12-AC01",
+          "functional_acceptance": "Dispute/reversal handling verified",
+          "technical_acceptance": "Conservative signed-dispute risk hold tested; current final reversal/won/lost semantics/genuine events absent.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Conservative signed-dispute risk hold tested; current final reversal/won/lost semantics/genuine events absent.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G13",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G13-AC01",
+          "functional_acceptance": "Reconciliation worker verified",
+          "technical_acceptance": "Leases/SKIP LOCKED/jitter/attempt limits/dead-letter/restart tested.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Leases/SKIP LOCKED/jitter/attempt limits/dead-letter/restart tested.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G14",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G14-AC01",
+          "functional_acceptance": "Operational monitoring implemented",
+          "technical_acceptance": "Private fixed metrics, durable gauges, read-only CLI and proposed alerts; no deployed monitoring claim.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Private fixed metrics, durable gauges, read-only CLI and proposed alerts; no deployed monitoring claim.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G15",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G15-AC01",
+          "functional_acceptance": "Security tests passed",
+          "technical_acceptance": "Scoped local security suites and second-pass sweep; not independent penetration certification.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Scoped local security suites and second-pass sweep; not independent penetration certification.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G16",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G16-AC01",
+          "functional_acceptance": "Full regression passed",
+          "technical_acceptance": "Exact local commands and artifact/browser results in TEST_REPORT; no remote CI claim.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Exact local commands and artifact/browser results in TEST_REPORT; no remote CI claim.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G17",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G17-AC01",
+          "functional_acceptance": "Genuine provider sandbox order verified",
+          "technical_acceptance": "No credentials/approval: zero genuine order calls.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No credentials/approval: zero genuine order calls.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G18",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G18-AC01",
+          "functional_acceptance": "Genuine provider sandbox payment verified",
+          "technical_acceptance": "No genuine provider payment performed.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No genuine provider payment performed.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G19",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G19-AC01",
+          "functional_acceptance": "Genuine signed provider webhook verified",
+          "technical_acceptance": "No genuine public signed provider webhook delivered.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No genuine public signed provider webhook delivered.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G20",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PAY-SANDBOX"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G20-AC01",
+          "functional_acceptance": "Genuine sandbox refund verified where supported",
+          "technical_acceptance": "No genuine provider sandbox refund performed.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No genuine provider sandbox refund performed.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G21",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G21-AC01",
+          "functional_acceptance": "Merchant account approved",
+          "technical_acceptance": "Merchant/KYC/live/settlement approval absent.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Merchant/KYC/live/settlement approval absent.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G22",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G22-AC01",
+          "functional_acceptance": "Legal/commercial policies approved",
+          "technical_acceptance": "Owner/legal/tax/refund/privacy/support approvals absent.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Owner/legal/tax/refund/privacy/support approvals absent.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G23",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G23-AC01",
+          "functional_acceptance": "Premium product functionality validated",
+          "technical_acceptance": "No approved real premium delivery list; compiled registry empty.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No approved real premium delivery list; compiled registry empty.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PAY03-G24",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G24-AC01",
+          "functional_acceptance": "Deployment configuration reviewed",
+          "technical_acceptance": "Review specification and separate artifacts supplied; actual infrastructure not deployed/reviewed.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "Review specification and separate artifacts supplied; actual infrastructure not deployed/reviewed.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G25",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G25-AC01",
+          "functional_acceptance": "Backup/restore and incident response validated",
+          "technical_acceptance": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
+          "verdict": "NOT_RUN",
+          "required_evidence": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PAY03-G26",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PAY03-G26-AC01",
+          "functional_acceptance": "Authorized production release approval recorded",
+          "technical_acceptance": "No authorized release approval, signed manifest or owner trust key provisioned.",
+          "verdict": "BLOCKED",
+          "required_evidence": "No authorized release approval, signed manifest or owner trust key provisioned.",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "METHOD-DASHA",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "METHOD-DASHA-AC01",
+          "functional_acceptance": "Versioned approved substantive method and domain validation for DASHA",
+          "technical_acceptance": "original approved method, deterministic implementation and independent examples",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved method, deterministic implementation and independent examples",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "METHOD-CERTIFIED_BTR",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "METHOD-CERTIFIED_BTR-AC01",
+          "functional_acceptance": "Versioned approved substantive method and domain validation for CERTIFIED_BTR",
+          "technical_acceptance": "original approved method, deterministic implementation and independent examples",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved method, deterministic implementation and independent examples",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "METHOD-RESOLVER",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "METHOD-RESOLVER-AC01",
+          "functional_acceptance": "Versioned approved substantive method and domain validation for RESOLVER",
+          "technical_acceptance": "original approved method, deterministic implementation and independent examples",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved method, deterministic implementation and independent examples",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "METHOD-GRAPH",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "METHOD-GRAPH-AC01",
+          "functional_acceptance": "Versioned approved substantive method and domain validation for GRAPH",
+          "technical_acceptance": "original approved method, deterministic implementation and independent examples",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved method, deterministic implementation and independent examples",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "METHOD-REMEDIES",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/evidence/INVENTORY_AUDIT.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Owner/domain source provider",
+      "dependencies": [
+        "PRODUCT-INVENTORY"
+      ],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "BLOCKED",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "METHOD-REMEDIES-AC01",
+          "functional_acceptance": "Versioned approved substantive method and domain validation for REMEDIES",
+          "technical_acceptance": "original approved method, deterministic implementation and independent examples",
+          "verdict": "BLOCKED",
+          "required_evidence": "original approved method, deterministic implementation and independent examples",
+          "tested_sha": null,
+          "evidence": null,
+          "open_findings": [
+            "Missing authoritative definition/source"
+          ]
+        }
+      ],
+      "next_action": "Resolve the named source/owner dependency"
+    },
+    {
+      "feature_id": "PHASE1-G1",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G1-AC01",
+          "functional_acceptance": "Reconcile G1 Repository with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G2",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G2-AC01",
+          "functional_acceptance": "Reconcile G2 Input with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G3",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G3-AC01",
+          "functional_acceptance": "Reconcile G3 BTR with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G4",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G4-AC01",
+          "functional_acceptance": "Reconcile G4 Resolver with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G5",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G5-AC01",
+          "functional_acceptance": "Reconcile G5 Profiles with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G6",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G6-AC01",
+          "functional_acceptance": "Reconcile G6 Graph with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G7",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G7-AC01",
+          "functional_acceptance": "Reconcile G7 Muhurat with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G8",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G8-AC01",
+          "functional_acceptance": "Reconcile G8 Astronomy with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G9",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G9-AC01",
+          "functional_acceptance": "Reconcile G9 Payment with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G10",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G10-AC01",
+          "functional_acceptance": "Reconcile G10 Entitlements with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G11",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G11-AC01",
+          "functional_acceptance": "Reconcile G11 Operations with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G12",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G12-AC01",
+          "functional_acceptance": "Reconcile G12 Regression with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G13",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G13-AC01",
+          "functional_acceptance": "Reconcile G13 UX with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G14",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G14-AC01",
+          "functional_acceptance": "Reconcile G14 Privacy with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PHASE1-G15",
+      "priority": "P0",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [],
+      "implementation_status": "repository-scoped implementation only; see source",
+      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "PHASE1-G15-AC01",
+          "functional_acceptance": "Reconcile G15 Documentation with later work; safely disabled capability is not delivered functionality",
+          "technical_acceptance": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "verdict": "NOT_RUN",
+          "required_evidence": "fresh integrated audit plus original owner/domain inputs where applicable",
+          "tested_sha": null,
+          "evidence": "GATE_RECONCILIATION.json",
+          "open_findings": []
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "F01-NATIVE-MTLS",
+      "priority": "P1",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "F01-PRIVACY"
+      ],
+      "implementation_status": true,
+      "verification_status": "PASS_SCOPED_HISTORICAL",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "F01-NATIVE-MTLS-AC01",
+          "functional_acceptance": "Actual Node gateway over verified mTLS to pinned native SWISS_FILE F01 succeeds for four certainty modes; malformed requests/certless clients refused; raw samples omitted",
+          "technical_acceptance": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
+          "verdict": "PASS",
+          "required_evidence": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
+          "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "OPS-POD-CREDENTIALS",
+      "priority": "P2",
+      "scope": "known repository workstream; complete approved inventory not supplied",
+      "user_problem": "See source criterion; detailed approved product definition remains subject to source reconciliation",
+      "source": "docs/release/BACKLOG.json at integration57a6bbe",
+      "source_version": "integration57a6bbe5cd2695fb7a69746ad322384009a6fbd2, inherited records retain original versions",
+      "owner": "Delivery Lead",
+      "dependencies": [
+        "AUDIT-BASE"
+      ],
+      "implementation_status": true,
+      "verification_status": "PASS_SCOPED_HISTORICAL",
+      "integration_status": "Repository baseline includes existing code, not proof of feature completion",
+      "criteria": [
+        {
+          "criterion_id": "OPS-POD-CREDENTIALS-AC01",
+          "functional_acceptance": "API pod template disables automatic Kubernetes service-account token mount without opening routes",
+          "technical_acceptance": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
+          "verdict": "PASS",
+          "required_evidence": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
+          "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
+          "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
+        }
+      ],
+      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+    },
+    {
+      "feature_id": "PWA-P0-01",
+      "priority": "P0",
+      "scope": "explicit new delivery brief anchors or existing privacy/publishing restrictions",
+      "user_problem": "Use the app shell reliably on supported devices without retaining birth data",
+      "source": "latest delivery brief + evidence/SCOPE_RESEARCH.md + UX_BASELINE.md/SECURITY_BASELINE.md",
+      "source_version": "brief SHA25634da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+      "owner": "privacy_implementation",
+      "dependencies": [
+        "integration57a6bbe baseline",
+        "source-reviewed scoped acceptance"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
+      "integration_status": "NOT_INTEGRATED",
+      "criteria": [
+        {
+          "criterion_id": "PWA-P0-01-AC01",
+          "functional_acceptance": "Manifest/start/scope/icons for root and subpath",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "PWA-P0-01-AC02",
+          "functional_acceptance": "Install UI reflects actual browser support",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "PWA-P0-01-AC03",
+          "functional_acceptance": "Offline static shell and honest online-data limitation",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "PWA-P0-01-AC04",
+          "functional_acceptance": "Exact static allowlist; no API/POST/query/auth/checkout/result persistence",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "PWA-P0-01-AC05",
+          "functional_acceptance": "Atomic scoped worker update and safe explicit activation",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "PWA-P0-01-AC06",
+          "functional_acceptance": "Both frontend builds and real Chromium regression",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        }
+      ],
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
+    },
+    {
+      "feature_id": "UX-A11Y-P0-01",
+      "priority": "P0",
+      "scope": "explicit new delivery brief anchors or existing privacy/publishing restrictions",
+      "user_problem": "Use existing dialogs and profile controls entirely from keyboard",
+      "source": "latest delivery brief + evidence/SCOPE_RESEARCH.md + UX_BASELINE.md/SECURITY_BASELINE.md",
+      "source_version": "brief SHA25634da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+      "owner": "native_engine",
+      "dependencies": [
+        "integration57a6bbe baseline",
+        "source-reviewed scoped acceptance"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
+      "integration_status": "NOT_INTEGRATED",
+      "criteria": [
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC01",
+          "functional_acceptance": "Initial focus and Tab/ShiftTab containment in all3dialogs",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC02",
+          "functional_acceptance": "Escape close and return focus to surviving invoker",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC03",
+          "functional_acceptance": "Background exclusion and dynamic checkout state preserved",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC04",
+          "functional_acceptance": "Profile inputs have exact programmatic label names",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC05",
+          "functional_acceptance": "Skip link reaches main content",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-A11Y-P0-01-AC06",
+          "functional_acceptance": "Unknown birth and BTR copy state limitations without generated time",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        }
+      ],
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
+    },
+    {
+      "feature_id": "UX-FAIL-P0-01",
+      "priority": "P0",
+      "scope": "explicit new delivery brief anchors or existing privacy/publishing restrictions",
+      "user_problem": "Know when a birth-time request times out and retry deliberately",
+      "source": "latest delivery brief + evidence/SCOPE_RESEARCH.md + UX_BASELINE.md/SECURITY_BASELINE.md",
+      "source_version": "brief SHA25634da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+      "owner": "analytical_audit",
+      "dependencies": [
+        "integration57a6bbe baseline",
+        "source-reviewed scoped acceptance"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
+      "integration_status": "NOT_INTEGRATED",
+      "criteria": [
+        {
+          "criterion_id": "UX-FAIL-P0-01-AC01",
+          "functional_acceptance": "Active timeout exposes accessible understandable failure",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-FAIL-P0-01-AC02",
+          "functional_acceptance": "Unmount/supersession never displays stale result/error",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "UX-FAIL-P0-01-AC03",
+          "functional_acceptance": "No silent retry or persistence; explicit retry can recover",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        }
+      ],
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
+    },
+    {
+      "feature_id": "REL-PUBLISH-GUARD",
+      "priority": "P0",
+      "scope": "explicit new delivery brief anchors or existing privacy/publishing restrictions",
+      "user_problem": "Prevent integration/feature workflow dispatch from publishing",
+      "source": "latest delivery brief + evidence/SCOPE_RESEARCH.md + UX_BASELINE.md/SECURITY_BASELINE.md",
+      "source_version": "brief SHA25634da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+      "owner": "root",
+      "dependencies": [
+        "integration57a6bbe baseline",
+        "source-reviewed scoped acceptance"
+      ],
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
+      "integration_status": "NOT_INTEGRATED",
+      "criteria": [
+        {
+          "criterion_id": "REL-PUBLISH-GUARD-AC01",
+          "functional_acceptance": "Pages build refuses nonpublishingrefs",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/FINAL_PAGES_GUARD.txt",
+            "evidence/PAGES_GUARD_REGRESSION.txt",
+            "evidence/SECURITY_PASS.md"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        },
+        {
+          "criterion_id": "REL-PUBLISH-GUARD-AC02",
+          "functional_acceptance": "Pages deploy refuses nonpublishingrefs",
+          "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
+          "verdict": "PASS",
+          "required_evidence": [
+            "executable result",
+            "exact tested SHA",
+            "independent review"
+          ],
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/FINAL_PAGES_GUARD.txt",
+            "evidence/PAGES_GUARD_REGRESSION.txt",
+            "evidence/SECURITY_PASS.md"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
+        }
+      ],
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
+    }
+  ],
+  "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+  "overall_private_readiness": "NO_GO"
+}

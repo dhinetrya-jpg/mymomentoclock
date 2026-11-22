@@ -1,0 +1,9 @@
+{
+  "source": "normal public GitHub HTML",
+  "feature_branch": "feat/private-product-execution",
+  "feature_pr_links_observed": [],
+  "workflow_run_urls_observed": [],
+  "api": "CONNECT_BLOCKED_POLICY",
+  "connector": "NOT_EXPOSED",
+  "integration_claim": false
+}

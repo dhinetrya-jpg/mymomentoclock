@@ -1,0 +1,2 @@
+PWA register-rejected: synthetic unsupported/denied API branch keeps actual navigation usable; safe availability copy; historical artifact404; no uncaught error PASS
+PWA api-absent: synthetic unsupported/denied API branch keeps actual navigation usable; safe availability copy; historical artifact404; no uncaught error PASS

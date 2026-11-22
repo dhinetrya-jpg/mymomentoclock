@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "brief_path": "/workspace/attachments/819a2f03-b9ba-4780-b15b-206a710dab35/Pasted text.txt",
+  "brief_sha256": "34da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+  "base_sources": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "git_commit": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "sha256": "35ab03fa623e28ad65110ea9b4193b5614457f2c55aa5906959096153ef852c3"
+    },
+    {
+      "path": ".github/workflows/deploy-pages.yml",
+      "git_commit": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "sha256": "d79f449362d852f9e1bcf0eb7ded3b583444a3f5ad9deb51dfe32eded6e0bf7d"
+    },
+    {
+      "path": "docs/release/BACKLOG.json",
+      "git_commit": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "sha256": "c77284d873d1d7e10ca297585a5fbaa382e0d0c8a2f3067263e4d8535df421c2"
+    },
+    {
+      "path": "docs/core/CORE_P0_02_ARCHITECTURE.md",
+      "git_commit": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "sha256": "20425e7c61d3e50a8220735a5e77987c98ea8dab1d1b053e3ecbbccae7b1cc7a"
+    },
+    {
+      "path": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
+      "git_commit": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "sha256": "61bab214bef982b48ee9ba2303ab0f3781fdfc137fe33efc375507508afc50c1"
+    }
+  ],
+  "primary_standard_provenance": "evidence/SCOPE_RESEARCH.md",
+  "missing": [
+    "complete approved feature matrix",
+    "CERS",
+    "ASCR",
+    "actual traditional activity rulebook",
+    "approved Dasha/BTR/resolver/graph/remedies methods",
+    "qualified same-convention independent reference cases",
+    "approved device/UAT group and traffic thresholds",
+    "private hosting/access/data policy"
+  ]
+}

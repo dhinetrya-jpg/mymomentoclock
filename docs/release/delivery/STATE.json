@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "main_sha": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+  "integration_base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+  "feature_branch": "feat/private-product-execution",
+  "brief_sha256": "34da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+  "brief_source": "/workspace/attachments/819a2f03-b9ba-4780-b15b-206a710dab35/Pasted text.txt",
+  "authority": "PRs and integration merges under verified configured controls; no main/master merge, deployment or live payment",
+  "github_capabilities": {
+    "git_read": "VERIFIED",
+    "api_connect": "BLOCKED_NETWORK_POLICY",
+    "agent_pr_write": "UNVERIFIED",
+    "repository_auto_merge": "UNVERIFIED",
+    "integration_ruleset": "UNVERIFIED",
+    "api_retest_after_owner_request": "403_BLOCKED_BEFORE_GITHUB; currentenforcedrevision1 excludesapi.github.com",
+    "authorized_github_connector": "NO_CALLABLE_GITHUB_CONNECTOR_TOOLS_EXPOSED",
+    "admin_settings": "UNVERIFIED_NOT_A_SERVICE_PERMISSION_VERDICT",
+    "auto_merge": "PENDING_VERIFIED_RULES_AND_REQUIRED_CHECKS"
+  },
+  "features": [
+    {
+      "id": "PWA-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "verified_scoped_engineering",
+      "owner": "privacy_implementation",
+      "acceptance": [
+        "allowlisted installable static shell",
+        "honest offline/degraded state",
+        "no sensitive caching",
+        "explicit safe update lifecycle",
+        "root/subpath behavior"
+      ],
+      "dependencies": [
+        "latest brief explicitPWA authorization"
+      ],
+      "evidence_required": [
+        "real browser worker/manifest/offline/cache/update assertions",
+        "bothbuilds",
+        "independent exact-head audit"
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "UX-A11Y-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "verified_scoped_engineering",
+      "owner": "native_engine",
+      "acceptance": [
+        "modal initialfocus",
+        "Tab containment",
+        "Escape dismissal",
+        "focus restoration",
+        "background exclusion"
+      ],
+      "dependencies": [
+        "existing modal contracts",
+        "latestbrief accessibility scope"
+      ],
+      "evidence_required": [
+        "three-dialog keyboardbrowser assertions",
+        "existingcheckout/BTR/resolver regressions",
+        "independent exacthead audit"
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "REL-PUBLISH-GUARD",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "verified_scoped_engineering",
+      "owner": "root",
+      "acceptance": [
+        "Pages manual dispatch cannot build/deploy fromintegration orfeature refs"
+      ],
+      "dependencies": [
+        "verifiedPages trigger audit"
+      ],
+      "evidence_required": [
+        "staticjobguardrefmatrix",
+        "independentworkflowreview"
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
+    },
+    {
+      "id": "UX-FAIL-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "verified_scoped_engineering",
+      "owner": "analytical_audit as implementer; independent audit separate",
+      "base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "criteria": "active timeout announces failure; stale/unmount cancellation remains silent; deliberate retry, no auto retry",
+      "evidence": [
+        "evidence/F01_TIMEOUT_IMPLEMENTATION.md",
+        "evidence/F01_TIMEOUT_BROWSER.txt"
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
+    }
+  ],
+  "readiness": "NO_GO_FULL_PRIVATE_PRODUCT",
+  "next_action": "When authorized API/connector is restored, inspect controls and find/create exactly one PR tointegration using preparedrequest; verify latestremoteheadCI/reviews and controlledmerge+integratedSHA. Untilthenwaitforapprovedsource/hosting/UAT/workloadinputs; no newunblockedsourcefinding identified.",
+  "attempts": [
+    {
+      "stage": "scope_reconciliation",
+      "outcome": "PWA/accessibility/timeout/publishing guard eligible; domainmatrixinputs stillmissing",
+      "next_action": "implementeligiblework"
+    },
+    {
+      "stage": "affected_regressions_precommit",
+      "outcome": "149/149 Node pass; Pagesguard passes and reproducesbaselinefailure; F01 timeout6/6browser+12/12contract",
+      "head_sha": null,
+      "next_action": "finishPWAworker lifecycle/modal regressions; pin candidate and independentlyaudit"
+    },
+    {
+      "stage": "resume_and_reflow",
+      "outcome": "Restarted interruptedlocalserver; finalkeyboard/reflow320/375/1280normal+200%andF01timeout6/6pass;PWAimplementerfullsuitepass",
+      "head_sha": null,
+      "remaining": "exactheadindependentreview; genuineOS/device/screenreader/ownerUATNOTRUN; GitHubAPIblocked"
+    },
+    {
+      "stage": "candidate_provenance",
+      "head_sha": "6c55a7b0c4e1d22d4c850a125d743c107bf44d7e",
+      "outcome": "FAIL missing root vite config in commit; fixed by c185132 and renewed affected builds/QA"
+    },
+    {
+      "stage": "independent_exact_head",
+      "head_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "outcome": "PASS scoped security and independent real browser QA;91calculation+102boundary checks; both builds/typechecks; actual read-only web container worker/MIME/CSP/static cache smoke"
+    },
+    {
+      "stage": "bounded_performance",
+      "head_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "outcome": "PASS existing1VU10iterations20requests50checks; p95 6.933ms p99 26.075ms; paced refusal paths, not capacity; original fixture permission error corrected with identical readable synthetic copy before successful HTTP run"
+    }
+  ],
+  "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+  "integration_status": "NOT_INTEGRATED",
+  "pr_url": null,
+  "remote_ci": "NOT_OBSERVED_NO_PR",
+  "remote_handoff": {
+    "branch_push": "SUCCEEDED",
+    "observed_pushed_head": "a7234f8739521622d4e00cefc72f77fc748dc056",
+    "observation_evidence": "evidence/REMOTE_OBSERVATION.json",
+    "pr_url": null,
+    "pr_creation": "NOT_SENT_POLICY_REJECTS_API_CONNECTION",
+    "connector": "NOT_EXPOSED",
+    "remote_ci": "NO_RUN_URL_OBSERVED",
+    "main_unchanged": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+    "integration_unchanged": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+    "current_tip": "Read git/remote; following handoff commit changes documentation only"
+  }
+}

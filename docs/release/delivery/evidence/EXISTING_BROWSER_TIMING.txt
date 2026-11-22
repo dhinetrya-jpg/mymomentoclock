@@ -1,0 +1,8 @@
+Daily timing 375px unavailable: passed; no accuracy or release claim.
+Daily timing 375px unknown: passed; no accuracy or release claim.
+Daily timing 375px synthetic: passed; no accuracy or release claim.
+Daily timing 375px invalid-response: passed; no accuracy or release claim.
+Daily timing 1280px unavailable: passed; no accuracy or release claim.
+Daily timing 1280px unknown: passed; no accuracy or release claim.
+Daily timing 1280px synthetic: passed; no accuracy or release claim.
+Daily timing 1280px invalid-response: passed; no accuracy or release claim.

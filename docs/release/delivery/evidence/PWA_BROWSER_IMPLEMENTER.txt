@@ -1,0 +1,11 @@
+Command: CHROMIUM_PATH=/usr/bin/chromium node tests/pwa/browser.mjs
+Working directory: /workspace/mymomentoclock-delivery
+Result: exit 0 (functions exec session 42705); source frozen after completion, parent must bind final integrated SHA.
+Protocol-only worker change with identical static bytes: distinct content-addressed cache identity PASS
+root: manifest/browser installability; real worker; synthetic install controls (no OS install claim); scoped static-only cache; foreign/other-scope cache preservation; GET/POST private exclusions; offline shell + API refusal; failed precache preservation; real changed-build update/cancel/two-tab refusal/cache cleanup; 375px PASS
+project-base: manifest/browser installability; real worker; synthetic install controls (no OS install claim); scoped static-only cache; foreign/other-scope cache preservation; GET/POST private exclusions; offline shell + API refusal; failed precache preservation; real changed-build update/cancel/two-tab refusal/cache cleanup; 375px PASS
+alternate-frontend: manifest/browser installability; real worker; synthetic install controls (no OS install claim); scoped static-only cache; foreign/other-scope cache preservation; GET/POST private exclusions; offline shell + API refusal; failed precache preservation; real changed-build update/cancel/two-tab refusal/cache cleanup; 375px PASS
+Chromium desktop emulation only; physical mobile install, Safari/WebKit and real-user/screen-reader signoff remain unverified. No scientific or deployment acceptance.
+
+Additional executed checks: npm run lint; npm --prefix frontend run lint; npm run build; npm --prefix frontend run build; git diff --check; cmp src/pwa/PwaStatus.tsx frontend/src/pwa/PwaStatus.tsx — all passed.
+Sandbox Chromium launch initially failed setsockopt EPERM; approved escalated local browser run succeeded. No external service calls, hosting, publishing, payment or production activation.

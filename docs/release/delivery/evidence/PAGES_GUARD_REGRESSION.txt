@@ -1,0 +1,21 @@
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+F
+======================================================================
+FAIL: test_each_publishing_job_excludes_nonpublishing_refs (guards.PagesPublishingBoundary.test_each_publishing_job_excludes_nonpublishing_refs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/mymomentoclock-delivery/tests/release/pages_guard_test.py", line 27, in test_each_publishing_job_excludes_nonpublishing_refs
+    self.assertIsNotNone(guard, f'{job}: manual dispatch needs a ref guard')
+AssertionError: unexpectedly None : build: manual dispatch needs a ref guard
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)
+Current source:
+Original baseline must fail this safety regression:
+PASS current guarded workflow; reproduced missing-guard failure on pinned baseline

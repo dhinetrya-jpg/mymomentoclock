@@ -1,0 +1,3 @@
+web: health and functional production smoke checks passed
+Actual read-only Node container: manifest/SW MIME, CSP-compatible real worker control, one static cache and empty local/session storage PASS. No hosted TLS or OS install claim.
+IMAGE=sha256:52db04cd608b67e82948e20421c46e610673260577c6855bd8b211fe9c8f0cad USER=node READONLY=true

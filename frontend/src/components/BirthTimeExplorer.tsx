@@ -17,6 +17,7 @@ const meaning=(factor:string,value:string)=>{
  return value;
 };
 const factorTitle=(key:string)=>key.split('.').map(v=>v.replace(/_/g,' ')).join(' — ');
+const timeoutMessage='The calculation took too long. Please try again when you are ready. No estimate was substituted.';
 
 
 export function BirthTimeExplorer(){
@@ -38,12 +39,13 @@ export function BirthTimeExplorer(){
  const [error,setError]=useState('');
  const [showAll,setShowAll]=useState(false);
  const abort=useRef<AbortController|null>(null);
- useEffect(()=>()=>abort.current?.abort(),[]);
+ useEffect(()=>()=>{const current=abort.current;abort.current=null;current?.abort();},[]);
  const update=()=>{setResult(null);setError('')};
  const submit=async(event:React.FormEvent<HTMLFormElement>)=>{
   event.preventDefault();abort.current?.abort();setResult(null);setError('');setBusy(true);
   const c=new AbortController();abort.current=c;
-  const timeout=setTimeout(()=>c.abort(),12000);
+  let timedOut=false;
+  const timeout=setTimeout(()=>{if(abort.current===c){timedOut=true;c.abort();}},12000);
   const request={schema_version:1,birth_date:date,certainty,timezone,latitude:Number(lat),longitude:Number(lon),
    ...(certainty==='RANGE'?{earliest_time:earliest,latest_time:latest,...(latestDate?{latest_date:latestDate}:{}),...(earliestOffset?{earliest_utc_offset:Number(earliestOffset)}:{}),...(latestOffset?{latest_utc_offset:Number(latestOffset)}:{})}:certainty==='UNKNOWN'?{}:{birth_time:clock,...(offset?{utc_offset:Number(offset)}:{})}),
    ...(certainty==='APPROXIMATE'?{uncertainty_minutes:uncertainty}:{})};
@@ -52,8 +54,8 @@ export function BirthTimeExplorer(){
    const body=await res.json();
    if(!res.ok)throw Error(typeof body.code==='string'?body.code:'F01_UNAVAILABLE');
    if(body.status!=='COMPUTED_UNVERIFIED'||body.customer_timing_authorized!==false||body.btr_status!=='UNAVAILABLE_UNVALIDATED_DASHA_METHOD'||!Array.isArray(body.factors)||!Array.isArray(body.transition_brackets)||!Array.isArray(body.limitations))throw Error('INVALID_F01_RESPONSE');
-   if(!c.signal.aborted)setResult(body);
-  }catch(e){if(!c.signal.aborted)setError((e as Error).message)}finally{clearTimeout(timeout);if(abort.current===c){abort.current=null;setBusy(false)}}
+   if(abort.current===c&&!c.signal.aborted)setResult(body);
+  }catch(e){if(abort.current===c){if(timedOut)setError(timeoutMessage);else if(!c.signal.aborted)setError((e as Error).message)}}finally{clearTimeout(timeout);if(abort.current===c){abort.current=null;setBusy(false)}}
  };
  const inputClass='w-full rounded-lg border border-rose-700 bg-[#19060b] px-3 py-2 text-rose-100';
  return <section aria-labelledby="f01-title" className="mx-auto max-w-4xl space-y-5 text-rose-100">
@@ -81,7 +83,7 @@ export function BirthTimeExplorer(){
    <p className="text-xs text-rose-200/80">Birthplace is not inferred from your current device location. Inputs are submitted for this calculation only; this screen does not save a profile.</p>
    <button disabled={busy} className="rounded-lg bg-amber-400 px-5 py-3 font-semibold text-neutral-950 disabled:opacity-50">{busy?'Inspecting possible charts…':'Explore birth-time possibilities'}</button>
   </form>
-  {error&&<div role="alert" className="rounded-lg border border-amber-600 p-4">Unable to calculate: {error}. Checked configurations or astronomical data may be unavailable. No estimate was substituted.</div>}
+  {error&&<div role="alert" className="rounded-lg border border-amber-600 p-4">{error===timeoutMessage?error:<>Unable to calculate: {error}. Checked configurations or astronomical data may be unavailable. No estimate was substituted.</>}</div>}
   {result&&<div aria-live="polite" className="space-y-4">
    <div role="status" className="rounded-xl border border-amber-600 p-4"><strong>Exploratory calculation — not independently approved</strong><p className="text-sm mt-2">Sampled {result.sample_count} birth instants from {new Date(result.start_utc).toLocaleString()} to {new Date(result.end_utc).toLocaleString()}. These dates are shown in your browser timezone; calculations use UTC and the supplied birth timezone.</p><p className="mt-2 text-xs">House system: {result.house_system}. Rectification: unavailable. Personal timing: disabled.</p></div>
    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-serif text-xl text-amber-300">Rashi and Bhava Chalit comparison</h2>

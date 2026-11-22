@@ -7,7 +7,7 @@
  * - Quick switch between Full Astrology Edition and Festival & Reflection Edition
  */
 
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import { AyanamsaType } from '../engine/astroMath';
 import { validateBirthInput } from '../engine/calculationValidation';
 import { MAJOR_CITIES_MUHURAT } from '../engine/diwaliData';
@@ -29,6 +29,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   onCalculate,
   onOpenQuickFestival,
 }) => {
+  const formId = useId();
   const [cityName, setCityName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [birthTime, setBirthTime] = useState('');
@@ -44,6 +45,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (certainty === 'UNKNOWN') { setError('An exact chart is unavailable without a known birth time. Birth-time rectification is unavailable; no time is substituted.'); return; }
     const cityMeta = MAJOR_CITIES_MUHURAT[cityName];
     if (!cityMeta) { setError('Select your birth city.'); return; }
     try { validateBirthInput({birthDate, birthTime, latitude: cityMeta.lat, longitude: cityMeta.lon, birthTimeCertainty:certainty||undefined, timezoneOffset: offset === '' ? undefined : Number(offset), ayanamsaType: ayanamsa}); } catch (e) { setError((e as Error).message); return; }
@@ -59,7 +61,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   };
 
   return (
-    <div className="rounded-2xl border border-rose-950/70 bg-[#1c050b] p-6 lg:p-8 shadow-2xl max-w-2xl mx-auto">
+    <div className="min-w-0 break-words rounded-2xl border border-rose-950/70 bg-[#1c050b] p-6 lg:p-8 shadow-2xl max-w-2xl mx-auto">
       <div className="text-center space-y-1.5 border-b border-rose-950/60 pb-5">
         <span className="font-mono text-xs font-semibold text-amber-400 uppercase tracking-widest">
           Module 1 · Spatiotemporal Normalization Engine
@@ -75,39 +77,44 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-rose-100">Birth Date</label>
+            <label htmlFor={`${formId}-date`} className="text-xs font-semibold text-rose-100">Birth Date</label>
             <input
+              id={`${formId}-date`}
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               required
-              className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-rose-100">Birth Time (Local)</label>
+            <label htmlFor={`${formId}-time`} className="text-xs font-semibold text-rose-100">Birth Time (Local)</label>
             <input
+              id={`${formId}-time`}
+              aria-describedby={`${formId}-time-help`}
+              disabled={certainty === 'UNKNOWN'}
               type="time"
               step="1"
               value={birthTime}
               onChange={(e) => setBirthTime(e.target.value)}
-              required
-              className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none font-mono"
+              required={certainty !== 'UNKNOWN'}
+              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none font-mono"
             />
-            <span className="text-[10px] text-rose-300/50 mt-1 block">
-              Unknown birth time cannot produce an exact chart. BTR offers heuristic candidates only.
+            <span id={`${formId}-time-help`} className="text-[10px] text-rose-300/50 mt-1 block">
+              Unknown birth time cannot produce an exact chart. Birth-time rectification is unavailable; no candidate time is generated.
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
+            <label htmlFor={`${formId}-city`} className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
             <select
+              id={`${formId}-city`}
               value={cityName}
               onChange={(e) => handleCityChange(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
             >
               <option value="">Select birth city</option>
               {Object.keys(MAJOR_CITIES_MUHURAT).map((c) => (
@@ -117,11 +124,12 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
+            <label htmlFor={`${formId}-ayanamsa`} className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
             <select
+              id={`${formId}-ayanamsa`}
               value={ayanamsa}
               onChange={(e) => setAyanamsa(e.target.value as AyanamsaType)}
-              className="mt-1.5 w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
             >
               <option value={AyanamsaType.TRUE_LAHIRI}>True Lahiri (Chitrapaksha) - Global Baseline</option>
               <option value={AyanamsaType.KP}>KP (Krishnamurti Paddhati)</option>
@@ -131,13 +139,14 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         </div>
 
         <label className="block text-xs">UTC offset at birth (hours)
-          <input aria-label="UTC offset at birth" type="number" min="-12" max="14" step="any" required value={offset} onChange={e => setOffset(e.target.value)} className="m-2 bg-rose-950 p-2" />
+          <input aria-label="UTC offset at birth" type="number" min="-12" max="14" step="any" required value={offset} onChange={e => setOffset(e.target.value)} className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2" />
           Historical timezone/DST conversion is unavailable. Supply the offset applicable at birth.
         </label>
         {error && <p role="alert">{error}</p>}
         <label className="block text-xs">Birth time certainty
-          <select aria-label="Birth time certainty" required value={certainty} onChange={e=>setCertainty(e.target.value)} className="m-2 bg-rose-950 p-2"><option value="">Choose certainty</option><option value="EXACT">Recorded time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time (chart unavailable)</option></select>
+          <select aria-label="Birth time certainty" required value={certainty} onChange={e=>setCertainty(e.target.value)} className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2"><option value="">Choose certainty</option><option value="EXACT">Recorded time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time (chart unavailable)</option></select>
         </label>
+        {certainty === 'UNKNOWN' && <p role="status" className="text-sm text-amber-200">An exact chart is unavailable without a known birth time. Use the Birth-Time Uncertainty Explorer to inspect the whole local date without selecting an actual birth time.</p>}
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
           <button
             type="submit"
