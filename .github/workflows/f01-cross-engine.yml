@@ -1,7 +1,7 @@
 name: F01 Cross-Engine Diagnostic Evidence
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, integration ]
     paths:
       - 'backend/internal/f01crossengine/**'
       - 'backend/cmd/f01crossengine/**'

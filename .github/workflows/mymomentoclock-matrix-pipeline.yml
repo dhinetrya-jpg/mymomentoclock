@@ -4,7 +4,7 @@ on:
     branches: [main, master]
     paths: ['tests/stress/**', 'server.ts', 'src/engine/**', 'package*.json', '.github/workflows/mymomentoclock-matrix-pipeline.yml']
   pull_request:
-    branches: [main, master]
+    branches: [main, master, integration]
     paths: ['tests/stress/**', 'server.ts', 'src/engine/**', 'package*.json', '.github/workflows/mymomentoclock-matrix-pipeline.yml']
   workflow_dispatch:
     inputs:
