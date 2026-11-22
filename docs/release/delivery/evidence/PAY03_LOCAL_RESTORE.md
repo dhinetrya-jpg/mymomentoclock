@@ -24,3 +24,22 @@ The gate remains open for approved hosted key management and backup
 integrity, WAL/PITR, target RPO/RTO, provider reconciliation, recovery
 permissions and the incident rehearsal. The elapsed time is an observation
 from this fixture and environment.
+
+## Named-point recovery rehearsal
+
+At integration `898382066f7cad10de4af4090662dc3398770f59`,
+`bash scripts/test-local-payment-pitr.sh` passed using the same pinned
+PostgreSQL image. The script takes a physical base backup before the
+synthetic capture, then archives WAL containing the capture, a named
+restore point, and the later refund. PostgreSQL confirmed that recovery
+stopped at the named restore point. The recovered cluster had the capture,
+active entitlement and capture audit row. The source also had the refund
+event and audit row, the refunded order and the inactive entitlement.
+The recovered cluster was promoted and replayed state was queried in 494 ms
+for this one fixture.
+
+The drill uses a disposable network-isolated container and ephemeral WAL
+files. Hosted backup integrity, independent storage, access controls,
+recovery objectives, provider reconciliation and incident rehearsal remain
+open. A restored entitlement at a selected historical point requires
+reconciliation before serving traffic.
