@@ -35,3 +35,10 @@ A successful workflow yields `COMPARISON_COMPLETED_UNADMITTED` and `scientific_a
 GitHub Actions -> F01 Cross-Engine Diagnostic Evidence -> Run workflow, or after reviewing this PR allow its targeted CI to run. Download the `f01-cross-engine-diagnostic` artifact.
 
 No user birth data, profiles, payment, BTR or personal timing predictions are included.
+
+### Private-release parser hardening
+
+Diagnostic JSON is bounded to 1 MiB and rejects trailing data, duplicate or
+noncanonical field names, absent/null numeric chart metadata and cusp arrays
+other than exactly 12 non-null numbers. These are evidence-integrity guards;
+they do not qualify the shared house-formula lineage or establish a tolerance.

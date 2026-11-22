@@ -1,0 +1,58 @@
+=== RUN   TestDifferentEngineProducesOnlyNonAcceptedDiagnostic
+--- PASS: TestDifferentEngineProducesOnlyNonAcceptedDiagnostic (0.00s)
+=== RUN   TestAngularWrapAndDisagreementRemainVisible
+--- PASS: TestAngularWrapAndDisagreementRemainVisible (0.00s)
+=== RUN   TestNativeAndAuthorityFailuresAreFatal
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/missing
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/wrong_mode
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/wrong_version
+--- PASS: TestNativeAndAuthorityFailuresAreFatal (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/missing (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/wrong_mode (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/wrong_version (0.00s)
+=== RUN   TestMalformedOrUntrustedCaptureRefused
+--- PASS: TestMalformedOrUntrustedCaptureRefused (0.00s)
+=== RUN   TestTimestampAndDimensions
+--- PASS: TestTimestampAndDimensions (0.00s)
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_only
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/mixed_case_alias
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/missing_latitude
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_longitude
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_package
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/thirteenth_cusp
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_root
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/eleven_cusps
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/oversized_whitespace
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_array
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/nonnumeric_cusp
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_nested
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/escaped_duplicate
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object_beyond_limit
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_ascendant
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_root
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_cusp
+--- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON (0.02s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_only (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/mixed_case_alias (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/missing_latitude (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_longitude (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_package (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/thirteenth_cusp (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_root (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/eleven_cusps (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/oversized_whitespace (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_array (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/nonnumeric_cusp (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_nested (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/escaped_duplicate (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object_beyond_limit (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_ascendant (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_root (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_cusp (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/f01crossengine	0.023s
+ok  	astroengine-core/backend/internal/f01crossengine	1.148s
+ok  	astroengine-core/backend/internal/f01crossengine	0.025s

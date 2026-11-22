@@ -21,6 +21,7 @@ spec:
         prometheus.io/scrape: 'false'
         prometheus.io/port: '8080'
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: api-container
         image: YOUR_CONTAINER_REGISTRY/mymomentoclock-core:latest

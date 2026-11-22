@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-22 Asia/Calcutta",
+  "sources": [
+    {
+      "path": "README.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "fc35539d75968d230a1819c8895920fcde1289e130034a1242c35ad532e2539b",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/remediation/CFRS_MASTER_TRACKER.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "ab21a6bd88600e252790e6a977eab11b82f262293f965ecb0c98f1015bb05717",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/remediation/PHASE1_FINAL_RELEASE_GATE.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "7d7deddf52cfcbef2d9e7496defcac90b0b1dd5bbe9898e0b7f4a925e43a7726",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_01_OPTION_A_ARCHITECTURE.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "055e5429301161250a8d4f938f5ce1370ebea4043d31a16dfb5b07f406b0c94c",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_01_TOLERANCE_POLICY.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "24b1fe93c8bd85b7ec0633c8c48e5f5f00ed77364645710bafc5b99624263a47",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/core/CORE_P0_02_RULE_MATRIX.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "35735bd6301b8ec63034722258d3ac81f1c0651345295375248f3051b16c9448",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_BIRTH_TIME_UNCERTAINTY.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "61bab214bef982b48ee9ba2303ab0f3781fdfc137fe33efc375507508afc50c1",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_01_TRANSITION_REFINEMENT.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "0d8a6b1048a096cf49570b00911aca487bb7b0a63b89be5d8e27b1b699a7f10d",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_02_SRIPATI_GEOMETRY_VALIDATION.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "a0499c885a83af945fb604f8e3b5447a76408d2ba3b28d2abacbf1203bcb04ff",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_03_EXTERNAL_REFERENCE_ADMISSION.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "ec34bcb232254550ace9394da5f7a42dfb13b3102711f8acd8ffa9e5009ebabe",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/features/F01_P0_04_CROSS_ENGINE_NUMERICAL_DIAGNOSTICS.md",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "cd029edb157e43f227c01649a6f12ff254e86b929932dc455850c27f216df58c",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "3cd081c158f2ce5441681aa4bed3c239e91b924c8186a69913f4b75db118fb92",
+      "authority": "repository scope and historical evidence; independent approval not inferred"
+    },
+    {
+      "path": "/workspace/attachments/037e8ec7-abfa-4c73-9ce1-dfd17e2ffbd2/Pasted text.txt",
+      "sha256": "9a7c70d2b74ab96bc1153540e179602674bb80be8c727ef227b3d3c2f42632b4",
+      "version_label": "# CODEX MASTER IMPLEMENTATION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/4b4c6d01-d9a7-4e69-987a-405eb423392e/Pasted text.txt",
+      "sha256": "1221a0d7327f32f93450760342ae35fe530d5482eebc1ed338ccbf43c1b803eb",
+      "version_label": "# CODEX MASTER PROMPT \u2014 MYMOMENTOCLOCK",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/4d14b4e8-316c-4fcc-9fcd-7d6ab2b59c8d/Pasted text.txt",
+      "sha256": "c8722347d635368a3e0de38846b576362b111580ec506e654297107a56d049ee",
+      "version_label": "# CODEX MASTER PROMPT \u2014 FINALIZE CORE-P0-01",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/51d185ac-045b-4cb0-a9bc-a5573f35de5c/Pasted text.txt",
+      "sha256": "70def775a0fa68a398b046748bbb29bc050ea1136a50d794c820c88c9c5836db",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX MASTER PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/8d870992-bdac-4788-a4d6-2649dedc5262/Pasted text.txt",
+      "sha256": "f4bfd06fa58a17c9b4756c2bde51a23bde1c9bf96f73e2c66415059197867d94",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX PAYMENT WORKSTREAM 01",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/adfcca9e-1d25-4202-9e7f-3b086a38c3bb/Pasted text.txt",
+      "sha256": "d6d3cd6bd0048e4090025367ddec0f9521fd30aa8b924d2ec6284adb511579b6",
+      "version_label": "# CODEX \u2014 PR #21 TARGETED ACCEPTANCE REPAIR",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/bac95297-b976-46ab-b17d-c3fe361c760c/Pasted text.txt",
+      "sha256": "30948ef435bf918c52165ab71623564d303332faa7aa000f33b034e5ae4bebaf",
+      "version_label": "# CODEX MASTER EXECUTION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/bbf0dd00-6412-4d0c-9484-933e958849f7/Pasted text.txt",
+      "sha256": "80e0de0a8897cfbaa36d6c46e434b53948b0dce0d9757b4e46e9236ce6de9042",
+      "version_label": "# MYMOMENTOCLOCK \u2014 CODEX MASTER IMPLEMENTATION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "path": "/workspace/attachments/be262430-e9de-48b8-8777-ca4910c4e94c/Pasted text.txt",
+      "sha256": "271b42aa14bb497f1a3e47ad9cd26ab77223eaaac2929423546a832ae9264610",
+      "version_label": "# CODEX MASTER EXECUTION PROMPT",
+      "authority": "historical user-supplied workstream prompt; not comprehensive current feature matrix"
+    },
+    {
+      "source": "current user directive",
+      "version": "2026-11-22 Asia/Calcutta, full approved product through private release readiness",
+      "authority": "workflow and Research/Audit delegation authorization; retains production/live-payment restrictions; does not supply missing feature definitions"
+    },
+    {
+      "path": "deploy/kubernetes/04-api-ingress.yaml",
+      "base_commit": "03a5f5e7704c1e07aaa0de5bcbb9e301948bd4a8",
+      "sha256": "b9aba5593a486f205745c9c8fd68a997c14709fc38f1eabba4f5d2c98848acff",
+      "authority": "inactive deployment template, not runtime/deployment evidence"
+    }
+  ],
+  "missing": {
+    "approved_product_matrix": [
+      "full inventory completeness",
+      "CFR-005 through CFR-018 definitions"
+    ],
+    "traditional_activity_rulebook": [
+      "work/interviews",
+      "purchases/transactions",
+      "travel",
+      "learning/exams",
+      "family/personal",
+      "finance/trading"
+    ],
+    "approved_methods": [
+      "Dasha",
+      "certified BTR",
+      "resolver",
+      "graph",
+      "remedies"
+    ],
+    "independent_reference_originals": [
+      "end-to-end Sripati",
+      "same-convention sidereal/node/solar acceptance"
+    ],
+    "owner_operational_approvals": [
+      "merchant/provider identity",
+      "catalog/legal",
+      "identity ownership",
+      "private infrastructure/TLS",
+      "restore/PITR/on-call"
+    ]
+  }
+}

@@ -4,6 +4,7 @@
 package crossengine
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,6 +31,91 @@ type Case struct {
 	JulianDay                float64     `json:"julian_day_used"`
 	Cusps                    [12]float64 `json:"sidereal_sripati_cusps_deg"`
 }
+
+// Fixed arrays silently truncate excess JSON values and pad missing ones.
+// Decode the source array separately before copying into the comparison type.
+func (c *Case) UnmarshalJSON(input []byte) error {
+	type plain Case
+	var value plain
+	decoder := json.NewDecoder(bytes.NewReader(input))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(input, &fields); err != nil {
+		return err
+	}
+	// Zero is legitimate; absent/null metadata must not silently become zero.
+	for _, key := range []string{"latitude", "longitude", "sidereal_ascendant_deg", "sidereal_mc_deg", "ayanamsa_degrees", "julian_day_used"} {
+		raw, ok := fields[key]
+		if !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return errors.New("F01_CROSS_ENGINE_METADATA_REQUIRED")
+		}
+	}
+	var cusps []json.RawMessage
+	if err := json.Unmarshal(fields["sidereal_sripati_cusps_deg"], &cusps); err != nil {
+		return err
+	}
+	if len(cusps) != 12 {
+		return errors.New("F01_CROSS_ENGINE_CUSP_COUNT_INVALID")
+	}
+	for i, raw := range cusps {
+		if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return errors.New("F01_CROSS_ENGINE_CUSP_INVALID")
+		}
+		if err := json.Unmarshal(raw, &value.Cusps[i]); err != nil {
+			return err
+		}
+	}
+	*c = Case(value)
+	return nil
+}
+
+// Walk tokens rather than maps so duplicate keys cannot disappear on decode.
+func uniqueJSONValue(decoder *json.Decoder) error {
+	token, err := decoder.Token()
+	if err != nil {
+		return err
+	}
+	delimiter, composite := token.(json.Delim)
+	if !composite {
+		return nil
+	}
+	switch delimiter {
+	case '{':
+		seen := map[string]bool{}
+		for decoder.More() {
+			token, err = decoder.Token()
+			if err != nil {
+				return err
+			}
+			key, ok := token.(string)
+			// encoding/json otherwise accepts case-insensitive struct aliases.
+			if !ok || !canonicalJSONKey.MatchString(key) {
+				return errors.New("F01_CROSS_ENGINE_NONCANONICAL_KEY")
+			}
+			if seen[key] {
+				return errors.New("F01_CROSS_ENGINE_DUPLICATE_KEY")
+			}
+			seen[key] = true
+			if err = uniqueJSONValue(decoder); err != nil {
+				return err
+			}
+		}
+	case '[':
+		for decoder.More() {
+			if err = uniqueJSONValue(decoder); err != nil {
+				return err
+			}
+		}
+	default:
+		return errors.New("F01_CROSS_ENGINE_JSON_INVALID")
+	}
+	_, err = decoder.Token()
+	return err
+}
+
 type Package struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
@@ -93,6 +179,8 @@ type Report struct {
 	Limitations                  []string      `json:"limitations"`
 }
 
+var canonicalJSONKey = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
+
 var caseID = regexp.MustCompile(`^[a-z0-9_]{4,60}$`)
 
 func finite(v float64) bool { return !math.IsNaN(v) && !math.IsInf(v, 0) }
@@ -109,7 +197,22 @@ func Decode(path string) (Dataset, error) {
 		return Dataset{}, e
 	}
 	defer file.Close()
-	d := json.NewDecoder(io.LimitReader(file, 1<<20))
+	const maximumBytes = 1 << 20
+	input, e := io.ReadAll(io.LimitReader(file, maximumBytes+1))
+	if e != nil {
+		return Dataset{}, e
+	}
+	if len(input) > maximumBytes {
+		return Dataset{}, errors.New("F01_CROSS_ENGINE_INPUT_TOO_LARGE")
+	}
+	tokens := json.NewDecoder(bytes.NewReader(input))
+	if e = uniqueJSONValue(tokens); e != nil {
+		return Dataset{}, e
+	}
+	if _, e = tokens.Token(); e != io.EOF {
+		return Dataset{}, errors.New("F01_CROSS_ENGINE_TRAILING_DATA")
+	}
+	d := json.NewDecoder(bytes.NewReader(input))
 	d.DisallowUnknownFields()
 	var data Dataset
 	if e = d.Decode(&data); e != nil {

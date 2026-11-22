@@ -34,13 +34,39 @@ function valid(input:any):boolean {
  if(input.certainty==='EXACT')return input.uncertainty_minutes===undefined||input.uncertainty_minutes===0;
  return Number.isInteger(input.uncertainty_minutes)&&input.uncertainty_minutes>=1&&input.uncertainty_minutes<=1440;
 }
+// The native contract serializes UTC time.Time values. Validate before projection.
+function utcInstant(value:unknown):number {
+ if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z$/.test(value))return NaN;
+ const instant=Date.parse(value);
+ if(!Number.isFinite(instant)||new Date(instant).toISOString().slice(0,19)!==value.slice(0,19))return NaN;
+ return instant;
+}
+function matchesWallTime(instant:number,date:string,clock:string,timezone:string,offset?:number):boolean {
+ const expected=date+'T'+(clock.length===5?clock+':00':clock);
+ if(offset!==undefined)return new Date(instant+offset*3600000).toISOString().slice(0,19)===expected;
+ // A disagreement with the host timezone database is unavailable, never accepted
+ // as evidence that the native pinned timezone interpretation was correct.
+ const parts=new Intl.DateTimeFormat('en-CA',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(instant);
+ const part=(name:string)=>parts.find(p=>p.type===name)?.value;
+ return `${part('year')}-${part('month')}-${part('day')}T${part('hour')}:${part('minute')}:${part('second')}`===expected;
+}
+function boundInterval(r:any,request:any):boolean {
+ const start=utcInstant(r.start_utc),end=utcInstant(r.end_utc);
+ if(!Number.isFinite(start)||!Number.isFinite(end)||end<start)return false;
+ const matches=(instant:number,date:string,clock:string,offset?:number)=>matchesWallTime(instant,date,clock,request.timezone,offset);
+ if(request.certainty==='EXACT')return start===end&&matches(start,request.birth_date,request.birth_time,request.utc_offset);
+ if(request.certainty==='APPROXIMATE')return end-start===request.uncertainty_minutes*120000&&matches(start+request.uncertainty_minutes*60000,request.birth_date,request.birth_time,request.utc_offset);
+ if(request.certainty==='RANGE')return end>start&&end-start<=48*3600000&&matches(start,request.birth_date,request.earliest_time,request.earliest_utc_offset)&&matches(end,request.latest_date??request.birth_date,request.latest_time,request.latest_utc_offset);
+ const next=new Date(Date.parse(request.birth_date+'T00:00:00Z')+86400000).toISOString().slice(0,10);
+ return end-start>=20*3600000&&end-start<=28*3600000&&matches(start,request.birth_date,'00:00')&&matches(end,next,'00:00');
+}
 function validResponse(r:any,request:any):boolean{
  if(!r||r.schema_version!==1||r.contract_version!=='f01-sensitivity-v1'||r.status!=='COMPUTED_UNVERIFIED'||r.customer_timing_authorized!==false||r.btr_status!=='UNAVAILABLE_UNVALIDATED_DASHA_METHOD'||r.authority?.production_eligible!==false)return false;
- if(r.birth_input!==undefined)return false;
+ if(r.birth_input!==undefined||r.timezone_database!=='IANA@e29969d3f327f129ec4aebaa9c7aee96c46f8e3b'||!boundInterval(r,request))return false;
  const geometry=r.geometry_check;
  if(!geometry||geometry.status!=='GEOMETRY_CONSISTENT_NOT_EXTERNALLY_VERIFIED'||geometry.source!=='INTERNAL_PORPHYRY_MIDPOINT_CROSSCHECK_NOT_INDEPENDENT_ASTRONOMICAL_REFERENCE'||geometry.tolerance_degrees!==0.000001||!Number.isFinite(geometry.max_angular_error_degrees)||geometry.max_angular_error_degrees<0||geometry.max_angular_error_degrees>geometry.tolerance_degrees)return false;
  if(!Array.isArray(r.samples)||r.samples.length>17||r.samples.length<1||r.sample_count!==r.samples.length||!Array.isArray(r.factors)||r.factors.length>100||!Array.isArray(r.limitations)||r.limitations.length>20||!r.limitations.every((s:any)=>typeof s==='string'&&s.length<=1000))return false;
- if(!Array.isArray(r.transition_brackets)||r.transition_brackets.length>2048||!r.transition_brackets.every((b:any)=>typeof b.factor==='string'&&b.factor.length<80&&typeof b.from_value==='string'&&typeof b.to_value==='string'&&(b.intermediate_value===undefined||(typeof b.intermediate_value==='string'&&b.intermediate_value.length<=50))&&Number.isFinite(Date.parse(b.from_utc))&&Number.isFinite(Date.parse(b.to_utc))&&Date.parse(b.from_utc)<Date.parse(b.to_utc)&&['OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION','OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED'].includes(b.evidence)))return false;
+ if(!Array.isArray(r.transition_brackets)||r.transition_brackets.length>2048||!r.transition_brackets.every((b:any)=>typeof b.factor==='string'&&b.factor.length<80&&typeof b.from_value==='string'&&typeof b.to_value==='string'&&b.from_value.length<=50&&b.to_value.length<=50&&(b.intermediate_value===undefined||(typeof b.intermediate_value==='string'&&b.intermediate_value.length<=50))&&Number.isFinite(utcInstant(b.from_utc))&&Number.isFinite(utcInstant(b.to_utc))&&utcInstant(b.from_utc)>=utcInstant(r.start_utc)&&utcInstant(b.to_utc)<=utcInstant(r.end_utc)&&utcInstant(b.from_utc)<utcInstant(b.to_utc)&&['OBSERVED_CHANGE_BOUNDED_BY_SAMPLES_NOT_EXACT_TRANSITION','OBSERVED_CHANGE_WITH_INTERMEDIATE_STATE_UNRESOLVED'].includes(b.evidence)))return false;
  if(r.house_system!=='SWISS_S_SIDEREAL_LAHIRI'||!r.factors.every((f:any)=>typeof f.name==='string'&&f.name.length<=80&&['OBSERVED_STABLE_NOT_PROVEN','OBSERVED_VARIABLE','UNRESOLVED'].includes(f.classification)&&typeof f.note==='string'&&f.note.length<=1000&&Array.isArray(f.observed_values)&&f.observed_values.length<=17&&f.observed_values.every((v:any)=>typeof v==='string'&&v.length<=50)))return false;
  return true;
 }
@@ -65,7 +91,7 @@ export function f01Gateway(transport?:Transport):RequestHandler{return async(req
    start_utc:b.start_utc,end_utc:b.end_utc,sample_count:b.sample_count,
    factors:b.factors.map((f:any)=>({name:f.name,classification:f.classification,observed_values:f.observed_values,note:f.note})),
    transition_brackets:b.transition_brackets.map((t:any)=>({factor:t.factor,from_value:t.from_value,to_value:t.to_value,from_utc:t.from_utc,to_utc:t.to_utc,evidence:t.evidence,...(t.intermediate_value?{intermediate_value:t.intermediate_value}:{})})),
-   limitations:b.limitations,geometry_check:b.geometry_check,customer_timing_authorized:false,
+   limitations:b.limitations,geometry_check:{status:b.geometry_check.status,source:b.geometry_check.source,tolerance_degrees:b.geometry_check.tolerance_degrees,max_angular_error_degrees:b.geometry_check.max_angular_error_degrees},customer_timing_authorized:false,
    btr_status:'UNAVAILABLE_UNVALIDATED_DASHA_METHOD'
   });
  }catch{fail(503,'NATIVE_F01_SERVICE_UNAVAILABLE')}

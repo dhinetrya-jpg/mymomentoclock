@@ -1,0 +1,2 @@
+browser 375px: chart, validation, division tabs, BTR, modal, festival, checkout, privacy and overflow passed
+browser 1280px: chart, validation, division tabs, BTR, modal, festival, checkout, privacy and overflow passed

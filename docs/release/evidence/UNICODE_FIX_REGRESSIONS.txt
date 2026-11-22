@@ -1,0 +1,147 @@
+testing: warning: no tests to run
+PASS
+ok  	astroengine-core/backend/internal/f01reference	0.002s [no tests to run]
+=== RUN   TestAdmissionAndWraparound
+--- PASS: TestAdmissionAndWraparound (0.00s)
+=== RUN   TestInvalidReferencesCannotBeAdmitted
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_ayanamsa
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_source_hash
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_epoch
+=== RUN   TestInvalidReferencesCannotBeAdmitted/swiss_not_independent
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_timescale
+=== RUN   TestInvalidReferencesCannotBeAdmitted/unsafe_path
+=== RUN   TestInvalidReferencesCannotBeAdmitted/missing_producer
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_tolerance
+=== RUN   TestInvalidReferencesCannotBeAdmitted/invalid_cusp
+=== RUN   TestInvalidReferencesCannotBeAdmitted/invalid_latitude
+=== RUN   TestInvalidReferencesCannotBeAdmitted/wrong_house
+--- PASS: TestInvalidReferencesCannotBeAdmitted (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_ayanamsa (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_source_hash (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_epoch (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/swiss_not_independent (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_timescale (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/unsafe_path (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/missing_producer (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_tolerance (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/invalid_cusp (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/invalid_latitude (0.00s)
+    --- PASS: TestInvalidReferencesCannotBeAdmitted/wrong_house (0.00s)
+=== RUN   TestMissingReferencesFailClosed
+--- PASS: TestMissingReferencesFailClosed (0.00s)
+=== RUN   TestComparisonPassFailureAndNativeFailure
+--- PASS: TestComparisonPassFailureAndNativeFailure (0.00s)
+=== RUN   TestManifestRejectsAmbiguousAndTruncatedEvidence
+=== RUN   TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_0
+=== RUN   TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_11
+=== RUN   TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_13
+--- PASS: TestManifestRejectsAmbiguousAndTruncatedEvidence (0.01s)
+    --- PASS: TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_0 (0.00s)
+    --- PASS: TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_11 (0.00s)
+    --- PASS: TestManifestRejectsAmbiguousAndTruncatedEvidence/cusps_13 (0.00s)
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/retrospective_tolerance
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/instant
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/latitude
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/longitude
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/cusp
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/no_qualification
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/shared_formula
+=== RUN   TestHashDoesNotPermitDifferentClaimedChart/precision
+--- PASS: TestHashDoesNotPermitDifferentClaimedChart (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/retrospective_tolerance (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/instant (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/latitude (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/longitude (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/cusp (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/no_qualification (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/shared_formula (0.00s)
+    --- PASS: TestHashDoesNotPermitDifferentClaimedChart/precision (0.00s)
+=== RUN   TestAllSourcesAdmittedBeforeAnyCalculation
+--- PASS: TestAllSourcesAdmittedBeforeAnyCalculation (0.00s)
+=== RUN   TestComparisonRejectsInvalidDirectInputs
+--- PASS: TestComparisonRejectsInvalidDirectInputs (0.00s)
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/eleven
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/thirteen
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/null_coordinate
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/missing_coordinate
+=== RUN   TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/radians
+--- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata (0.01s)
+    --- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/eleven (0.00s)
+    --- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/thirteen (0.00s)
+    --- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/null_coordinate (0.00s)
+    --- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/missing_coordinate (0.00s)
+    --- PASS: TestOriginalJSONMustMatchActualTwelveValuesAndRequiredMetadata/radians (0.00s)
+=== RUN   TestManifestMissingAndNullCoordinatesFailClosed
+--- PASS: TestManifestMissingAndNullCoordinatesFailClosed (0.00s)
+=== RUN   TestOriginalSymlinksRejected
+--- PASS: TestOriginalSymlinksRejected (0.00s)
+=== RUN   TestCaseAliasedChartClaimsCannotOverrideCanonicalKeys
+--- PASS: TestCaseAliasedChartClaimsCannotOverrideCanonicalKeys (0.00s)
+=== RUN   TestUnicodeCaseAliasesCannotOverrideEvidence
+--- PASS: TestUnicodeCaseAliasesCannotOverrideEvidence (0.00s)
+PASS
+ok  	astroengine-core/backend/internal/f01reference	0.028s
+=== RUN   TestDifferentEngineProducesOnlyNonAcceptedDiagnostic
+--- PASS: TestDifferentEngineProducesOnlyNonAcceptedDiagnostic (0.00s)
+=== RUN   TestAngularWrapAndDisagreementRemainVisible
+--- PASS: TestAngularWrapAndDisagreementRemainVisible (0.00s)
+=== RUN   TestNativeAndAuthorityFailuresAreFatal
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/missing
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/wrong_mode
+=== RUN   TestNativeAndAuthorityFailuresAreFatal/wrong_version
+--- PASS: TestNativeAndAuthorityFailuresAreFatal (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/missing (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/wrong_mode (0.00s)
+    --- PASS: TestNativeAndAuthorityFailuresAreFatal/wrong_version (0.00s)
+=== RUN   TestMalformedOrUntrustedCaptureRefused
+--- PASS: TestMalformedOrUntrustedCaptureRefused (0.00s)
+=== RUN   TestTimestampAndDimensions
+--- PASS: TestTimestampAndDimensions (0.00s)
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/missing_latitude
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/Unicode_alias
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_root
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object_beyond_limit
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/mixed_case_alias
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_ascendant
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_package
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_longitude
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/thirteenth_cusp
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/eleven_cusps
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_cusp
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/nonnumeric_cusp
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_nested
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/escaped_duplicate
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_only
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_root
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/null_array
+=== RUN   TestDecodeRejectsAmbiguousOrOversizedJSON/oversized_whitespace
+--- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON (0.02s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/missing_latitude (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/Unicode_alias (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_root (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object_beyond_limit (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/mixed_case_alias (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_ascendant (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_package (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_longitude (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/thirteenth_cusp (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/eleven_cusps (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_cusp (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/nonnumeric_cusp (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/duplicate_nested (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/escaped_duplicate (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/trailing_object (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_only (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/uppercase_root (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/null_array (0.00s)
+    --- PASS: TestDecodeRejectsAmbiguousOrOversizedJSON/oversized_whitespace (0.01s)
+PASS
+ok  	astroengine-core/backend/internal/f01crossengine	0.022s
+ok  	astroengine-core/backend/internal/f01reference	1.090s
+ok  	astroengine-core/backend/internal/f01crossengine	1.098s
+ok  	astroengine-core/backend/internal/f01reference	0.037s
+ok  	astroengine-core/backend/internal/f01crossengine	0.024s
