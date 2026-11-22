@@ -149,3 +149,37 @@ Post-merge execution at `492793423edbef06f9f93b05d40273732a0278da`
 passed all three targeted Go tests with a maximum circular error of
 0.5 arcseconds across 12 boundaries. See the
 [post-merge checkpoint](https://github.com/dhinetrya-jpg/mymomentoclock/pull/32#issuecomment-7079631235).
+
+## Follow-up — observed clock input at the synthetic noon epoch
+
+The IERS Earth Orientation Centre's
+[20u24 C04 noon data](https://datacenter.iers.org/data/255/eopc04_20u24.12h.1984-now.txt)
+gives UT1−UTC = +0.3550132 s with formal error 0.0000150 s at
+MJD 51544.50. The downloaded file SHA-256 was
+`1215c7820301444e5e193e2c5fc84a8f5f17b7fe0b3d4035a8d96535aa140034`.
+The [USNO TAI−UTC history](https://maia.usno.navy.mil/ser7/tai-utc.dat)
+gives TAI−UTC = 32 s, implying TT−UTC = 64.184 s at the same instant.
+The downloaded table SHA-256 was
+`3524e1ae34d67e858873a89e59983bbc5bd100221da898e796c1b36036a310c3`.
+
+The linked-native regression supplies the IERS offset to `ConvertUTC`
+for 2000-01-01 at 12:00 UTC. It verifies that native Swiss TT is unchanged
+by the override, both Julian dates match the tabulated offsets when
+rounded to one binary64 Julian day, and the provenance stays explicit.
+The observed UT1 and TT Julian days were 2451545.000004109 and
+2451545.0007428704. Recovering seconds from these values introduced
+about 5.99 microseconds and 1.09 microseconds of rounding respectively.
+The test derives its bound from half a Julian-day ULP (about 20.12
+microseconds at this date). This bound covers representation of the
+epoch only. An angular tolerance must also account for the frame,
+location, time data, and verified sidereal convention.
+
+In LibEphemeris, the [native extended house provider](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/runtime/api/houses.rs#L389-L406)
+still uses bundled time conversions in the sidereal branch when the
+public session accepts a frame clock override. The lower-level
+[`houses_ex_via_callbacks` interface](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/houses/mod.rs#L399-L462)
+can supply frame and ayanamsa callbacks for a controlled clock diagnostic.
+That route needs explicit call tracing and remains distinct from the
+stock session path. No LibEphemeris executable comparison was run.
+The modern end-to-end reference criterion remains blocked by Lahiri
+provenance and model uncertainty.
