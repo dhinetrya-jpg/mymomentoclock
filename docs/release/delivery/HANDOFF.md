@@ -1,4 +1,26 @@
-# Current integration handoff
+# Integration handoff — 22 November 2026
+
+GitHub and Git agree that `origin/integration` and `origin/main` both
+point to `840227781b85df9a469d67090ddf349f234e7a5d`. PR #30 targeted
+`main`, and the Pages workflow succeeded on that SHA. The three required
+PR checks passed. GitHub lists zero PR reviews and the saved independent
+attestations cover earlier SHAs. The scoped changes are present on
+`integration`. The integration auto-merge handoff test is pending.
+
+Repository auto-merge is enabled. Ruleset 27837708 requires the PR to be
+up to date and all three GitHub Actions checks to pass. Independently
+review the exact PR head before enabling auto-merge. Target all development
+PRs at `integration`. Publishing, production deployment and live payments
+require separate owner authorization.
+
+Continue F01-P0-05 reference qualification and record any separate
+geometry-only evidence. Full private release remains NO-GO. Restart
+recovery requires an interruption-and-resume test on an authorized
+persistent runner. The machine-readable checkpoint in
+[STATE.json](STATE.json) records current state and evidence links.
+
+## Historical handoff
+
 
 Feature branch:
 https://github.com/dhinetrya-jpg/mymomentoclock/tree/feat/private-product-execution
