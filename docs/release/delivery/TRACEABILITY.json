@@ -1843,21 +1843,21 @@
       "owner": "Delivery Lead",
       "dependencies": [],
       "implementation_status": "repository-scoped implementation only; see source",
-      "verification_status": "NOT_RUN_CURRENT_CRITERION",
+      "verification_status": "LOCAL_RESTORE_PASS_HOSTED_GATE_BLOCKED",
       "integration_status": "Repository baseline includes existing code, not proof of feature completion",
       "criteria": [
         {
           "criterion_id": "PAY03-G25-AC01",
           "functional_acceptance": "Backup/restore and incident response validated",
-          "technical_acceptance": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
-          "verdict": "NOT_RUN",
-          "required_evidence": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
-          "tested_sha": null,
-          "evidence": null,
+          "technical_acceptance": "Local synthetic logical restore passed; hosted backup integrity, PITR and incident rehearsal remain open.",
+          "verdict": "BLOCKED",
+          "required_evidence": "Hosted encrypted backup integrity, PITR, approved recovery targets and incident rehearsal. Local synthetic logical restore passed independently.",
+          "tested_sha": "492793423edbef06f9f93b05d40273732a0278da",
+          "evidence": "evidence/PAY03_LOCAL_RESTORE.md and https://github.com/dhinetrya-jpg/mymomentoclock/pull/34",
           "open_findings": []
         }
       ],
-      "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
+      "next_action": "Obtain authorized hosted backup and WAL assets and recovery objectives. Rehearse PITR and incident response."
     },
     {
       "feature_id": "PAY03-G26",

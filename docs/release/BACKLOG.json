@@ -58,7 +58,8 @@
       ],
       "status": "blocked_reference_qualification",
       "acceptance_criteria": "All12 independently sourced cusps, matched conventions and predeclared source-based tolerance",
-      "evidence_required": "original source, lineage, metadata, precision, executable comparisons, independent review"
+      "evidence_required": "original source, lineage, metadata, precision, executable comparisons, independent review",
+      "evidence": "evidence/F01_REFERENCE_RESEARCH.md"
     },
     {
       "id": "CORE01-INTEGRATED",
@@ -878,13 +879,14 @@
       "priority": "P0",
       "classification": "audit",
       "dependencies": [],
-      "status": "not_tested",
+      "status": "local_restore_verified_hosted_gate_blocked",
       "acceptance_criteria": "Backup/restore and incident response validated",
-      "evidence_required": "PostgreSQL restart tested; encrypted backup restore/PITR/on-call rehearsal not executed.",
+      "evidence_required": "Hosted encrypted backup integrity, PITR, approved recovery targets and incident rehearsal. Local synthetic logical restore passed independently.",
       "source": "docs/payment/PAY_P0_03_RELEASE_GATES.json",
       "implemented": "repository-scoped implementation only; see source",
       "independently_verified": false,
-      "historical_status": "NOT_TESTED"
+      "historical_status": "NOT_TESTED",
+      "evidence": "delivery/evidence/PAY03_LOCAL_RESTORE.md"
     },
     {
       "id": "PAY03-G26",
@@ -1216,7 +1218,7 @@
       "dependencies": [
         "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
       ],
-      "status": "verified_scoped_engineering_not_integrated",
+      "status": "scoped_engineering_present_on_integration",
       "acceptance_criteria": "delivery/TRACEABILITY.json criteria for PWA-P0-01",
       "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
       "evidence": [
@@ -1237,7 +1239,7 @@
       "dependencies": [
         "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
       ],
-      "status": "verified_scoped_engineering_not_integrated",
+      "status": "scoped_engineering_present_on_integration",
       "acceptance_criteria": "delivery/TRACEABILITY.json criteria for UX-A11Y-P0-01",
       "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
       "evidence": [
@@ -1256,7 +1258,7 @@
       "dependencies": [
         "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
       ],
-      "status": "verified_scoped_engineering_not_integrated",
+      "status": "scoped_engineering_present_on_integration",
       "acceptance_criteria": "delivery/TRACEABILITY.json criteria for UX-FAIL-P0-01",
       "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
       "evidence": [
@@ -1275,7 +1277,7 @@
       "dependencies": [
         "latest owner delivery brief explicit PWA/accessibility/private-publishing restrictions"
       ],
-      "status": "verified_scoped_engineering_not_integrated",
+      "status": "scoped_engineering_present_on_integration",
       "acceptance_criteria": "delivery/TRACEABILITY.json criteria for REL-PUBLISH-GUARD",
       "evidence_required": "exact-head local and independent evidence plus configured GitHub CI/review before integration",
       "evidence": [
