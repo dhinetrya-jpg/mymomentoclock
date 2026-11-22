@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "main_sha": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+  "integration_base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+  "feature_branch": "feat/private-product-execution",
+  "brief_sha256": "34da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
+  "brief_source": "/workspace/attachments/819a2f03-b9ba-4780-b15b-206a710dab35/Pasted text.txt",
+  "authority": "PRs and integration merges under verified configured controls; no main/master merge, deployment or live payment",
+  "github_capabilities": {
+    "git_read": "VERIFIED",
+    "api_connect": "BLOCKED_NETWORK_POLICY",
+    "agent_pr_write": "UNVERIFIED",
+    "repository_auto_merge": "UNVERIFIED",
+    "integration_ruleset": "UNVERIFIED",
+    "api_retest_after_owner_request": "403_BLOCKED_BEFORE_GITHUB; currentenforcedrevision1 excludesapi.github.com",
+    "authorized_github_connector": "NO_CALLABLE_GITHUB_CONNECTOR_TOOLS_EXPOSED",
+    "admin_settings": "UNVERIFIED_NOT_A_SERVICE_PERMISSION_VERDICT",
+    "auto_merge": "PENDING_VERIFIED_RULES_AND_REQUIRED_CHECKS"
+  },
+  "features": [
+    {
+      "id": "PWA-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "owner": "privacy_implementation",
+      "acceptance": [
+        "allowlisted installable static shell",
+        "honest offline/degraded state",
+        "no sensitive caching",
+        "explicit safe update lifecycle",
+        "root/subpath behavior"
+      ],
+      "dependencies": [
+        "latest brief explicitPWA authorization"
+      ],
+      "evidence_required": [
+        "real browser worker/manifest/offline/cache/update assertions",
+        "bothbuilds",
+        "independent exact-head audit"
+      ]
+    },
+    {
+      "id": "UX-A11Y-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "owner": "native_engine",
+      "acceptance": [
+        "modal initialfocus",
+        "Tab containment",
+        "Escape dismissal",
+        "focus restoration",
+        "background exclusion"
+      ],
+      "dependencies": [
+        "existing modal contracts",
+        "latestbrief accessibility scope"
+      ],
+      "evidence_required": [
+        "three-dialog keyboardbrowser assertions",
+        "existingcheckout/BTR/resolver regressions",
+        "independent exacthead audit"
+      ]
+    },
+    {
+      "id": "REL-PUBLISH-GUARD",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "owner": "root",
+      "acceptance": [
+        "Pages manual dispatch cannot build/deploy fromintegration orfeature refs"
+      ],
+      "dependencies": [
+        "verifiedPages trigger audit"
+      ],
+      "evidence_required": [
+        "staticjobguardrefmatrix",
+        "independentworkflowreview"
+      ]
+    },
+    {
+      "id": "UX-FAIL-P0-01",
+      "classification": "implementation",
+      "priority": "P0",
+      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "owner": "analytical_audit as implementer; independent audit separate",
+      "base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+      "criteria": "active timeout announces failure; stale/unmount cancellation remains silent; deliberate retry, no auto retry",
+      "evidence": [
+        "evidence/F01_TIMEOUT_IMPLEMENTATION.md",
+        "evidence/F01_TIMEOUT_BROWSER.txt"
+      ]
+    }
+  ],
+  "readiness": "NOT_ESTABLISHED",
+  "next_action": "Pin candidate, execute affected exact-head checks, independent security/QA review, bounded historical smoke, Git handoff tointegration ifAPIaccessresolves",
+  "attempts": [
+    {
+      "stage": "scope_reconciliation",
+      "outcome": "PWA/accessibility/timeout/publishing guard eligible; domainmatrixinputs stillmissing",
+      "next_action": "implementeligiblework"
+    },
+    {
+      "stage": "affected_regressions_precommit",
+      "outcome": "149/149 Node pass; Pagesguard passes and reproducesbaselinefailure; F01 timeout6/6browser+12/12contract",
+      "head_sha": null,
+      "next_action": "finishPWAworker lifecycle/modal regressions; pin candidate and independentlyaudit"
+    },
+    {
+      "stage": "resume_and_reflow",
+      "outcome": "Restarted interruptedlocalserver; finalkeyboard/reflow320/375/1280normal+200%andF01timeout6/6pass;PWAimplementerfullsuitepass",
+      "head_sha": null,
+      "remaining": "exactheadindependentreview; genuineOS/device/screenreader/ownerUATNOTRUN; GitHubAPIblocked"
+    }
+  ]
+}

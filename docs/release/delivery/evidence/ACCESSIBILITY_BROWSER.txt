@@ -1,0 +1,19 @@
+Modal keyboard 320px btr: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 320px checkout: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 320px conflict: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal stack 320px: nested dialog, hosted-widget handoff and removed invoker passed.
+Modal keyboard 375px btr: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 375px checkout: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 375px conflict: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal stack 375px: nested dialog, hosted-widget handoff and removed invoker passed.
+Modal keyboard 1280px btr: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 1280px checkout: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal keyboard 1280px conflict: initial focus, live Tab/ShiftTab trap, Escape, restore and preserved refusal passed.
+Modal stack 1280px: nested dialog, hosted-widget handoff and removed invoker passed.
+Actual app 320px/100% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Actual app 320px/200% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Actual app 375px/100% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Actual app 375px/200% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Actual app 1280px/100% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Actual app 1280px/200% root-text: Tab/Enter skip link, label operation, UNKNOWN refusal and no page/control horizontal clipping passed.
+Chromium keyboard and root-text stress only; full WCAG, screen-reader and device/browser conformance not claimed.

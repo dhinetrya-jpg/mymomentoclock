@@ -1,0 +1,11 @@
+{
+  "observed_public_html": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/29",
+  "observations": [
+    {
+      "state": "MERGED",
+      "title": "Run validation for integration pull requests",
+      "headSha": "1939d208e5a18f0f5a1d1afb49e0b5cae3d468c6",
+      "mergeCommitSha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2"
+    }
+  ]
+}

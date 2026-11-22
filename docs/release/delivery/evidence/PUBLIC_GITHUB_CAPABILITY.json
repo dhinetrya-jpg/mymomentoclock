@@ -1,0 +1,6 @@
+{
+  "open_pr_page_link_ids": [],
+  "rules_page_fetched": true,
+  "admin_and_agent_api_capabilities": "UNVERIFIED_CONNECT_BLOCKED",
+  "auto_merge": "DO_NOT_ENABLE_WITHOUT_VERIFIED_RULES_AND_REQUIRED_CHECKS"
+}

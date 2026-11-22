@@ -50,6 +50,9 @@ jobs:
       - name: Calculation integrity & astronomical accuracy regression tests
         run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts tests/calculation/independent_planetary_accuracy.test.ts tests/calculation/temporal_reference_accuracy.test.ts tests/calculation/panchang_accuracy.test.ts tests/calculation/analytical_safety.test.ts tests/calculation/native_reference_diagnostics.test.ts
 
+      - name: Pages publishing branch boundary
+        run: python3 tests/release/pages_guard_test.py
+
       - name: Immutable source integrity and adversarial admission checks
         run: |
           python3 scripts/core-reference-acquire.py verify
@@ -77,4 +80,7 @@ jobs:
           export CHROMIUM_PATH="$(command -v google-chrome || command -v chromium)"
           PHASE1_WEB_URL=http://127.0.0.1:3101 node tests/phase1/browser.mjs
           node tests/payment/pay03-browser.mjs
+          A11Y_WEB_URL=http://127.0.0.1:3101 node tests/accessibility/browser.mjs
+          F01_WEB_URL=http://127.0.0.1:3101 node tests/f01/timeout-browser.mjs
+          node tests/pwa/browser.mjs
           CORE02_WEB_URL=http://127.0.0.1:3101 node tests/timing/browser.mjs

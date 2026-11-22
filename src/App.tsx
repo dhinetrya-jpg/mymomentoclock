@@ -64,7 +64,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#140407] text-[#f5e6ea] flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="min-h-screen min-w-0 bg-[#140407] text-[#f5e6ea] flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-amber-300 focus:p-3 focus:text-neutral-950">Skip to main content</a>
       {/* 1. Universal Top Navigation Bar */}
       <Navigation
         activeTab={activeTab}
@@ -77,8 +78,8 @@ export default function App() {
 
       {/* Profile quick bar */}
       <div className="border-b border-rose-950/60 bg-[#1a050a] px-4 py-2 text-xs">
-        <div className="mx-auto flex max-w-7xl items-center justify-between text-rose-200/70">
-          <div className="flex items-center gap-2">
+        <div className="mx-auto flex min-w-0 max-w-7xl flex-wrap items-center justify-between gap-3 text-rose-200/70">
+          <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
             <span className="text-amber-400 font-mono font-medium">Native Profile:</span>
             <span>{chart?.inputProfile.cityName || "No birth profile supplied"}</span>
             <span aria-hidden="true">·</span>
@@ -98,7 +99,7 @@ export default function App() {
 
       {!import.meta.env?.DEV && ['funnel','devops-uat'].includes(activeTab) && <p role="status" className="p-5 text-amber-200">This demonstration is not available in production. Use Birth Details or Festival Kit to continue.</p>}
       {/* Main Container */}
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Onboarding Wizard (Collapsible or Triggered) */}
         {isOnboardingOpen ? (
           <div className="mb-8">
@@ -178,10 +179,10 @@ export default function App() {
       {/* Footer */}
       <footer className="mt-16 border-t border-rose-950/70 bg-[#100306] py-8 text-rose-300/50 text-xs">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 max-w-full flex-wrap items-center justify-center gap-2 text-center">
             <span className="font-serif text-sm font-semibold text-rose-200/80">MymomentOclock Platform</span>
             <span>·</span>
-            <span>Diwali 2026 & Samvat 2083 Suite</span>
+            <span>Astrology & city-local timing preview</span>
           </div>
 
           <div className="text-center sm:text-right text-[11px] space-y-1">
