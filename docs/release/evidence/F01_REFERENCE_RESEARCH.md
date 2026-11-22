@@ -72,3 +72,42 @@ Nine historical user master-prompt attachments are available under /workspace/at
 The repository docs/core/CORE_P0_02_RULE_MATRIX.md explicitly says no real traditional activity/natal/Panchang rule is approved. Its six versioned timing-rules-v1 categories require OWNER_RULE_SOURCE_REQUIRED: work/interviews, purchases/transactions, travel, learning/exams, family/personal occasions, finance/trading. They require exact owner-selected tradition/edition/passage, applicability/exclusions, approved predicates, and uncertainty policy. Synthetic engine fixtures verify generic intersection/exclusion/ranking only. All six live personalized recommendation rule sets, production Panchang/sunrise/Rahu facts and corresponding accuracy/release claims depend on missing source approval and independent references. Finance additionally requires owner/legal disclosure review.
 
 The absent complete feature matrix blocks a defensible declaration that the entire approved product is complete, but does not block verified repository-scoped hardening, regression coverage, security/release audits or evidence bookkeeping. Existing F01 methodology docs and source evidence suffice to keep scientific gates closed; they do not supply missing independent acceptance data or owner domain signoff.
+
+## Follow-up — published geometry worked example
+
+V. Subrahmanya Sastri's English edition of *Sripatipaddhati*, chapter I,
+slokas 6–8 and the table on printed p. 12 (PDF page 26), publishes all
+12 house centers (madhyas) and all 12 junctions (sandhis). The scan
+was retrieved from [eBharati Sampat](https://www.ebharatisampat.in/pdfs/ebharati-pdf-1621321809Sripatipadhati.pdf).
+SHA-256 of the retrieved PDF is
+`c1403fbc0a97fc4f17cdd97c950ad9c5c002ca66c1554629eee06d5dce9a9537`.
+
+Two readers transcribed the image. The junction following house 12
+is the start of house 1. The geometry regression supplies the printed
+centers directly and compares against the printed junctions, reordered
+to start at house 1. The one-arcsecond tolerance allows up to half an
+arcsecond from rounding the centers (a midpoint averages that input
+error) and half an arcsecond from rounding the published junction.
+The test adds a small floating-point allowance. Runtime tolerance and
+the reference admission manifest are unchanged.
+
+The example supplies a traditional angle construction and a stated
+ayanamsa. An exact modern instant, UTC/UT1/TT conventions, longitude,
+and Swiss Lahiri equivalence remain unqualified. This fixture covers
+the midpoint operation only. End-to-end external reference admission,
+rule approvals, and private release remain blocked.
+
+At base `1ed6d5c886b5055625a231e956ebd3f81505c5de`, the targeted pure-Go
+suite (`cd backend && CGO_ENABLED=0 go test ./internal/ephemeris -run
+'TestSripati' -v`) passed all three tests. The published example compared
+all 12 boundaries with maximum absolute circular error 0.5 arcseconds.
+
+A follow-up [TKS methods inspection](https://panchang.tksephemeris.com/tks-jyotish-methods)
+and synthetic equatorial input to the provider's bhava-chalit endpoint
+yielded 12 start, center and end rows. The response mixes a top-level
+Lahiri label with true Chitrāpakṣa in provenance fields. The methods
+describe fitting Lahiri to Swiss and omitting DUT1. The returned chart
+lacks an immutable engine revision and a complete input echo. These
+gaps prevent matched end-to-end comparison. A versioned export with
+resolved field semantics, coordinates, time scales, sidereal
+conventions and an uncertainty budget would permit reevaluation.
