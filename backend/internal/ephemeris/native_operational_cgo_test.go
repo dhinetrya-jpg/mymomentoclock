@@ -180,3 +180,45 @@ func TestNativeCrossMidnightDaylight(t *testing.T) {
 	encoded, _ := json.Marshal(out)
 	t.Log(string(encoded))
 }
+
+func TestNativeEpochWithIERSNoonDUT1(t *testing.T) {
+	// IERS EOP 20u24 C04, MJD 51544.50, and the USNO TAI-UTC history.
+	const nominalUTCJD = 2451545.0
+	const dut1 = 0.3550132
+	const ttMinusUTC = 64.184
+	utc := time.Date(2000, 1, 1, 12, 0, 0, 0, time.UTC)
+
+	epoch, err := ConvertUTC(utc, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	suppliedDUT1 := dut1
+	observedClock, err := ConvertUTC(utc, &suppliedDUT1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantUT1 := float64(nominalUTCJD + dut1/86400)
+	wantTT := float64(nominalUTCJD + ttMinusUTC/86400)
+	if observedClock.JulianDayUTC != nominalUTCJD ||
+		observedClock.JulianDayUT1 != wantUT1 ||
+		observedClock.JulianDayTT != wantTT ||
+		observedClock.JulianDayTT != epoch.JulianDayTT {
+		t.Fatalf("unexpected Julian days: UTC %.17g, UT1 %.17g (want %.17g), TT %.17g (want %.17g)",
+			observedClock.JulianDayUTC, observedClock.JulianDayUT1, wantUT1, observedClock.JulianDayTT, wantTT)
+	}
+	if observedClock.UT1Source != "CALLER_SUPPLIED_DUT1_NOT_INDEPENDENTLY_VERIFIED" ||
+		observedClock.TTSource != "SWISS_BUILTIN_LEAP_TABLE_NOT_EXTERNALLY_VERIFIED" {
+		t.Fatalf("unexpected input provenance: UT1=%s, TT=%s", observedClock.UT1Source, observedClock.TTSource)
+	}
+	// Subtracting the recorded Julian dates to recover offsets exposes the
+	// original rounding at the Julian date's scale (about 40 microseconds/ULP).
+	halfULPSeconds := (math.Nextafter(nominalUTCJD, math.Inf(1)) - nominalUTCJD) * 86400 / 2
+	if math.Abs(observedClock.DUT1Seconds-dut1) > halfULPSeconds ||
+		math.Abs(observedClock.TTMinusUTCSeconds-ttMinusUTC) > halfULPSeconds {
+		t.Fatalf("offset loss exceeds a half ULP: DUT1=%.12f, TT-UTC=%.12f",
+			observedClock.DUT1Seconds, observedClock.TTMinusUTCSeconds)
+	}
+	t.Logf("UTC %.17g, UT1 %.17g, TT %.17g; DUT1 %.12f s, TT-UTC %.12f s",
+		observedClock.JulianDayUTC, observedClock.JulianDayUT1, observedClock.JulianDayTT,
+		observedClock.DUT1Seconds, observedClock.TTMinusUTCSeconds)
+}
