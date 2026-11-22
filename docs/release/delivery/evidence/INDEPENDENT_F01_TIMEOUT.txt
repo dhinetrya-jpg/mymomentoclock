@@ -1,0 +1,6 @@
+F01 375px active-timeout-and-retry: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.
+F01 375px unmount-is-silent: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.
+F01 375px supersession-is-silent: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.
+F01 1280px active-timeout-and-retry: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.
+F01 1280px unmount-is-silent: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.
+F01 1280px supersession-is-silent: passed; only12s deadline accelerated, synthetic POST data, no automatic retry or release claim.

@@ -91,3 +91,30 @@ versioned real-worker script URLs drive deterministic lifecycle tests. Synthetic
 install-button events are labelled separately from actual install eligibility.
 Physical OS install and normal production polling latency are not claimed.
 Pin candidate and obtain independent original-evidence/source review next.
+
+## Exact candidate verification and recommendations
+
+Independent source/quality review initially FAILed6c55a7b because the root Vite
+plugin registration had not been included in the commit. Committed that omitted
+configuration and pinned clean c185132; rebuilt both frontends and renewed original
+independent PWA/A11Y/F01 browser executions. Both independent reviewers now PASS
+within their stated slice.91calculation and102boundary checks pass; no backend
+source changed. Fresh read-only nonroot Node22 container serves manifest/SW MIME
+and controls a real browser with CSP, one static cache and no local/session state.
+
+Bounded existing k6 smoke:1VU,10iterations,20requests,50/50checks, no unexpected
+HTTP failures; p95=6.933ms,p99=26.075ms and pacedthroughput1.982requests/s. An initial
+fixture mount failed permission before HTTP; an identical SHA-bound readable
+synthetic copy resolved it. No stress/capacity claim or approvedtrafficSLO inferred.
+
+Independent executive:NO-GO fullprivateproduct; CONDITIONALGO narrow engineering
+handoff under exact-head CI/review/controls. Primary managerial verdict matches;
+actualowner, domain and real-UAT signoffs are not supplied. READINESS/RUNBOOK identify
+all applicable category limits, riskowners, safe rollback design and concrete resume.
+Final evidence-only metadata is being pinned/reviewed, followed by branch push and
+remote head/PR lookup. No API/connector or repository-control success is invented.
+
+Existing production-browser suites also pass on candidate application source:
+Phase1 desktop/mobile, commercial checkout local-fixture states and daily timing
+unavailable/unknown/synthetic/invalid-response states. Outputs retained separately.
+This does not create genuine provider or approved-rule acceptance.

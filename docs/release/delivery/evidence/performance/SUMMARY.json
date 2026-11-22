@@ -1,0 +1,170 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "Unavailable BTR does not fabricate a candidate": {
+                    "name": "Unavailable BTR does not fabricate a candidate",
+                    "path": "::Unavailable BTR does not fabricate a candidate",
+                    "id": "54a173e2d75ffce85470cc43d927f547",
+                    "passes": 10,
+                    "fails": 0
+                },
+                "Unavailable BTR returns no fit or time": {
+                    "name": "Unavailable BTR returns no fit or time",
+                    "path": "::Unavailable BTR returns no fit or time",
+                    "id": "69c9e0601317b65253be0c2c2356b0f1",
+                    "passes": 10,
+                    "fails": 0
+                },
+                "BTR returns the current API contract": {
+                    "passes": 10,
+                    "fails": 0,
+                    "name": "BTR returns the current API contract",
+                    "path": "::BTR returns the current API contract",
+                    "id": "2f8406e01d7d0c76d3e6df79c4d3f7b2"
+                },
+                "Unavailable profile graph fails closed": {
+                    "name": "Unavailable profile graph fails closed",
+                    "path": "::Unavailable profile graph fails closed",
+                    "id": "8313aad789bf80512ff360b17ba7242e",
+                    "passes": 10,
+                    "fails": 0
+                },
+                "Unavailable graph never fabricates vectors": {
+                    "fails": 0,
+                    "name": "Unavailable graph never fabricates vectors",
+                    "path": "::Unavailable graph never fabricates vectors",
+                    "id": "44b2c56ce5c64dd6c90db0a914d47526",
+                    "passes": 10
+                }
+            }
+    },
+    "metrics": {
+        "http_req_tls_handshaking": {
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+        },
+        "http_req_duration": {
+            "max": 30.861004,
+            "p(90)": 4.864294300000001,
+            "p(95)": 6.932956900000018,
+            "p(99)": 26.07539457999997,
+            "avg": 3.3039040999999996,
+            "min": 0.851261,
+            "med": 1.2600455
+        },
+        "http_req_sending": {
+            "max": 0.091166,
+            "p(90)": 0.06612240000000001,
+            "p(95)": 0.08058775000000001,
+            "p(99)": 0.08905034999999999,
+            "avg": 0.038011649999999994,
+            "min": 0.017256,
+            "med": 0.031983
+        },
+        "iterations": {
+            "count": 10,
+            "rate": 0.9911347459067269
+        },
+        "http_reqs": {
+            "count": 20,
+            "rate": 1.9822694918134538
+        },
+        "http_req_waiting": {
+            "avg": 3.1827287500000003,
+            "min": 0.749205,
+            "med": 1.1360835,
+            "max": 30.633341,
+            "p(90)": 4.7438790000000015,
+            "p(95)": 6.772027600000017,
+            "p(99)": 25.86107831999997
+        },
+        "checks": {
+            "passes": 50,
+            "fails": 0,
+            "thresholds": {
+                "rate==1": false
+            },
+            "value": 1
+        },
+        "vus_max": {
+            "min": 1,
+            "max": 1,
+            "value": 1
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 0.308522,
+            "p(90)": 0,
+            "p(95)": 0.01542610000000022,
+            "p(99)": 0.2499028199999996,
+            "avg": 0.015426100000000002
+        },
+        "data_received": {
+            "count": 18960,
+            "rate": 1879.1914782391543
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(90)": 4.864294300000001,
+            "p(95)": 6.932956900000018,
+            "p(99)": 26.07539457999997,
+            "avg": 3.3039040999999996,
+            "min": 0.851261,
+            "med": 1.2600455,
+            "max": 30.861004
+        },
+        "data_sent": {
+            "count": 6850,
+            "rate": 678.927300946108
+        },
+        "iteration_duration": {
+            "avg": 1008.7797987,
+            "min": 1003.51775,
+            "med": 1005.859873,
+            "max": 1035.427521,
+            "p(90)": 1010.5750398,
+            "p(95)": 1023.0012804,
+            "p(99)": 1032.94227288
+        },
+        "http_req_receiving": {
+            "min": 0.043065,
+            "med": 0.06675,
+            "max": 0.194143,
+            "p(90)": 0.16342560000000003,
+            "p(95)": 0.18003170000000002,
+            "p(99)": 0.19132074,
+            "avg": 0.0831637
+        },
+        "http_req_blocked": {
+            "min": 0.004647,
+            "med": 0.0060090000000000005,
+            "max": 0.357785,
+            "p(90)": 0.018165200000000003,
+            "p(95)": 0.03632780000000024,
+            "p(99)": 0.2934935599999996,
+            "avg": 0.024647350000000005
+        },
+        "http_req_failed": {
+            "fails": 20,
+            "passes": 0,
+            "thresholds": {
+                "rate==0": false
+            },
+            "value": 0
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        }
+    }
+}

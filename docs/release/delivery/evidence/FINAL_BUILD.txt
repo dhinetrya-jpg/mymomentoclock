@@ -1,0 +1,22 @@
+
+> mymomentoclock@1.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 50 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/pwa-clock.svg                                                   0.38 kB │ gzip:   0.22 kB
+dist/manifest.webmanifest                                            0.54 kB
+dist/index.html                                                      1.09 kB │ gzip:   0.48 kB
+dist/pwa-clock-192.png                                               1.30 kB
+dist/sw.js                                                           3.49 kB
+dist/pwa-clock-512.png                                               4.86 kB
+dist/assets/diwali_sealed_wax_envelope_1791900494959-DinplcKD.jpg  887.96 kB
+dist/assets/diwali_blessing_card_art_1791900494610-BIqJ76yN.jpg    924.84 kB
+dist/assets/diwali_lakshmi_altar_1791900494902-DzXKPhCe.jpg        984.49 kB
+dist/assets/index-CuWtHz6y.css                                      63.42 kB │ gzip:  10.40 kB
+dist/assets/index-fkYeuU-9.js                                      357.31 kB │ gzip: 110.44 kB
+
+✓ built in 440ms

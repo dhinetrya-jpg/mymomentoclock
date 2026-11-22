@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+  "owner_development_and_controlled_integration_authorization": "GRANTED_BY_LATEST_BRIEF",
+  "owner_private_hosting_or_deployment_authorization": "NOT_PROVIDED",
+  "owner_production_or_live_payment_activation": "NOT_PROVIDED_RESTRICTED",
+  "owner_approved_full_inventory_or_exclusions": "NOT_PROVIDED",
+  "real_user_uat": "NOT_RUN_NO_AUTHORIZED_GROUP",
+  "domain_and_scientific_acceptance": "BLOCKED_OR_PARTIAL_SEE_TRACEABILITY",
+  "managerial_recommendation": "CONDITIONAL_GO_ENGINEERING_HANDOFF_NO_GO_FULL_PRIVATE",
+  "independent_security": "PASS_SCOPED",
+  "independent_scripted_qa": "GO_SCOPED",
+  "independent_executive": "NO_GO_FULL_PRIVATE_CONDITIONAL_GO_ENGINEERING_HANDOFF",
+  "integration": "NOT_INTEGRATED"
+}

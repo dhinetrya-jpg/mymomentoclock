@@ -22,7 +22,7 @@
       "id": "PWA-P0-01",
       "classification": "implementation",
       "priority": "P0",
-      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "status": "verified_scoped_engineering",
       "owner": "privacy_implementation",
       "acceptance": [
         "allowlisted installable static shell",
@@ -38,13 +38,16 @@
         "real browser worker/manifest/offline/cache/update assertions",
         "bothbuilds",
         "independent exact-head audit"
-      ]
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
     },
     {
       "id": "UX-A11Y-P0-01",
       "classification": "implementation",
       "priority": "P0",
-      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "status": "verified_scoped_engineering",
       "owner": "native_engine",
       "acceptance": [
         "modal initialfocus",
@@ -61,13 +64,16 @@
         "three-dialog keyboardbrowser assertions",
         "existingcheckout/BTR/resolver regressions",
         "independent exacthead audit"
-      ]
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
     },
     {
       "id": "REL-PUBLISH-GUARD",
       "classification": "implementation",
       "priority": "P0",
-      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "status": "verified_scoped_engineering",
       "owner": "root",
       "acceptance": [
         "Pages manual dispatch cannot build/deploy fromintegration orfeature refs"
@@ -78,24 +84,30 @@
       "evidence_required": [
         "staticjobguardrefmatrix",
         "independentworkflowreview"
-      ]
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
     },
     {
       "id": "UX-FAIL-P0-01",
       "classification": "implementation",
       "priority": "P0",
-      "status": "implemented_precommit_regressions_pass_pending_exact_head_audit",
+      "status": "verified_scoped_engineering",
       "owner": "analytical_audit as implementer; independent audit separate",
       "base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
       "criteria": "active timeout announces failure; stale/unmount cancellation remains silent; deliberate retry, no auto retry",
       "evidence": [
         "evidence/F01_TIMEOUT_IMPLEMENTATION.md",
         "evidence/F01_TIMEOUT_BROWSER.txt"
-      ]
+      ],
+      "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
+      "integration_status": "NOT_INTEGRATED"
     }
   ],
-  "readiness": "NOT_ESTABLISHED",
-  "next_action": "Pin candidate, execute affected exact-head checks, independent security/QA review, bounded historical smoke, Git handoff tointegration ifAPIaccessresolves",
+  "readiness": "NO_GO_FULL_PRIVATE_PRODUCT",
+  "next_action": "Push tested feature/evidence branch; find/create exactly one PR to integration when API/connector works; verify controls+exact-head CI/review before merge; continue source-dependent backlog when owner inputs arrive",
   "attempts": [
     {
       "stage": "scope_reconciliation",
@@ -113,6 +125,25 @@
       "outcome": "Restarted interruptedlocalserver; finalkeyboard/reflow320/375/1280normal+200%andF01timeout6/6pass;PWAimplementerfullsuitepass",
       "head_sha": null,
       "remaining": "exactheadindependentreview; genuineOS/device/screenreader/ownerUATNOTRUN; GitHubAPIblocked"
+    },
+    {
+      "stage": "candidate_provenance",
+      "head_sha": "6c55a7b0c4e1d22d4c850a125d743c107bf44d7e",
+      "outcome": "FAIL missing root vite config in commit; fixed by c185132 and renewed affected builds/QA"
+    },
+    {
+      "stage": "independent_exact_head",
+      "head_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "outcome": "PASS scoped security and independent real browser QA;91calculation+102boundary checks; both builds/typechecks; actual read-only web container worker/MIME/CSP/static cache smoke"
+    },
+    {
+      "stage": "bounded_performance",
+      "head_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+      "outcome": "PASS existing1VU10iterations20requests50checks; p95 6.933ms p99 26.075ms; paced refusal paths, not capacity; original fixture permission error corrected with identical readable synthetic copy before successful HTTP run"
     }
-  ]
+  ],
+  "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+  "integration_status": "NOT_INTEGRATED",
+  "pr_url": null,
+  "remote_ci": "NOT_OBSERVED_NO_PR"
 }

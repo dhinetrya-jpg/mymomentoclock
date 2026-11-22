@@ -48,11 +48,12 @@
           "criterion_id": "F01-PRIVACY-AC01",
           "functional_acceptance": "Reject malformed upstream scalars and out-of-request intervals; project geometry keys",
           "technical_acceptance": "adversarial F01 contracts, lint, exact-head independent audit",
-          "verdict": "PASS_SCOPED_HISTORICAL",
+          "verdict": "PASS",
           "required_evidence": "adversarial F01 contracts, lint, exact-head independent audit",
           "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
           "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
-          "open_findings": []
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
         }
       ],
       "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
@@ -76,11 +77,12 @@
           "criterion_id": "F01-REFERENCE-INTEGRITY-AC01",
           "functional_acceptance": "Reject non-12 arrays, oversized manifests and claims unbound to original chart bytes",
           "technical_acceptance": "targeted parser/admission regressions and exact-head audit",
-          "verdict": "PASS_SCOPED_HISTORICAL",
+          "verdict": "PASS",
           "required_evidence": "targeted parser/admission regressions and exact-head audit",
           "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
           "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
-          "open_findings": []
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
         }
       ],
       "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
@@ -453,11 +455,12 @@
           "criterion_id": "F01-DIAGNOSTIC-INTEGRITY-AC01",
           "functional_acceptance": "Exactly12 non-null source cusps and unambiguous bounded diagnostic JSON",
           "technical_acceptance": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
-          "verdict": "PASS_SCOPED_HISTORICAL",
+          "verdict": "PASS",
           "required_evidence": "adversarial parser cases, native/noCGO execution, independent exact-head audit",
           "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
           "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
-          "open_findings": []
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
         }
       ],
       "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
@@ -2443,11 +2446,12 @@
           "criterion_id": "F01-NATIVE-MTLS-AC01",
           "functional_acceptance": "Actual Node gateway over verified mTLS to pinned native SWISS_FILE F01 succeeds for four certainty modes; malformed requests/certless clients refused; raw samples omitted",
           "technical_acceptance": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
-          "verdict": "PASS_SCOPED_HISTORICAL",
+          "verdict": "PASS",
           "required_evidence": "real cross-service native test, exact-head audit; no scientific/customer acceptance inferred",
           "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
           "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
-          "open_findings": []
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
         }
       ],
       "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
@@ -2471,11 +2475,12 @@
           "criterion_id": "OPS-POD-CREDENTIALS-AC01",
           "functional_acceptance": "API pod template disables automatic Kubernetes service-account token mount without opening routes",
           "technical_acceptance": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
-          "verdict": "PASS_SCOPED_HISTORICAL",
+          "verdict": "PASS",
           "required_evidence": "YAML parse and exact-head static independent review; no live RBAC/cluster claim",
           "tested_sha": "2b5458a4565349cbdf5de3c1fb98e20f97bd054e",
           "evidence": "evidence/ENGINEERING_AUDIT_PASS.md",
-          "open_findings": []
+          "open_findings": [],
+          "verification_scope": "historical limited evidence; no full-product/domain certification inferred"
         }
       ],
       "next_action": "Reuse unchanged scoped evidence; run affected checks when implementation changes"
@@ -2492,96 +2497,132 @@
         "integration57a6bbe baseline",
         "source-reviewed scoped acceptance"
       ],
-      "implementation_status": "IN_PROGRESS",
-      "verification_status": "NOT_RUN_FINAL_HEAD",
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
       "integration_status": "NOT_INTEGRATED",
       "criteria": [
         {
           "criterion_id": "PWA-P0-01-AC01",
           "functional_acceptance": "Manifest/start/scope/icons for root and subpath",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "PWA-P0-01-AC02",
           "functional_acceptance": "Install UI reflects actual browser support",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "PWA-P0-01-AC03",
           "functional_acceptance": "Offline static shell and honest online-data limitation",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "PWA-P0-01-AC04",
           "functional_acceptance": "Exact static allowlist; no API/POST/query/auth/checkout/result persistence",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "PWA-P0-01-AC05",
           "functional_acceptance": "Atomic scoped worker update and safe explicit activation",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "PWA-P0-01-AC06",
           "functional_acceptance": "Both frontend builds and real Chromium regression",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_PWA.txt",
+            "evidence/SECURITY_PASS.md",
+            "evidence/CONTAINER_SMOKE.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         }
       ],
-      "next_action": "Finish scoped implementation, execute tests, pin and independently audit exact head"
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
     },
     {
       "feature_id": "UX-A11Y-P0-01",
@@ -2595,96 +2636,120 @@
         "integration57a6bbe baseline",
         "source-reviewed scoped acceptance"
       ],
-      "implementation_status": "IN_PROGRESS",
-      "verification_status": "NOT_RUN_FINAL_HEAD",
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
       "integration_status": "NOT_INTEGRATED",
       "criteria": [
         {
           "criterion_id": "UX-A11Y-P0-01-AC01",
           "functional_acceptance": "Initial focus and Tab/ShiftTab containment in all3dialogs",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-A11Y-P0-01-AC02",
           "functional_acceptance": "Escape close and return focus to surviving invoker",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-A11Y-P0-01-AC03",
           "functional_acceptance": "Background exclusion and dynamic checkout state preserved",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-A11Y-P0-01-AC04",
           "functional_acceptance": "Profile inputs have exact programmatic label names",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-A11Y-P0-01-AC05",
           "functional_acceptance": "Skip link reaches main content",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-A11Y-P0-01-AC06",
           "functional_acceptance": "Unknown birth and BTR copy state limitations without generated time",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_ACCESSIBILITY.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         }
       ],
-      "next_action": "Finish scoped implementation, execute tests, pin and independently audit exact head"
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
     },
     {
       "feature_id": "UX-FAIL-P0-01",
@@ -2698,54 +2763,66 @@
         "integration57a6bbe baseline",
         "source-reviewed scoped acceptance"
       ],
-      "implementation_status": "IN_PROGRESS",
-      "verification_status": "NOT_RUN_FINAL_HEAD",
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
       "integration_status": "NOT_INTEGRATED",
       "criteria": [
         {
           "criterion_id": "UX-FAIL-P0-01-AC01",
           "functional_acceptance": "Active timeout exposes accessible understandable failure",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-FAIL-P0-01-AC02",
           "functional_acceptance": "Unmount/supersession never displays stale result/error",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "UX-FAIL-P0-01-AC03",
           "functional_acceptance": "No silent retry or persistence; explicit retry can recover",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/INDEPENDENT_QA.md",
+            "evidence/INDEPENDENT_F01_TIMEOUT.txt"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         }
       ],
-      "next_action": "Finish scoped implementation, execute tests, pin and independently audit exact head"
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
     },
     {
       "feature_id": "REL-PUBLISH-GUARD",
@@ -2759,40 +2836,52 @@
         "integration57a6bbe baseline",
         "source-reviewed scoped acceptance"
       ],
-      "implementation_status": "IN_PROGRESS",
-      "verification_status": "NOT_RUN_FINAL_HEAD",
+      "implementation_status": "IMPLEMENTED",
+      "verification_status": "PASS_SCOPED",
       "integration_status": "NOT_INTEGRATED",
       "criteria": [
         {
           "criterion_id": "REL-PUBLISH-GUARD-AC01",
           "functional_acceptance": "Pages build refuses nonpublishingrefs",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/FINAL_PAGES_GUARD.txt",
+            "evidence/PAGES_GUARD_REGRESSION.txt",
+            "evidence/SECURITY_PASS.md"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         },
         {
           "criterion_id": "REL-PUBLISH-GUARD-AC02",
           "functional_acceptance": "Pages deploy refuses nonpublishingrefs",
           "technical_acceptance": "Actual browser/assertion or workflow guard evaluation; original source review",
-          "verdict": "NOT_RUN",
+          "verdict": "PASS",
           "required_evidence": [
             "executable result",
             "exact tested SHA",
             "independent review"
           ],
-          "tested_sha": null,
-          "evidence": [],
-          "open_findings": []
+          "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+          "evidence": [
+            "evidence/FINAL_PAGES_GUARD.txt",
+            "evidence/PAGES_GUARD_REGRESSION.txt",
+            "evidence/SECURITY_PASS.md"
+          ],
+          "open_findings": [],
+          "verification_scope": "local synthetic Chromium/source/workflow evidence; limits in READINESS.md"
         }
       ],
-      "next_action": "Finish scoped implementation, execute tests, pin and independently audit exact head"
+      "next_action": "Obtain exact-head required GitHub CI/review and controlled PR merge into integration; then verify merged SHA"
     }
-  ]
+  ],
+  "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
+  "overall_private_readiness": "NO_GO"
 }
