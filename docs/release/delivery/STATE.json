@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "main_sha": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+  "main_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
   "integration_base_sha": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
   "feature_branch": "feat/private-product-execution",
   "brief_sha256": "34da95267c1099f5d84303805d21cab1f548aaa5ff01b8c77cc38adf47773d4f",
@@ -8,14 +8,12 @@
   "authority": "PRs and integration merges under verified configured controls; no main/master merge, deployment or live payment",
   "github_capabilities": {
     "git_read": "VERIFIED",
-    "api_connect": "BLOCKED_NETWORK_POLICY",
-    "agent_pr_write": "UNVERIFIED",
-    "repository_auto_merge": "UNVERIFIED",
-    "integration_ruleset": "UNVERIFIED",
-    "api_retest_after_owner_request": "403_BLOCKED_BEFORE_GITHUB; currentenforcedrevision1 excludesapi.github.com",
-    "authorized_github_connector": "NO_CALLABLE_GITHUB_CONNECTOR_TOOLS_EXPOSED",
-    "admin_settings": "UNVERIFIED_NOT_A_SERVICE_PERMISSION_VERDICT",
-    "auto_merge": "PENDING_VERIFIED_RULES_AND_REQUIRED_CHECKS"
+    "api_connect": "VERIFIED",
+    "agent_pr_write": "PENDING_HANDOFF_TEST",
+    "repository_auto_merge": "ENABLED",
+    "integration_ruleset": "ACTIVE_STRICT_REQUIRED_CHECKS",
+    "admin_settings": "REPOSITORY_METADATA_REPORTS_ADMIN",
+    "auto_merge": "PENDING_EXACT_HEAD_INDEPENDENT_REVIEW_AND_REQUIRED_CHECKS"
   },
   "features": [
     {
@@ -41,7 +39,7 @@
       ],
       "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
       "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
-      "integration_status": "NOT_INTEGRATED"
+      "integration_status": "SCOPED_CHANGE_PRESENT_ON_INTEGRATION"
     },
     {
       "id": "UX-A11Y-P0-01",
@@ -67,7 +65,7 @@
       ],
       "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
       "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
-      "integration_status": "NOT_INTEGRATED"
+      "integration_status": "SCOPED_CHANGE_PRESENT_ON_INTEGRATION"
     },
     {
       "id": "REL-PUBLISH-GUARD",
@@ -87,7 +85,7 @@
       ],
       "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
       "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
-      "integration_status": "NOT_INTEGRATED"
+      "integration_status": "SCOPED_CHANGE_PRESENT_ON_INTEGRATION"
     },
     {
       "id": "UX-FAIL-P0-01",
@@ -103,11 +101,11 @@
       ],
       "tested_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
       "independent_review": "evidence/SECURITY_PASS.md + INDEPENDENT_QA.md",
-      "integration_status": "NOT_INTEGRATED"
+      "integration_status": "SCOPED_CHANGE_PRESENT_ON_INTEGRATION"
     }
   ],
   "readiness": "NO_GO_FULL_PRIVATE_PRODUCT",
-  "next_action": "When authorized API/connector is restored, inspect controls and find/create exactly one PR tointegration using preparedrequest; verify latestremoteheadCI/reviews and controlledmerge+integratedSHA. Untilthenwaitforapprovedsource/hosting/UAT/workloadinputs; no newunblockedsourcefinding identified.",
+  "next_action": "Open the reconciliation PR to integration, bind the verdict to its remote head, and observe the required Actions checks. Continue F01-P0-05 reference research while CI runs.",
   "attempts": [
     {
       "stage": "scope_reconciliation",
@@ -143,9 +141,9 @@
     }
   ],
   "candidate_source_sha": "c1851327d3d2779cad95a0d6f96e912bbcd7a914",
-  "integration_status": "NOT_INTEGRATED",
-  "pr_url": null,
-  "remote_ci": "NOT_OBSERVED_NO_PR",
+  "integration_status": "SCOPED_CHANGES_PRESENT_ON_INTEGRATION",
+  "pr_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/30",
+  "remote_ci": "PR30_REQUIRED_CHECKS_PASSED_WITH_MAIN_BASE",
   "remote_handoff": {
     "branch_push": "SUCCEEDED",
     "observed_pushed_head": "a7234f8739521622d4e00cefc72f77fc748dc056",
@@ -157,5 +155,32 @@
     "main_unchanged": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
     "integration_unchanged": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
     "current_tip": "Read git/remote; following handoff commit changes documentation only"
+  },
+  "continuation": {
+    "ticket": "GIT-HANDOFF",
+    "stage": "remote_reconciled",
+    "base_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
+    "main_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
+    "integrated_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
+    "historical_pr_head_sha": "f8a341623d5509d970e6e483e477f299eb401415",
+    "historical_pr_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/30",
+    "historical_pr_base": "main",
+    "historical_pr_review": "Prior runtime and packet attestations cover earlier SHAs. No exact PR-head independent verdict was recorded in the saved evidence.",
+    "pages_run": "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45009233594",
+    "integration_ruleset_id": 27837708,
+    "required_checks": [
+      "Build & Lint Check",
+      "Test Docker Container Build",
+      "isolated-security-tests"
+    ],
+    "required_check_run_urls": [
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45007907643/job/137163517787",
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45007907588/job/137163517684",
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45007907647/job/137163518118"
+    ],
+    "runtime_verification": "Prior c185132 source evidence is limited to its tested scope. Git diff from c185132 to 8402277 is confined to docs/release.",
+    "handoff_test": "PENDING_INDEPENDENTLY_REVIEWED_INTEGRATION_AUTO_MERGE",
+    "restart_recovery": "UNVERIFIED_PENDING_AUTHORIZED_PERSISTENT_RUNNER_TEST",
+    "next_action": "Open the reconciliation PR to integration, bind the verdict to its remote head, and observe the required Actions checks. Continue F01-P0-05 reference research while CI runs."
   }
 }
