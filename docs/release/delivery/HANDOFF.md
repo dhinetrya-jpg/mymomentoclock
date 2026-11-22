@@ -1,11 +1,16 @@
 # Integration handoff — 22 November 2026
 
-GitHub and Git agree that `origin/integration` and `origin/main` both
-point to `840227781b85df9a469d67090ddf349f234e7a5d`. PR #30 targeted
+At reconciliation, both remote branches pointed to
+`840227781b85df9a469d67090ddf349f234e7a5d`. PR #30 targeted
 `main`, and the Pages workflow succeeded on that SHA. The three required
 PR checks passed. GitHub lists zero PR reviews and the saved independent
 attestations cover earlier SHAs. The scoped changes are present on
-`integration`. The integration auto-merge handoff test is pending.
+`integration`. PR #31 passed the integration auto-merge handoff test. The independently
+reviewed head `85d86d2a28cff2418b47e345309d4465fc678b2a` passed all
+three required checks and GitHub auto-merged it. The fetched integration
+commit `1ed6d5c886b5055625a231e956ebd3f81505c5de` has the reviewed tree.
+The observed `main` tip remains `840227781b85df9a469d67090ddf349f234e7a5d`.
+[PR #31](https://github.com/dhinetrya-jpg/mymomentoclock/pull/31)
 
 Repository auto-merge is enabled. Ruleset 27837708 requires the PR to be
 up to date and all three GitHub Actions checks to pass. Independently

@@ -9,11 +9,11 @@
   "github_capabilities": {
     "git_read": "VERIFIED",
     "api_connect": "VERIFIED",
-    "agent_pr_write": "PENDING_HANDOFF_TEST",
+    "agent_pr_write": "VERIFIED_PR31",
     "repository_auto_merge": "ENABLED",
     "integration_ruleset": "ACTIVE_STRICT_REQUIRED_CHECKS",
     "admin_settings": "REPOSITORY_METADATA_REPORTS_ADMIN",
-    "auto_merge": "PENDING_EXACT_HEAD_INDEPENDENT_REVIEW_AND_REQUIRED_CHECKS"
+    "auto_merge": "VERIFIED_PR31"
   },
   "features": [
     {
@@ -105,7 +105,7 @@
     }
   ],
   "readiness": "NO_GO_FULL_PRIVATE_PRODUCT",
-  "next_action": "Open the reconciliation PR to integration, bind the verdict to its remote head, and observe the required Actions checks. Continue F01-P0-05 reference research while CI runs.",
+  "next_action": "Integrate the published Sripati geometry regression via an independently reviewed PR. Continue reference qualification for independent modern end-to-end acceptance.",
   "attempts": [
     {
       "stage": "scope_reconciliation",
@@ -144,24 +144,12 @@
   "integration_status": "SCOPED_CHANGES_PRESENT_ON_INTEGRATION",
   "pr_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/30",
   "remote_ci": "PR30_REQUIRED_CHECKS_PASSED_WITH_MAIN_BASE",
-  "remote_handoff": {
-    "branch_push": "SUCCEEDED",
-    "observed_pushed_head": "a7234f8739521622d4e00cefc72f77fc748dc056",
-    "observation_evidence": "evidence/REMOTE_OBSERVATION.json",
-    "pr_url": null,
-    "pr_creation": "NOT_SENT_POLICY_REJECTS_API_CONNECTION",
-    "connector": "NOT_EXPOSED",
-    "remote_ci": "NO_RUN_URL_OBSERVED",
-    "main_unchanged": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
-    "integration_unchanged": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
-    "current_tip": "Read git/remote; following handoff commit changes documentation only"
-  },
   "continuation": {
     "ticket": "GIT-HANDOFF",
-    "stage": "remote_reconciled",
+    "stage": "integration_handoff_verified",
     "base_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
     "main_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
-    "integrated_sha": "840227781b85df9a469d67090ddf349f234e7a5d",
+    "integrated_sha": "1ed6d5c886b5055625a231e956ebd3f81505c5de",
     "historical_pr_head_sha": "f8a341623d5509d970e6e483e477f299eb401415",
     "historical_pr_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/30",
     "historical_pr_base": "main",
@@ -179,8 +167,30 @@
       "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45007907647/job/137163518118"
     ],
     "runtime_verification": "Prior c185132 source evidence is limited to its tested scope. Git diff from c185132 to 8402277 is confined to docs/release.",
-    "handoff_test": "PENDING_INDEPENDENTLY_REVIEWED_INTEGRATION_AUTO_MERGE",
+    "handoff_test": "PASS",
     "restart_recovery": "UNVERIFIED_PENDING_AUTHORIZED_PERSISTENT_RUNNER_TEST",
-    "next_action": "Open the reconciliation PR to integration, bind the verdict to its remote head, and observe the required Actions checks. Continue F01-P0-05 reference research while CI runs."
+    "next_action": "Integrate the published Sripati geometry regression via an independently reviewed PR. Continue reference qualification for independent modern end-to-end acceptance.",
+    "handoff_pr_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/31",
+    "handoff_pr_head_sha": "85d86d2a28cff2418b47e345309d4465fc678b2a",
+    "handoff_review_url": "https://github.com/dhinetrya-jpg/mymomentoclock/pull/31#issuecomment-7079448335",
+    "handoff_required_check_run_urls": [
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45024711133/job/137215098227",
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45024711277/job/137215098696",
+      "https://github.com/dhinetrya-jpg/mymomentoclock/actions/runs/45024711169/job/137215098395"
+    ],
+    "handoff_merged_at_utc": "2026-11-22T12:57:20Z",
+    "handoff_merged_tree": "Verified equal to the reviewed PR head. Main still points to 840227781b85df9a469d67090ddf349f234e7a5d."
+  },
+  "historical_remote_handoff": {
+    "branch_push": "SUCCEEDED",
+    "observed_pushed_head": "a7234f8739521622d4e00cefc72f77fc748dc056",
+    "observation_evidence": "evidence/REMOTE_OBSERVATION.json",
+    "pr_url": null,
+    "pr_creation": "NOT_SENT_POLICY_REJECTS_API_CONNECTION",
+    "connector": "NOT_EXPOSED",
+    "remote_ci": "NO_RUN_URL_OBSERVED",
+    "main_unchanged": "3df790b03a92a1fdd7a76a2a1c9271e4de6bd6f2",
+    "integration_unchanged": "57a6bbe5cd2695fb7a69746ad322384009a6fbd2",
+    "current_tip": "Read git/remote; following handoff commit changes documentation only"
   }
 }
