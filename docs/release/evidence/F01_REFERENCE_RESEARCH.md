@@ -111,3 +111,41 @@ lacks an immutable engine revision and a complete input echo. These
 gaps prevent matched end-to-end comparison. A versioned export with
 resolved field semantics, coordinates, time scales, sidereal
 conventions and an uncertainty budget would permit reevaluation.
+
+## Follow-up — LibEphemeris v4 lineage and input conventions
+
+Research baseline: integration `492793423edbef06f9f93b05d40273732a0278da`.
+Source inspected: LibEphemeris
+[`1abe74d1d5a7693b69a16392795b0521be9892d2`](https://github.com/g-battaglia/libephemeris/tree/1abe74d1d5a7693b69a16392795b0521be9892d2).
+Verdict: candidate for explicitly scoped diagnostics. End-to-end admission
+remains blocked. No engine vectors were compared.
+
+| Requirement | Pinned source finding | Admission implication |
+|---|---|---|
+| Geometry | [systems.rs](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/houses/systems.rs#L171-L198) attributes the geometry to Śrīpati and Holden (1977). It splits the Porphyry sectors and takes each previous-to-current circular midpoint, with the 12→1 wrap. The [release notes](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/RELEASE_NOTES.md#L93-L101) state there is no Swiss runtime or source dependency. | Source and indices support the boundary interpretation. The v4 statement is publisher provenance. The original historical worked example remains our separately verified geometry fixture. |
+| Frame and time | [Public houses API](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/runtime/api/public_houses.rs#L175-L250) takes UT1 JD, geographic north/east degrees and returns 12 ordered cusps for ordinary systems. [House serving](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/houses/serving.rs#L389-L441) uses frame ARMC plus longitude and true obliquity. [Frame code](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/runtime/api/houses.rs#L500-L540) derives TT from a model delta and uses ERFA nut06a. The [source register](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/docs/sources.md) identifies the IAU/IERS and Skyfield snapshot lineage. | A reproducible comparison must retain the selected frame and model clock, actual UT1 and TT, UTC/leap table, and a dated Earth-orientation source or justified model allowance. For ordinary Sripati, the house calculation does not consume a planetary position just because the library supports JPL DE files. |
+| Lahiri | [LibEphemeris defining pairs](https://github.com/g-battaglia/libephemeris/blob/1abe74d1d5a7693b69a16392795b0521be9892d2/core/src/time/sidereal.rs#L71-L85) use 23.85709166666667° at JD 2451545.0 TT for mode 1. [Swiss 2.10.03](https://github.com/aloistr/swisseph/blob/v2.10.03/sweph.h#L374-L387) uses 23.250182778° minus 0.004658035° at JD 2435553.5 and lists IAU 1976 in the mode record. Its [traditional sidereal house route](https://github.com/aloistr/swisseph/blob/v2.10.03/swehouse.c#L535-L562) applies the extended ayanamsa to its house cusps. | The epochs differ, so the constants cannot be directly subtracted to estimate model error. Matching mode names does not establish the same epoch transport, precession, and nutation conventions. No same-convention uncertainty budget is established. |
+
+The Government of India [Calendar Reform Committee report](https://dspace.gipe.ac.in/xmlui/bitstream/handle/10973/39692/GIPE-043972.pdf),
+Final Recommendations (7), specifies a variable ayanamsa of 23°15′00″
+on 21 March 1956. [Swiss documentation](https://www.astro.com/swisseph/swisseph.htm),
+§2.8.5 and Appendix E, distinguishes that interpretation (Swiss mode 46)
+from mode 1, which follows the Indian Astronomical Ephemeris and interprets
+its defining number as true despite the source's mean label. The committee
+recommendation alone cannot establish the exact LibEphemeris mode 1
+J2000 constant. The original IAE 1989 page 556 remains unverified here.
+
+For admission, reconcile the original IAE with the committee report,
+document the
+mean-to-apparent reduction at common epochs, bind a UTC/UT1/TT conversion
+and Earth-orientation input, and justify the predeclared error budget.
+Use archived original outputs for all 12 boundaries and retain the selected
+settings and output hash. A common-UT1 tropical comparison can provide a
+separate frame/geometry diagnostic. Applying Swiss's sidereal offset to the
+candidate would share the tested component and cannot validate that component.
+
+The independent geometry slice was integrated in [PR #32](https://github.com/dhinetrya-jpg/mymomentoclock/pull/32).
+Post-merge execution at `492793423edbef06f9f93b05d40273732a0278da`
+passed all three targeted Go tests with a maximum circular error of
+0.5 arcseconds across 12 boundaries. See the
+[post-merge checkpoint](https://github.com/dhinetrya-jpg/mymomentoclock/pull/32#issuecomment-7079631235).
