@@ -183,3 +183,61 @@ That route needs explicit call tracing and remains distinct from the
 stock session path. No LibEphemeris executable comparison was run.
 The modern end-to-end reference criterion remains blocked by Lahiri
 provenance and model uncertainty.
+
+## Follow-up — historical cardinal angles at fixed sidereal time
+
+The Researcher examined new published tables and worked examples. A separate
+Domain Reviewer independently transcribed the selected cells and issued
+**APPROVE NARROWER SCOPE** for the fixed-angle diagnostic before any engine
+run. The Engineer then implemented and executed the test against Swiss
+Ephemeris 2.10.03, source `175e1fcb3108bcd5c0d146c803f51dcf23508012`.
+The research and implementation base was integration
+`9c102e04c9dfd62bbd360555882a6b8039f11a2e`.
+
+N. C. Lahiri's [Tables of Ascendants, ninth edition](https://storage.googleapis.com/teachmint/public/institute/members/7d954ce0-c321-4b04-bc22-9e2fab747284.pdf)
+uses a fixed 23°27′ obliquity and directs the reader to add 23° to the
+tabulated angles for tropical values. The historical construction is
+described on printed p. 83. The verified cells are from pp. 8, 9 and 15.
+The hosted scan has an incomplete PDF trailer but renders the inspected
+pages. SHA-256 of the exact downloaded bytes is
+`0ac68933a154870c2804611c2ace2bb47cbd10bb0d191a448bf03b563d7e749e`.
+
+The test uses exact zero-minute sidereal grid cells with no interpolation,
+ARMC equal to 15° per sidereal hour, and circular absolute residuals.
+The provisional threshold, set in review before execution, is one printed
+arcminute plus 1e−8 degrees for arithmetic. The table's empirical rounding
+method is undocumented, so this threshold is a diagnostic convention.
+Each published output has 1′ resolution.
+
+| Local sidereal time | Latitude | Tropical Asc / MC | Asc / MC residual in arcmin |
+|---|---:|---|---|
+| 03:00 | 0° | 132°32′ / 47°28′ | 0.010606 / 0.010606 |
+| 09:00 | 0° | 227°28′ / 132°32′ | 0.010606 / 0.010606 |
+| 03:00 | 8° N | 134°54′ / 47°28′ | 0.023351 / 0.010606 |
+
+All six circular comparisons passed. `tests/f01/historical_cardinal_angles.c`
+calls `swe_houses_armc` in Sripati mode and evaluates the two returned
+cardinal angles. It discards individual cusp results. Compile with
+`cc -std=c11 -Wall -Wextra -Werror tests/f01/historical_cardinal_angles.c
+-lswe -lm -ldl -o /tmp/historical-cardinal-angles` against the pinned
+installed Swiss library, then run the binary. The isolated native suite
+executes the same command.
+
+B. V. Raman's [worked examples 32–35](https://www.scribd.com/document/614974243/Jyotish-A-Manual-of-Hindu-Astrology-B-v-raman-1992)
+were investigated as a potential set of house junctions. The accessible
+transcription has inconsistent adjacent endpoints. The example uses
+a nearest-grid time and a different ayanamsa, so it remains unadmitted.
+The fixed-angle result covers a different layer than the 12 independently
+published midpoint junctions and the observed-clock regression. It leaves
+the modern clock-to-frame pipeline, Lahiri equivalence, source-derived
+end-to-end tolerances and full F01-P0-05 admission open.
+
+The Researcher also located N. C. Lahiri's 1972
+[Advance Ephemeris](https://ocrdigitalfile.nvli.in/dlirepository/1381/Advance-Ephemeris-ocr.pdf).
+The indexed OCR for printed p. 52 lists a mean ayanamsa of 23°51.4′ for
+Jan 0, 2000. The introduction defines Jan 0 as Greenwich midnight on
+31 December of the previous year. This pre-correction source has 6″
+printed resolution and a different epoch from the LibEphemeris anchor.
+Its direct PDF returned HTTP 503 during research, so the OCR lead is
+retained without fixture admission. It cannot resolve the 1985 IAE
+revision of 0.658″ or establish present Swiss mode 1 equivalence.
