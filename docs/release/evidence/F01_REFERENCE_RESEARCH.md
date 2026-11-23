@@ -402,3 +402,46 @@ The PAC chart remains outside schema 2. Stock Swiss mode 1, the
 application's consumed clocks, polar-motion conventions and the
 prospective combined angular error budget still need separate
 qualification before a Swiss product cusp comparison.
+
+## Follow-up — modeled and observed UT1 in the existing comparator
+
+The Researcher traced the schema 2 native comparator through
+`NativeSnapshot(..., nil, ...)` to Swiss's default UTC-to-UT1
+conversion and the house path's separate TT reconstruction.
+A separate Domain Reviewer issued **APPROVE NARROWER SCOPE** for
+reporting-only clock diagnostics at the two pinned noon epochs.
+There is no acceptance threshold for modeled UT1 on these cases.
+
+IERS C04, USNO leap history and source hashes are pinned above.
+The exact 2000 and 2007 noon rows report formal DUT1 errors of
+15.0 and 8.8 microseconds, respectively. USNO gives TT−UTC
+64.184 and 65.184 seconds. The native test exercises the existing
+nil argument and the explicit DUT1 override separately. The pass
+criterion covers scalar representation and declared provenance.
+It does not grade astronomical accuracy.
+
+| UTC noon | Modeled minus observed UT1 | Override representation error | Returned TT representation error | Earth rotation input equivalent |
+|---|---:|---:|---:|---:|
+| 2000-01-01 | +0.000084451 s | +0.000003985 s | +0.000001088 s | +0.001270235″ |
+| 2007-04-05 | +0.029052945 s | +0.000004622 s | −0.000004336 s | +0.436985350″ |
+
+Both override UT1 and returned TT passed the half-ULP representation
+bound. The equivalent angle applies nominal 15.041 arcseconds per
+second to the stock clock difference. It does not estimate cusp error.
+
+The pinned `swe_houses_ex` entry separately constructs
+`UT1 + swe_deltat_ex(UT1, flags, NULL)`. Evaluation with the flags
+used by the tropical whole-sign and sidereal Sripati calls (0 and
+`SEFLG_SIDEREAL`) returned the same TT for each UT1 input:
+
+| UTC noon | Modeled UT1 path house TT JD | Observed override house TT JD |
+|---|---:|---:|
+| 2000-01-01 | 2451545.0007428704 | 2451545.0007428695 |
+| 2007-04-05 | 2454196.0007544444 | 2454196.0007541082 |
+
+These are the house entry's reconstruction values from the pinned
+library and do not describe every internal sidereal-time subroutine.
+The observed override remains a diagnostic route. The manifest
+continues to call the modeled path, so its clock uncertainty remains
+part of any future combined error budget. No cusp values were compared
+or admitted.

@@ -222,3 +222,43 @@ func TestNativeEpochWithIERSNoonDUT1(t *testing.T) {
 		observedClock.JulianDayUTC, observedClock.JulianDayUT1, observedClock.JulianDayTT,
 		observedClock.DUT1Seconds, observedClock.TTMinusUTCSeconds)
 }
+
+func TestObservedAndModeledClockDiagnostic(t *testing.T) {
+	// IERS C04 noon rows and USNO leap history pinned in release evidence.
+	const secondsPerDay = 86400
+	cases := []struct {
+		utc         time.Time
+		utcJD       float64
+		observedDUT float64
+		ttMinusUTC  float64
+	}{
+		{time.Date(2000, 1, 1, 12, 0, 0, 0, time.UTC), 2451545, 0.3550132, 64.184},
+		{time.Date(2007, 4, 5, 12, 0, 0, 0, time.UTC), 2454196, -0.0721024, 65.184},
+	}
+	for _, fixture := range cases {
+		t.Run(fixture.utc.Format(time.DateOnly), func(t *testing.T) {
+			modeled, err := ConvertUTC(fixture.utc, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			observed, err := ConvertUTC(fixture.utc, &fixture.observedDUT)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if modeled.UT1Source != "SWISS_DELTAT_MODEL_ESTIMATE" ||
+				observed.UT1Source != "CALLER_SUPPLIED_DUT1_NOT_INDEPENDENTLY_VERIFIED" {
+				t.Fatalf("unexpected UT1 sources: %s, %s", modeled.UT1Source, observed.UT1Source)
+			}
+			halfULP := (math.Nextafter(fixture.utcJD, math.Inf(1)) - fixture.utcJD) * secondsPerDay / 2
+			ut1Rounding := (observed.JulianDayUT1-fixture.utcJD)*secondsPerDay - fixture.observedDUT
+			ttRounding := (modeled.JulianDayTT-fixture.utcJD)*secondsPerDay - fixture.ttMinusUTC
+			if math.Abs(ut1Rounding) > halfULP || math.Abs(ttRounding) > halfULP ||
+				modeled.JulianDayTT != observed.JulianDayTT {
+				t.Fatalf("clock conversion exceeded representation bound: UT1 %.12f s, TT %.12f s", ut1Rounding, ttRounding)
+			}
+			modelResidual := (modeled.JulianDayUT1-fixture.utcJD)*secondsPerDay - fixture.observedDUT
+			t.Logf("modeled minus observed UT1 %+.9f s; override rounding %+.9f s; TT rounding %+.9f s; rotation-input sensitivity %+.9f arcsec",
+				modelResidual, ut1Rounding, ttRounding, modelResidual*15.041)
+		})
+	}
+}
