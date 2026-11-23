@@ -291,3 +291,49 @@ cc -std=c11 -Wall -Wextra -Werror -I"$SOFA" -I"$SWISS" \
   -lm -ldl -o /tmp/mmo-sofa-armc
 /tmp/mmo-sofa-armc
 ```
+
+## Follow-up — official PAC mean and true ayanamsa components
+
+The Researcher retrieved the [Indian Astronomical Ephemeris 2025](https://packolkata.imd.gov.in/download/IAE2025.zip)
+from the India Meteorological Department's Positional Astronomy Centre.
+The archive SHA-256 is
+`b63b94e2138e8efca945bf0eaf2d8d06ef6cc619b2f092d360a51da49d6c6733`.
+The extracted PDF SHA-256 is
+`584ea1e4bbfc89ea206ffb026602dc0fedb4c4f37a8f45e5a5f1cc7c5e618bb0`.
+A separate Domain Reviewer independently verified the source and issued
+**APPROVE NARROWER SCOPE** for the mean anchor and two explicitly timed
+true-ayanamsa reconstructions. Both thresholds preceded comparisons.
+
+Printed p. 374 states the J2000.0 mean anchor 23°51′25.53″ and the
+[Capitaine, Wallace and Chapront (2003)](https://doi.org/10.1051/0004-6361:20031539)
+polynomial adopted by PAC since 2021. Printed p. 18 gives longitude
+nutation at 0h TT. Printed p. 438 specifies IAU 2000A with the 2006
+adjustment. The diagnostic reconstructs true ayanamsa with the p. 374
+polynomial and the p. 18 values for 1 and 4 January 2025 (+0.20″ and
++0.41″), using the mean-plus-nutation relation on p. 415. The p. 415
+dated table's 5h 29m heading omits the time scale. Its annual mean
+footers also fail to reproduce the polynomial at exact Julian-year
+epochs. These p. 415 table values were kept outside the comparison.
+
+Pinned Swiss 2.10.03 used stock mode 1 with `SEFLG_SWIEPH`, adding
+`SEFLG_NONUT` for mean. The J2000.0 mean passed 0.005″ (half the
+printed unit), plus 1e−8 degrees for arithmetic. Both reconstructed
+true values passed 0.010″ plus the same allowance, based on the sum
+of half units of printed mean anchor and longitude nutation.
+J2025.0 and J2026.0 mean transport values are observations.
+
+| TT JD | PAC value type | Swiss mean residual | Swiss true residual | Swiss nutation residual |
+|---|---|---:|---:|---:|
+| 2451545.00 | J2000.0 mean anchor | +0.002371639″ | — | — |
+| 2460676.25 | J2025.0 mean transport | +0.002474979″ | — | — |
+| 2461041.50 | J2026.0 mean transport | +0.002479474″ | — | — |
+| 2460676.50 | Reconstructed true | +0.002474982″ | +0.000495677″ | −0.001979305″ |
+| 2460679.50 | Reconstructed true | +0.002475018″ | +0.000367773″ | −0.002107246″ |
+
+The strict C diagnostic (`tests/f01/pac_ayanamsa.c`) runs in the
+isolated native suite. Compile against the pinned Swiss installation
+with `cc -std=c11 -Wall -Wextra -Werror tests/f01/pac_ayanamsa.c -lswe -lm -ldl -o /tmp/pac-ayanamsa`
+and run the binary. The publisher's J2000.0 anchor matches the
+LibEphemeris source constant. Executable cross-engine evidence is
+pending. Full F01-P0-05 still needs a qualified complete 12-cusp
+reference with matched conventions and a prospective angular budget.
