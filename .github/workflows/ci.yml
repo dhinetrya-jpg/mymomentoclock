@@ -44,6 +44,7 @@ jobs:
 
       - name: Typecheck and build alternate frontend
         run: |
+          npm --prefix frontend ci
           npm --prefix frontend run lint
           npm --prefix frontend run build
 
