@@ -34,7 +34,7 @@ must retain publicDir:false. Commands:
 - Local preview load and restart baseline: run `npm ci`, `npm run build`,
   then `python3 tests/stress/preview_baseline.py` on a disposable non-production
   machine. The runner starts its own process with neutral configuration in a
-  temporary directory, sends loopback requests only, and stops the process
+  temporary directory, binds a loopback listener only, and stops the process
   when finished. It verifies the health response, successful Kolkata timing
   preview, and expected unsupported-city refusal, with 30 sequential
   requests, 120 requests across up to eight clients, and nine requests

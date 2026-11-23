@@ -103,7 +103,8 @@ async function startServer(){
   const server=http.createServer(app);
   server.requestTimeout=15000;server.headersTimeout=10000;server.keepAliveTimeout=5000;
   server.once('error',()=>{console.error(JSON.stringify({event:'startup_failed',code:'WEB_STARTUP_FAILED'}));process.exit(1);});
-  server.listen(port,'0.0.0.0',()=>console.log('MyMomentOclock web service ready'));
+  const host=process.env.PREVIEW_LOOPBACK_ONLY==='1'?'127.0.0.1':'0.0.0.0';
+  server.listen(port,host,()=>console.log('MyMomentOclock web service ready'));
   for(const signal of ['SIGTERM','SIGINT'])process.once(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),10000).unref();});
 }
 startServer().catch(()=>{console.error(JSON.stringify({event:'startup_failed',code:'WEB_STARTUP_FAILED'}));process.exit(1);});

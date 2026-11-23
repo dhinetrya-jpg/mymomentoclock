@@ -41,21 +41,23 @@ def start_server(fixture):
     start = time.perf_counter()
     # Start a preview with neutral adapter configuration even on a configured host.
     env = {'PATH': os.environ.get('PATH', os.defpath),
-           'NODE_ENV': 'production', 'PORT': str(port)}
-    process = subprocess.Popen(
-        ['node', '--import', 'tsx', str(root / 'server.ts')], cwd=fixture, env=env,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-    )
+           'NODE_ENV': 'production', 'PORT': str(port), 'PREVIEW_LOOPBACK_ONLY': '1'}
+    log_path = fixture / 'preview.log'
+    with log_path.open('w') as log:
+        process = subprocess.Popen(
+            ['node', '--import', 'tsx', str(root / 'server.ts')], cwd=fixture, env=env,
+            stdout=log, stderr=subprocess.STDOUT,
+        )
     deadline = start + 10
     try:
         while time.perf_counter() < deadline:
             if process.poll() is not None:
                 raise RuntimeError('preview exited before health check')
-            try:
+            # This line is emitted only after this child has bound successfully.
+            if 'MyMomentOclock web service ready' in log_path.read_text().splitlines():
                 request(endpoints[0])
                 return process, (time.perf_counter() - start) * 1000
-            except ConnectionRefusedError:
-                time.sleep(0.025)
+            time.sleep(0.025)
         raise RuntimeError('preview did not become healthy')
     except BaseException:
         stop_server(process)
