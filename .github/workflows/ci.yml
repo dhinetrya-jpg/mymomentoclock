@@ -42,11 +42,6 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Typecheck and build alternate frontend
-        run: |
-          npm --prefix frontend run lint
-          npm --prefix frontend run build
-
       - name: Calculation integrity & astronomical accuracy regression tests
         run: node --import ./tests/calculation/register-assets.mjs --import tsx --test tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts tests/calculation/independent_planetary_accuracy.test.ts tests/calculation/temporal_reference_accuracy.test.ts tests/calculation/panchang_accuracy.test.ts tests/calculation/analytical_safety.test.ts tests/calculation/native_reference_diagnostics.test.ts
 
@@ -70,6 +65,13 @@ jobs:
         run: node --import tsx --test tests/payment/boundary.test.ts tests/payment/pay02.test.tsx tests/payment/pay03.test.tsx
       - name: Personalized timing API and UI contracts
         run: node --import tsx --test tests/timing/contracts.test.tsx tests/f01/contracts.test.tsx
+      # Cross-frontend SSR contracts above use a single React instance.
+      - name: Typecheck and build alternate frontend
+        run: |
+          npm --prefix frontend ci
+          npm --prefix frontend run lint
+          npm --prefix frontend run build
+
       - name: Desktop and mobile production browser regression
         run: |
           NODE_ENV=production PORT=3101 node --import tsx server.ts > /tmp/phase1-browser-server.log 2>&1 &

@@ -2,7 +2,7 @@
 // no deployed infrastructure or provider interaction. Run after npm ci.
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
-import {readFile,writeFile,mkdtemp,rm,cp,symlink} from 'node:fs/promises';
+import {access,readFile,writeFile,mkdtemp,rm,cp,symlink} from 'node:fs/promises';
 import {join,extname,resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {execFileSync} from 'node:child_process';
@@ -127,9 +127,14 @@ try{
  const nextRoot=join(temporary,'next-source');
  for(const name of ['src','frontend','tooling','index.html','vite.config.ts','package.json','tsconfig.json'])await cp(join(root,name),join(nextRoot,name),{recursive:true,filter:source=>!source.includes('/node_modules')&&!source.includes('/dist')});
  await symlink(join(root,'node_modules'),join(nextRoot,'node_modules'),'dir');
+ const rootVite=join(root,'node_modules/vite/bin/vite.js');
+ const alternateModules=join(root,'frontend/node_modules');
+ const alternateVite=join(alternateModules,'vite/bin/vite.js');
+ const standaloneAlternate=await access(alternateVite).then(()=>true,()=>false);
+ if(standaloneAlternate)await symlink(alternateModules,join(nextRoot,'frontend/node_modules'),'dir');
  // A protocol-only change must change cache identity even when all static
  // artifact bytes remain identical; otherwise failed installs can affect live caches.
- const build=(cwd,folder,base)=>execFileSync(process.execPath,[join(root,'node_modules/vite/bin/vite.js'),'build','--outDir',folder,'--emptyOutDir'],{cwd,env:{...process.env,VITE_BASE_PATH:base},stdio:'pipe'});
+ const build=(cwd,folder,base,vite=rootVite)=>execFileSync(process.execPath,[vite,'build','--outDir',folder,'--emptyOutDir'],{cwd,env:{...process.env,VITE_BASE_PATH:base},stdio:'pipe'});
  const logicBaseline=join(temporary,'logic-baseline'),logicNext=join(temporary,'logic-next');
  build(nextRoot,logicBaseline,'/');
  const pluginPath=join(nextRoot,'tooling/pwa.ts'),plugin=await readFile(pluginPath,'utf8');
@@ -144,10 +149,11 @@ try{
  for(const folder of ['src','frontend/src']){const path=join(nextRoot,folder,'pwa/PwaStatus.tsx');await writeFile(path,(await readFile(path,'utf8')).replace('Install and offline information','Install and offline information · updated shell'));}
  // Build separate outputs so no test mutates normal dist or active application.
  for(const [label,cwd,base] of [['root',root,'/'],['project-base',root,'/mymomentoclock/'],['alternate-frontend',join(root,'frontend'),'/alternate/']]){
-  const folder=join(temporary,label);
-  execFileSync(process.execPath,[join(root,'node_modules/vite/bin/vite.js'),'build','--outDir',folder,'--emptyOutDir'],{cwd,env:{...process.env,VITE_BASE_PATH:base},stdio:'pipe'});
-  const nextFolder=join(temporary,label+'-next');
-  execFileSync(process.execPath,[join(root,'node_modules/vite/bin/vite.js'),'build','--outDir',nextFolder,'--emptyOutDir'],{cwd:label==='alternate-frontend'?join(nextRoot,'frontend'):nextRoot,env:{...process.env,VITE_BASE_PATH:base},stdio:'pipe'});
+  const folder=join(temporary,label),nextFolder=join(temporary,label+'-next');
+  const alternate=label==='alternate-frontend';
+  const vite=alternate&&standaloneAlternate?alternateVite:rootVite;
+  build(cwd,folder,base,vite);
+  build(alternate?join(nextRoot,'frontend'):nextRoot,nextFolder,base,vite);
   await scenario(label,folder,nextFolder,base);
  }
  console.log('Chromium desktop emulation only; physical mobile install, Safari/WebKit and real-user/screen-reader signoff remain unverified. No scientific or deployment acceptance.');
