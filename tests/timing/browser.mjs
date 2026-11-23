@@ -2,11 +2,54 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright-core';
 const base=process.env.CORE02_WEB_URL||'http://127.0.0.1:3101';
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-try{for(const width of [375,1280])for(const scenario of ['unavailable','unknown','synthetic','invalid-response']){
+try{
+ for (const width of [375,1280]) {
+  const page = await browser.newPage({viewport:{width,height:900}});
+  try {
+   const requests=[];
+   page.on('request',request=>{
+    if(new URL(request.url()).pathname.startsWith('/api/')) requests.push(request);
+   });
+   await page.goto(base);
+   await page.getByRole('heading',{name:'Daily timing by location'}).waitFor();
+   assert.deepEqual(await page.locator('main input, main select').evaluateAll(fields=>fields.map(field=>field.name)),['city','date','activity']);
+   assert.equal(await page.getByRole('button',{name:'Edit Birth Details'}).count(),0);
+   await page.getByLabel('City',{exact:true}).selectOption('New York');
+   await page.getByLabel('Local date',{exact:true}).fill('2026-11-01');
+   await page.getByLabel('Activity',{exact:true}).selectOption('property_sale');
+   async function check(name) {
+    const [response]=await Promise.all([
+     page.waitForResponse(response=>new URL(response.url()).pathname==='/api/v1/timing/location-only'),
+     page.getByRole('button',{name,exact:true}).click(),
+    ]);
+    assert.equal(response.status(),503);
+    const status=page.getByRole('status').filter({hasText:'Timing is unavailable for this selection.'});
+    await status.waitFor();
+    return {body:await response.json(),view:await status.innerText()};
+   }
+   const direct=await check('Check availability');
+   await page.getByRole('button',{name:'Guided chat',exact:true}).click();
+   assert.equal(await page.getByLabel('City',{exact:true}).isVisible(),false);
+   await page.getByRole('button',{name:'Next',exact:true}).click();
+   await page.getByLabel('City',{exact:true}).waitFor();
+   await page.getByRole('button',{name:'Next',exact:true}).click();
+   await page.getByLabel('Local date',{exact:true}).waitFor();
+   assert.deepEqual(await check('Send selections'),direct);
+   const payload={schema_version:1,city:'New York',date:'2026-11-01',activity:'property_sale'};
+   assert.deepEqual(requests.map(request=>request.postDataJSON()),[payload,payload]);
+   assert.ok(requests.every(request=>request.method()==='POST' && !new URL(request.url()).search));
+   assert.deepEqual(await page.evaluate(()=>[localStorage.length,sessionStorage.length]),[0,0]);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   console.log(`Location-only timing ${width}px: no birth fields, shared direct/guided result, empty unavailable windows and no storage passed.`);
+  } finally {
+   await page.close();
+  }
+ }
+ for(const width of [375,1280])for(const scenario of ['unavailable','unknown','synthetic','invalid-response']){
  const page=await browser.newPage({viewport:{width,height:900}});const errors=[],badURLs=[];let requests=0;
  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/2000-01-01|birth-date|22\.57|88\.36/.test(r.url()))badURLs.push(r.url());});
  if(['synthetic','invalid-response'].includes(scenario))await page.route('**/api/v1/timing/daily',async route=>{requests++;const req=route.request().postDataJSON();const b={schema_version:1,status:scenario==='synthetic'?'PROVISIONAL':'VERIFIED',code:'SYNTHETIC_ALGORITHM_ONLY',activity:req.activity,day:{date:req.target.date,timezone:req.target.timezone,start:'2026-03-08T05:00:00Z',end:'2026-03-09T04:00:00Z',elapsed_seconds:82800},windows:[{start:'2026-03-08T06:00:00Z',end:'2026-03-08T08:00:00Z',duration_seconds:7200,rank:1,rule_ids:['synthetic-rule'],explanations:['Synthetic boundary fixture <img src=x onerror=alert(1)>; not actual astrology.'],classification:'PROVISIONAL_TRADITIONAL_FAVORABLE'}],limitations:['Synthetic algorithm test only; no recommendation.'],provenance:{calculation_version:'timing-v1',rule_version:'timing-rules-v1',ephemeris_mode:'SYNTHETIC',requested_ephemeris_mode:req.ephemeris_mode,source:'BROWSER_SYNTHETIC_FIXTURE',calculated_at:'2026-01-01T00:00:00Z',accuracy_status:'SYNTHETIC_NOT_ACCURACY_EVIDENCE',release_authorized:false}};await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(b)});});
- await page.goto(base);await page.getByRole('button',{name:'Daily Timing',exact:true}).click();
+ await page.goto(base);await page.getByRole('button',{name:'Daily Timing',exact:true}).click();await page.getByRole('button',{name:'Use personal timing',exact:true}).click();
  await page.getByLabel('Birth date',{exact:true}).fill('2000-01-01');
  if(scenario==='unknown')await page.getByLabel('Birth-time certainty',{exact:true}).selectOption('UNKNOWN');else await page.getByLabel('Birth local time',{exact:true}).fill('12:00:00');
  await page.getByLabel('Birth IANA timezone',{exact:true}).fill('Asia/Kolkata');await page.getByLabel('Birth latitude',{exact:true}).fill('22.57');await page.getByLabel('Birth longitude',{exact:true}).fill('88.36');

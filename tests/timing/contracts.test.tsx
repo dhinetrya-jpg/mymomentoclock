@@ -50,3 +50,41 @@ test('browser client rejects verified claims, invalid windows and mismatched pro
   for(const mutate of [(b:any)=>b.status='VERIFIED',(b:any)=>b.provenance.release_authorized=true,(b:any)=>b.windows[0].end='not-an-instant',(b:any)=>b.windows[0].duration_seconds=1,(b:any)=>b.day.timezone='UTC',(b:any)=>b.provenance.requested_ephemeris_mode='JPL',(b:any)=>b.windows[0].explanations=null]){const b=structuredClone(valid);mutate(b);globalThis.fetch=async()=>new Response(JSON.stringify(b),{status:200});await assert.rejects(calculateDailyTiming(request));}
  }finally{globalThis.fetch=original;}
 });
+
+test('location-only requests fail closed locally without forwarding or accepting birth data', () => {
+ const input = {schema_version: 1, city: 'New York', date: '2026-11-01', activity: 'property_sale'};
+ const postLocation = (base: string, body: unknown, query = '') => fetch(
+  base + '/api/v1/timing/location-only' + query,
+  {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)},
+ );
+ let forwarded = 0;
+ return serve(async base => {
+  const first = await postLocation(base,input), second = await postLocation(base,input);
+  assert.equal(first.status,503);
+  assert.equal(first.headers.get('cache-control'),'no-store');
+  const result = await first.json();
+  assert.deepEqual(result, {
+   ...input, mode: 'LOCATION_ONLY', timezone: 'America/New_York',
+   status: 'UNAVAILABLE', code: 'LOCATION_RULES_UNAVAILABLE', windows: [],
+  });
+  assert.deepEqual(await second.json(),result);
+  for (const body of [
+   {...input,birth:{date:'BIRTH_SENTINEL'}}, {...input,birth_date:'BIRTH_SENTINEL'},
+   {...input,timezone:'UTC'}, {...input,city:'toString'}, {...input,date:'2026-02-30'},
+   {...input,activity:'unsupported'},
+  ]) {
+   const refusal = await postLocation(base,body);
+   assert.equal(refusal.status,422);
+   assert.doesNotMatch(await refusal.text(),/BIRTH_SENTINEL/);
+  }
+  assert.equal((await postLocation(base,input,'?birthDate=BIRTH_SENTINEL')).status,422);
+  assert.equal(forwarded,0);
+ }, async () => { forwarded++; throw Error('Location requests must not reach the natal service'); });
+});
+
+test('location-only UI and client stay mirrored across builds', () => {
+ for (const name of ['components/LocationTiming.tsx','engine/locationTiming.ts']) {
+  assert.equal(readFileSync(new URL('../../src/'+name,import.meta.url),'utf8'),
+   readFileSync(new URL('../../frontend/src/'+name,import.meta.url),'utf8'));
+ }
+});

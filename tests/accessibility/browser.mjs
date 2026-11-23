@@ -73,8 +73,9 @@ try{
  // Actual app: keyboard skip link, associated/operable labels, no invented UNKNOWN chart, and bounded reflow.
  // Root font-size stress is explicit; it is not claimed to reproduce every browser/device zoom setting.
  for(const width of [320,375,1280])for(const textScale of [100,200]){
-  const page=await browser.newPage({viewport:{width,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.getByRole('button',{name:'Edit Birth Details',exact:true}).waitFor();
+  const page=await browser.newPage({viewport:{width,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.getByRole('heading',{name:'Daily timing by location',exact:true}).waitFor();
   const skip=page.getByRole('link',{name:'Skip to main content',exact:true});await page.keyboard.press('Tab');assert.equal(await skip.evaluate(el=>el===document.activeElement),true);await page.keyboard.press('Enter');await focused(page,'#main-content');
+  await page.getByRole('button',{name:'Astro Dashboard',exact:true}).click();
   if(textScale===200)await page.evaluate(()=>{const size=parseFloat(getComputedStyle(document.documentElement).fontSize);document.documentElement.style.fontSize=(size*2)+'px';});
   await page.getByRole('button',{name:'Edit Birth Details',exact:true}).click();
   const fits=()=>page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth}));
