@@ -241,3 +241,53 @@ printed resolution and a different epoch from the LibEphemeris anchor.
 Its direct PDF returned HTTP 503 during research, so the OCR lead is
 retained without fixture admission. It cannot resolve the 1985 IAE
 revision of 0.658″ or establish present Swiss mode 1 equivalence.
+
+## Follow-up — Greenwich house frame with split observed clocks
+
+The Researcher located official [IAU SOFA C release 19](https://www.iausofa.org/2023-10-11c)
+validation vectors and the [Earth Attitude cookbook, section 5.1](https://www.iausofa.org/s/sofa_pn_c.pdf#page=25).
+A separate Domain Reviewer issued **APPROVE NARROWER SCOPE** for a two-epoch
+clock-to-frame diagnostic before observing product residuals. The Engineer
+ran it from integration `b20d1b2cafe6e264280c7492d78e93a00024b092`.
+
+`make check` passed in the SOFA C source tree. This includes the official
+ERA00, GMST06 and GST06A vectors at their 1e−12 radian test tolerance.
+The diagnostic independently reproduces the cookbook's 2007-04-05 noon
+UTC split UT1 and TT inputs and its published Earth Rotation Angle before
+using GAST for the comparison. The 2000 case uses the IERS/USNO inputs
+already documented above. The 2007 DUT1 is the cookbook's illustrative
+input. Both comparisons use Greenwich, latitude and east longitude 0°.
+
+For each case, `swe_houses_ex` receives UT1 as one double, and its
+tropical whole-sign ARMC is compared circularly with SOFA GST06A.
+SOFA evaluates the supplied split UT1 and TT. Swiss reconstructs TT
+from its own Delta-T model inside the house call. In particular, the
+verified TT returned by the native conversion in PR #37 is distinct
+from Swiss's modeled house-frame TT.
+
+| UTC noon | Swiss UT1 JD | Swiss modeled TT JD | Swiss ARMC minus SOFA GAST |
+|---|---:|---:|---:|
+| 2000-01-01 | 2451545.000004109 | 2451545.0007428695 | +0.000339449″ |
+| 2007-04-05 | 2454195.999999166 | 2454196.0007541087 | −0.000203579″ |
+
+Both residuals passed the predeclared **0.010″ screening threshold**.
+At these epochs a half-ULP of scalar UT1 is about 20.12 μs, or 0.000303″
+of Earth rotation. The 2000 C04 formal UT1 uncertainty contributes
+about 0.000226″. The screening threshold also allows differing nutation,
+precession and modeled TT. It is a two-case diagnostic threshold.
+It does not establish a general physical error bound, Lahiri equivalence,
+or end-to-end reference admission.
+
+To reproduce, acquire the [SOFA R19 archive](https://www.iausofa.org/s/sofa_c-20231011tar.gz)
+and verify SHA-256
+`d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2`.
+In its C source directory run `make check`. From the repository root,
+set `SOFA` to that directory and `SWISS` to the pinned Swiss 2.10.03
+source directory with `libswe.a` built, then run:
+
+```sh
+cc -std=c11 -Wall -Wextra -Werror -I"$SOFA" -I"$SWISS" \
+  tests/f01/sofa_armc_diagnostic.c "$SOFA/libsofa_c.a" "$SWISS/libswe.a" \
+  -lm -ldl -o /tmp/mmo-sofa-armc
+/tmp/mmo-sofa-armc
+```
