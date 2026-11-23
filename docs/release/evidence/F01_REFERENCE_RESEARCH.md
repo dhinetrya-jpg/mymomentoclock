@@ -245,7 +245,7 @@ revision of 0.658″ or establish present Swiss mode 1 equivalence.
 ## Follow-up — Greenwich house frame with split observed clocks
 
 The Researcher located official [IAU SOFA C release 19](https://www.iausofa.org/2023-10-11c)
-validation vectors and the [Earth Attitude cookbook](https://www.iausofa.org/s/sofa_pn_c.pdf#page=28).
+validation vectors and the [Earth Attitude cookbook, section 5.1](https://www.iausofa.org/s/sofa_pn_c.pdf#page=25).
 A separate Domain Reviewer issued **APPROVE NARROWER SCOPE** for a two-epoch
 clock-to-frame diagnostic before observing product residuals. The Engineer
 ran it from integration `b20d1b2cafe6e264280c7492d78e93a00024b092`.

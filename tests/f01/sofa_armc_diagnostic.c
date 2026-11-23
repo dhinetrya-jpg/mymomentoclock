@@ -31,6 +31,10 @@ int main(void) {
         }
 
         const double era = iauEra00(ut11, ut12) * degrees_per_radian;
+        if (!isfinite(era)) {
+            fprintf(stderr, "SOFA ERA unavailable for %d\n", sample.year);
+            return 1;
+        }
         if (sample.year == 2007 &&
             (fabs(((tt1 - 2454195.5) + tt2) - 0.500754444444444) > 1e-14 ||
              fabs(((ut11 - 2454195.5) + ut12) - 0.499999165813831) > 1e-14 ||
@@ -50,6 +54,10 @@ int main(void) {
         }
 
         const double gast = iauGst06a(ut11, ut12, tt1, tt2) * degrees_per_radian;
+        if (!isfinite(gast)) {
+            fprintf(stderr, "SOFA GAST unavailable for %d\n", sample.year);
+            return 1;
+        }
         const double residual = remainder(angles[SE_ARMC] - gast, 360.0) * 3600.0;
         printf("%04d-%02d-%02d noon UTC: SOFA UT1 %.17g + %.17g, TT %.17g + %.17g; Swiss UT1 %.17g, modeled TT %.17g; ARMC-GAST %.9f arcsec\n",
             sample.year, sample.month, sample.day, ut11, ut12, tt1, tt2,
