@@ -31,6 +31,17 @@ must retain publicDir:false. Commands:
 - With a local production test server3101: A11Y_WEB_URL=http://127.0.0.1:3101
   node tests/accessibility/browser.mjs; F01_WEB_URL=http://127.0.0.1:3101
   node tests/f01/timeout-browser.mjs
+- Local preview load and restart baseline: run `npm ci`, `npm run build`,
+  then `python3 tests/stress/preview_baseline.py` on a disposable non-production
+  machine. The runner starts its own process with neutral configuration in a
+  temporary directory, binds a loopback listener only, and stops the process
+  when finished. It verifies the health response, successful Kolkata timing
+  preview, and expected unsupported-city refusal, with 30 sequential
+  requests, 120 requests across up to eight clients, and nine requests
+  after a graceful process restart. Capture the emitted JSON along with the
+  tested commit, Node version and machine details. Latencies and restart
+  time are observations for this fixture; the baseline has no production
+  capacity or availability threshold.
 - Existing tests/stress/load_profile.js only with TEST_PROFILE=smoke for the bounded
   engineering regression. Do not run the10000VU stress profile without approved
   workload/threshold/environment scope. Synthetic data only.
