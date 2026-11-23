@@ -337,3 +337,68 @@ and run the binary. The publisher's J2000.0 anchor matches the
 LibEphemeris source constant. Executable cross-engine evidence is
 pending. Full F01-P0-05 still needs a qualified complete 12-cusp
 reference with matched conventions and a prospective angular budget.
+
+## Follow-up — independent PAC-mode synthetic chart prototype
+
+The Researcher proposed a source-pinned chart independent of Swiss.
+The separate Domain Reviewer issued **APPROVE NARROWER SCOPE** for
+creating original PAC-mode charts with synthetic coordinates and
+checking invariants. This approval excludes product cusp comparisons
+and schema 2 admission. The implementation base was integration
+`6379393bd504716ca8b64cee17d26e0c7c048bba`.
+
+The [recorded output](F01_PAC_CHARTS.json) contains six charts with 12
+ordered cusp starts each, at longitude/latitude (0°, 0°), (75° E,
+30° N), and (120° W, 30° S), at 12:00 UTC on 1 January 2000 and
+5 April 2007. Longitude is east positive. The exact
+[IERS C04 noon rows](https://datacenter.iers.org/data/255/eopc04_20u24.12h.1984-now.txt)
+give DUT1 +0.3550132 s and −0.0721024 s, respectively. The latter is
+the observation, distinct from the cookbook example. C04 file SHA-256
+`1215c7820301444e5e193e2c5fc84a8f5f17b7fe0b3d4035a8d96535aa140034`.
+The [USNO leap history](https://maia.usno.navy.mil/ser7/tai-utc.dat)
+gives TAI−UTC 32 s and 33 s, respectively. Its SHA-256 is
+`3524e1ae34d67e858873a89e59983bbc5bd100221da898e796c1b36036a310c3`.
+
+The generator links only IAU SOFA R19, verified above. It uses split
+UT1 and TT, SOFA GAST and IAU 2006 true obliquity, and the mean-pole
+convention with zero polar-motion offsets. It intersects the date
+ecliptic with the geodetic local horizon and meridian in three
+dimensions, choosing the eastern and upper branches, respectively.
+It then constructs the four quadrant centers from Ascendant, IC,
+Descendant and MC, trisects their forward arcs, and takes circular
+midpoints between neighboring centers. The PAC sidereal zero point is
+the p. 374 polynomial plus SOFA IAU 2000A/2006 longitude nutation.
+The 1-based first boundary precedes house 1.
+
+The program rejects ill-conditioned intersections, degenerate
+quadrants, and any cusp cycle lacking opposite symmetry and a single
+forward winding. Its geometry self-check derives all 12 boundaries
+from two printed cardinal centers on Śrīpati's p. 12 before modern
+generation, using the predeclared one-arcsecond source bound. The
+chart output reproduced byte-for-byte with this compiler and SOFA
+source. Its SHA-256 is
+`ee24500133438f8d5efe6ab250ec8fe1a96f0901a860f4f9c9ad509073309d9a`.
+
+```sh
+# SOFA is the verified R19 C source directory after make check.
+cc -std=c11 -Wall -Wextra -Werror -I"$SOFA" tests/f01/pac_chart_reference.c \
+  "$SOFA/libsofa_c.a" -lm -o /tmp/mmo-pac-chart
+/tmp/mmo-pac-chart | cmp - docs/release/evidence/F01_PAC_CHARTS.json
+```
+
+The separate `pac_ayanamsa_libephemeris.rs` example ran in the pinned
+LibEphemeris revision `1abe74d1d5a7693b69a16392795b0521be9892d2`.
+Copy it into that checkout's `core/examples`, then run
+`cargo run --locked -p libephemeris-core --example pac_ayanamsa_libephemeris`.
+The executed build used Rust 1.86 and checksum-verified offline
+dependencies. Mean residual at J2000.0 was zero to printed precision.
+J2025.0/J2026.0 mean differences were +0.000010990″/+0.000012034″.
+True reconstruction residuals were −0.002603169″/−0.002572637″;
+corresponding mean residuals were +0.000010990″/+0.000010998″ and
+nutation residuals were −0.002614159″/−0.002583635″. Both true values
+fit the predeclared 0.010″ plus arithmetic bound for those dates.
+
+The PAC chart remains outside schema 2. Stock Swiss mode 1, the
+application's consumed clocks, polar-motion conventions and the
+prospective combined angular error budget still need separate
+qualification before a Swiss product cusp comparison.
