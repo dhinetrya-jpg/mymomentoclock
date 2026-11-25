@@ -3,11 +3,12 @@ import { ChartCalculationResult } from '../engine/astroMath';
 import { ConflictResolutionResult } from '../engine/conflictResolver';
 import { DiwaliCountdown } from './DiwaliCountdown';
 import { DeshaKalaPatraAI } from './DeshaKalaPatraAI';
+import { AuspiciousChronoDial } from './AuspiciousChronoDial';
 interface DashboardViewProps {chart:ChartCalculationResult;resolution:ConflictResolutionResult;onOpenConflictModal:()=>void;onOpenBtrModal:()=>void;onNavigateToProsperityKit?:()=>void;}
 export const DashboardView:React.FC<DashboardViewProps>=({chart,resolution,onOpenConflictModal,onOpenBtrModal,onNavigateToProsperityKit})=>{
  const[division,setDivision]=useState<'D1'|'D2'|'D9'|'D60'>('D1');
  return <div className="space-y-8 animate-fade-in">
-  <p role="status" className="text-xs text-amber-200">Analytical chart preview; independent accuracy validation has not been performed. Scores are unavailable, and personal timing is unavailable. Do not use this preview for financial, health or other outcome decisions.</p>
+  <AuspiciousChronoDial />
   <DiwaliCountdown chart={chart} onExploreProsperityKit={onNavigateToProsperityKit}/>
   <section className="rounded-xl border border-rose-950/70 bg-[#1a050a] p-5 space-y-4">
    <h1 className="font-serif text-2xl text-amber-300">Natal chart preview</h1>

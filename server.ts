@@ -28,9 +28,12 @@ app.use((req,res,next)=>{
     const api=sandbox?' https://api.razorpay.com':'';
     res.set('Content-Security-Policy',`default-src 'self'; script-src 'self'${sdk}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self'${api}; frame-src 'self'${api}${sdk}; frame-ancestors 'none'`);
   }
-  if(Date.now()-windowStart>60000){windowStart=Date.now();windowCount=0;}
-  if(++windowCount>600 || active>=8) return res.status(429).json({error:'RATE_LIMITED',message:'Please try again shortly.',request_id:requestId});
-  active++;let released=false;const release=()=>{if(!released){active--;released=true;}};res.once('finish',release);res.once('close',release);next();
+  if(req.path.startsWith('/api')){
+    if(Date.now()-windowStart>60000){windowStart=Date.now();windowCount=0;}
+    if(++windowCount>600 || active>=8) return res.status(429).json({error:'RATE_LIMITED',message:'Please try again shortly.',request_id:requestId});
+    active++;let released=false;const release=()=>{if(!released){active--;released=true;}};res.once('finish',release);res.once('close',release);
+  }
+  next();
 });
 app.use(express.json({limit:'64kb',strict:false}));
 const unavailable=(code:string,message:string)=>(_req:express.Request,res:express.Response)=>res.status(503).json({error:code,status:'UNAVAILABLE',message,request_id:res.locals.requestId,is_certified:false,is_graph_verified:false,vector_matrix:null});
@@ -79,6 +82,22 @@ app.get('/api/astro/muhurat',(req,res)=>{
   res.json({cityData,goldenWindow,...list,scope_metadata:{...goldenWindow.scope_metadata,scope:'GENERAL_LOCATION_BASED',status:'PREVIEW',location:city,timezone:cityData.timezone,activity_rules_used:false,calculation_version:'static-preview-2026-v1'}});
 });
 app.use(['/assets/aistudio','/public/assets/aistudio'],(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'Historical implementation artifacts are not public content.'}));
+app.get('/api/geo/search',async(req,res)=>{
+  const q=typeof req.query.q==='string'?req.query.q.trim():'';
+  const limit=Math.min(10,Math.max(1,Number(req.query.limit)||6));
+  if(q.length<2||q.length>100) return res.json({features:[]});
+  try{
+    const upstream=await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=${limit}`,{
+      headers:{Accept:'application/json','User-Agent':'MyMomentOclock/1.0'},
+      signal:AbortSignal.timeout(2500)
+    });
+    if(!upstream.ok) return res.json({features:[]});
+    const data=await upstream.json() as {features?:unknown[]};
+    return res.json({features:Array.isArray(data?.features)?data.features.slice(0,limit):[]});
+  }catch{
+    return res.json({features:[]});
+  }
+});
 app.use('/api/v1/timing',timingGatewayFromEnvironment());
 app.use('/api/v1/f01',f01GatewayFromEnvironment());
 app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND',message:'This API is not available.',request_id:res.locals.requestId}));
