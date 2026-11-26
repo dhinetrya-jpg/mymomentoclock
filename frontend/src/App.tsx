@@ -21,7 +21,6 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { OnboardingWizard } from './components/OnboardingWizard';
 import { calculateFullChart, AyanamsaType, ChartCalculationResult } from './engine/astroMath';
 import { resolvePillarConflict, ConflictResolutionResult } from './engine/conflictResolver';
-import { RvmEvaluationResult } from './engine/rvmEngine';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('daily-timing');
@@ -33,13 +32,11 @@ export default function App() {
 
   const [chart, setChart] = useState<ChartCalculationResult | null>(null);
   const [resolution, setResolution] = useState<ConflictResolutionResult | null>(null);
-  const [rvmResult, setRvmResult] = useState<RvmEvaluationResult | null>(null);
 
   const handleUpdateChart = (newChart: ChartCalculationResult) => {
     setChart(newChart);
     const newResolution = resolvePillarConflict(newChart, 'Wealth');
     setResolution(newResolution);
-    setRvmResult(null);
   };
 
   const handleRecalculateFromWizard = (params: {
@@ -125,7 +122,7 @@ export default function App() {
           {personalTiming ? <DailyTiming/> : <LocationTiming/>}
         </div>}
         {activeTab === 'birth-time-explorer' && <BirthTimeExplorer/>}
-        {!chart && ['dashboard','remediation'].includes(activeTab) && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
+        {!chart && activeTab === 'dashboard' && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
         {activeTab === 'funnel' && import.meta.env?.DEV && (
           <ConversionFunnelView
             onNavigateToFullApp={() => setActiveTab('dashboard')}
@@ -149,10 +146,7 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'remediation' && <p role="status" className="rounded-xl border border-rose-900 p-5">Personal remedy recommendations are unavailable until the rules have been verified.</p>}
-        {activeTab === 'remediation' && rvmResult && (
-          <RemediationView rvmResult={rvmResult} />
-        )}
+        {activeTab === 'remediation' && <RemediationView />}
 
         {activeTab === 'ambient-games' && (
           <div className="space-y-10">
