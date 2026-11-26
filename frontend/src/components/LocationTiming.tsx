@@ -21,6 +21,9 @@ export function LocationTiming() {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<LocationTimingResult | null>(null);
   const [error, setError] = useState(false);
+  const intentControl = useRef<HTMLInputElement>(null);
+  const citySearch = useRef<HTMLInputElement>(null);
+  const dateControl = useRef<HTMLInputElement>(null);
   const pending = useRef<AbortController | null>(null);
   const visibleCities = LOCATION_TIMING_CITIES.filter(
     option => option.city.toLowerCase().includes(cityQuery.trim().toLowerCase()),
@@ -28,6 +31,10 @@ export function LocationTiming() {
   const timezone = LOCATION_TIMING_CITIES.find(option => option.city === city)?.timezone;
 
   useEffect(() => () => pending.current?.abort(), []);
+
+  useEffect(() => {
+    if (guided) [intentControl, citySearch, dateControl][step].current?.focus();
+  }, [guided, step]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,7 +84,7 @@ export function LocationTiming() {
         <legend>Activity location and date</legend>
         <div hidden={guided && step !== 1} className="min-w-0">
           <label htmlFor="location-timing-search" className="mb-1 block">Search supported cities</label>
-          <input id="location-timing-search" name="city-search" type="search" maxLength={80}
+          <input ref={citySearch} id="location-timing-search" name="city-search" type="search" maxLength={80}
             className={control} value={cityQuery} disabled={guided && step !== 1}
             onChange={event => {
               const query = event.target.value;
@@ -94,14 +101,14 @@ export function LocationTiming() {
         </div>
         <div hidden={guided && step !== 2}>
           <label htmlFor="location-timing-date" className="mb-1 block">Local date</label>
-          <input id="location-timing-date" required disabled={guided && step !== 2} name="date"
+          <input ref={dateControl} id="location-timing-date" required disabled={guided && step !== 2} name="date"
             type="date" min="2000-01-01" max="2100-12-31" className={control}
             value={date} onChange={event => setDate(event.target.value)}/>
         </div>
         <div hidden={guided && step !== 0}>
           {guided && step === 0 && <div className="mb-3 space-y-2">
             <label htmlFor="location-timing-intent" className="block">Describe the activity (optional)</label>
-            <input id="location-timing-intent" type="text" maxLength={100} autoComplete="off"
+            <input ref={intentControl} id="location-timing-intent" type="text" maxLength={100} autoComplete="off"
               className={control} value={activityText}
               onChange={event => { setActivityText(event.target.value); setActivity(''); }}/>
             {suggestedActivity
