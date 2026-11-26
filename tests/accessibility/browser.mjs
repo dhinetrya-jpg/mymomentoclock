@@ -75,6 +75,18 @@ try{
  for(const width of [320,375,1280])for(const textScale of [100,200]){
   const page=await browser.newPage({viewport:{width,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.getByRole('heading',{name:'Daily timing by location',exact:true}).waitFor();
   const skip=page.getByRole('link',{name:'Skip to main content',exact:true});await page.keyboard.press('Tab');assert.equal(await skip.evaluate(el=>el===document.activeElement),true);await page.keyboard.press('Enter');await focused(page,'#main-content');
+  const guidanceRequests=[];
+  const collectGuidanceRequest=request=>{
+   if(new URL(request.url()).pathname.startsWith('/api/'))guidanceRequests.push(request.url());
+  };
+  page.on('request',collectGuidanceRequest);
+  await page.getByRole('button',{name:'Optional guidance',exact:true}).click();
+  const guidance=page.getByRole('region',{name:'Optional guidance',exact:true});
+  assert.deepEqual(await guidance.locator('dt').allTextContents(),['Colors','Clothing','Footwear','Metals','Stones']);
+  assert.deepEqual(await guidance.locator('dd').allTextContents(),Array(5).fill('Unavailable'));
+  assert.equal(await page.locator('main input, main select, main button, main a').count(),0);
+  assert.deepEqual(guidanceRequests,[]);
+  page.off('request',collectGuidanceRequest);
   await page.getByRole('button',{name:'Astro Dashboard',exact:true}).click();
   if(textScale===200)await page.evaluate(()=>{const size=parseFloat(getComputedStyle(document.documentElement).fontSize);document.documentElement.style.fontSize=(size*2)+'px';});
   await page.getByRole('button',{name:'Edit Birth Details',exact:true}).click();
