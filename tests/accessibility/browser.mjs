@@ -87,8 +87,21 @@ try{
   assert.equal(await page.locator('main input, main select, main button, main a').count(),0);
   assert.deepEqual(guidanceRequests,[]);
   page.off('request',collectGuidanceRequest);
-  await page.getByRole('button',{name:'Astro Dashboard',exact:true}).click();
   if(textScale===200)await page.evaluate(()=>{const size=parseFloat(getComputedStyle(document.documentElement).fontSize);document.documentElement.style.fontSize=(size*2)+'px';});
+  await page.getByRole('button',{name:'Daily Timing',exact:true}).click();
+  for(const [phrase,field] of [
+   ['Sell my house in New York.','#location-timing-date'],
+   ['Sell my house on 2026-11-01.','#location-timing-search'],
+  ]){
+   await page.getByRole('button',{name:'Guided chat',exact:true}).click();
+   await page.getByLabel('Describe the activity (optional)',{exact:true}).fill(phrase);
+   await page.getByRole('button',{name:'Review suggested details',exact:true}).press('Enter');
+   await focused(page,field);
+   const box=await page.locator(field).boundingBox();
+   assert.ok(box&&box.x>=-1&&box.x+box.width<=width+1,`Guided field clipped: ${field}, ${width}px/${textScale}% root-text`);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  }
+  await page.getByRole('button',{name:'Astro Dashboard',exact:true}).click();
   await page.getByRole('button',{name:'Edit Birth Details',exact:true}).click();
   const fits=()=>page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth}));
   let size=await fits();assert.ok(size.scrollWidth<=size.viewport+1,`Actual app ${width}px/${textScale}% root-text has horizontal page overflow: ${JSON.stringify(size)}`);
