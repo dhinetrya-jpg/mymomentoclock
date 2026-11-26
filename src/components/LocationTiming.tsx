@@ -11,12 +11,16 @@ export function LocationTiming() {
   const [guided, setGuided] = useState(false);
   const [step, setStep] = useState(0);
   const [city, setCity] = useState('');
+  const [cityQuery, setCityQuery] = useState('');
   const [date, setDate] = useState('');
   const [activity, setActivity] = useState<LocationActivity>('general');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<LocationTimingResult | null>(null);
   const [error, setError] = useState(false);
   const pending = useRef<AbortController | null>(null);
+  const visibleCities = LOCATION_TIMING_CITIES.filter(
+    option => option.city.toLowerCase().includes(cityQuery.trim().toLowerCase()),
+  );
   const timezone = LOCATION_TIMING_CITIES.find(option => option.city === city)?.timezone;
 
   useEffect(() => () => pending.current?.abort(), []);
@@ -67,13 +71,22 @@ export function LocationTiming() {
     <form onSubmit={submit} onChange={clearResult} className="space-y-4">
       <fieldset disabled={busy} className="grid gap-4 rounded-lg border border-rose-800 p-4 sm:grid-cols-2">
         <legend>Activity location and date</legend>
-        <div hidden={guided && step !== 1}>
-          <label htmlFor="location-timing-city" className="mb-1 block">City</label>
+        <div hidden={guided && step !== 1} className="min-w-0">
+          <label htmlFor="location-timing-search" className="mb-1 block">Search supported cities</label>
+          <input id="location-timing-search" name="city-search" type="search" maxLength={80}
+            className={control} value={cityQuery} disabled={guided && step !== 1}
+            onChange={event => {
+              const query = event.target.value;
+              setCityQuery(query);
+              if (!city.toLowerCase().includes(query.trim().toLowerCase())) setCity('');
+            }}/>
+          <label htmlFor="location-timing-city" className="mt-3 mb-1 block">City</label>
           <select id="location-timing-city" required disabled={guided && step !== 1} name="city"
             className={control} value={city} onChange={event => setCity(event.target.value)}>
             <option value="">Choose a city</option>
-            {LOCATION_TIMING_CITIES.map(option => <option key={option.city}>{option.city}</option>)}
+            {visibleCities.map(option => <option key={option.city}>{option.city}</option>)}
           </select>
+          {!visibleCities.length && <p role="status" className="mt-2 text-sm">No supported cities match. Try another search.</p>}
         </div>
         <div hidden={guided && step !== 2}>
           <label htmlFor="location-timing-date" className="mb-1 block">Local date</label>
