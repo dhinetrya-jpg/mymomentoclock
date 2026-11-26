@@ -41,7 +41,7 @@ const guidedActivityPhrases: Partial<Record<string, LocationActivity>> = {
 
 export function suggestLocationActivity(text: string): LocationActivity | undefined {
   const phrase = text.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
-  return Object.hasOwn(guidedActivityPhrases, phrase) ? guidedActivityPhrases[phrase] : undefined;
+  return Object.prototype.hasOwnProperty.call(guidedActivityPhrases, phrase) ? guidedActivityPhrases[phrase] : undefined;
 }
 
 export interface LocationTimingRequest {
