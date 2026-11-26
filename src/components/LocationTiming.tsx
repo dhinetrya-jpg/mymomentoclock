@@ -6,7 +6,7 @@ import {
 } from '../engine/locationTiming';
 
 const prompts = ['What activity are you planning?', 'Which city will it be in?', 'What is the local date?', 'Review your activity, city and local date.'];
-const control = 'w-full rounded border border-rose-700 bg-[#19060b] p-2 text-white';
+const control = 'w-full min-w-0 rounded border border-rose-700 bg-[#19060b] p-2 text-white';
 
 export function LocationTiming() {
   const [guided, setGuided] = useState(false);
@@ -87,7 +87,7 @@ export function LocationTiming() {
       <p aria-live="polite">{prompts[step]}</p>
     </div>}
     <form onSubmit={submit} onChange={clearResult} className="space-y-4">
-      <fieldset disabled={busy} className="grid gap-4 rounded-lg border border-rose-800 p-4 sm:grid-cols-2">
+      <fieldset disabled={busy} className="grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-rose-800 p-2 sm:grid-cols-2 sm:p-4">
         <legend>Activity location and date</legend>
         <div hidden={stepByStep && step !== 1} className="min-w-0">
           <label htmlFor="location-timing-search" className="mb-1 block">Search supported cities</label>
@@ -106,13 +106,13 @@ export function LocationTiming() {
           </select>
           {!visibleCities.length && <p role="status" className="mt-2 text-sm">No supported cities match. Try another search.</p>}
         </div>
-        <div hidden={stepByStep && step !== 2}>
+        <div hidden={stepByStep && step !== 2} className="min-w-0">
           <label htmlFor="location-timing-date" className="mb-1 block">Local date</label>
           <input ref={dateControl} id="location-timing-date" required disabled={stepByStep && step !== 2} name="date"
             type="date" min="2000-01-01" max="2100-12-31" className={control}
             value={date} onChange={event => setDate(event.target.value)}/>
         </div>
-        <div hidden={stepByStep && step !== 0}>
+        <div hidden={stepByStep && step !== 0} className="min-w-0">
           {guided && step === 0 && <div className="mb-3 space-y-2">
             <label htmlFor="location-timing-intent" className="block">Describe the activity (optional)</label>
             <input ref={intentControl} id="location-timing-intent" type="text" maxLength={100} autoComplete="off"
