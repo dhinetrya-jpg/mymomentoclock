@@ -3,7 +3,7 @@ import https from 'node:https';
 import {readFileSync} from 'node:fs';
 import {TIMING_ACTIVITIES,TIMING_RULE_VERSION,TIMING_VERSION,type TimingRequest} from '../src/engine/timingClient';
 import {
- LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES, LOCATION_TIMING_PATH,
+ LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES, LOCATION_TIMING_PATH, validLocationTimingDate,
  type LocationTimingResult,
 } from '../src/engine/locationTiming';
 export type TimingTransport=(method:string,path:string,body?:TimingRequest)=>Promise<{status:number;body:any}>;
@@ -34,7 +34,7 @@ export function createTimingGateway(transport?:TimingTransport):RequestHandler{r
  if(path===LOCATION_TIMING_PATH){
   const body=req.body;
   if(!keys(body,['schema_version','city','date','activity'])||body.schema_version!==1||
-    !date(body.date,2000,2100)||!LOCATION_TIMING_ACTIVITIES.some(option=>option.id===body.activity)){
+    !validLocationTimingDate(body.date)||!LOCATION_TIMING_ACTIVITIES.some(option=>option.id===body.activity)){
    return void fail(422,'INVALID_LOCATION_TIMING_REQUEST');
   }
   const location=LOCATION_TIMING_CITIES.find(option=>option.city===body.city);

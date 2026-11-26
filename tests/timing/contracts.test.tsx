@@ -7,7 +7,7 @@ import {readFileSync} from 'node:fs';
 import {createTimingGateway,validTimingRequest,timingGatewayFromEnvironment,type TimingTransport} from '../../server/timingBoundary';
 import {DailyTiming,TimingTimeline} from '../../src/components/DailyTiming';
 import {TIMING_ACTIVITIES,type TimingRequest,type TimingResult} from '../../src/engine/timingClient';
-import {suggestLocationActivity} from '../../src/engine/locationTiming';
+import {suggestLocationActivity,suggestLocationTimingDetails} from '../../src/engine/locationTiming';
 
 test('guided activity suggestions resolve only supported whole phrases', () => {
   for (const [phrase, activity] of [
@@ -23,6 +23,19 @@ test('guided activity suggestions resolve only supported whole phrases', () => {
     '', 'constructor', 'property', 'do not trade stocks', 'buy a house or sell my house',
     'sell my house in London tomorrow', 'interview and proposal',
   ]) assert.equal(suggestLocationActivity(phrase), undefined);
+});
+
+test('guided timing details require one known activity, catalog city and real local ISO date', () => {
+  assert.deepEqual(suggestLocationTimingDetails('  BUY a house in  New York on 2028-02-29! '),
+    {activity:'property_purchase',city:'New York',date:'2028-02-29'});
+  assert.deepEqual(suggestLocationTimingDetails('sell my house in London on 2100-12-31'),
+    {activity:'property_sale',city:'London',date:'2100-12-31'});
+  for (const phrase of [
+    'sell my house in London on 2026-02-29', 'sell my house in London on 2100-02-29',
+    'sell my house in London on 2101-01-01', 'sell my house in Tokyo on 2026-11-01',
+    'sell my house in London on tomorrow', 'sell my house in London and New York on 2026-11-01',
+    'sell or buy a house in London on 2026-11-01', 'sell my house in London on 2026-11-01 or 2026-11-02',
+  ]) assert.equal(suggestLocationTimingDetails(phrase), undefined);
 });
 
 const request:TimingRequest={schema_version:1,birth:{date:'2000-01-01',time:'12:00',certainty:'EXACT',timezone:'Asia/Kolkata',latitude:22.57,longitude:88.36},target:{date:'2026-03-08',timezone:'America/New_York',latitude:40.71,longitude:-74},activity:'work',rule_version:'timing-rules-v1',ephemeris_mode:'MOSHIER'};
