@@ -36,13 +36,19 @@ export function DailyTiming(){
   <form onSubmit={submit} onChange={()=>{setResult(null);setError('');}} className="space-y-4">
    <fieldset disabled={busy} className="rounded-lg border border-rose-800 p-4"><legend>Birth details</legend><div className="grid gap-3 sm:grid-cols-2">
     {field('birth-date','Birth date','date',{min:'1900-01-01',max:'2100-12-31'})}
-    <label className="flex flex-col gap-1">Birth-time certainty<select aria-label="Birth-time certainty" name="certainty" value={certainty} onChange={e=>setCertainty(e.target.value)} className="rounded border border-rose-700 bg-[#19060b] p-2"><option value="EXACT">Known time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time</option></select></label>
+    <label className="flex flex-col gap-1">Birth-time certainty<select aria-label="Birth-time certainty" aria-describedby="birth-time-guidance" name="certainty" value={certainty} onChange={e=>setCertainty(e.target.value)} className="rounded border border-rose-700 bg-[#19060b] p-2"><option value="EXACT">Known time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time</option></select></label>
     {certainty!=='UNKNOWN'&&field('birth-time','Birth local time','time',{step:1})}
     {certainty!=='UNKNOWN'&&field('birth-offset','Birth UTC offset (optional, hours)','number',{required:false,min:-12,max:14,step:'any',placeholder:'For a repeated DST time, e.g. -4 or -5'})}
     {certainty==='APPROXIMATE'&&field('uncertainty','Uncertainty (± minutes)','number',{min:1,max:1440,step:1})}
     {field('birth-zone','Birth IANA timezone','text',{placeholder:'Asia/Kolkata',maxLength:100})}
     {field('birth-lat','Birth latitude','number',{min:-90,max:90,step:'any'})}{field('birth-lon','Birth longitude','number',{min:-180,max:180,step:'any'})}
-   </div><p className="mt-2 text-xs">For a repeated DST birth time, supply its recorded UTC offset. Missing or inconsistent offsets are rejected rather than guessed.</p></fieldset>
+   </div>
+   <p id="birth-time-guidance" className="mt-2 text-sm">
+    {certainty==='APPROXIMATE' ? 'Enter your best estimate and how many minutes earlier or later the birth could have been. Approximate times currently return insufficient evidence for personalized guidance.'
+      : certainty==='UNKNOWN' ? 'Leave the birth time unknown if you have no reliable estimate. This mode uses the date and place you enter and currently returns insufficient evidence for personalized guidance.'
+      : 'Use the recorded local birth time. Choose an approximate or unknown time when the recorded time is uncertain.'}
+   </p>
+   <p className="mt-2 text-xs">For a repeated DST birth time, supply its recorded UTC offset. Missing or inconsistent offsets are rejected rather than guessed.</p></fieldset>
    <fieldset disabled={busy} className="rounded-lg border border-rose-800 p-4"><legend>Activity date and location</legend><div className="grid gap-3 sm:grid-cols-2">
     {field('target-date','Activity date','date',{min:'2000-01-01',max:'2100-12-31'})}{field('target-zone','Activity IANA timezone','text',{placeholder:'America/Toronto',maxLength:100})}
     {field('target-lat','Activity latitude','number',{min:-90,max:90,step:'any'})}{field('target-lon','Activity longitude','number',{min:-180,max:180,step:'any'})}
