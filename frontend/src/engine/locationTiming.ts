@@ -39,8 +39,12 @@ const guidedActivityPhrases: Partial<Record<string, LocationActivity>> = {
   'sell my house': 'property_sale',
 };
 
+function normalizeGuidedText(text: string): string {
+  return text.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+}
+
 export function suggestLocationActivity(text: string): LocationActivity | undefined {
-  const phrase = text.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+  const phrase = normalizeGuidedText(text);
   return Object.prototype.hasOwnProperty.call(guidedActivityPhrases, phrase) ? guidedActivityPhrases[phrase] : undefined;
 }
 
@@ -49,6 +53,24 @@ export interface LocationTimingRequest {
   city: string;
   date: string;
   activity: LocationActivity;
+}
+
+export function validLocationTimingDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^(20[0-9]{2}|2100)-[0-9]{2}-[0-9]{2}$/.test(value)) {
+    return false;
+  }
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+export function suggestLocationTimingDetails(text: string): Omit<LocationTimingRequest, 'schema_version'> | undefined {
+  const phrase = normalizeGuidedText(text);
+  const match = /^(.+?) in (.+?) on ([0-9]{4}-[0-9]{2}-[0-9]{2})$/.exec(phrase);
+  if (!match) return undefined;
+  const [, activityText, cityText, date] = match;
+  const activity = suggestLocationActivity(activityText);
+  const city = LOCATION_TIMING_CITIES.find(option => option.city.toLowerCase() === cityText)?.city;
+  if (activity && city && validLocationTimingDate(date)) return {activity, city, date};
 }
 
 export interface LocationTimingResult {
