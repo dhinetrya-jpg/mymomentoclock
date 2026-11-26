@@ -13,16 +13,16 @@ function validSelection(candidate, allowed) {
       !Array.isArray(candidate.missing) || !Array.isArray(candidate.facts)) return false;
   return candidate.decision === allowed.decision &&
     candidate.missing.length === allowed.missing.length &&
-    candidate.missing.every((slot, index) => slot === allowed.missing[index]) &&
+    allowed.missing.every((slot, index) => slot === candidate.missing[index]) &&
     candidate.facts.length === allowed.facts.length &&
-    candidate.facts.every((fact, index) => fact === allowed.facts[index]);
+    allowed.facts.every((fact, index) => fact === candidate.facts[index]);
 }
 
 async function exerciseFixture(input, adapter) {
   const missing = slots.filter(slot => !input.selection[slot]);
   if (missing.length) return {source: 'template', ...clarify(...missing)};
-  if (!input.confirmed || !input.syntheticEligible ||
-      input.snapshot?.binding !== input.selection.binding) {
+  if (!input.confirmed || !input.syntheticEligible || !input.selection.binding ||
+      input.snapshot?.binding !== input.selection.binding || !input.snapshot.factIds?.length) {
     return {source: 'template', ...abstain()};
   }
   // Only typed IDs derived from trusted synthetic facts go to the fake adapter.
@@ -50,6 +50,8 @@ test('unavailable, unconfirmed and mismatched snapshots never call the fake adap
     {...complete, syntheticEligible: false},
     {...complete, confirmed: false},
     {...complete, snapshot: null},
+    {...complete, snapshot: {binding: 'fixture-1', factIds: []}},
+    {...complete, selection: {...selection, binding: undefined}, snapshot: {}},
     {...complete, snapshot: {...complete.snapshot, binding: 'different-fixture'}},
   ]) assert.deepEqual(await exerciseFixture(input, adapter), {source: 'template', ...abstain()});
   assert.equal(calls, 0);
@@ -72,7 +74,9 @@ test('the fake adapter receives fact IDs only and cannot add facts or prose', as
     return explain('city', 'local-date');
   }), {source: 'fixture', ...explain('city', 'local-date')});
   for (const proposal of [
-    null, 'unstructured response', explain('city', 'invented-window'), explain('local-date', 'local-date'),
+    null, 'unstructured response',
+    {decision: 'EXPLAIN', missing: [], facts: new Array(2)},
+    explain('city', 'invented-window'), explain('local-date', 'local-date'),
     {...explain('city', 'local-date'), prose: 'A guaranteed outcome'},
     {...explain('city', 'local-date'), time: '14:00'},
     {decision: 'EXPLAIN', missing: ['birthTime'], facts: ['city', 'local-date']},
