@@ -1,3 +1,4 @@
+import {locationCalendarDays} from '../../src/components/LocationCalendar';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
@@ -36,6 +37,17 @@ test('guided timing details require one known activity, catalog city and real lo
     'sell my house in London on tomorrow', 'sell my house in London and New York on 2026-11-01',
     'sell or buy a house in London on 2026-11-01', 'sell my house in London on 2026-11-01 or 2026-11-02',
   ]) assert.equal(suggestLocationTimingDetails(phrase), undefined);
+});
+
+test('location calendar uses civil labels across year boundaries and leap days', () => {
+  assert.deepEqual(locationCalendarDays('2028-01-01', 'Week', 0), ['2028-01-01', '2028-01-02']);
+  assert.deepEqual(locationCalendarDays('2026-12-31', 'Week', 11),
+    ['2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31']);
+  assert.equal(locationCalendarDays('2028-03-12', 'Month', 1).at(-1), '2028-02-29');
+  assert.equal(locationCalendarDays('2100-03-12', 'Month', 1).at(-1), '2100-02-28');
+  assert.equal(locationCalendarDays('2026-03-08', 'Week', 2).length, 7);
+  assert.equal(readFileSync('src/components/LocationCalendar.tsx','utf8'),
+    readFileSync('frontend/src/components/LocationCalendar.tsx','utf8'));
 });
 
 const request:TimingRequest={schema_version:1,birth:{date:'2000-01-01',time:'12:00',certainty:'EXACT',timezone:'Asia/Kolkata',latitude:22.57,longitude:88.36},target:{date:'2026-03-08',timezone:'America/New_York',latitude:40.71,longitude:-74},activity:'work',rule_version:'timing-rules-v1',ephemeris_mode:'MOSHIER'};

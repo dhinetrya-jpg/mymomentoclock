@@ -27,6 +27,15 @@ try{
    await search.fill('New York');
    await page.getByLabel('City',{exact:true}).selectOption('New York');
    await page.getByLabel('Local date',{exact:true}).fill('2026-11-01');
+   await page.getByText('Browse dates in 2026',{exact:true}).click();
+   await page.getByRole('button',{name:'Year',exact:true}).click();
+   await page.getByRole('button',{name:'February',exact:true}).click();
+   assert.equal(await page.getByRole('list',{name:'Dates',exact:true}).getByRole('button').count(),28);
+   await page.waitForFunction(()=>document.activeElement?.textContent==='2026-02-01');
+   await page.getByRole('button',{name:'2026-02-28',exact:true}).click();
+   assert.equal(await page.getByLabel('Local date',{exact:true}).inputValue(),'2026-02-28');
+   assert.equal(requests.length,0);
+   await page.getByLabel('Local date',{exact:true}).fill('2026-11-01');
    await page.getByLabel('Activity',{exact:true}).selectOption('property_sale');
    async function check(name) {
     const [response]=await Promise.all([

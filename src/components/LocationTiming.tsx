@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {LocationCalendar} from './LocationCalendar';
 import {
-  checkLocationTiming, suggestLocationActivity, suggestLocationTimingDetails, LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES,
+  checkLocationTiming, suggestLocationActivity, suggestLocationTimingDetails, validLocationTimingDate, LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES,
   type LocationActivity, type LocationTimingResult,
 } from '../engine/locationTiming';
 
@@ -149,6 +150,8 @@ export function LocationTiming() {
         </button>
       </div>
     </form>
+    {!guided && validLocationTimingDate(date) &&
+      <LocationCalendar date={date} busy={busy} chooseDate={day => {setDate(day); clearResult();}}/>}
     {error && <p role="alert">Could not check timing availability. Try again.</p>}
     {result && <div role="status" className="space-y-2 rounded-lg border border-amber-600 p-4">
       <p>{result.city} · {result.date} · {result.timezone}</p>
