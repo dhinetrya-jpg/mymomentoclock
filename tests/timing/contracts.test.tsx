@@ -7,6 +7,24 @@ import {readFileSync} from 'node:fs';
 import {createTimingGateway,validTimingRequest,timingGatewayFromEnvironment,type TimingTransport} from '../../server/timingBoundary';
 import {DailyTiming,TimingTimeline} from '../../src/components/DailyTiming';
 import {TIMING_ACTIVITIES,type TimingRequest,type TimingResult} from '../../src/engine/timingClient';
+import {suggestLocationActivity} from '../../src/engine/locationTiming';
+
+test('guided activity suggestions resolve only supported whole phrases', () => {
+  for (const [phrase, activity] of [
+    ['  I have a JOB interview! ', 'interview'],
+    ['open my shop', 'shop_opening'],
+    ['marriage proposal', 'proposal'],
+    ['trade stocks', 'trading'],
+    ['buy a house', 'property_purchase'],
+    ['sell my house', 'property_sale'],
+  ]) assert.equal(suggestLocationActivity(phrase), activity);
+
+  for (const phrase of [
+    '', 'constructor', 'property', 'do not trade stocks', 'buy a house or sell my house',
+    'sell my house in London tomorrow', 'interview and proposal',
+  ]) assert.equal(suggestLocationActivity(phrase), undefined);
+});
+
 const request:TimingRequest={schema_version:1,birth:{date:'2000-01-01',time:'12:00',certainty:'EXACT',timezone:'Asia/Kolkata',latitude:22.57,longitude:88.36},target:{date:'2026-03-08',timezone:'America/New_York',latitude:40.71,longitude:-74},activity:'work',rule_version:'timing-rules-v1',ephemeris_mode:'MOSHIER'};
 async function serve(run:(base:string)=>Promise<void>,transport?:TimingTransport){const app=express();app.use(express.json({limit:'64kb'}));app.use('/api/v1/timing',createTimingGateway(transport));const server=app.listen(0,'127.0.0.1');await new Promise<void>(r=>server.once('listening',r));try{await run('http://127.0.0.1:'+(server.address() as any).port);}finally{server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}}
 const post=(base:string,body:unknown)=>fetch(base+'/api/v1/timing/daily',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
