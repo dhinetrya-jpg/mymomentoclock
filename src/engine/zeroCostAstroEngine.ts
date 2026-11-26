@@ -2,28 +2,80 @@
  * @license
  * MIT License
  *
- * High-Precision Self-Contained Astronomical & Vedic Panchang Engine
- * Implements Meeus Astronomical Algorithms (VSOP87 & ELP2000-82 truncated),
- * Topocentric Refraction-corrected Sunrise/Sunset, True Chitrapaksha Lahiri Ayanamsa,
- * 5-Limb Panchang (with true 60-Karana cycle), 8 Kaalas (with lunar Amritadi Ghati),
- * 16 Day/Night Choghadiyas + Pre-Sunrise Continuity, 24 Horas, and Live Sripati Bhava Chalit.
- *
- * Zero external dependencies. Zero licensing cost. Permissive MIT license.
+ * Unified High-Precision Astronomical & Vedic Panchang Engine
+ * Powered by the single shared `moonSun()` + `solarTimes()` core (`planetaryEphemeris.ts`):
+ * - Meeus VSOP87 Apparent Sun + Full 60-Term Meeus Ch. 47 Table 47.A Moon (with ΔT, E/E², A1/A2/L'-F, IAU Nutation)
+ * - 2-Pass Right-Ascension Equation of Time Sunrise/Sunset with -50' refraction + optional elevation dip
+ * - Strict Date, Coordinate & IANA Timezone Validation (zero silent fallback to New Delhi or UTC+5.5)
+ * - Exact Root-Solved Tithi, Nakshatra, Yoga & Karana End Times + Udaya Tithi + Kshaya/Vriddhi Detection
+ * - Lunar Masa (Amanta & Purnimanta) with Astronomical Adhika & Kshaya Masa Detection
+ * - Exact Root-Solved Varjyam (Tyajya), Amrit Kalam, Vishti (Bhadra) Windows, Panchak & Festival Rules
  */
+
+import { CalculationInputError, validGregorianDate } from './calculationValidation';
+import { calculateGAST, moonSun, norm360, solarTimes } from './planetaryEphemeris';
+
+export type LunarMonthSystem = 'AMANTA' | 'PURNIMANTA';
 
 export interface LocationCoordinates {
   latitude: number;
   longitude: number;
   cityName?: string;
-  timezone?: string;     // Optional IANA timezone e.g. 'Asia/Kolkata', 'America/New_York'
-  timezoneOffset: number; // e.g. +5.5 for IST
+  timezone?: string;       // IANA timezone e.g. 'Asia/Kolkata', 'America/New_York'
+  timezoneOffset: number;  // Explicit UTC offset in hours e.g. +5.5 (auto-derived when valid IANA timezone is supplied)
+  elevationMeters?: number; // Optional observer elevation above sea level (meters)
+}
+
+export type StrictLocationInput =
+  | LocationCoordinates
+  | (Omit<LocationCoordinates, 'timezoneOffset'> & { timezone: string; timezoneOffset?: number });
+
+export interface DayAnalysisOptions {
+  lunarMonthSystem?: LunarMonthSystem;
+  elevationMeters?: number;
 }
 
 export interface PanchangaLimbResult {
   index: number;
   name: string;
-  fractionElapsed: number; // 0.0 - 1.0
+  fractionElapsed: number; // 0.0 - 1.0 at sunrise
   degreeInSpan: number;
+  endMs: number;
+  endIso: string;
+  endLocal: string;
+  end12Hr: string;
+  endsAfterNextSunrise: boolean;
+}
+
+export interface TithiSpanEntry {
+  index: number; // 1..30
+  name: string;
+  paksha: 'Shukla' | 'Krishna';
+  startMs: number;
+  endMs: number;
+  start12Hr: string;
+  end12Hr: string;
+  classification: 'UDAYA' | 'VRIDDHI' | 'KSHAYA' | 'SUBSEQUENT';
+}
+
+export interface LunarMasaInfo {
+  activeSystem: LunarMonthSystem;
+  amantaIndex: number;      // 0..11 (Chaitra..Phalguna)
+  amantaName: string;
+  purnimantaIndex: number;  // 0..11
+  purnimantaName: string;
+  displayName: string;      // Includes "Adhika " or "Kshaya " prefix when applicable
+  isAdhikaMasa: boolean;
+  isKshayaMasa: boolean;
+  prevNewMoonIso: string;
+  nextNewMoonIso: string;
+}
+
+export interface FestivalObservance {
+  id: string;
+  name: string;
+  ruleSummary: string;
+  observanceWindow12Hr: string;
 }
 
 export interface KaalaWindow {
@@ -68,16 +120,48 @@ export interface HoraWindow {
 
 export interface BhavaCusp {
   bhavaNumber: number;
-  madhyaLongitude: number;      // Midpoint
-  sandhiStartLongitude: number; // Starting boundary
-  sandhiEndLongitude: number;   // Ending boundary
+  madhyaLongitude: number;
+  sandhiStartLongitude: number;
+  sandhiEndLongitude: number;
   rashiIndex: number;
   rashiName: string;
+}
+
+export interface LocalDayUtcBounds {
+  date: string;
+  timezone?: string;
+  startUtcMs: number;
+  endUtcMs: number;
+  startIso: string;
+  endIso: string;
+  elapsedSeconds: number;
+  elapsedMinutes: number;
+  elapsedHours: number;
+  sampleCount15Min: number;
+  startOffsetHours: number;
+  endOffsetHours: number;
+  startOffsetLabel: string;
+  endOffsetLabel: string;
+  isDstTransition: boolean;
+}
+
+export interface WallTimeParts {
+  dateStr: string;
+  hhmm24: string;
+  hhmm12: string;
+  hour24: number;
+  minute: number;
+  second: number;
+  minutesOfDay: number;
+  offsetMinutes: number;
+  offsetHours: number;
+  offsetLabel: string;
 }
 
 export interface DayAnalysisResult {
   date: string;
   location: LocationCoordinates;
+  localDayBounds: LocalDayUtcBounds;
   solarMetrics: {
     sunrise: string;
     sunset: string;
@@ -92,15 +176,29 @@ export interface DayAnalysisResult {
     nightLengthMinutes: number;
     isPolar: boolean;
     polarCondition?: 'POLAR_DAY' | 'POLAR_NIGHT';
+    elevationMeters: number;
   };
   sunriseLocal?: string;
   sunsetLocal?: string;
   dayOfWeekIndex: number;
   siderealSunLongitude: number;
   siderealMoonLongitude: number;
+  lunarMasa: LunarMasaInfo;
   panchanga: {
-    tithi: PanchangaLimbResult & { paksha: 'Shukla' | 'Krishna' };
-    nakshatra: PanchangaLimbResult & { lord: string; pada: number };
+    tithi: PanchangaLimbResult & {
+      paksha: 'Shukla' | 'Krishna';
+      udayaTithiIndex: number;
+      udayaTithiName: string;
+      tithiAnomaly: 'NORMAL' | 'VRIDDHI' | 'KSHAYA';
+      kshayaTithiName?: string;
+      dayTithiSpans: TithiSpanEntry[];
+    };
+    nakshatra: PanchangaLimbResult & {
+      lord: string;
+      pada: number;
+      startMs: number;
+      start12Hr: string;
+    };
     yoga: PanchangaLimbResult;
     karana: PanchangaLimbResult & { isVishtiBhadra: boolean };
     vaara: { dayIndex: number; name: string; lord: string };
@@ -114,6 +212,19 @@ export interface DayAnalysisResult {
     godhuliKaal: KaalaWindow;
     vijayaMuhurta: KaalaWindow;
     amritKaal: KaalaWindow;
+    varjyam: KaalaWindow;
+    pradoshKaal: KaalaWindow;
+  };
+  vishtiWindows: KaalaWindow[];
+  panchak: {
+    isActive: boolean;
+    window: KaalaWindow | null;
+    nakshatraName: string | null;
+  };
+  festivalObservances: {
+    ruleSetVersion: 'drik-festival-rules-v1';
+    approvalStatus: 'UNAPPROVED_PENDING_JYOTISHI_SIGN_OFF';
+    matched: FestivalObservance[];
   };
   kaalaTimings: {
     rahuKaalam: { start: string; end: string; start12Hr: string; end12Hr: string };
@@ -124,6 +235,7 @@ export interface DayAnalysisResult {
     godhuliBela: { start: string; end: string; start12Hr: string; end12Hr: string };
     vijayaMuhurta: { start: string; end: string; start12Hr: string; end12Hr: string };
     amritKaal: { start: string; end: string; start12Hr: string; end12Hr: string };
+    varjyam: { start: string; end: string; start12Hr: string; end12Hr: string };
   };
   choghadiya: {
     preSunriseChoghadiya: ChoghadiyaWindow[];
@@ -142,6 +254,12 @@ export const ZODIAC_SIGNS = [
   'Aries', 'Taurus', 'Gemini', 'Cancer',
   'Leo', 'Virgo', 'Libra', 'Scorpio',
   'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+];
+
+export const MASA_NAMES = [
+  'Chaitra', 'Vaishakha', 'Jyeshtha', 'Ashadha',
+  'Shravana', 'Bhadrapada', 'Ashwin', 'Kartika',
+  'Margashirsha', 'Pausha', 'Magha', 'Phalguna'
 ];
 
 export const TITHI_NAMES = [
@@ -194,52 +312,303 @@ const CHOGHADIYA_LORDS: Record<string, string> = {
   Rog: 'Mars'
 };
 
-// Classical Amritadi Ghati start offset (out of 60 Ghatis) per Nakshatra (Ashwini..Revati, Muhurta Chintamani)
+// Classical Varjyam (Vishaghati / Tyajya) start Ghati (out of 60 Ghatis of actual Nakshatra span) per Muhurta Chintamani
+const NAKSHATRA_VARJYAM_START_GHATI = [
+  50, 24, 30, 40, 14, 21, 30, 20, 32,
+  30, 20, 18, 21, 20, 14, 14, 10, 14,
+  56, 24, 20, 10, 10, 18, 16, 24, 30
+];
+
+// Classical Amritadi Ghati start offset (out of 60 Ghatis of actual Nakshatra span) per Muhurta Chintamani
 const NAKSHATRA_AMRIT_START_GHATI = [
   42, 48, 54, 52, 38, 35, 54, 44, 56,
   54, 44, 42, 45, 44, 38, 38, 34, 38,
   44, 48, 44, 34, 34, 42, 40, 48, 54
 ];
 
-// Day Choghadiya sequence per weekday lord: Sun, Mon, Tue, Wed, Thu, Fri, Sat
 const DAY_CHOGHADIYA_ORDER = [
-  ['Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg'], // Sun
-  ['Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit'], // Mon
-  ['Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog'],   // Tue
-  ['Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh'], // Wed
-  ['Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh'], // Thu
-  ['Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char'],   // Fri
-  ['Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal']   // Sat
+  ['Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg'],
+  ['Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit'],
+  ['Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog'],
+  ['Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh'],
+  ['Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal', 'Shubh'],
+  ['Char', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Char'],
+  ['Kaal', 'Shubh', 'Rog', 'Udveg', 'Char', 'Labh', 'Amrit', 'Kaal']
 ];
 
-// Night Choghadiya sequence per weekday lord
 const NIGHT_CHOGHADIYA_ORDER = [
-  ['Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh'], // Sun
-  ['Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char'],   // Mon
-  ['Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal'],   // Tue
-  ['Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg'], // Wed
-  ['Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit'], // Thu
-  ['Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog'],   // Fri
-  ['Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh']   // Sat
+  ['Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh'],
+  ['Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char'],
+  ['Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal'],
+  ['Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg'],
+  ['Amrit', 'Char', 'Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit'],
+  ['Rog', 'Kaal', 'Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog'],
+  ['Labh', 'Udveg', 'Shubh', 'Amrit', 'Char', 'Rog', 'Kaal', 'Labh']
 ];
 
-// Chaldean Planetary Order (Descending speed: Saturn down to Moon)
 const CHALDEAN_HORA_ORDER = ['Saturn', 'Jupiter', 'Mars', 'Sun', 'Venus', 'Mercury', 'Moon'];
 const WEEKDAY_FIRST_HORA = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+
+function signedAngleDiff(targetDeg: number, currentDeg: number): number {
+  return ((targetDeg - currentDeg + 540.0) % 360.0) - 180.0;
+}
 
 export class HighPrecisionAstroEngine {
   private static readonly DEG2RAD = Math.PI / 180.0;
   private static readonly RAD2DEG = 180.0 / Math.PI;
+  private static readonly DTF_CACHE = new Map<string, Intl.DateTimeFormat>();
 
   public static normalizeDegrees(deg: number): number {
-    let d = deg % 360.0;
-    if (d < 0) d += 360.0;
-    return d;
+    return norm360(deg);
   }
 
-  /**
-   * Formats 24-hour "HH:MM" into localized 12-hour "hh:mm AM/PM"
-   */
+  private static civilUtcMs(
+    year: number,
+    month: number,
+    day: number,
+    hour: number = 0,
+    minute: number = 0,
+    second: number = 0
+  ): number {
+    const d = new Date(0);
+    d.setUTCFullYear(year, month - 1, day);
+    d.setUTCHours(hour, minute, second, 0);
+    return d.getTime();
+  }
+
+  public static isValidIanaTimezone(timezone?: string): boolean {
+    if (!timezone || timezone === 'UTC_OFFSET' || timezone === 'Local') return false;
+    if (this.DTF_CACHE.has(timezone)) return true;
+    try {
+      const dtf = new Intl.DateTimeFormat('en-CA', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+      });
+      this.DTF_CACHE.set(timezone, dtf);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  public static formatUtcOffsetLabel(offsetMinutes: number): string {
+    if (!Number.isFinite(offsetMinutes) || offsetMinutes === 0) return 'GMT+0';
+    const sign = offsetMinutes < 0 ? '-' : '+';
+    const abs = Math.abs(Math.round(offsetMinutes));
+    const hrs = Math.floor(abs / 60);
+    const mins = abs % 60;
+    return mins === 0
+      ? `GMT${sign}${hrs}`
+      : `GMT${sign}${hrs}:${mins.toString().padStart(2, '0')}`;
+  }
+
+  public static getWallTimeInZone(
+    epochMs: number,
+    timezone?: string,
+    fallbackOffset: number = 5.5,
+    roundToMinute: boolean = false
+  ): WallTimeParts {
+    const safeMs = Number.isFinite(epochMs) ? epochMs : Date.now();
+    const snappedMs = roundToMinute
+      ? Math.round(safeMs / 60000) * 60000
+      : Math.round(safeMs / 1000) * 1000;
+
+    if (timezone && this.isValidIanaTimezone(timezone)) {
+      const dtf = this.DTF_CACHE.get(timezone)!;
+      const parts = dtf.formatToParts(new Date(snappedMs));
+      let yStr = '2026', mStr = '01', dStr = '01', hStr = '00', minStr = '00', sStr = '00';
+      for (const p of parts) {
+        if (p.type === 'year') yStr = p.value;
+        else if (p.type === 'month') mStr = p.value;
+        else if (p.type === 'day') dStr = p.value;
+        else if (p.type === 'hour') hStr = p.value === '24' ? '00' : p.value;
+        else if (p.type === 'minute') minStr = p.value;
+        else if (p.type === 'second') sStr = p.value;
+      }
+      const yn = Number(yStr), mn = Number(mStr), dn = Number(dStr);
+      const hn = Number(hStr), minn = Number(minStr), sn = Number(sStr);
+      const naiveLocalMs = this.civilUtcMs(yn, mn, dn, hn, minn, sn);
+      const offsetMinutes = Math.round((naiveLocalMs - snappedMs) / 60000);
+      const hhmm24 = `${hStr.padStart(2, '0')}:${minStr.padStart(2, '0')}`;
+      return {
+        dateStr: `${yStr.padStart(4, '0')}-${mStr.padStart(2, '0')}-${dStr.padStart(2, '0')}`,
+        hhmm24,
+        hhmm12: this.format24To12Hr(hhmm24),
+        hour24: hn,
+        minute: minn,
+        second: sn,
+        minutesOfDay: hn * 60 + minn,
+        offsetMinutes,
+        offsetHours: offsetMinutes / 60.0,
+        offsetLabel: this.formatUtcOffsetLabel(offsetMinutes)
+      };
+    }
+
+    const safeTz = Number.isFinite(fallbackOffset) ? fallbackOffset : 5.5;
+    const offsetMinutes = Math.round(safeTz * 60);
+    const shifted = new Date(snappedMs + offsetMinutes * 60000);
+    const yn = shifted.getUTCFullYear();
+    const mn = shifted.getUTCMonth() + 1;
+    const dn = shifted.getUTCDate();
+    const hn = shifted.getUTCHours();
+    const minn = shifted.getUTCMinutes();
+    const sn = shifted.getUTCSeconds();
+    const hhmm24 = `${hn.toString().padStart(2, '0')}:${minn.toString().padStart(2, '0')}`;
+    return {
+      dateStr: `${yn.toString().padStart(4, '0')}-${mn.toString().padStart(2, '0')}-${dn.toString().padStart(2, '0')}`,
+      hhmm24,
+      hhmm12: this.format24To12Hr(hhmm24),
+      hour24: hn,
+      minute: minn,
+      second: sn,
+      minutesOfDay: hn * 60 + minn,
+      offsetMinutes,
+      offsetHours: offsetMinutes / 60.0,
+      offsetLabel: this.formatUtcOffsetLabel(offsetMinutes)
+    };
+  }
+
+  public static resolveStartOfLocalDateUtcMs(
+    year: number,
+    month: number,
+    day: number,
+    timezone?: string,
+    fallbackOffset: number = 5.5
+  ): number {
+    const targetNaiveMs = this.civilUtcMs(year, month, day, 0, 0, 0);
+    const safeTz = Number.isFinite(fallbackOffset) ? fallbackOffset : 5.5;
+    if (!timezone || !this.isValidIanaTimezone(timezone)) {
+      return targetNaiveMs - Math.round(safeTz * 3600000);
+    }
+
+    const targetDateKey = year * 10000 + month * 100 + day;
+    const dateKeyAt = (ms: number): number => {
+      const w = this.getWallTimeInZone(ms, timezone, safeTz, false);
+      const [wy, wm, wd] = w.dateStr.split('-').map(Number);
+      return wy * 10000 + wm * 100 + wd;
+    };
+
+    let guessMs = targetNaiveMs - Math.round(safeTz * 3600000);
+    for (let i = 0; i < 4; i++) {
+      const w = this.getWallTimeInZone(guessMs, timezone, safeTz, false);
+      const [wy, wm, wd] = w.dateStr.split('-').map(Number);
+      const shownNaiveMs = this.civilUtcMs(wy, wm, wd, w.hour24, w.minute, w.second);
+      const errMs = shownNaiveMs - targetNaiveMs;
+      if (errMs === 0) {
+        if (dateKeyAt(guessMs - 3600000) < targetDateKey && dateKeyAt(guessMs - 1000) < targetDateKey) {
+          return guessMs;
+        }
+        guessMs -= 3600000;
+      } else {
+        guessMs -= errMs;
+      }
+    }
+
+    const anchor = targetNaiveMs - Math.round(safeTz * 3600000);
+    let lo = anchor - 18 * 3600000;
+    let hi = anchor + 18 * 3600000;
+    for (let h = -18; h <= 18; h++) {
+      const probe = anchor + h * 3600000;
+      if (dateKeyAt(probe) < targetDateKey) {
+        lo = probe;
+      } else {
+        hi = probe;
+        break;
+      }
+    }
+    while (hi - lo > 1000) {
+      const mid = Math.floor((lo + hi) / 2000) * 1000;
+      if (mid <= lo) break;
+      if (dateKeyAt(mid) < targetDateKey) lo = mid;
+      else hi = mid;
+    }
+    return Math.round(hi / 1000) * 1000;
+  }
+
+  public static getLocalDayUtcBounds(
+    dateStr: string,
+    timezone?: string,
+    fallbackOffset: number = 5.5
+  ): LocalDayUtcBounds {
+    const trimmed = typeof dateStr === 'string' ? dateStr.trim() : '';
+    if (!validGregorianDate(trimmed)) {
+      throw new CalculationInputError('INVALID_DATE', `Invalid Gregorian calendar date: "${dateStr}".`);
+    }
+    const safeTz = Number.isFinite(fallbackOffset) ? fallbackOffset : 0;
+    const [y, m, d] = trimmed.split('-').map(Number);
+    const nextDayUtc = new Date(this.civilUtcMs(y, m, d + 1, 0, 0, 0));
+    const ny = nextDayUtc.getUTCFullYear();
+    const nm = nextDayUtc.getUTCMonth() + 1;
+    const nd = nextDayUtc.getUTCDate();
+
+    const startUtcMs = this.resolveStartOfLocalDateUtcMs(y, m, d, timezone, safeTz);
+    const endUtcMs = this.resolveStartOfLocalDateUtcMs(ny, nm, nd, timezone, safeTz);
+    const spanMs = Math.max(3600000, endUtcMs - startUtcMs);
+    const elapsedSeconds = Math.round(spanMs / 1000);
+    const elapsedMinutes = Math.round(spanMs / 60000);
+    const elapsedHours = Number((elapsedSeconds / 3600.0).toFixed(2));
+    const sampleCount15Min = Math.max(1, Math.round(spanMs / 900000));
+
+    const startWall = this.getWallTimeInZone(startUtcMs, timezone, safeTz, false);
+    const endWall = this.getWallTimeInZone(endUtcMs - 60000, timezone, safeTz, false);
+
+    return {
+      date: trimmed,
+      timezone: timezone && this.isValidIanaTimezone(timezone) ? timezone : undefined,
+      startUtcMs,
+      endUtcMs,
+      startIso: new Date(startUtcMs).toISOString(),
+      endIso: new Date(endUtcMs).toISOString(),
+      elapsedSeconds,
+      elapsedMinutes,
+      elapsedHours,
+      sampleCount15Min,
+      startOffsetHours: startWall.offsetHours,
+      endOffsetHours: endWall.offsetHours,
+      startOffsetLabel: startWall.offsetLabel,
+      endOffsetLabel: endWall.offsetLabel,
+      isDstTransition: startWall.offsetMinutes !== endWall.offsetMinutes || elapsedSeconds !== 86400
+    };
+  }
+
+  public static resolveLocalMinutesToUtcMs(
+    dateStr: string,
+    minutesOfDay: number,
+    timezone?: string,
+    fallbackOffset: number = 5.5
+  ): number {
+    const safeMins = Math.max(0, Math.min(1439, Math.floor(minutesOfDay)));
+    const bounds = this.getLocalDayUtcBounds(dateStr, timezone, fallbackOffset);
+    const [y, m, d] = bounds.date.split('-').map(Number);
+    const h = Math.floor(safeMins / 60);
+    const min = safeMins % 60;
+    const naiveMs = this.civilUtcMs(y, m, d, h, min, 0);
+
+    if (!bounds.timezone) {
+      return naiveMs - Math.round((Number.isFinite(fallbackOffset) ? fallbackOffset : 5.5) * 3600000);
+    }
+
+    const candidateOffsets = Array.from(new Set([bounds.startOffsetHours, bounds.endOffsetHours]));
+    for (const offHrs of candidateOffsets) {
+      const candMs = naiveMs - Math.round(offHrs * 3600000);
+      if (candMs >= bounds.startUtcMs && candMs < bounds.endUtcMs) {
+        const w = this.getWallTimeInZone(candMs, bounds.timezone, fallbackOffset, false);
+        if (w.dateStr === bounds.date && w.hour24 === h && w.minute === min) {
+          return candMs;
+        }
+      }
+    }
+
+    const snapped = naiveMs - Math.round(bounds.endOffsetHours * 3600000);
+    return Math.min(bounds.endUtcMs - 60000, Math.max(bounds.startUtcMs, snapped));
+  }
+
   public static format24To12Hr(hhmm: string): string {
     if (!hhmm || !hhmm.includes(':')) return '12:00 PM';
     const [hRaw, mRaw] = hhmm.split(':').map(Number);
@@ -250,18 +619,14 @@ export class HighPrecisionAstroEngine {
     return `${h12.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${isPm ? 'PM' : 'AM'}`;
   }
 
-  /**
-   * Resolves current observer calendar date (YYYY-MM-DD) for a UTC offset
-   */
-  public static getObserverDateString(timezoneOffset: number = 5.5, nowMs: number = Date.now()): string {
-    const safeTz = Number.isFinite(timezoneOffset) ? timezoneOffset : 5.5;
-    const localDate = new Date(nowMs + Math.round(safeTz * 3600000));
-    return localDate.toISOString().split('T')[0];
+  public static getObserverDateString(
+    timezoneOffset: number = 5.5,
+    nowMs: number = Date.now(),
+    timezone?: string
+  ): string {
+    return this.getWallTimeInZone(nowMs, timezone, timezoneOffset, false).dateStr;
   }
 
-  /**
-   * Resolves canonical Karana name (1..60 half-tithis in a lunar month)
-   */
   public static getKaranaNameByIndex(karanaNumber1To60: number): string {
     const k = Math.min(60, Math.max(1, Math.floor(karanaNumber1To60)));
     if (k === 1) return 'Kintughna';
@@ -271,16 +636,10 @@ export class HighPrecisionAstroEngine {
     return 'Naga';
   }
 
-  /**
-   * Calculates Julian Day number from Unix timestamp (ms)
-   */
   public static julianDayFromEpochMs(epochMs: number): number {
     return 2440587.5 + epochMs / 86400000.0;
   }
 
-  /**
-   * Calculates Julian Day number for Gregorian date at 0h UT + hourFraction
-   */
   public static calculateJulianDay(year: number, month: number, day: number, hourFraction: number = 0): number {
     let y = year;
     let m = month;
@@ -293,9 +652,6 @@ export class HighPrecisionAstroEngine {
     return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + hourFraction + b - 1524.5;
   }
 
-  /**
-   * True Chitrapaksha (Lahiri) Ayanamsa Formulation
-   */
   public static getTrueLahiriAyanamsa(jd: number): number {
     const t = (jd - 2451545.0) / 36525.0;
     const precessionRate = 50.290966 / 3600.0;
@@ -303,96 +659,122 @@ export class HighPrecisionAstroEngine {
   }
 
   /**
-   * High-accuracy Sun apparent tropical longitude (VSOP87 truncated, Meeus Chapter 25)
+   * Unified Sun apparent tropical longitude (delegates directly to `moonSun(jd)` in `planetaryEphemeris.ts`)
    */
   public static calculateSunLongitude(jd: number): { longitude: number; distanceAU: number } {
-    const t = (jd - 2451545.0) / 36525.0;
-    const l0 = this.normalizeDegrees(280.46646 + 36000.76983 * t + 0.0003032 * t * t);
-    const m = this.normalizeDegrees(357.52911 + 35999.05029 * t - 0.0001537 * t * t);
-    const mRad = m * this.DEG2RAD;
-
-    const c = (1.914602 - 0.004817 * t - 0.000014 * t * t) * Math.sin(mRad)
-            + (0.019993 - 0.000101 * t) * Math.sin(2 * mRad)
-            + 0.000289 * Math.sin(3 * mRad);
-
-    const trueLong = l0 + c;
-    const omega = 125.04 - 1934.136 * t;
-    const apparentLong = this.normalizeDegrees(trueLong - 0.00569 - 0.00478 * Math.sin(omega * this.DEG2RAD));
-    const distanceAU = 1.000001018 * (1 - 0.016708634 * Math.cos(mRad));
-
-    return { longitude: apparentLong, distanceAU };
+    const ms = moonSun(jd);
+    return { longitude: ms.sunTropicalDeg, distanceAU: ms.sunDistanceAU };
   }
 
   /**
-   * High-accuracy Moon apparent tropical longitude (ELP2000-82 truncated, Meeus Chapter 47)
+   * Unified 60-term Meeus Ch. 47 Moon apparent tropical longitude (delegates directly to `moonSun(jd)`)
    */
   public static calculateMoonLongitude(jd: number): number {
-    const t = (jd - 2451545.0) / 36525.0;
-    const lPrime = this.normalizeDegrees(218.3164477 + 481267.88123421 * t);
-    const d = this.normalizeDegrees(297.8501921 + 445267.1114034 * t) * this.DEG2RAD;
-    const m = this.normalizeDegrees(357.5291092 + 35999.0502909 * t) * this.DEG2RAD;
-    const mPrime = this.normalizeDegrees(134.9633964 + 477198.8675055 * t) * this.DEG2RAD;
-    const f = this.normalizeDegrees(93.2720950 + 483202.0175233 * t) * this.DEG2RAD;
-
-    const periodicTerms =
-      + 6.288774 * Math.sin(mPrime)
-      + 1.274027 * Math.sin(2 * d - mPrime)
-      + 0.658314 * Math.sin(2 * d)
-      + 0.213618 * Math.sin(2 * mPrime)
-      - 0.185116 * Math.sin(m)
-      - 0.114332 * Math.sin(2 * f)
-      + 0.058793 * Math.sin(2 * d - 2 * mPrime)
-      + 0.057066 * Math.sin(2 * d - m - mPrime)
-      + 0.053322 * Math.sin(2 * d + mPrime)
-      + 0.046153 * Math.sin(2 * d - m)
-      - 0.034722 * Math.sin(d)
-      - 0.030383 * Math.sin(m + mPrime)
-      + 0.015327 * Math.sin(2 * d - 2 * f)
-      - 0.012528 * Math.sin(2 * f + mPrime);
-
-    return this.normalizeDegrees(lPrime + periodicTerms);
+    return moonSun(jd).moonTropicalDeg;
   }
 
   /**
-   * Computes live Sidereal Ascendant (Lagna) and Sidereal Midheaven (MC) for any UTC epoch & coordinates
+   * Sidereal Sun & Moon longitudes at any UTC millisecond instant using the unified core
    */
+  public static siderealSunMoonAtMs(epochMs: number): { siderealSun: number; siderealMoon: number; ayanamsa: number } {
+    const jdUT = this.julianDayFromEpochMs(epochMs);
+    const ms = moonSun(jdUT);
+    const ayanamsa = this.getTrueLahiriAyanamsa(jdUT);
+    return {
+      siderealSun: norm360(ms.sunTropicalDeg - ayanamsa),
+      siderealMoon: norm360(ms.moonTropicalDeg - ayanamsa),
+      ayanamsa,
+    };
+  }
+
+  /**
+   * Fast quasi-Newton + bracketed bisection solver for monotone forward angular crossings (converges < 0.5s in ~5 calls)
+   */
+  public static solveForwardCrossingMs(
+    startMs: number,
+    targetDeg: number,
+    angleAtMs: (ms: number) => number,
+    meanRateDegPerDay: number
+  ): number {
+    const target = norm360(targetDeg);
+    const startAngle = angleAtMs(startMs);
+    let remDeg = norm360(target - startAngle);
+    if (remDeg < 1e-6) remDeg = 360.0;
+
+    let t = startMs + (remDeg / meanRateDegPerDay) * 86400000.0;
+    for (let iter = 0; iter < 5; iter++) {
+      const ang = angleAtMs(t);
+      const err = signedAngleDiff(target, ang);
+      if (Math.abs(err) < 1e-5) break;
+      const dtProbe = 600000; // 10 min derivative probe
+      const rateDegPerMs = norm360(angleAtMs(t + dtProbe) - ang) / dtProbe;
+      const safeRate = rateDegPerMs > 1e-11 ? rateDegPerMs : meanRateDegPerDay / 86400000.0;
+      t += err / safeRate;
+    }
+    return Math.max(startMs + 1000, Math.round(t / 1000) * 1000);
+  }
+
+  /**
+   * Fast quasi-Newton solver for monotone backward angular crossings (finds entry instant <= startMs)
+   */
+  public static solveBackwardCrossingMs(
+    startMs: number,
+    targetDeg: number,
+    angleAtMs: (ms: number) => number,
+    meanRateDegPerDay: number
+  ): number {
+    const target = norm360(targetDeg);
+    const startAngle = angleAtMs(startMs);
+    const elapsedDeg = norm360(startAngle - target);
+    if (elapsedDeg < 1e-6) return Math.round(startMs / 1000) * 1000;
+
+    let t = startMs - (elapsedDeg / meanRateDegPerDay) * 86400000.0;
+    for (let iter = 0; iter < 5; iter++) {
+      const ang = angleAtMs(t);
+      const err = signedAngleDiff(target, ang);
+      if (Math.abs(err) < 1e-5) break;
+      const dtProbe = 600000;
+      const rateDegPerMs = norm360(angleAtMs(t + dtProbe) - ang) / dtProbe;
+      const safeRate = rateDegPerMs > 1e-11 ? rateDegPerMs : meanRateDegPerDay / 86400000.0;
+      t += err / safeRate;
+    }
+    return Math.min(startMs, Math.round(t / 1000) * 1000);
+  }
+
   public static calculateLiveAngles(
     epochMs: number,
     latitude: number,
     longitude: number
   ): { siderealAscendant: number; siderealMidheaven: number; ayanamsa: number } {
     const jd = this.julianDayFromEpochMs(epochMs);
-    const t = (jd - 2451545.0) / 36525.0;
     const ayanamsa = this.getTrueLahiriAyanamsa(jd);
-
-    const gst = this.normalizeDegrees(
-      280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * t * t - (t * t * t) / 38710000.0
-    );
-    const ramc = this.normalizeDegrees(gst + longitude);
-    const epsRad = (23.4392911 - 0.0130042 * t) * this.DEG2RAD;
+    const { gastDeg, trueObliquityDeg } = calculateGAST(jd);
+    const epsRad = trueObliquityDeg * this.DEG2RAD;
+    const ramc = norm360(gastDeg + longitude);
     const ramcRad = ramc * this.DEG2RAD;
-    const clampedLat = Math.max(-66.0, Math.min(66.0, latitude));
+    const clampedLat = Math.max(-89.9999, Math.min(89.9999, latitude));
     const latRad = clampedLat * this.DEG2RAD;
 
-    const tropAsc = this.normalizeDegrees(
+    const tropAsc = norm360(
       Math.atan2(
         Math.cos(ramcRad),
         -(Math.sin(epsRad) * Math.tan(latRad) + Math.cos(epsRad) * Math.sin(ramcRad))
       ) * this.RAD2DEG
     );
-    const tropMc = this.normalizeDegrees(
+
+    const tropMc = norm360(
       Math.atan2(Math.sin(ramcRad), Math.cos(ramcRad) * Math.cos(epsRad)) * this.RAD2DEG
     );
 
     return {
-      siderealAscendant: this.normalizeDegrees(tropAsc - ayanamsa),
-      siderealMidheaven: this.normalizeDegrees(tropMc - ayanamsa),
+      siderealAscendant: norm360(tropAsc - ayanamsa),
+      siderealMidheaven: norm360(tropMc - ayanamsa),
       ayanamsa
     };
   }
 
   /**
-   * Topocentric Sunrise, Sunset and Solar Noon with standard -50' atmospheric refraction
+   * Unified Topocentric Sunrise, Sunset and Solar Noon (delegates directly to `solarTimes()` in `planetaryEphemeris.ts`)
    */
   public static calculateSolarTimes(
     year: number,
@@ -400,7 +782,8 @@ export class HighPrecisionAstroEngine {
     day: number,
     latitude: number,
     longitude: number,
-    timezoneOffset: number
+    _timezoneOffset: number = 0,
+    elevationMeters: number = 0
   ): {
     sunriseDate: Date;
     sunsetDate: Date;
@@ -408,103 +791,63 @@ export class HighPrecisionAstroEngine {
     isPolar: boolean;
     polarCondition?: 'POLAR_DAY' | 'POLAR_NIGHT';
   } {
-    const safeTz = (typeof timezoneOffset === 'number' && !isNaN(timezoneOffset)) ? timezoneOffset : 5.5;
-    const jd0 = this.calculateJulianDay(year, month, day, 0.5 - safeTz / 24.0);
-    const sun0 = this.calculateSunLongitude(jd0);
-
-    const eps = (23.4392911 - 0.0130042 * ((jd0 - 2451545.0) / 36525.0)) * this.DEG2RAD;
-    const sinDec = Math.sin(eps) * Math.sin(sun0.longitude * this.DEG2RAD);
-    const cosDec = Math.cos(Math.asin(sinDec));
-    const dec = Math.asin(sinDec);
-
-    const h0 = -0.833333 * this.DEG2RAD;
-    const latRad = Math.max(-89.5, Math.min(89.5, latitude)) * this.DEG2RAD;
-
-    const meanLong = this.normalizeDegrees(280.46646 + 36000.76983 * ((jd0 - 2451545.0) / 36525.0));
-    // Circular angle wrap in [-180°, +180°] prevents ±24h jump at Vernal Equinox (360° -> 0°)
-    const eotDiffDeg = ((meanLong - sun0.longitude + 540.0) % 360.0) - 180.0;
-    const eotMinutes = 4.0 * eotDiffDeg;
-    const solarNoonHours = 12.0 + (safeTz * 15.0 - longitude) / 15.0 - (eotMinutes / 60.0);
-
-    const toDate = (hours: number): Date => {
-      const safeHours = (typeof hours === 'number' && !isNaN(hours)) ? hours : 12.0;
-      const d = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-      d.setUTCSeconds(Math.round((safeHours - safeTz) * 3600));
-      return d;
-    };
-
-    const cosH0 = (Math.sin(h0) - Math.sin(latRad) * Math.sin(dec)) / (Math.cos(latRad) * cosDec);
-
-    if (cosH0 > 1.0 || cosH0 < -1.0) {
-      const solarNoonDate = toDate(solarNoonHours);
+    const st = solarTimes(year, month, day, latitude, longitude, elevationMeters);
+    const solarNoonDate = new Date(st.solarNoonUtcMs);
+    if (st.isPolarDay || st.isPolarNight || st.sunriseUtcMs === null || st.sunsetUtcMs === null) {
       return {
-        sunriseDate: new Date(solarNoonDate.getTime() - 6 * 3600000),
-        sunsetDate: new Date(solarNoonDate.getTime() + 6 * 3600000),
+        sunriseDate: new Date(st.solarNoonUtcMs - 6 * 3600000),
+        sunsetDate: new Date(st.solarNoonUtcMs + 6 * 3600000),
         solarNoonDate,
         isPolar: true,
-        polarCondition: cosH0 < -1.0 ? 'POLAR_DAY' : 'POLAR_NIGHT'
+        polarCondition: st.isPolarDay ? 'POLAR_DAY' : 'POLAR_NIGHT'
       };
     }
-
-    const h0Hours = Math.acos(cosH0) * this.RAD2DEG / 15.0;
-    const riseHours = solarNoonHours - h0Hours;
-    const setHours = solarNoonHours + h0Hours;
-
     return {
-      sunriseDate: toDate(riseHours),
-      sunsetDate: toDate(setHours),
-      solarNoonDate: toDate(solarNoonHours),
+      sunriseDate: new Date(st.sunriseUtcMs),
+      sunsetDate: new Date(st.sunsetUtcMs),
+      solarNoonDate,
       isPolar: false
     };
   }
 
-  /**
-   * Sripati Bhava Chalit (Cuspal Unequal House Trisection)
-   */
   public static calculateBhavaChalitCusps(
     siderealAscendant: number,
     siderealMidheaven: number
   ): BhavaCusp[] {
-    const asc = this.normalizeDegrees(siderealAscendant);
-    const mc = this.normalizeDegrees(siderealMidheaven);
-    const ic = this.normalizeDegrees(mc + 180.0);
-    const desc = this.normalizeDegrees(asc + 180.0);
+    const asc = norm360(siderealAscendant);
+    const mc = norm360(siderealMidheaven);
+    const ic = norm360(mc + 180.0);
+    const desc = norm360(asc + 180.0);
 
-    const span1 = this.normalizeDegrees(ic - asc) / 3.0;
-    const span2 = this.normalizeDegrees(desc - ic) / 3.0;
-    const span3 = this.normalizeDegrees(mc - desc) / 3.0;
-    const span4 = this.normalizeDegrees(asc - mc) / 3.0;
+    const span1 = norm360(ic - asc) / 3.0;
+    const span2 = norm360(desc - ic) / 3.0;
+    const span3 = norm360(mc - desc) / 3.0;
+    const span4 = norm360(asc - mc) / 3.0;
 
     const madhyas: number[] = [
       asc,
-      this.normalizeDegrees(asc + span1),
-      this.normalizeDegrees(asc + 2 * span1),
+      norm360(asc + span1),
+      norm360(asc + 2 * span1),
       ic,
-      this.normalizeDegrees(ic + span2),
-      this.normalizeDegrees(ic + 2 * span2),
+      norm360(ic + span2),
+      norm360(ic + 2 * span2),
       desc,
-      this.normalizeDegrees(desc + span3),
-      this.normalizeDegrees(desc + 2 * span3),
+      norm360(desc + span3),
+      norm360(desc + 2 * span3),
       mc,
-      this.normalizeDegrees(mc + span4),
-      this.normalizeDegrees(mc + 2 * span4)
+      norm360(mc + span4),
+      norm360(mc + 2 * span4)
     ];
 
     const cusps: BhavaCusp[] = [];
     for (let i = 0; i < 12; i++) {
       const prevIdx = (i + 11) % 12;
       const nextIdx = (i + 1) % 12;
-
-      const mCurrent = Number.isFinite(madhyas[i]) ? madhyas[i] : (i * 30.0);
-      const mPrev = Number.isFinite(madhyas[prevIdx]) ? madhyas[prevIdx] : (prevIdx * 30.0);
-      const mNext = Number.isFinite(madhyas[nextIdx]) ? madhyas[nextIdx] : (nextIdx * 30.0);
-
-      const diffPrev = this.normalizeDegrees(mCurrent - mPrev);
-      const sandhiStart = this.normalizeDegrees(mPrev + diffPrev / 2.0);
-
-      const diffNext = this.normalizeDegrees(mNext - mCurrent);
-      const sandhiEnd = this.normalizeDegrees(mCurrent + diffNext / 2.0);
-
+      const mCurrent = madhyas[i];
+      const mPrev = madhyas[prevIdx];
+      const mNext = madhyas[nextIdx];
+      const sandhiStart = norm360(mPrev + norm360(mCurrent - mPrev) / 2.0);
+      const sandhiEnd = norm360(mCurrent + norm360(mNext - mCurrent) / 2.0);
       const rashiIdx = Math.floor(mCurrent / 30.0) % 12;
       cusps.push({
         bhavaNumber: i + 1,
@@ -515,104 +858,254 @@ export class HighPrecisionAstroEngine {
         rashiName: ZODIAC_SIGNS[rashiIdx] || 'Aries'
       });
     }
-
     return cusps;
   }
 
   /**
-   * Complete Day Panchanga, Kaalas, Choghadiyas and Horas Generator
+   * Strict, Zero-Silent-Default Day Panchanga, Limb End Times, Lunar Masa, Kaalas, Choghadiyas & Horas Generator
    */
-  public static analyzeFullDay(dateStr: string, loc: LocationCoordinates): DayAnalysisResult {
-    const tz = (typeof loc?.timezoneOffset === 'number' && !isNaN(loc.timezoneOffset))
-      ? loc.timezoneOffset
-      : ((loc as { defaultUtcOffset?: number })?.defaultUtcOffset ?? 5.5);
-
-    const isIsoDate = typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr.trim());
-    let validDate = isIsoDate ? dateStr.trim() : this.getObserverDateString(tz);
-    let [y, m, d] = validDate.split('-').map(Number);
-    if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d) || m < 1 || m > 12 || d < 1 || d > 31) {
-      validDate = this.getObserverDateString(tz);
-      [y, m, d] = validDate.split('-').map(Number);
+  public static analyzeFullDay(
+    dateStr: string,
+    loc: StrictLocationInput,
+    options?: DayAnalysisOptions
+  ): DayAnalysisResult {
+    // 1. Strict Gregorian Date Validation (rejects impossible dates like '2026-02-31' or '1900-02-29')
+    const trimmedDate = typeof dateStr === 'string' ? dateStr.trim() : '';
+    if (!validGregorianDate(trimmedDate)) {
+      throw new CalculationInputError('INVALID_DATE', `Invalid Gregorian calendar date: "${dateStr}". No fallback date is substituted.`);
     }
 
+    // 2. Strict Location & Timezone Validation (zero silent fallback to New Delhi or UTC+5.5)
+    if (!loc || typeof loc !== 'object') {
+      throw new CalculationInputError('INVALID_LOCATION', 'Location coordinates and timezone are required; no default city is substituted.');
+    }
+    if (
+      typeof loc.latitude !== 'number' ||
+      typeof loc.longitude !== 'number' ||
+      !Number.isFinite(loc.latitude) ||
+      !Number.isFinite(loc.longitude) ||
+      Math.abs(loc.latitude) > 90 ||
+      Math.abs(loc.longitude) > 180
+    ) {
+      throw new CalculationInputError('INVALID_LOCATION', 'Supply finite latitude (±90°) and longitude (±180°).');
+    }
+
+    const elevationMeters = options?.elevationMeters ?? loc.elevationMeters ?? 0;
+    if (!Number.isFinite(elevationMeters) || elevationMeters < -500 || elevationMeters > 12000) {
+      throw new CalculationInputError('INVALID_ELEVATION', 'Observer elevation must be between -500m and 12000m.');
+    }
+
+    const hasExplicitIana = loc.timezone !== undefined && loc.timezone !== '' && loc.timezone !== 'UTC_OFFSET';
+    if (loc.timezone === 'Local' || (hasExplicitIana && !this.isValidIanaTimezone(loc.timezone))) {
+      throw new CalculationInputError('INVALID_TIMEZONE', `Unsupported or invalid IANA timezone: "${loc.timezone}".`);
+    }
+
+    const rawOffset = (loc as { timezoneOffset?: number }).timezoneOffset;
+    const hasValidNumericOffset =
+      typeof rawOffset === 'number' && Number.isFinite(rawOffset) && rawOffset >= -12 && rawOffset <= 14;
+
+    if (!hasExplicitIana && !hasValidNumericOffset) {
+      throw new CalculationInputError('INVALID_TIMEZONE', 'Supply a valid IANA timezone or explicit UTC offset (−12 to +14).');
+    }
+
+    const initialOffset = hasValidNumericOffset ? (rawOffset as number) : 0;
+    const localDayBounds = this.getLocalDayUtcBounds(
+      trimmedDate,
+      hasExplicitIana ? loc.timezone : undefined,
+      initialOffset
+    );
+    const effectiveTzOffset = hasExplicitIana ? localDayBounds.startOffsetHours : initialOffset;
+
     const safeLoc: LocationCoordinates = {
-      latitude: loc?.latitude ?? 28.6139,
-      longitude: loc?.longitude ?? 77.2090,
-      timezoneOffset: tz,
-      timezone: loc?.timezone,
-      cityName: loc?.cityName || 'New Delhi'
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+      timezoneOffset: effectiveTzOffset,
+      timezone: hasExplicitIana ? loc.timezone : undefined,
+      cityName: loc.cityName || `${loc.latitude.toFixed(2)}°, ${loc.longitude.toFixed(2)}°`,
+      elevationMeters
     };
 
+    const [y, m, d] = trimmedDate.split('-').map(Number);
+
     const { sunriseDate, sunsetDate, solarNoonDate, isPolar, polarCondition } = this.calculateSolarTimes(
-      y, m, d, safeLoc.latitude, safeLoc.longitude, tz
+      y, m, d, safeLoc.latitude, safeLoc.longitude, effectiveTzOffset, elevationMeters
     );
 
-    // Adjacent solar days for exact Vedic Ratri-mana (sunset -> next sunrise) and pre-sunrise continuity
     const prevUtc = new Date(Date.UTC(y, m - 1, d - 1));
     const nextUtc = new Date(Date.UTC(y, m - 1, d + 1));
     const prevSolar = this.calculateSolarTimes(
       prevUtc.getUTCFullYear(), prevUtc.getUTCMonth() + 1, prevUtc.getUTCDate(),
-      safeLoc.latitude, safeLoc.longitude, tz
+      safeLoc.latitude, safeLoc.longitude, effectiveTzOffset, elevationMeters
     );
     const nextSolar = this.calculateSolarTimes(
       nextUtc.getUTCFullYear(), nextUtc.getUTCMonth() + 1, nextUtc.getUTCDate(),
-      safeLoc.latitude, safeLoc.longitude, tz
+      safeLoc.latitude, safeLoc.longitude, effectiveTzOffset, elevationMeters
     );
 
-    const tRiseMs = isNaN(sunriseDate.getTime()) ? Date.UTC(y, m - 1, d, 0, 30) : sunriseDate.getTime();
-    const tSetMs = isNaN(sunsetDate.getTime()) ? tRiseMs + 12 * 3600000 : sunsetDate.getTime();
-    const tNextRiseMs = isNaN(nextSolar.sunriseDate.getTime()) ? tRiseMs + 24 * 3600000 : nextSolar.sunriseDate.getTime();
-    const tPrevRiseMs = isNaN(prevSolar.sunriseDate.getTime()) ? tRiseMs - 24 * 3600000 : prevSolar.sunriseDate.getTime();
-    const tPrevSetMs = isNaN(prevSolar.sunsetDate.getTime()) ? tPrevRiseMs + 12 * 3600000 : prevSolar.sunsetDate.getTime();
+    const tRiseMs = sunriseDate.getTime();
+    const tSetMs = sunsetDate.getTime();
+    const tNextRiseMs = nextSolar.sunriseDate.getTime();
+    const tPrevRiseMs = prevSolar.sunriseDate.getTime();
+    const tPrevSetMs = prevSolar.sunsetDate.getTime();
 
     const dayLengthMs = Math.max(3600000, tSetMs - tRiseMs);
     const nightLengthMs = Math.max(3600000, tNextRiseMs - tSetMs);
     const prevNightLengthMs = Math.max(3600000, tRiseMs - tPrevSetMs);
     const partMs = dayLengthMs / 8.0;
 
-    // Exact Julian Day from Unix Epoch (immune to 00:xx UTC / Jan 0-index falsy bugs)
-    const jdSunrise = this.julianDayFromEpochMs(tRiseMs);
-    const ayanamsa = this.getTrueLahiriAyanamsa(jdSunrise);
-    const sunTrop = this.calculateSunLongitude(jdSunrise).longitude;
-    const moonTrop = this.calculateMoonLongitude(jdSunrise);
+    // Sidereal positions at local sunrise (Udaya instant)
+    const { siderealSun, siderealMoon, ayanamsa } = this.siderealSunMoonAtMs(tRiseMs);
 
-    const siderealSun = this.normalizeDegrees(sunTrop - ayanamsa);
-    const siderealMoon = this.normalizeDegrees(moonTrop - ayanamsa);
+    const elongationAtMs = (ms: number) => {
+      const s = this.siderealSunMoonAtMs(ms);
+      return norm360(s.siderealMoon - s.siderealSun);
+    };
+    const sidMoonAtMs = (ms: number) => this.siderealSunMoonAtMs(ms).siderealMoon;
+    const yogaSumAtMs = (ms: number) => {
+      const s = this.siderealSunMoonAtMs(ms);
+      return norm360(s.siderealMoon + s.siderealSun);
+    };
 
-    // Tithi (1..30)
-    const lunarSep = this.normalizeDegrees(siderealMoon - siderealSun);
+    const formatLocal = (ms: number): string =>
+      this.getWallTimeInZone(ms, safeLoc.timezone, effectiveTzOffset, true).hhmm24;
+    const formatLocalWithDay = (ms: number): string => {
+      const w = this.getWallTimeInZone(ms, safeLoc.timezone, effectiveTzOffset, true);
+      return w.dateStr === trimmedDate ? w.hhmm12 : `${w.hhmm12} (+1d)`;
+    };
+
+    // 3. Tithi at Sunrise (Udaya Tithi) + Exact End Time + Kshaya / Vriddhi Detection
+    const lunarSep = norm360(siderealMoon - siderealSun);
     const tithiIdx = Math.min(30, Math.floor(lunarSep / 12.0) + 1);
     const tithiFraction = (lunarSep % 12.0) / 12.0;
+    const tithiEndMs = this.solveForwardCrossingMs(tRiseMs, (tithiIdx % 30) * 12.0, elongationAtMs, 12.19075);
+    const tithiStartMs = this.solveBackwardCrossingMs(tRiseMs, ((tithiIdx - 1) % 30) * 12.0, elongationAtMs, 12.19075);
 
-    // Nakshatra (1..27)
+    let tithiAnomaly: 'NORMAL' | 'VRIDDHI' | 'KSHAYA' = 'NORMAL';
+    let kshayaTithiName: string | undefined;
+    const dayTithiSpans: TithiSpanEntry[] = [];
+
+    if (tithiEndMs > tNextRiseMs) {
+      tithiAnomaly = 'VRIDDHI';
+      dayTithiSpans.push({
+        index: tithiIdx,
+        name: TITHI_NAMES[tithiIdx - 1],
+        paksha: tithiIdx <= 15 ? 'Shukla' : 'Krishna',
+        startMs: tithiStartMs,
+        endMs: tithiEndMs,
+        start12Hr: formatLocalWithDay(tithiStartMs),
+        end12Hr: formatLocalWithDay(tithiEndMs),
+        classification: 'VRIDDHI',
+      });
+    } else {
+      dayTithiSpans.push({
+        index: tithiIdx,
+        name: TITHI_NAMES[tithiIdx - 1],
+        paksha: tithiIdx <= 15 ? 'Shukla' : 'Krishna',
+        startMs: tithiStartMs,
+        endMs: tithiEndMs,
+        start12Hr: formatLocalWithDay(tithiStartMs),
+        end12Hr: formatLocalWithDay(tithiEndMs),
+        classification: 'UDAYA',
+      });
+      const nextTithiIdx = (tithiIdx % 30) + 1;
+      const secondEndMs = this.solveForwardCrossingMs(tithiEndMs + 2000, (nextTithiIdx % 30) * 12.0, elongationAtMs, 12.19075);
+      if (secondEndMs <= tNextRiseMs) {
+        tithiAnomaly = 'KSHAYA';
+        kshayaTithiName = `${nextTithiIdx <= 15 ? 'Shukla' : 'Krishna'} ${TITHI_NAMES[nextTithiIdx - 1]}`;
+        dayTithiSpans.push({
+          index: nextTithiIdx,
+          name: TITHI_NAMES[nextTithiIdx - 1],
+          paksha: nextTithiIdx <= 15 ? 'Shukla' : 'Krishna',
+          startMs: tithiEndMs,
+          endMs: secondEndMs,
+          start12Hr: formatLocalWithDay(tithiEndMs),
+          end12Hr: formatLocalWithDay(secondEndMs),
+          classification: 'KSHAYA',
+        });
+        const thirdIdx = (nextTithiIdx % 30) + 1;
+        const thirdEndMs = this.solveForwardCrossingMs(secondEndMs + 2000, (thirdIdx % 30) * 12.0, elongationAtMs, 12.19075);
+        dayTithiSpans.push({
+          index: thirdIdx,
+          name: TITHI_NAMES[thirdIdx - 1],
+          paksha: thirdIdx <= 15 ? 'Shukla' : 'Krishna',
+          startMs: secondEndMs,
+          endMs: thirdEndMs,
+          start12Hr: formatLocalWithDay(secondEndMs),
+          end12Hr: formatLocalWithDay(thirdEndMs),
+          classification: 'SUBSEQUENT',
+        });
+      } else {
+        dayTithiSpans.push({
+          index: nextTithiIdx,
+          name: TITHI_NAMES[nextTithiIdx - 1],
+          paksha: nextTithiIdx <= 15 ? 'Shukla' : 'Krishna',
+          startMs: tithiEndMs,
+          endMs: secondEndMs,
+          start12Hr: formatLocalWithDay(tithiEndMs),
+          end12Hr: formatLocalWithDay(secondEndMs),
+          classification: 'SUBSEQUENT',
+        });
+      }
+    }
+
+    // 4. Nakshatra Exact Start & End Times -> Exact Varjyam & Amrit Kalam
     const nakSpanDeg = 360.0 / 27.0;
     const nakshatraIdx = Math.min(27, Math.floor(siderealMoon / nakSpanDeg) + 1);
     const nakshatraFraction = (siderealMoon % nakSpanDeg) / nakSpanDeg;
     const nakPada = Math.min(4, Math.floor(nakshatraFraction * 4) + 1);
+    const nakStartMs = this.solveBackwardCrossingMs(tRiseMs, ((nakshatraIdx - 1) * nakSpanDeg) % 360.0, sidMoonAtMs, 13.17636);
+    const nakEndMs = this.solveForwardCrossingMs(tRiseMs, (nakshatraIdx * nakSpanDeg) % 360.0, sidMoonAtMs, 13.17636);
+    const actualNakDurationMs = Math.max(18 * 3600000, nakEndMs - nakStartMs);
 
-    // Nitya Yoga (1..27)
-    const yogaSum = this.normalizeDegrees(siderealSun + siderealMoon);
+    // 5. Yoga & Karana Exact End Times
+    const yogaSum = norm360(siderealSun + siderealMoon);
     const yogaIdx = Math.min(27, Math.floor(yogaSum / nakSpanDeg) + 1);
     const yogaFraction = (yogaSum % nakSpanDeg) / nakSpanDeg;
+    const yogaEndMs = this.solveForwardCrossingMs(tRiseMs, (yogaIdx * nakSpanDeg) % 360.0, yogaSumAtMs, 14.16196);
 
-    // Karana (1..60 half-tithis in lunar month -> true 4 Sthira + 7x8 Chara cycle)
     const karanaIdx = Math.min(60, Math.floor(lunarSep / 6.0) + 1);
     const karanaFraction = (lunarSep % 6.0) / 6.0;
     const karanaName = this.getKaranaNameByIndex(karanaIdx);
+    const karanaEndMs = this.solveForwardCrossingMs(tRiseMs, (karanaIdx * 6.0) % 360.0, elongationAtMs, 12.19075);
 
-    // Vaara (Weekday in observer local calendar at Sunrise)
-    const localDayOfWeek = ((new Date(tRiseMs + Math.round(tz * 3600000)).getUTCDay()) % 7 + 7) % 7;
-    const prevLocalDayOfWeek = (localDayOfWeek + 6) % 7;
+    // 6. Lunar Masa (Amanta & Purnimanta) + Adhika / Kshaya Masa Detection
+    const activeMasaSystem: LunarMonthSystem = options?.lunarMonthSystem || 'AMANTA';
+    const prevNewMoonMs = this.solveBackwardCrossingMs(tRiseMs, 0.0, elongationAtMs, 12.19075);
+    const nextNewMoonMs = this.solveForwardCrossingMs(tRiseMs, 0.0, elongationAtMs, 12.19075);
+    const sunRashiPrev = Math.floor(this.siderealSunMoonAtMs(prevNewMoonMs + 1000).siderealSun / 30.0) % 12;
+    const sunRashiNext = Math.floor(this.siderealSunMoonAtMs(nextNewMoonMs - 1000).siderealSun / 30.0) % 12;
+    const rashiAdvance = (sunRashiNext - sunRashiPrev + 12) % 12;
 
-    const formatLocal = (ms: number): string => {
-      if (!Number.isFinite(ms)) return '12:00';
-      try {
-        const local = new Date(ms + Math.round(tz * 3600000));
-        return local.toISOString().substring(11, 16);
-      } catch {
-        return '12:00';
-      }
+    const isAdhikaMasa = rashiAdvance === 0;
+    const isKshayaMasa = rashiAdvance >= 2;
+    const amantaIndex = isAdhikaMasa
+      ? (sunRashiNext + 1) % 12
+      : isKshayaMasa
+      ? (sunRashiPrev + 1) % 12
+      : sunRashiNext;
+    const paksha: 'Shukla' | 'Krishna' = tithiIdx <= 15 ? 'Shukla' : 'Krishna';
+    const purnimantaIndex = !isAdhikaMasa && paksha === 'Krishna' ? (amantaIndex + 1) % 12 : amantaIndex;
+    const amantaName = MASA_NAMES[amantaIndex];
+    const purnimantaName = MASA_NAMES[purnimantaIndex];
+    const baseChosenName = activeMasaSystem === 'PURNIMANTA' ? purnimantaName : amantaName;
+    const masaPrefix = isAdhikaMasa ? 'Adhika ' : isKshayaMasa ? 'Kshaya ' : '';
+
+    const lunarMasa: LunarMasaInfo = {
+      activeSystem: activeMasaSystem,
+      amantaIndex,
+      amantaName,
+      purnimantaIndex,
+      purnimantaName,
+      displayName: `${masaPrefix}${baseChosenName}`,
+      isAdhikaMasa,
+      isKshayaMasa,
+      prevNewMoonIso: new Date(prevNewMoonMs).toISOString(),
+      nextNewMoonIso: new Date(nextNewMoonMs).toISOString(),
     };
+
+    // Vaara (Weekday of the civil calendar date in the selected location)
+    const localDayOfWeek = ((new Date(this.civilUtcMs(y, m, d, 12, 0, 0)).getUTCDay()) % 7 + 7) % 7;
+    const prevLocalDayOfWeek = (localDayOfWeek + 6) % 7;
 
     const makeWindow = (
       name: string,
@@ -640,7 +1133,7 @@ export class HighPrecisionAstroEngine {
       };
     };
 
-    const rahuSegments = [8, 2, 7, 5, 6, 4, 3]; // Sun -> Sat
+    const rahuSegments = [8, 2, 7, 5, 6, 4, 3];
     const gulikaSegments = [7, 6, 5, 4, 3, 2, 1];
     const yamaSegments = [5, 4, 3, 2, 1, 7, 6];
 
@@ -652,9 +1145,8 @@ export class HighPrecisionAstroEngine {
     const gulikaKaal = makeWindow('Gulika Kaal', tRiseMs + (gSeg - 1) * partMs, tRiseMs + gSeg * partMs, 'Neutral', -10);
     const yamaghanta = makeWindow('Yamaghanta', tRiseMs + (ySeg - 1) * partMs, tRiseMs + ySeg * partMs, 'Inauspicious', -20);
 
-    // Abhijit Muhurta (8th of 15 diurnal Muhurtas; cancelled on Wednesdays per Muhurta Chintamani)
     const mSpanMs = dayLengthMs / 15.0;
-    const tNoonMs = isNaN(solarNoonDate.getTime()) ? tRiseMs + dayLengthMs / 2.0 : solarNoonDate.getTime();
+    const tNoonMs = solarNoonDate.getTime();
     const isAbhijitValid = localDayOfWeek !== 3;
     const abhijit = {
       ...makeWindow(
@@ -667,28 +1159,127 @@ export class HighPrecisionAstroEngine {
       isValidOnThisDay: isAbhijitValid
     };
 
-    // Brahma Muhurta (96 mins to 48 mins before Sunrise)
     const brahma = makeWindow('Brahma Muhurta', tRiseMs - 96 * 60000, tRiseMs - 48 * 60000, 'Auspicious', 20);
-
-    // Godhuli Kaal (12 mins before to 12 mins after Sunset)
     const godhuli = makeWindow('Godhuli Kaal', tSetMs - 12 * 60000, tSetMs + 12 * 60000, 'Auspicious', 15);
-
-    // Vijaya Muhurta (11th diurnal Muhurta)
     const vijaya = makeWindow('Vijaya Muhurta', tRiseMs + 10 * mSpanMs, tRiseMs + 11 * mSpanMs, 'Auspicious', 20);
+    const pradoshKaal = makeWindow('Pradosh Kaal', tSetMs, tSetMs + 144 * 60000, 'Auspicious', 16);
 
-    // Classical Lunar Nakshatra Amrit Kaal (4 Ghatis = 4/60 of mean ~24.3h lunar star transit)
-    const meanNakDurationMs = 24.32 * 3600000;
-    const nakEntryMs = tRiseMs - nakshatraFraction * meanNakDurationMs;
-    const amritGhatiOffset = NAKSHATRA_AMRIT_START_GHATI[(nakshatraIdx - 1) % 27] ?? 42;
-    let amritStartMs = nakEntryMs + (amritGhatiOffset / 60.0) * meanNakDurationMs;
-    const amritDurationMs = (4.0 / 60.0) * meanNakDurationMs; // ~97 minutes
-    // Keep within the current solar day cycle if entry wrapped prior to sunrise
-    if (amritStartMs + amritDurationMs < tRiseMs) {
-      const nextNakIdx = nakshatraIdx % 27;
-      const nextOffset = NAKSHATRA_AMRIT_START_GHATI[nextNakIdx] ?? 42;
-      amritStartMs = (nakEntryMs + meanNakDurationMs) + (nextOffset / 60.0) * meanNakDurationMs;
+    // 7. Exact Root-Solved Amrit Kalam & Varjyam (4 Ghatis = 4/60 of actual Nakshatra span)
+    const resolveNakshatraGhatiWindow = (ghatiTable: number[], label: string, nature: 'Auspicious' | 'Inauspicious', impact: number): KaalaWindow => {
+      const ghatiOffset = ghatiTable[(nakshatraIdx - 1) % 27] ?? 30;
+      let winStart = nakStartMs + (ghatiOffset / 60.0) * actualNakDurationMs;
+      let winDur = (4.0 / 60.0) * actualNakDurationMs;
+      if (winStart + winDur < tRiseMs && nakEndMs < tNextRiseMs) {
+        const nextNakIdx0 = nakshatraIdx % 27;
+        const nextEndMs = this.solveForwardCrossingMs(nakEndMs + 2000, ((nextNakIdx0 + 1) * nakSpanDeg) % 360.0, sidMoonAtMs, 13.17636);
+        const nextDurMs = Math.max(18 * 3600000, nextEndMs - nakEndMs);
+        const nextOffset = ghatiTable[nextNakIdx0] ?? 30;
+        winStart = nakEndMs + (nextOffset / 60.0) * nextDurMs;
+        winDur = (4.0 / 60.0) * nextDurMs;
+      }
+      return makeWindow(label, winStart, winStart + winDur, nature, impact);
+    };
+
+    const amrit = resolveNakshatraGhatiWindow(NAKSHATRA_AMRIT_START_GHATI, 'Amrit Kaal', 'Auspicious', 18);
+    const varjyam = resolveNakshatraGhatiWindow(NAKSHATRA_VARJYAM_START_GHATI, 'Varjyam (Tyajya)', 'Inauspicious', -22);
+
+    // 8. Exact Root-Solved Vishti (Bhadra) Windows Overlapping the Local Day
+    const vishtiWindows: KaalaWindow[] = [];
+    {
+      let cursorMs = localDayBounds.startUtcMs;
+      for (let step = 0; step < 6 && cursorMs < localDayBounds.endUtcMs; step++) {
+        const el = elongationAtMs(cursorMs + 1000);
+        const kIdx1 = Math.min(60, Math.floor(el / 6.0) + 1);
+        const kName = this.getKaranaNameByIndex(kIdx1);
+        const kEnd = this.solveForwardCrossingMs(cursorMs + 1000, (kIdx1 * 6.0) % 360.0, elongationAtMs, 12.19075);
+        const clippedEnd = Math.min(localDayBounds.endUtcMs, kEnd);
+        if (kName.includes('Vishti') && clippedEnd > cursorMs) {
+          vishtiWindows.push(makeWindow('Vishti (Bhadra)', cursorMs, clippedEnd, 'Inauspicious', -15));
+        }
+        cursorMs = kEnd + 1000;
+      }
     }
-    const amrit = makeWindow('Amrit Kaal', amritStartMs, amritStartMs + amritDurationMs, 'Auspicious', 18);
+
+    // 9. Exact Panchak Detection & Window (Sidereal Moon in [300°, 360°): Dhanishta P3-4 through Revati)
+    let panchak: DayAnalysisResult['panchak'] = { isActive: false, window: null, nakshatraName: null };
+    {
+      const moonStart = sidMoonAtMs(localDayBounds.startUtcMs);
+      const moonEnd = sidMoonAtMs(localDayBounds.endUtcMs - 1000);
+      const startInPanchak = moonStart >= 300.0;
+      const endInPanchak = moonEnd >= 300.0;
+      const entersPanchak = !startInPanchak && moonStart >= 275.0 && endInPanchak;
+      const exitsPanchak = startInPanchak && !endInPanchak && moonEnd < 25.0;
+
+      if (startInPanchak || endInPanchak || entersPanchak || exitsPanchak) {
+        const pStart = startInPanchak
+          ? localDayBounds.startUtcMs
+          : this.solveForwardCrossingMs(localDayBounds.startUtcMs, 300.0, sidMoonAtMs, 13.17636);
+        const pEnd = endInPanchak
+          ? localDayBounds.endUtcMs
+          : this.solveForwardCrossingMs(pStart + 1000, 0.0, sidMoonAtMs, 13.17636);
+        const clampedStart = Math.max(localDayBounds.startUtcMs, pStart);
+        const clampedEnd = Math.min(localDayBounds.endUtcMs, pEnd);
+        if (clampedEnd > clampedStart) {
+          const midMoon = sidMoonAtMs((clampedStart + clampedEnd) / 2);
+          const pNakIdx = Math.min(26, Math.floor(midMoon / nakSpanDeg));
+          panchak = {
+            isActive: true,
+            window: makeWindow('Panchak', clampedStart, clampedEnd, 'Inauspicious', -8),
+            nakshatraName: NAKSHATRA_NAMES[pNakIdx]
+          };
+        }
+      }
+    }
+
+    // 10. Explicit Versioned Festival Rule Evaluator (e.g. Pradosh-Vyapini Kartika Amavasya for Diwali)
+    const matchedFestivals: FestivalObservance[] = [];
+    if (!isAdhikaMasa) {
+      const pradoshMidMs = tSetMs + 72 * 60000;
+      const tithiAtPradosh = Math.min(30, Math.floor(elongationAtMs(pradoshMidMs) / 12.0) + 1);
+      const nishitaMidMs = tSetMs + nightLengthMs / 2.0;
+      const tithiAtNishita = Math.min(30, Math.floor(elongationAtMs(nishitaMidMs) / 12.0) + 1);
+
+      if (amantaIndex === 6 && tithiAtPradosh === 30) {
+        matchedFestivals.push({
+          id: 'diwali-lakshmi-puja',
+          name: 'Diwali · Mahalakshmi Puja',
+          ruleSummary: 'Kartika (Purnimanta) / Ashwin (Amanta) Amavasya prevailing during Pradosh Kaal',
+          observanceWindow12Hr: `${pradoshKaal.start12Hr} – ${pradoshKaal.end12Hr}`
+        });
+      }
+      if (amantaIndex === 6 && tithiAtPradosh === 28) {
+        matchedFestivals.push({
+          id: 'dhanteras-pradosh',
+          name: 'Dhanteras (Dhantrayodashi)',
+          ruleSummary: 'Krishna Trayodashi prevailing during Pradosh Kaal prior to Diwali',
+          observanceWindow12Hr: `${pradoshKaal.start12Hr} – ${pradoshKaal.end12Hr}`
+        });
+      }
+      if (amantaIndex === 1 && tithiIdx === 3) {
+        matchedFestivals.push({
+          id: 'akshaya-tritiya',
+          name: 'Akshaya Tritiya',
+          ruleSummary: 'Vaishakha Shukla Tritiya at Udaya / Purvahna',
+          observanceWindow12Hr: `${this.format24To12Hr(formatLocal(tRiseMs))} – ${formatLocalWithDay(Math.min(tSetMs, tithiEndMs))}`
+        });
+      }
+      if (amantaIndex === 6 && tithiIdx === 10) {
+        matchedFestivals.push({
+          id: 'vijaya-dashami',
+          name: 'Vijaya Dashami (Dussehra)',
+          ruleSummary: 'Ashwin Shukla Dashami (Aparahna / Vijaya Muhurta)',
+          observanceWindow12Hr: `${vijaya.start12Hr} – ${vijaya.end12Hr}`
+        });
+      }
+      if (amantaIndex === 10 && tithiAtNishita === 29) {
+        matchedFestivals.push({
+          id: 'maha-shivaratri',
+          name: 'Maha Shivaratri',
+          ruleSummary: 'Magha (Amanta) / Phalguna (Purnimanta) Krishna Chaturdashi during Nishita Kaal',
+          observanceWindow12Hr: `${this.format24To12Hr(formatLocal(nishitaMidMs - 24 * 60000))} – ${this.format24To12Hr(formatLocal(nishitaMidMs + 24 * 60000))}`
+        });
+      }
+    }
 
     const buildChoghadiyaSet = (order: string[], baseMs: number, stepMs: number): ChoghadiyaWindow[] =>
       order.map((name, idx) => {
@@ -764,15 +1355,16 @@ export class HighPrecisionAstroEngine {
       tPrevSetMs,
       Math.max(3600000, tPrevSetMs - tPrevRiseMs),
       prevNightLengthMs
-    ).slice(12); // Nocturnal 12 Horas leading into today's sunrise
+    ).slice(12);
 
     const sunriseStr = formatLocal(tRiseMs);
     const sunsetStr = formatLocal(tSetMs);
     const noonStr = formatLocal(tNoonMs);
 
     return {
-      date: validDate,
+      date: trimmedDate,
       location: safeLoc,
+      localDayBounds,
       solarMetrics: {
         sunrise: sunriseStr,
         sunset: sunsetStr,
@@ -786,20 +1378,32 @@ export class HighPrecisionAstroEngine {
         dayLengthMinutes: Math.round(dayLengthMs / 60000),
         nightLengthMinutes: Math.round(nightLengthMs / 60000),
         isPolar,
-        polarCondition
+        polarCondition,
+        elevationMeters
       },
       sunriseLocal: sunriseStr,
       sunsetLocal: sunsetStr,
       dayOfWeekIndex: localDayOfWeek,
       siderealSunLongitude: Number(siderealSun.toFixed(4)),
       siderealMoonLongitude: Number(siderealMoon.toFixed(4)),
+      lunarMasa,
       panchanga: {
         tithi: {
           index: tithiIdx,
           name: TITHI_NAMES[tithiIdx - 1] || 'Pratipada',
-          paksha: tithiIdx <= 15 ? 'Shukla' : 'Krishna',
+          paksha,
+          udayaTithiIndex: tithiIdx,
+          udayaTithiName: `${paksha} ${TITHI_NAMES[tithiIdx - 1] || 'Pratipada'}`,
+          tithiAnomaly,
+          ...(kshayaTithiName ? { kshayaTithiName } : {}),
+          dayTithiSpans,
           fractionElapsed: Number(tithiFraction.toFixed(4)),
-          degreeInSpan: Number((tithiFraction * 12.0).toFixed(2))
+          degreeInSpan: Number((tithiFraction * 12.0).toFixed(2)),
+          endMs: tithiEndMs,
+          endIso: new Date(tithiEndMs).toISOString(),
+          endLocal: formatLocal(tithiEndMs),
+          end12Hr: formatLocalWithDay(tithiEndMs),
+          endsAfterNextSunrise: tithiEndMs > tNextRiseMs,
         },
         nakshatra: {
           index: nakshatraIdx,
@@ -807,20 +1411,37 @@ export class HighPrecisionAstroEngine {
           lord: NAKSHATRA_LORDS[nakshatraIdx - 1] || 'Ketu',
           pada: nakPada,
           fractionElapsed: Number(nakshatraFraction.toFixed(4)),
-          degreeInSpan: Number((nakshatraFraction * nakSpanDeg).toFixed(2))
+          degreeInSpan: Number((nakshatraFraction * nakSpanDeg).toFixed(2)),
+          startMs: nakStartMs,
+          start12Hr: formatLocalWithDay(nakStartMs),
+          endMs: nakEndMs,
+          endIso: new Date(nakEndMs).toISOString(),
+          endLocal: formatLocal(nakEndMs),
+          end12Hr: formatLocalWithDay(nakEndMs),
+          endsAfterNextSunrise: nakEndMs > tNextRiseMs,
         },
         yoga: {
           index: yogaIdx,
           name: YOGA_NAMES[yogaIdx - 1] || 'Vishkambha',
           fractionElapsed: Number(yogaFraction.toFixed(4)),
-          degreeInSpan: Number((yogaFraction * nakSpanDeg).toFixed(2))
+          degreeInSpan: Number((yogaFraction * nakSpanDeg).toFixed(2)),
+          endMs: yogaEndMs,
+          endIso: new Date(yogaEndMs).toISOString(),
+          endLocal: formatLocal(yogaEndMs),
+          end12Hr: formatLocalWithDay(yogaEndMs),
+          endsAfterNextSunrise: yogaEndMs > tNextRiseMs,
         },
         karana: {
           index: karanaIdx,
           name: karanaName,
           isVishtiBhadra: karanaName.includes('Vishti'),
           fractionElapsed: Number(karanaFraction.toFixed(4)),
-          degreeInSpan: Number((karanaFraction * 6.0).toFixed(2))
+          degreeInSpan: Number((karanaFraction * 6.0).toFixed(2)),
+          endMs: karanaEndMs,
+          endIso: new Date(karanaEndMs).toISOString(),
+          endLocal: formatLocal(karanaEndMs),
+          end12Hr: formatLocalWithDay(karanaEndMs),
+          endsAfterNextSunrise: karanaEndMs > tNextRiseMs,
         },
         vaara: {
           dayIndex: localDayOfWeek,
@@ -836,7 +1457,16 @@ export class HighPrecisionAstroEngine {
         brahmaMuhurta: brahma,
         godhuliKaal: godhuli,
         vijayaMuhurta: vijaya,
-        amritKaal: amrit
+        amritKaal: amrit,
+        varjyam,
+        pradoshKaal
+      },
+      vishtiWindows,
+      panchak,
+      festivalObservances: {
+        ruleSetVersion: 'drik-festival-rules-v1',
+        approvalStatus: 'UNAPPROVED_PENDING_JYOTISHI_SIGN_OFF',
+        matched: matchedFestivals
       },
       kaalaTimings: {
         rahuKaalam: { start: rahuKaal.startLocal, end: rahuKaal.endLocal, start12Hr: rahuKaal.start12Hr, end12Hr: rahuKaal.end12Hr },
@@ -846,7 +1476,8 @@ export class HighPrecisionAstroEngine {
         brahmaMuhurta: { start: brahma.startLocal, end: brahma.endLocal, start12Hr: brahma.start12Hr, end12Hr: brahma.end12Hr },
         godhuliBela: { start: godhuli.startLocal, end: godhuli.endLocal, start12Hr: godhuli.start12Hr, end12Hr: godhuli.end12Hr },
         vijayaMuhurta: { start: vijaya.startLocal, end: vijaya.endLocal, start12Hr: vijaya.start12Hr, end12Hr: vijaya.end12Hr },
-        amritKaal: { start: amrit.startLocal, end: amrit.endLocal, start12Hr: amrit.start12Hr, end12Hr: amrit.end12Hr }
+        amritKaal: { start: amrit.startLocal, end: amrit.endLocal, start12Hr: amrit.start12Hr, end12Hr: amrit.end12Hr },
+        varjyam: { start: varjyam.startLocal, end: varjyam.endLocal, start12Hr: varjyam.start12Hr, end12Hr: varjyam.end12Hr }
       },
       choghadiya: {
         preSunriseChoghadiya,

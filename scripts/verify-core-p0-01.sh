@@ -19,7 +19,7 @@ npm run lint
 npm run build
 npm --prefix frontend run lint
 npm --prefix frontend run build
-for test_file in tests/calculation/integrity.test.tsx tests/calculation/astronomical_accuracy.test.ts tests/calculation/independent_planetary_accuracy.test.ts tests/calculation/temporal_reference_accuracy.test.ts tests/calculation/panchang_accuracy.test.ts tests/calculation/analytical_safety.test.ts tests/calculation/native_reference_diagnostics.test.ts tests/timing/contracts.test.tsx tests/payment/boundary.test.ts tests/payment/pay02.test.tsx tests/payment/pay03.test.tsx tests/phase1/security.test.ts; do
+for test_file in tests/calculation/integrity.test.tsx tests/calculation/golden_ephemeris_reference.test.ts tests/calculation/muhurta_500_corpus.test.ts tests/calculation/astronomical_accuracy.test.ts tests/calculation/independent_planetary_accuracy.test.ts tests/calculation/temporal_reference_accuracy.test.ts tests/calculation/panchang_accuracy.test.ts tests/calculation/analytical_safety.test.ts tests/calculation/native_reference_diagnostics.test.ts tests/timing/contracts.test.tsx tests/payment/boundary.test.ts tests/payment/pay02.test.tsx tests/payment/pay03.test.tsx tests/phase1/security.test.ts; do
  node --import ./tests/calculation/register-assets.mjs --import tsx "$test_file"
 done
 # This existing script always recompiles current source and executes real native/PG/restart tests.

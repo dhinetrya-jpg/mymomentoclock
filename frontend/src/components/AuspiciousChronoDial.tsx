@@ -29,7 +29,9 @@ interface AuspiciousChronoDialProps {
   location?: LocationCoordinates;
   natal?: NatalProfile;
   currentMinutesOfDay?: number;
+  activeEpochMs?: number;
   onMinutesChange?: (mins: number) => void;
+  onSelectEpochMs?: (epochMs: number, wallMinutes: number) => void;
   onSelectWindow?: (windowName: string, timeSpan?: string) => void;
 }
 
@@ -38,7 +40,9 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
   location: propLocation,
   natal: propNatal,
   currentMinutesOfDay: propMinutes,
+  activeEpochMs,
   onMinutesChange,
+  onSelectEpochMs,
   onSelectWindow
 }) => {
   const [selectedCityKey, setSelectedCityKey] = useState<string>('New Delhi');
@@ -86,6 +90,8 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     epochMs: Date.now(),
     localTimeStr: '12:00',
     localTime12Hr: '12:00 PM',
+    utcOffsetHours: 5.5,
+    utcOffsetLabel: 'GMT+5:30',
     auspiciousnessScore: 75,
     tier: 'SHUBHA',
     colorHex: '#3B82F6',
@@ -95,24 +101,36 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     activeHoraPlanet: 'Jupiter',
     isRahuKaalActive: false,
     isYamaghantaActive: false,
+    isVarjyamActive: false,
+    isVishtiActive: false,
+    isPanchakActive: false,
     isAbhijitActive: true,
     taraBalaCategory: 'Universal Mode',
     chandraBalaHouse: 1,
+    chandraBalaConvention: 'CLASSICAL_STRICT',
+    lunarPakshaAtInstant: 'Shukla',
     isAshtamaChandra: false,
     executiveAdvice: 'Constructive planetary alignment. Favorable for daily initiatives.'
   };
 
+  // Exact evaluation at activeEpochMs (for DST fold disambiguation) or IANA-resolved activeMinutes
   const activeSample: IntradayScoringSample = useMemo(() => {
     try {
-      const [y, m, d] = dayData.date.split('-').map(Number);
-      const tz = city.timezoneOffset ?? 5.5;
-      const evalInstant = new Date(Date.UTC(y, m - 1, d, 0, activeMinutes - Math.round(tz * 60)));
-      return PersonalAuspiciousnessScoringEngine.evaluateInstant(evalInstant, dayData, activeNatal);
+      const targetMs = activeEpochMs !== undefined && Number.isFinite(activeEpochMs)
+        ? activeEpochMs
+        : HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+            dayData.date,
+            activeMinutes,
+            city.timezone,
+            city.timezoneOffset ?? 5.5
+          );
+      return PersonalAuspiciousnessScoringEngine.evaluateInstant(new Date(targetMs), dayData, activeNatal);
     } catch {
       return timeline[Math.min(timeline.length - 1, Math.max(0, Math.floor(activeMinutes / 15)))] || fallbackSample;
     }
-  }, [dayData, city.timezoneOffset, activeMinutes, activeNatal, timeline]);
+  }, [dayData, city.timezone, city.timezoneOffset, activeEpochMs, activeMinutes, activeNatal, timeline]);
 
+  // Live Topocentric Sidereal Ascendant & Midheaven -> 12 Sripati Bhava Chalit Cusps
   const liveAngles = useMemo(() => {
     return HighPrecisionAstroEngine.calculateLiveAngles(activeSample.epochMs, city.latitude, city.longitude);
   }, [activeSample.epochMs, city.latitude, city.longitude]);
@@ -140,22 +158,24 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y}`;
   };
 
-  const needleAngle = (activeMinutes / 1440.0) * 360.0;
+  const daySpanMs = Math.max(3600000, dayData.localDayBounds.endUtcMs - dayData.localDayBounds.startUtcMs);
+  const needleAngle = Math.max(0, Math.min(360, ((activeSample.epochMs - dayData.localDayBounds.startUtcMs) / daySpanMs) * 360.0));
   const needleCoords = polarToCartesian(center, center, radius - 15, needleAngle);
   const isAbhijitValid = dayData.fixedKaalas.abhijitMuhurta.isValidOnThisDay;
 
   return (
     <div className="rounded-2xl border border-amber-900/60 bg-[#140307] p-4 md:p-6 text-rose-100 shadow-2xl space-y-6 scroll-mt-28">
+      {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-rose-950 pb-4">
         <div>
           <h2 className="font-serif text-2xl text-amber-300 flex flex-wrap items-center gap-2">
-            <span>⏱️</span> Auspicious 24-Hour Chrono-Dial
+            <span>⏱️</span> Auspicious Local-Day Chrono-Dial
             <span className="text-xs px-2.5 py-0.5 rounded-full border border-emerald-500/50 bg-emerald-950/60 text-emerald-300 font-sans">
-              Click Any Ring Segment to Jump Time
+              {timeline.length} × 15m Samples ({dayData.localDayBounds.elapsedHours}h{dayData.localDayBounds.isDstTransition ? ` · DST ${dayData.localDayBounds.startOffsetLabel} → ${dayData.localDayBounds.endOffsetLabel}` : ` · ${dayData.localDayBounds.startOffsetLabel}`})
             </span>
           </h2>
           <p className="text-xs text-rose-300/80 mt-1">
-            Meeus VSOP87 + ELP2000 Engine · Topocentric Refraction Corrected · Live {bhavaCusps[0]?.rashiName || 'Aries'} Lagna ({liveAngles.siderealAscendant.toFixed(1)}°)
+            Analytical Meeus VSOP87 + ELP2000 Preview · Consecutive IANA Midnights · Live {bhavaCusps[0]?.rashiName || 'Aries'} Lagna ({liveAngles.siderealAscendant.toFixed(1)}°)
           </p>
         </div>
 
@@ -195,6 +215,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
         )}
       </div>
 
+      {/* Polar Latitude Warning Banner (e.g. Tromsø in June / December) */}
       {dayData.solarMetrics.isPolar && (
         <div role="status" className="rounded-xl border border-amber-500/60 bg-amber-950/40 px-4 py-3 text-xs text-amber-200 flex items-center gap-2.5">
           <span className="text-lg">🧭</span>
@@ -205,10 +226,12 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
         </div>
       )}
 
+      {/* Main Dial & Live Status Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        {/* Left: SVG 24-Hour Circular Chrono-Dial */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center p-2">
           <div className="relative w-72 h-72 sm:w-80 sm:h-80">
-            <svg viewBox="0 0 320 320" className="w-full h-full transform -rotate-90" role="img" aria-label="24-hour auspicious timing dial">
+            <svg viewBox="0 0 320 320" className="w-full h-full transform -rotate-90" role="img" aria-label={`Local-day auspicious timing dial, ${dayData.localDayBounds.elapsedHours} elapsed hours, ${timeline.length} 15-minute windows`}>
               <circle
                 cx={center}
                 cy={center}
@@ -218,9 +241,12 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                 strokeWidth={strokeWidth}
               />
 
+              {/* Clickable Local-Day Timeline Arcs (92 / 96 / 100 15-min segments) */}
               {timeline.map((sample, idx) => {
                 const startAngle = (idx / timeline.length) * 360.0;
                 const endAngle = ((idx + 1) / timeline.length) * 360.0;
+                const [sh, sm] = sample.localTimeStr.split(':').map(Number);
+                const wallMins = (Number.isFinite(sh) ? sh : 0) * 60 + (Number.isFinite(sm) ? sm : 0);
                 return (
                   <path
                     key={idx}
@@ -230,8 +256,9 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                     strokeWidth={strokeWidth}
                     opacity={0.88}
                     onClick={() => {
-                      if (onMinutesChange) onMinutesChange(idx * 15);
-                      else setInternalMinutesOfDay(idx * 15);
+                      if (onSelectEpochMs) onSelectEpochMs(sample.epochMs, wallMins);
+                      else if (onMinutesChange) onMinutesChange(wallMins);
+                      else setInternalMinutesOfDay(wallMins);
                     }}
                     className="cursor-pointer hover:opacity-100 transition-opacity"
                   >
@@ -240,6 +267,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                 );
               })}
 
+              {/* 12 AM, 6 AM, 12 PM, 6 PM Markers */}
               {[0, 6, 12, 18].map((hour) => {
                 const angle = (hour / 24.0) * 360.0;
                 const ptOuter = polarToCartesian(center, center, radius + 14, angle);
@@ -259,6 +287,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                 );
               })}
 
+              {/* Live Time Rotating Needle */}
               <line
                 x1={center}
                 y1={center}
@@ -272,6 +301,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
               <circle cx={center} cy={center} r={6} fill="#D4AF37" className="pointer-events-none" />
             </svg>
 
+            {/* Center Dial Hub Overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
               <span className="text-3xl font-serif font-bold text-amber-200 tracking-tight">
                 {activeSample.auspiciousnessScore}%
@@ -295,6 +325,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
             </div>
           </div>
 
+          {/* Quick Legend */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs mt-3 text-rose-300">
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#10B981]"></span> Amritham (&ge;75%)</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]"></span> Shubha (55-74%)</span>
@@ -303,6 +334,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
           </div>
         </div>
 
+        {/* Right: Live Telemetry & Executive Verdict */}
         <div className="lg:col-span-6 space-y-4">
           <div
             className="rounded-xl border p-4 transition-all"
@@ -363,6 +395,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
             </div>
           </div>
 
+          {/* 5-Limb Panchang Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
             <div className="rounded-lg border border-rose-950 bg-[#1d060e] p-2.5">
               <span className="text-rose-400 block">Tithi ({dayData.panchanga.tithi.paksha})</span>
@@ -398,6 +431,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
             </div>
           </div>
 
+          {/* Key Solar Windows Strip (12-Hour AM/PM) */}
           <div className="rounded-xl border border-rose-950 bg-[#19050c] p-3 text-xs space-y-2">
             <span className="font-semibold text-amber-300 block">Core Solar Windows (12-Hour Local Time)</span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
@@ -430,6 +464,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
         </div>
       </div>
 
+      {/* Multimodal Sub-Tabs */}
       <div className="border-t border-rose-950 pt-4">
         <div className="flex flex-wrap gap-2 border-b border-rose-950 pb-2">
           <button
@@ -470,6 +505,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
           </button>
         </div>
 
+        {/* Tab 2: 16 Day & Night Choghadiyas (Clickable -> Do's & Don'ts) */}
         {activeTab === 'CHOGHADIYA' && (
           <div className="mt-4 space-y-3 text-xs animate-fade-in">
             <p className="text-[11px] text-amber-300/90">
@@ -519,6 +555,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
           </div>
         )}
 
+        {/* Tab 3: 24 Planetary Horas (Clickable -> Do's & Don'ts) */}
         {activeTab === 'HORAS' && (
           <div className="mt-4 rounded-xl border border-rose-950 p-4 bg-[#18040a] text-xs space-y-3 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -552,6 +589,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
           </div>
         )}
 
+        {/* Tab 4: Live Sripati Bhava Chalit Table */}
         {activeTab === 'BHAVA_CHALIT' && (
           <div className="mt-4 rounded-xl border border-rose-950 p-4 bg-[#18040a] text-xs space-y-3 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

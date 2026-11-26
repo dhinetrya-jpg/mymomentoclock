@@ -12,6 +12,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { PersonalProfileEngine, UserProfile } from '../engine/personalProfileEngine';
 import { OfflineGeoResolver, OfflineCityRecord } from '../engine/offlineGeoData';
 import { LocationCoordinates } from '../engine/zeroCostAstroEngine';
+import { resolveIanaTimezone } from '../engine/timezoneResolver';
 
 export type ProfileModalTab = 'WIZARD' | 'EXACT' | 'UNIVERSAL';
 
@@ -181,19 +182,29 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
     };
   }, [isOpen, isCitySearching, onClose]);
 
-  // Automatically update historical / DST birth timezone offset when birthDate changes (unless user typed a manual override)
+  // Automatically update historical / DST birth timezone offset when birthDate or birthTime changes (unless user typed a manual override)
   useEffect(() => {
     if (!isOpen || hasCustomOffset) return;
     if (selectedBirthCity.timezone && /^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
-      const resolved = OfflineGeoResolver.resolveTimezoneOffsetForDate(
+      let hour24 = birthHour12 % 12;
+      if (birthAmPm === 'PM') hour24 += 12;
+      const wallTime = `${hour24.toString().padStart(2, '0')}:${birthMinute.toString().padStart(2, '0')}:00`;
+      let resolved = OfflineGeoResolver.resolveTimezoneOffsetForDate(
         selectedBirthCity.timezone,
         birthDate,
         selectedBirthCity.defaultOffset
       );
+      if (selectedBirthCity.timezone !== 'UTC_OFFSET' && selectedBirthCity.timezone !== 'Local') {
+        try {
+          resolved = resolveIanaTimezone(birthDate, wallTime, selectedBirthCity.timezone).offsetHours;
+        } catch {
+          // Spring-forward gap or fall-back fold will be caught explicitly on form submit
+        }
+      }
       setSelectedBirthCity(prev => ({ ...prev, timezoneOffset: resolved }));
       setManualOffset(resolved.toString());
     }
-  }, [isOpen, birthDate, selectedBirthCity.timezone, selectedBirthCity.defaultOffset, hasCustomOffset]);
+  }, [isOpen, birthDate, birthHour12, birthMinute, birthAmPm, selectedBirthCity.timezone, selectedBirthCity.defaultOffset, hasCustomOffset]);
 
   // Google Maps-style 3+ character Place of Birth autocomplete (0ms local + CSP-safe /api/geo/search)
   useEffect(() => {
@@ -313,12 +324,16 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
         latitude: parsedLat,
         longitude: parsedLon,
         timezoneOffset: parsedOffset,
-        timezone: selectedBirthCity.timezone
+        timezone: selectedBirthCity.timezone,
+        explicitOffsetOverride: hasCustomOffset
       });
       onSaveProfile(finalProfile);
       onClose();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unable to compute birth Kundali. Please verify birth date, time, and coordinates.';
+      if (/occurred twice|UTC offset/i.test(msg)) {
+        setIsManualCoordsOpen(true);
+      }
       setExactValidationError(msg);
     }
   };
@@ -415,6 +430,9 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
 
         {/* Modal Body */}
         <div className="p-4 sm:p-6 space-y-6 max-h-[72vh] overflow-y-auto">
+          {/* ========================================================================= */}
+          {/* TAB 1: QUICK 20-SEC NON-TECHNICAL QUIZ (NO BIRTH DETAILS)                */}
+          {/* ========================================================================= */}
           {activeTab === 'WIZARD' && (
             <div className="space-y-5 animate-fade-in">
               <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-3 sm:p-4 text-xs text-rose-200 flex items-start gap-3">
@@ -429,6 +447,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Question 1: Calling Name */}
               <div className="space-y-2">
                 <label htmlFor="wizard-calling-name" className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
                   1. What is your Calling Name? (What friends &amp; family call you)
@@ -450,6 +469,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Question 2: Diurnal Birth Phase */}
               <div className="space-y-2">
                 <span className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
                   2. Approximately what time of day were you born?
@@ -482,6 +502,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Question 3: Core Personality Instinct */}
               <div className="space-y-2">
                 <span className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
                   3. What is your natural core instinct in life &amp; work?
@@ -535,6 +556,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Question 4: Sacred Resonance Number */}
               <div className="space-y-2">
                 <span className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
                   4. Choose your Sacred Prashna Number (1 to 9):
@@ -557,6 +579,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Live Preview Card */}
               <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/20 p-3 sm:p-4 text-xs space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-emerald-300 flex items-center gap-1.5">
@@ -587,6 +610,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </p>
               </div>
 
+              {/* Shastric Explainer Toggle */}
               <div>
                 <button
                   type="button"
@@ -619,6 +643,9 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
             </div>
           )}
 
+          {/* ========================================================================= */}
+          {/* TAB 2: EXACT BIRTH DETAILS (DOB + TOB + POB)                             */}
+          {/* ========================================================================= */}
           {activeTab === 'EXACT' && (
             <div className="space-y-5 animate-fade-in">
               <div className="rounded-xl border border-blue-500/30 bg-blue-950/20 p-3 sm:p-4 text-xs text-rose-200 flex items-start gap-3">
@@ -640,6 +667,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               )}
 
+              {/* Full Name */}
               <div className="space-y-1.5">
                 <label htmlFor="exact-full-name" className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
                   Full Name
@@ -654,6 +682,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 />
               </div>
 
+              {/* Date of Birth & Time of Birth */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label htmlFor="exact-birth-date" className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
@@ -721,6 +750,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                 </div>
               </div>
 
+              {/* Place of Birth & Coordinates */}
               <div className="space-y-3" ref={pobDropdownRef}>
                 <div className="flex items-center justify-between">
                   <label htmlFor="exact-birth-place" className="block text-xs font-semibold text-amber-200 uppercase tracking-wide">
@@ -806,6 +836,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                     </button>
                   )}
 
+                  {/* Autocomplete Dropdown */}
                   {isCitySearching && (
                     <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-56 overflow-y-auto rounded-xl border border-amber-700/80 bg-[#160409] p-1.5 shadow-2xl space-y-0.5">
                       {citySearchResults.length > 0 ? (
@@ -846,6 +877,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
                   )}
                 </div>
 
+                {/* Autofilled Birth Coordinates Telemetry Card */}
                 <div className="rounded-xl border border-blue-800/50 bg-blue-950/25 p-3 text-xs space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="space-y-0.5">
@@ -933,6 +965,9 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
             </div>
           )}
 
+          {/* ========================================================================= */}
+          {/* TAB 3: UNIVERSAL MODE (NO INDIVIDUAL FILTERING)                           */}
+          {/* ========================================================================= */}
           {activeTab === 'UNIVERSAL' && (
             <div className="space-y-6 animate-fade-in text-center py-4">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-3xl border border-emerald-500/40">
@@ -958,6 +993,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
           )}
         </div>
 
+        {/* Footer */}
         <div className="border-t border-amber-900/60 bg-[#110206] px-5 py-3 text-center text-[11px] text-rose-400/60 flex items-center justify-between">
           <span>🔒 100% Client-Edge Calculation · $0 Cloud Compute</span>
           <button

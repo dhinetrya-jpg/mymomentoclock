@@ -45,7 +45,6 @@ function formatInZone(date: Date, timeZone: string): string {
     second: '2-digit',
     hourCycle: 'h23',
   });
-  // 'en-CA' outputs "YYYY-MM-DD, HH:mm:ss" or similar
   const parts = dtf.formatToParts(date);
   const partMap: Record<string, string> = {};
   parts.forEach(p => {
@@ -94,12 +93,10 @@ export function resolveIanaTimezone(
     const [year, month, day] = birthDate.split('-').map(Number);
     const [hour, min, sec] = rawTime.split(':').map(Number);
 
-    // Compute UTC time in milliseconds
     const naiveUtcMs = civilUtcMillis(year,month,day,hour,min,sec);
     const targetUtcMs = naiveUtcMs - Math.round(callerOffset * 3600 * 1000);
     const utcDate = new Date(targetUtcMs);
 
-    // If IANA zone was also provided, check for consistency
     if (timezone) {
       try {
         const formatted = formatInZone(utcDate, timezone);
@@ -130,13 +127,11 @@ export function resolveIanaTimezone(
     };
   }
 
-  // Pure IANA timezone resolution
   if (!timezone) {
     throw new CalculationInputError('INVALID_TIMEZONE', 'Timezone name or UTC offset must be provided.');
   }
 
   try {
-    // Validate timezone name
     new Intl.DateTimeFormat(undefined, { timeZone: timezone });
   } catch (_e) {
     throw new CalculationInputError('INVALID_TIMEZONE', 'Unknown or unsupported IANA timezone.');
@@ -146,12 +141,10 @@ export function resolveIanaTimezone(
   const [hour, min, sec] = rawTime.split(':').map(Number);
   const naiveUtcMs = civilUtcMillis(year,month,day,hour,min,sec);
 
-  // Probe possible offsets within +/- 48 hours to collect potential transition states
   const candidateOffsets = new Set<number>();
   for (let h = -48; h <= 48; h += 3) {
     const probe = new Date(naiveUtcMs + h * 3600 * 1000);
     const formatted = formatInZone(probe, timezone);
-    // Parse the offset between probe (UTC) and formatted (local)
     const [pDate, pTime] = formatted.split(' ');
     const [pY, pM, pD] = pDate.split('-').map(Number);
     const [pH, pMin, pS] = pTime.split(':').map(Number);
@@ -224,7 +217,6 @@ function calculateJdFromDate(d: Date): number {
   return C + day + E + F + hour / 24.0 - 1524.5;
 }
 
-// Date.UTC treats years0–99 as1900–1999; avoid that legacy coercion.
 function civilUtcMillis(year:number,month:number,day:number,hour:number,minute:number,second:number){const d=new Date(0);d.setUTCFullYear(year,month-1,day);d.setUTCHours(hour,minute,second,0);return d.getTime();}
 function timeScales(jdUTC:number,deltaTSeconds?:number,dut1Seconds?:number){
  const ut1=dut1Seconds===undefined?null:jdUTC+dut1Seconds/86400;

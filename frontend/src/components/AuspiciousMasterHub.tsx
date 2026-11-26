@@ -12,8 +12,8 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { HighPrecisionAstroEngine, LocationCoordinates, DayAnalysisResult } from '../engine/zeroCostAstroEngine';
-import { PersonalAuspiciousnessScoringEngine, NatalProfile, IntradayScoringSample } from '../engine/scoringEngine';
+import { HighPrecisionAstroEngine, LocationCoordinates, DayAnalysisResult, LunarMonthSystem } from '../engine/zeroCostAstroEngine';
+import { PersonalAuspiciousnessScoringEngine, NatalProfile, IntradayScoringSample, ChandraBalaConvention, SCORING_WEIGHT_GOVERNANCE } from '../engine/scoringEngine';
 import { RemedialLifestyleEngine, PlanetaryRemedialGuidance, WindowActionGuidance } from '../engine/remedialLifestyleEngine';
 import { MultimodalCalendarEngine, MonthLunarDaySummary, SolarSankrantiEvent } from '../engine/calendarEngine';
 import { AuspiciousChronoDial } from './AuspiciousChronoDial';
@@ -84,6 +84,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
   activeTab = 'auspicious-hub',
   onTabChange
 }) => {
+  // Cold-start state: never writes to localStorage on initial mount; defaults to Universal Mode ("No birth profile supplied")
   const [initialProfileState] = useState(readStoredProfile);
   const [initialLocationState] = useState(readStoredLocation);
 
@@ -95,25 +96,140 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
 
   const [horizon, setHorizon] = useState<TimeHorizon>('DAY');
   const [selectedDate, setSelectedDate] = useState<string>(() =>
-    HighPrecisionAstroEngine.getObserverDateString(initialLocationState.location.timezoneOffset)
+    HighPrecisionAstroEngine.getObserverDateString(
+      initialLocationState.location.timezoneOffset,
+      Date.now(),
+      initialLocationState.location.timezone
+    )
   );
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [profileModalInitialTab, setProfileModalInitialTab] = useState<ProfileModalTab | undefined>(undefined);
+  const [lunarMonthSystem, setLunarMonthSystem] = useState<LunarMonthSystem>('AMANTA');
+  const [chandraBalaConvention, setChandraBalaConvention] = useState<ChandraBalaConvention>('CLASSICAL_STRICT');
+  const [elevationMeters, setElevationMeters] = useState<number>(() => initialLocationState.location.elevationMeters ?? 0);
 
+  // Explicit Release Decision Governance (Option 1 — Fail-Closed Production Gate, Server-Driven):
+  // Public production has NO client-side unlock button and strictly follows `/api/v1/timing/capability` (`release_authorized`).
+  // QA / Staging builds only show an unlock form when the server explicitly sets `qa_preview_available: true` and verifies an HttpOnly QA session.
+  const [backendCapabilityStatus, setBackendCapabilityStatus] = useState<{
+    checked: boolean;
+    releaseAuthorized: boolean;
+    qaPreviewAvailable: boolean;
+    qaPreviewUnlocked: boolean;
+    code: string;
+    accuracyStatus: string;
+  }>({
+    checked: false,
+    releaseAuthorized: false,
+    qaPreviewAvailable: false,
+    qaPreviewUnlocked: false,
+    code: 'CORE_P0_01_NOT_VERIFIED',
+    accuracyStatus: 'NOT_VERIFIED'
+  });
+  const [qaTokenInput, setQaTokenInput] = useState<string>('');
+  const [qaAuthError, setQaAuthError] = useState<string>('');
+
+  const enforceBackendReleaseGate = !(
+    backendCapabilityStatus.releaseAuthorized || backendCapabilityStatus.qaPreviewUnlocked
+  );
+
+  // Observer-city current wall-clock minute (0..1439) + optional exact UTC epoch override (for DST repeated hours)
   const [currentMinutesOfDay, setCurrentMinutesOfDay] = useState<number>(() => {
     const off = initialLocationState.location.timezoneOffset ?? 5.5;
-    const obsNow = new Date(Date.now() + Math.round(off * 3600000));
-    return obsNow.getUTCHours() * 60 + obsNow.getUTCMinutes();
+    const w = HighPrecisionAstroEngine.getWallTimeInZone(Date.now(), initialLocationState.location.timezone, off, false);
+    return w.minutesOfDay;
   });
+  const [selectedEpochOverrideMs, setSelectedEpochOverrideMs] = useState<number | null>(null);
 
+  // Interactive Window Do's & Don'ts State (both Modal Dialog + Inline Card!)
   const [selectedWindowName, setSelectedWindowName] = useState<string>('Abhijit Muhurta');
   const [selectedWindowSpan, setSelectedWindowSpan] = useState<string>('');
   const [isWindowDialogOpen, setIsWindowDialogOpen] = useState<boolean>(false);
 
+  // Screen 4: AI / Shastric Natural Language Muhurat Scanner State
   const [chatQuery, setChatQuery] = useState<string>('When is the best time for a high-stakes job interview this week?');
   const [chatResponse, setChatResponse] = useState<MuhuratConsultationResult | null>(null);
 
+  const refreshCapabilityFromServer = async () => {
+    try {
+      const r = await fetch('/api/v1/timing/capability', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (!data) return;
+      setBackendCapabilityStatus({
+        checked: true,
+        releaseAuthorized: Boolean(data.release_authorized),
+        qaPreviewAvailable: Boolean(data.qa_preview_available),
+        qaPreviewUnlocked: Boolean(data.qa_preview_unlocked),
+        code: typeof data.code === 'string' ? data.code : 'CORE_P0_01_NOT_VERIFIED',
+        accuracyStatus: typeof data.accuracy_status === 'string' ? data.accuracy_status : 'NOT_VERIFIED'
+      });
+    } catch {
+      // Offline / static mode: remain fail-closed (enforceBackendReleaseGate = true)
+    }
+  };
+
+  // Check live backend /api/v1/timing/capability release gate (read-only, zero personal data)
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/v1/timing/capability', { headers: { Accept: 'application/json' }, cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        setBackendCapabilityStatus({
+          checked: true,
+          releaseAuthorized: Boolean(data.release_authorized),
+          qaPreviewAvailable: Boolean(data.qa_preview_available),
+          qaPreviewUnlocked: Boolean(data.qa_preview_unlocked),
+          code: typeof data.code === 'string' ? data.code : 'CORE_P0_01_NOT_VERIFIED',
+          accuracyStatus: typeof data.accuracy_status === 'string' ? data.accuracy_status : 'NOT_VERIFIED'
+        });
+      })
+      .catch(() => {
+        // Offline / static mode: remain fail-closed (enforceBackendReleaseGate = true)
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleQaUnlockSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setQaAuthError('');
+    try {
+      const r = await fetch('/api/v1/timing/qa-unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ token: qaTokenInput }),
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        setQaAuthError(typeof err.message === 'string' ? err.message : 'QA preview unlock denied by server.');
+        return;
+      }
+      setQaTokenInput('');
+      await refreshCapabilityFromServer();
+    } catch {
+      setQaAuthError('Unable to reach server QA unlock endpoint.');
+    }
+  };
+
+  const handleQaRelock = async () => {
+    try {
+      await fetch('/api/v1/timing/qa-lock', { method: 'POST' });
+    } catch {
+      // Ignore network errors and refresh state
+    }
+    await refreshCapabilityFromServer();
+  };
+
+  // Reset exact epoch override when date or city changes
+  useEffect(() => {
+    setSelectedEpochOverrideMs(null);
+  }, [selectedDate, locCoords.latitude, locCoords.longitude, locCoords.timezone]);
+
+  // Keep DST-aware timezoneOffset synchronized when selectedDate changes on a known IANA timezone
   useEffect(() => {
     if (!locCoords.timezone) return;
     const resolved = OfflineGeoResolver.resolveTimezoneOffsetForDate(
@@ -126,6 +242,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     }
   }, [selectedDate, locCoords.timezone, locCoords.timezoneOffset]);
 
+  // Close Window Do's & Don'ts modal on Escape
   useEffect(() => {
     if (!isWindowDialogOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -164,7 +281,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     }
     setUserProfile(PersonalProfileEngine.createUniversalProfile());
     setLocCoords(DEFAULT_LOCATION);
-    setSelectedDate(HighPrecisionAstroEngine.getObserverDateString(DEFAULT_LOCATION.timezoneOffset));
+    setSelectedDate(HighPrecisionAstroEngine.getObserverDateString(DEFAULT_LOCATION.timezoneOffset, Date.now(), DEFAULT_LOCATION.timezone));
+    setSelectedEpochOverrideMs(null);
     setHasSavedBrowserData(false);
   };
 
@@ -176,10 +294,20 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
   const shiftSelectedDateByDays = (deltaDays: number) => {
     const safe = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate)
       ? selectedDate
-      : HighPrecisionAstroEngine.getObserverDateString(locCoords.timezoneOffset);
+      : HighPrecisionAstroEngine.getObserverDateString(locCoords.timezoneOffset, Date.now(), locCoords.timezone);
     const [y, m, d] = safe.split('-').map(Number);
     const shifted = new Date(Date.UTC(y, m - 1, d + deltaDays));
     setSelectedDate(shifted.toISOString().split('T')[0]);
+  };
+
+  const handleMinutesPickerChange = (mins: number) => {
+    setSelectedEpochOverrideMs(null);
+    setCurrentMinutesOfDay(mins);
+  };
+
+  const handleSelectExactEpoch = (epochMs: number, wallMins: number) => {
+    setSelectedEpochOverrideMs(epochMs);
+    setCurrentMinutesOfDay(wallMins);
   };
 
   const handleOpenWindowGuidance = (windowName: string, timeSpan?: string) => {
@@ -188,37 +316,56 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     setIsWindowDialogOpen(true);
   };
 
+  // 1. Full Day Astronomical Analysis (100% Client-Edge, Unified 60-Term Moon + RA-EoT Solar Core)
   const dayData: DayAnalysisResult = useMemo(() => {
-    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, locCoords);
-  }, [selectedDate, locCoords]);
+    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, locCoords, {
+      lunarMonthSystem,
+      elevationMeters
+    });
+  }, [selectedDate, locCoords, lunarMonthSystem, elevationMeters]);
 
   const isWednesday = dayData.dayOfWeekIndex === 3;
   const isAbhijitValid = dayData.fixedKaalas.abhijitMuhurta.isValidOnThisDay;
 
+  // 2. Natal Profile (1-indexed Nakshatra 1..27 for ScoringEngine; suppressed when Strict Backend Gate is enforced)
   const natalProfile: NatalProfile | undefined = useMemo(() => {
-    if (userProfile.mode === 'UNIVERSAL') return undefined;
+    if (enforceBackendReleaseGate || userProfile.mode === 'UNIVERSAL') return undefined;
     return {
       natalMoonSignIndex: userProfile.moonSignIndex,
       natalMoonNakshatraIndex: userProfile.nakshatraIndex + 1,
       natalAscendantSignIndex: userProfile.ascendantSignIndex,
       natalNakshatraPada: userProfile.nakshatraPada
     };
-  }, [userProfile]);
+  }, [enforceBackendReleaseGate, userProfile]);
 
+  // 3. Consecutive-Midnight Local-Day Intraday Timeline (92 / 96 / 100 samples)
   const timeline: IntradayScoringSample[] = useMemo(() => {
-    return PersonalAuspiciousnessScoringEngine.generate24HourTimeline(dayData, natalProfile);
-  }, [dayData, natalProfile]);
+    return PersonalAuspiciousnessScoringEngine.generate24HourTimeline(dayData, natalProfile, {
+      chandraBalaConvention
+    });
+  }, [dayData, natalProfile, chandraBalaConvention]);
 
+  // 4. Observer-Timezone-Accurate Evaluation Instant (supports DST jumps & folds)
   const currentInstant = useMemo(() => {
-    const [y, m, d] = dayData.date.split('-').map(Number);
-    const tzMins = Math.round((locCoords.timezoneOffset ?? 5.5) * 60);
-    return new Date(Date.UTC(y, m - 1, d, 0, currentMinutesOfDay - tzMins));
-  }, [dayData.date, currentMinutesOfDay, locCoords.timezoneOffset]);
+    if (selectedEpochOverrideMs !== null && Number.isFinite(selectedEpochOverrideMs)) {
+      return new Date(selectedEpochOverrideMs);
+    }
+    const resolvedMs = HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+      dayData.date,
+      currentMinutesOfDay,
+      locCoords.timezone,
+      locCoords.timezoneOffset ?? 5.5
+    );
+    return new Date(resolvedMs);
+  }, [selectedEpochOverrideMs, dayData.date, currentMinutesOfDay, locCoords.timezone, locCoords.timezoneOffset]);
 
   const currentSample: IntradayScoringSample = useMemo(() => {
-    return PersonalAuspiciousnessScoringEngine.evaluateInstant(currentInstant, dayData, natalProfile);
-  }, [currentInstant, dayData, natalProfile]);
+    return PersonalAuspiciousnessScoringEngine.evaluateInstant(currentInstant, dayData, natalProfile, {
+      chandraBalaConvention
+    });
+  }, [currentInstant, dayData, natalProfile, chandraBalaConvention]);
 
+  // 5. Synthesized Vaara + Active Hora + Natal Lagna Gemstone Safety Guidance
   const dayLordGuidance: PlanetaryRemedialGuidance = useMemo(() => {
     const dayIdx = dayData.panchanga.vaara.dayIndex ?? dayData.dayOfWeekIndex;
     return RemedialLifestyleEngine.getSynthesizedLifestyleGuidance({
@@ -230,6 +377,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     });
   }, [dayData, currentSample.activeHoraPlanet, currentSample.isRahuKaalActive, userProfile.ascendantSignIndex, userProfile.mode]);
 
+  // 6. Active Window Action Guidance (respecting Wednesday Abhijit cancellation!)
   const activeWindowGuidance: WindowActionGuidance = useMemo(() => {
     return RemedialLifestyleEngine.getWindowActionGuidance(selectedWindowName, isWednesday);
   }, [selectedWindowName, isWednesday]);
@@ -238,6 +386,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     return RemedialLifestyleEngine.getFootwearComparativeAnalysis();
   }, []);
 
+  // All 8 Daily Kaala Cards Metadata
   const allKaalaCards = useMemo(() => {
     const fk = dayData.fixedKaalas;
     return [
@@ -314,37 +463,67 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         span12Hr: `${fk.yamaghanta.start12Hr} – ${fk.yamaghanta.end12Hr}`,
         desc: 'Cautionary Yama octant—avoid commencing travel, loans, or store openings.',
         tone: 'rose'
+      },
+      {
+        key: 'Varjyam',
+        icon: '⛔',
+        title: 'Varjyam (Tyajya)',
+        badge: 'Vishaghati',
+        span12Hr: `${fk.varjyam.start12Hr} – ${fk.varjyam.end12Hr}`,
+        desc: `Root-solved 4-Ghati Nakshatra exclusion (${dayData.panchanga.nakshatra.name})—avoid major beginnings.`,
+        tone: 'rose'
+      },
+      {
+        key: 'Pradosh Kaal',
+        icon: '🪔',
+        title: 'Pradosh Kaal',
+        badge: '6-Ghati Dusk',
+        span12Hr: `${fk.pradoshKaal.start12Hr} – ${fk.pradoshKaal.end12Hr}`,
+        desc: 'Post-sunset 6-Ghati Shiva & Lakshmi Puja twilight span.',
+        tone: 'blue'
       }
     ] as const;
   }, [dayData, isAbhijitValid]);
 
+  // Screen 2: Month Grid (personalized with NatalProfile)
   const monthDays: MonthLunarDaySummary[] = useMemo(() => {
     if (horizon !== 'MONTH') return [];
     const [y, m] = dayData.date.split('-').map(Number);
-    return MultimodalCalendarEngine.generateMonthGrid(y, m, locCoords, natalProfile);
-  }, [horizon, dayData.date, locCoords, natalProfile]);
+    return MultimodalCalendarEngine.generateMonthGrid(y, m, { ...locCoords, elevationMeters }, natalProfile);
+  }, [horizon, dayData.date, locCoords, elevationMeters, natalProfile]);
 
+  // Screen 2: Astronomical Year Sankrantis (Observer local 12h AM/PM + Natal house)
   const yearSankrantis: SolarSankrantiEvent[] = useMemo(() => {
     if (horizon !== 'YEAR') return [];
     const [y] = dayData.date.split('-').map(Number);
-    return MultimodalCalendarEngine.generateAnnualSankrantiCalendar(y, locCoords, natalProfile);
-  }, [horizon, dayData.date, locCoords, natalProfile]);
+    return MultimodalCalendarEngine.generateAnnualSankrantiCalendar(y, { ...locCoords, elevationMeters }, natalProfile);
+  }, [horizon, dayData.date, locCoords, elevationMeters, natalProfile]);
 
+  // Screen 2: UTC-Safe 7-Day Week Comparative Matrix
   const weekDays = useMemo(() => {
     if (horizon !== 'WEEK') return [];
     const [y, m, d] = dayData.date.split('-').map(Number);
     const baseUtc = new Date(Date.UTC(y, m - 1, d));
     const dayOfWeek = baseUtc.getUTCDay();
     const startUtc = new Date(Date.UTC(y, m - 1, d - dayOfWeek));
-    const tzMins = Math.round((locCoords.timezoneOffset ?? 5.5) * 60);
 
     return Array.from({ length: 7 }, (_, i) => {
       const curUtc = new Date(Date.UTC(startUtc.getUTCFullYear(), startUtc.getUTCMonth(), startUtc.getUTCDate() + i));
       const curStr = curUtc.toISOString().split('T')[0];
-      const [cy, cm, cd] = curStr.split('-').map(Number);
-      const dAnalysis = HighPrecisionAstroEngine.analyzeFullDay(curStr, locCoords);
-      const evalUtc = new Date(Date.UTC(cy, cm - 1, cd, 0, 10 * 60 + 30 - tzMins));
-      const score = PersonalAuspiciousnessScoringEngine.evaluateInstant(evalUtc, dAnalysis, natalProfile);
+      const dAnalysis = HighPrecisionAstroEngine.analyzeFullDay(curStr, locCoords, {
+        lunarMonthSystem,
+        elevationMeters
+      });
+      // Evaluate 10:30 AM observer local time in the target city's IANA timezone
+      const evalMs = HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+        curStr,
+        10 * 60 + 30,
+        locCoords.timezone,
+        locCoords.timezoneOffset ?? 5.5
+      );
+      const score = PersonalAuspiciousnessScoringEngine.evaluateInstant(new Date(evalMs), dAnalysis, natalProfile, {
+        chandraBalaConvention
+      });
       const abhijitValid = dAnalysis.fixedKaalas.abhijitMuhurta.isValidOnThisDay;
 
       return {
@@ -360,8 +539,9 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         rahuKaal: `${dAnalysis.fixedKaalas.rahuKaal.start12Hr} – ${dAnalysis.fixedKaalas.rahuKaal.end12Hr}`
       };
     });
-  }, [horizon, dayData.date, locCoords, natalProfile]);
+  }, [horizon, dayData.date, locCoords, lunarMonthSystem, elevationMeters, natalProfile, chandraBalaConvention]);
 
+  // Screen 4: 1-Click Preset Handler (updates query to preset prompt & runs real scanner)
   const handleQuickPreset = (presetId: string) => {
     const result = AiNarrativeEngine.evaluateMuhuratQuery({
       queryOrPreset: presetId,
@@ -374,6 +554,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     setChatResponse(result);
   };
 
+  // Screen 4: Custom Free-Text Submit Handler (NEVER overwrites user's typed question!)
   const handleCustomAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = chatQuery.trim() || 'What is the best auspicious Golden Window today?';
@@ -390,6 +571,81 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
 
   return (
     <div className="space-y-8 animate-fade-in text-rose-100">
+      {/* ========================================================================= */}
+      {/* SERVER-DRIVEN RELEASE GATE & QA UNVALIDATED_PREVIEW WATERMARK BANNER       */}
+      {/* ========================================================================= */}
+      <div
+        role="status"
+        aria-label="Release authorization and analytical preview scope notice"
+        className={`rounded-2xl border px-4 py-3.5 text-xs text-rose-100 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-3 ${
+          enforceBackendReleaseGate
+            ? 'border-rose-600/70 bg-[#1e050b]'
+            : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
+            ? 'border-amber-400 bg-amber-950/70 ring-2 ring-amber-400/60'
+            : 'border-emerald-500/60 bg-[#0d1f17]'
+        }`}
+      >
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold border ${
+              enforceBackendReleaseGate
+                ? 'bg-rose-600/25 border-rose-500/60 text-rose-200'
+                : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
+                ? 'bg-amber-400 text-neutral-950 border-amber-300'
+                : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200'
+            }`}>
+              {enforceBackendReleaseGate
+                ? 'PRODUCTION GATE LOCKED · HTTP 503 PARITY'
+                : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
+                ? 'UNVALIDATED_PREVIEW · QA / STAGING BUILD ONLY — NOT PRODUCTION'
+                : 'RELEASE_AUTHORIZED · VERIFIED TIMING'}
+            </span>
+            <span className="rounded bg-rose-950 border border-rose-700 px-2 py-0.5 font-mono text-[10px] text-rose-200">
+              Backend /api/v1/timing/daily: {backendCapabilityStatus.code} · release_authorized: {String(backendCapabilityStatus.releaseAuthorized)}
+            </span>
+          </div>
+          <p className="text-[11px] text-rose-100 leading-relaxed">
+            {enforceBackendReleaseGate ? (
+              <>
+                Personalized and intraday Muhurat windows are <strong>locked in production (HTTP 503, 0 windows)</strong> until ~100 city-date reference exit tests, CI tolerance checks, Moon/Tara-Bala verification, and Jyotishi rule sign-off set <code className="text-amber-200">release_authorized: true</code> on the server.
+              </>
+            ) : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized ? (
+              <>
+                <strong>UNVALIDATED_PREVIEW (QA / Tester Session):</strong> Production remains locked (<code className="text-amber-200">release_authorized: false</code>). These day-part intervals and Tara Bala calculations are visible solely via server-verified QA session for tolerance review—never treat screenshots of this view as production-authorized guidance.
+              </>
+            ) : (
+              <>
+                Server-authorized traditional timing windows active (<code className="text-emerald-200">release_authorized: true</code>).
+              </>
+            )}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized && (
+            <button
+              type="button"
+              onClick={handleQaRelock}
+              className="rounded-lg bg-rose-600 hover:bg-rose-500 px-3 py-1.5 text-[11px] font-bold text-white border border-rose-400 shadow transition-colors"
+            >
+              🔒 End QA Preview Session
+            </button>
+          )}
+          {onTabChange && (
+            <button
+              type="button"
+              onClick={() => onTabChange('daily-timing')}
+              className="rounded-lg bg-[#140307] hover:bg-rose-950/60 px-3 py-1.5 text-[11px] font-medium text-rose-200 border border-rose-800 transition-colors"
+            >
+              Inspect Backend Gate →
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* PERSISTENT GLOBAL CONTROL BAR: LOCATION + GLOBAL DATE + 12-HR AM/PM       */}
+      {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch scroll-mt-28">
         <div className="lg:col-span-5">
           <ModernLocationPicker
@@ -399,6 +655,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
           />
         </div>
 
+        {/* Global Date Navigator */}
         <div className="lg:col-span-3 rounded-2xl border border-rose-950 bg-[#160408] p-4 text-xs space-y-3 shadow-md flex flex-col justify-between">
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 block">
@@ -409,7 +666,9 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                 {dayData.panchanga.vaara.name}
               </span>
               <span className="rounded bg-amber-500/15 px-2 py-0.5 text-[10px] font-mono text-amber-300 border border-amber-500/30">
-                {dayData.panchanga.tithi.paksha} {dayData.panchanga.tithi.name}
+                {enforceBackendReleaseGate
+                  ? `${dayData.localDayBounds.elapsedHours}h · ${dayData.localDayBounds.sampleCount15Min} slots`
+                  : `${dayData.panchanga.tithi.paksha} ${dayData.panchanga.tithi.name}`}
               </span>
             </div>
           </div>
@@ -436,7 +695,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setSelectedDate(HighPrecisionAstroEngine.getObserverDateString(locCoords.timezoneOffset))}
+              onClick={() => setSelectedDate(HighPrecisionAstroEngine.getObserverDateString(locCoords.timezoneOffset, Date.now(), locCoords.timezone))}
               className="rounded-lg bg-amber-500/20 hover:bg-amber-500/30 py-1 text-[11px] font-bold text-amber-200 border border-amber-500/40 transition-colors"
             >
               Today
@@ -454,15 +713,194 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         <div className="lg:col-span-4">
           <AmPmTimePicker
             currentMinutes={currentMinutesOfDay}
-            onChangeMinutes={setCurrentMinutesOfDay}
+            onChangeMinutes={handleMinutesPickerChange}
             timezoneLabel={locCoords.cityName}
             timezoneOffset={locCoords.timezoneOffset}
+            ianaTimezone={locCoords.timezone}
           />
         </div>
       </div>
 
-      {activeTab === 'auspicious-hub' && (
+      {/* Topocentric Horizon & Regional Sampradaya Settings Bar */}
+      <div className="rounded-2xl border border-rose-950 bg-[#140307] px-4 py-3 text-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-rose-200">
+            <span className="font-semibold text-amber-300">🏔️ Elevation (m):</span>
+            <input
+              type="number"
+              min={-400}
+              max={8849}
+              step={10}
+              aria-label="Observer elevation in meters"
+              value={elevationMeters}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setElevationMeters(Number.isFinite(v) ? Math.max(-400, Math.min(8849, v)) : 0);
+              }}
+              className="w-20 rounded-lg border border-rose-900 bg-[#20060e] px-2 py-1 font-mono text-rose-100"
+            />
+          </label>
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-amber-300">🌙 Masa System:</span>
+            {(['AMANTA', 'PURNIMANTA'] as LunarMonthSystem[]).map((sys) => (
+              <button
+                key={sys}
+                type="button"
+                onClick={() => setLunarMonthSystem(sys)}
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${
+                  lunarMonthSystem === sys
+                    ? 'bg-amber-500 text-neutral-950 border-amber-400'
+                    : 'bg-[#20060e] text-rose-200 border-rose-900 hover:border-amber-600'
+                }`}
+              >
+                {sys === 'AMANTA' ? 'Amanta' : 'Purnimanta'}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-amber-300">🔭 Chandra Bala:</span>
+            {([
+              { id: 'CLASSICAL_STRICT', label: 'Strict (1,3,6,7,10,11)' },
+              { id: 'SHUKLA_WAXING_RELAXED', label: 'Shukla-Waxing Relaxed (+2,5,9)' }
+            ] as Array<{ id: ChandraBalaConvention; label: string }>).map((conv) => (
+              <button
+                key={conv.id}
+                type="button"
+                onClick={() => setChandraBalaConvention(conv.id)}
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${
+                  chandraBalaConvention === conv.id
+                    ? 'bg-amber-500 text-neutral-950 border-amber-400'
+                    : 'bg-[#20060e] text-rose-200 border-rose-900 hover:border-amber-600'
+                }`}
+              >
+                {conv.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <span className="font-mono text-[11px] text-rose-300">
+          Zone: <strong className="text-amber-200">{locCoords.timezone || `UTC${locCoords.timezoneOffset}`}</strong> · Dip: {elevationMeters}m
+        </span>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* FAIL-CLOSED GATE PANEL FOR ALL GUIDANCE TABS WHEN RELEASE IS UNAUTHORIZED */}
+      {/* ========================================================================= */}
+      {enforceBackendReleaseGate && activeTab !== 'science-audit' && (
+        <div
+          role="alert"
+          className="rounded-2xl border border-rose-600/70 bg-gradient-to-br from-[#24060e] via-[#160308] to-[#24060e] p-6 sm:p-8 space-y-6 text-xs text-rose-100 shadow-2xl"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-900/70 pb-3">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-amber-300">
+              🔒 Personalized Muhurat Windows Pending Verification ({backendCapabilityStatus.code})
+            </h2>
+            <span className="font-mono text-[11px] bg-rose-950 border border-rose-600 px-2.5 py-0.5 rounded text-rose-200">
+              HTTP 503 · windows: 0 · release_authorized: false
+            </span>
+          </div>
+
+          <p className="leading-relaxed text-rose-200 text-xs sm:text-sm">
+            Intraday Muhurat windows (Panchang Shuddhi, Planetary Hora, Choghadiya, and Natal Tara Bala) are built on the server (<code className="text-amber-200">POST /api/v1/timing/daily</code>) and intentionally withheld in public production so visitors never act on unverified timing intervals.
+          </p>
+
+          {/* What Is Coming (Exit-Test Checklist) */}
+          <div className="rounded-xl border border-rose-900/70 bg-black/35 p-4 space-y-2">
+            <h3 className="font-semibold text-amber-200 text-xs uppercase tracking-wider">
+              What Unlocks Personalized Timing (Release Exit Criteria)
+            </h3>
+            <ul className="list-disc pl-5 space-y-1 text-rose-200/90 text-xs">
+              <li><strong>100-City Reference Exit Test:</strong> Cross-checking Sunrise, Sunset, Tithi, Nakshatra, Yoga, and Karana boundaries across ~100 global city-date pairs (including DST &amp; high-latitude cases) in CI.</li>
+              <li><strong>Lunar &amp; Nakshatra Exit Gate for Tara Bala:</strong> Independent verification of natal Moon longitude so cusp births never shift Tara Bala classification.</li>
+              <li><strong>Domain Sign-Off:</strong> Classical Jyotishi review of activity-specific Hora, Choghadiya, and Ashtabhaga exclusion rules (<code className="text-amber-200">timing-rules-v1</code>).</li>
+            </ul>
+            <div className="pt-2 border-t border-rose-950 font-mono text-[11px] text-rose-300 space-y-0.5">
+              <div>Selected Target Day: <span className="text-amber-200">{dayData.date}</span> · Zone: <span className="text-amber-200">{locCoords.timezone || `UTC${locCoords.timezoneOffset}`}</span> ({dayData.localDayBounds.elapsedHours}h · {dayData.localDayBounds.sampleCount15Min} × 15m slots)</div>
+              <div>Profile State: <span className="text-rose-100">{userProfile.mode === 'UNIVERSAL' ? 'No birth profile supplied' : `${userProfile.name} (withheld under strict gate)`}</span> · Authorized Windows: <span className="text-rose-400 font-bold">0</span></div>
+            </div>
+          </div>
+
+          {/* What Already Works Today */}
+          {onTabChange && (
+            <div className="space-y-2.5">
+              <h3 className="font-semibold text-amber-200 text-xs uppercase tracking-wider">
+                Available Today While Timing Windows Complete Verification
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <button
+                  type="button"
+                  onClick={() => onTabChange('natal-chart')}
+                  className="text-left rounded-xl border border-amber-500/50 bg-[#260812] hover:bg-amber-950/50 p-3.5 space-y-1 transition-colors"
+                >
+                  <div className="font-bold text-amber-300 text-xs">📜 Natal Birth Chart Preview</div>
+                  <p className="text-[11px] text-rose-200/80">Enter birth date, time &amp; worldwide city for Lagna, 9 planets, and D1/D2/D9/D60 vargas.</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onTabChange('birth-explorer')}
+                  className="text-left rounded-xl border border-rose-800 bg-[#1b050c] hover:bg-rose-950/60 p-3.5 space-y-1 transition-colors"
+                >
+                  <div className="font-bold text-amber-200 text-xs">🧭 Birth-Time Explorer</div>
+                  <p className="text-[11px] text-rose-200/80">Inspect whole-day Rashi &amp; varga sensitivity when birth time is approximate or unknown.</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onTabChange('science-audit')}
+                  className="text-left rounded-xl border border-rose-800 bg-[#1b050c] hover:bg-rose-950/60 p-3.5 space-y-1 transition-colors"
+                >
+                  <div className="font-bold text-amber-200 text-xs">🔬 Science of Muhurat</div>
+                  <p className="text-[11px] text-rose-200/80">Read the 7-layer astronomical &amp; Shastric mathematical formulation.</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onTabChange('daily-timing')}
+                  className="text-left rounded-xl border border-rose-800 bg-[#1b050c] hover:bg-rose-950/60 p-3.5 space-y-1 transition-colors"
+                >
+                  <div className="font-bold text-amber-200 text-xs">🛡️ Daily Timing Boundary</div>
+                  <p className="text-[11px] text-rose-200/80">Verify the live stateless <code className="text-amber-200">/api/v1/timing/daily</code> contract.</p>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Server-Checked QA / Staging Sign-In ONLY when enabled on the server (never rendered in public production) */}
+          {backendCapabilityStatus.qaPreviewAvailable && (
+            <form onSubmit={handleQaUnlockSubmit} className="rounded-xl border border-amber-500/50 bg-amber-950/25 p-3.5 space-y-2">
+              <div className="font-mono text-[11px] font-bold text-amber-300">
+                QA / STAGING ENVIRONMENT DETECTED · SERVER-VERIFIED TESTER UNLOCK
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="password"
+                  value={qaTokenInput}
+                  onChange={(e) => setQaTokenInput(e.target.value)}
+                  placeholder="Enter server QA preview token"
+                  aria-label="QA preview token"
+                  required
+                  className="flex-1 rounded-lg border border-amber-600/50 bg-[#160409] px-3 py-1.5 text-xs text-rose-100 font-mono"
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-amber-500 hover:bg-amber-400 px-4 py-1.5 text-xs font-bold text-neutral-950 transition-colors"
+                >
+                  Verify QA Session (UNVALIDATED_PREVIEW)
+                </button>
+              </div>
+              {qaAuthError && <p className="text-[11px] text-rose-300">{qaAuthError}</p>}
+            </form>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SCREEN 1: AUSPICIOUS CHRONO-DIAL & INTERACTIVE KAALA WINDOWS              */}
+      {/* ========================================================================= */}
+      {!enforceBackendReleaseGate && activeTab === 'auspicious-hub' && (
         <div className="space-y-8 animate-fade-in">
+          {/* 3-Path Personalization & Privacy Banner */}
           <div className="rounded-2xl border border-amber-500/50 bg-gradient-to-r from-[#280713] via-[#1a050d] to-[#280713] p-5 shadow-2xl space-y-4 scroll-mt-28">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-rose-950 pb-4">
               <div className="flex items-start sm:items-center gap-3">
@@ -488,6 +926,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                 </div>
               </div>
 
+              {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <button
                   type="button"
@@ -519,6 +958,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </div>
             </div>
 
+            {/* 3-Path Onboarding Cards (when in Universal Mode) OR Personal Harmonic Telemetry (when Personalized) */}
             {userProfile.mode === 'UNIVERSAL' ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                 <button
@@ -611,15 +1051,154 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             )}
           </div>
 
-          <AuspiciousChronoDial
-            selectedDate={dayData.date}
-            location={locCoords}
-            natal={natalProfile}
-            currentMinutesOfDay={currentMinutesOfDay}
-            onMinutesChange={setCurrentMinutesOfDay}
-            onSelectWindow={handleOpenWindowGuidance}
-          />
+          {/* Consecutive-Midnight Local-Day Chrono-Dial */}
+          {enforceBackendReleaseGate ? (
+            <div role="alert" className="rounded-2xl border border-rose-600/70 bg-rose-950/40 p-6 space-y-3 text-xs text-rose-100 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-serif text-lg font-bold text-amber-300">
+                  🔒 Strict Backend Release Gate Active (CORE_P0_01_NOT_VERIFIED)
+                </h3>
+                <span className="font-mono text-[11px] bg-rose-950 border border-rose-600 px-2.5 py-0.5 rounded text-rose-200">
+                  HTTP 503 · windows: 0 · release_authorized: false
+                </span>
+              </div>
+              <p className="leading-relaxed text-rose-200">
+                Personalized timing recommendations are withheld because the authoritative backend (<code className="text-amber-200">POST /api/v1/timing/daily</code>) reports <code className="text-amber-200">{backendCapabilityStatus.code}</code>. Switch back to <strong>Client Analytical Preview</strong> in the banner above only to inspect unvalidated traditional Panchang intervals.
+              </p>
+            </div>
+          ) : (
+            <AuspiciousChronoDial
+              selectedDate={dayData.date}
+              location={locCoords}
+              natal={natalProfile}
+              currentMinutesOfDay={currentMinutesOfDay}
+              activeEpochMs={currentInstant.getTime()}
+              onMinutesChange={handleMinutesPickerChange}
+              onSelectEpochMs={handleSelectExactEpoch}
+              onSelectWindow={handleOpenWindowGuidance}
+            />
+          )}
 
+          {/* ========================================================================= */}
+          {/* 5-LIMB PANCHANGA EXACT END TIMES, LUNAR MASA, VISHTI/PANCHAK & FESTIVALS  */}
+          {/* ========================================================================= */}
+          <section className="rounded-2xl border border-rose-950 bg-[#160408] p-5 sm:p-6 space-y-4 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-950 pb-3">
+              <div>
+                <h3 className="font-serif text-lg font-bold text-amber-300">
+                  📜 Drik Panchanga Exact End Times &amp; Lunar Masa ({dayData.lunarMasa.activeSystem})
+                </h3>
+                <p className="text-xs text-rose-300/80">
+                  Root-solved transitions via unified 60-term Meeus Ch. 47 Moon + VSOP87 Sun (True Chitrapaksha Lahiri {dayData.ayanamsa.valueDegrees}°)
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-amber-500/20 border border-amber-500/40 px-3 py-1 text-xs font-bold text-amber-200">
+                  🌙 {dayData.lunarMasa.displayName} Masa
+                </span>
+                {dayData.panchanga.tithi.tithiAnomaly !== 'NORMAL' && (
+                  <span className="rounded-full bg-rose-600/30 border border-rose-500 px-2.5 py-1 text-[11px] font-mono font-bold text-rose-200">
+                    {dayData.panchanga.tithi.tithiAnomaly} TITHI{dayData.panchanga.tithi.kshayaTithiName ? `: ${dayData.panchanga.tithi.kshayaTithiName}` : ''}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div className="rounded-xl border border-rose-900/70 bg-[#1f060e] p-3.5 space-y-1">
+                <span className="text-[10px] font-mono uppercase text-rose-400">Udaya Tithi</span>
+                <div className="font-bold text-amber-200 text-sm">
+                  {dayData.panchanga.tithi.paksha} {dayData.panchanga.tithi.name}
+                </div>
+                <div className="font-mono text-[11px] text-emerald-300">
+                  Ends: {dayData.panchanga.tithi.end12Hr}{dayData.panchanga.tithi.endsAfterNextSunrise ? ' (+1d)' : ''}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-rose-900/70 bg-[#1f060e] p-3.5 space-y-1">
+                <span className="text-[10px] font-mono uppercase text-rose-400">Nakshatra &amp; Pada</span>
+                <div className="font-bold text-amber-200 text-sm">
+                  {dayData.panchanga.nakshatra.name} (Pada {dayData.panchanga.nakshatra.pada})
+                </div>
+                <div className="font-mono text-[11px] text-emerald-300">
+                  Ends: {dayData.panchanga.nakshatra.end12Hr}{dayData.panchanga.nakshatra.endsAfterNextSunrise ? ' (+1d)' : ''}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-rose-900/70 bg-[#1f060e] p-3.5 space-y-1">
+                <span className="text-[10px] font-mono uppercase text-rose-400">Nitya Yoga</span>
+                <div className="font-bold text-amber-200 text-sm">
+                  {dayData.panchanga.yoga.name}
+                </div>
+                <div className="font-mono text-[11px] text-emerald-300">
+                  Ends: {dayData.panchanga.yoga.end12Hr}{dayData.panchanga.yoga.endsAfterNextSunrise ? ' (+1d)' : ''}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-rose-900/70 bg-[#1f060e] p-3.5 space-y-1">
+                <span className="text-[10px] font-mono uppercase text-rose-400">Karana</span>
+                <div className="font-bold text-amber-200 text-sm">
+                  {dayData.panchanga.karana.name}
+                </div>
+                <div className="font-mono text-[11px] text-emerald-300">
+                  Ends: {dayData.panchanga.karana.end12Hr}{dayData.panchanga.karana.endsAfterNextSunrise ? ' (+1d)' : ''}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+              <div className="rounded-xl border border-rose-900/60 bg-black/30 p-3 space-y-1">
+                <span className="font-semibold text-rose-300">⚠️ Vishti (Bhadra) Windows Today:</span>
+                {dayData.vishtiWindows.length === 0 ? (
+                  <p className="text-[11px] text-emerald-300 font-mono">None active in local day</p>
+                ) : (
+                  dayData.vishtiWindows.map((vw, idx) => (
+                    <p key={idx} className="text-[11px] text-rose-200 font-mono">
+                      {vw.start12Hr} – {vw.end12Hr}
+                    </p>
+                  ))
+                )}
+              </div>
+
+              <div className="rounded-xl border border-rose-900/60 bg-black/30 p-3 space-y-1">
+                <span className="font-semibold text-amber-300">🌠 Panchak Status (300°–360°):</span>
+                {dayData.panchak.isActive && dayData.panchak.window ? (
+                  <p className="text-[11px] text-amber-200 font-mono">
+                    Active ({dayData.panchak.nakshatraName}): {dayData.panchak.window.start12Hr} – {dayData.panchak.window.end12Hr}
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-emerald-300 font-mono">Inactive today</p>
+                )}
+              </div>
+
+              <div className="rounded-xl border border-rose-900/60 bg-black/30 p-3 space-y-1">
+                <span className="font-semibold text-amber-300">🪔 Parva / Festival Rules ({dayData.festivalObservances.ruleSetVersion}):</span>
+                {dayData.festivalObservances.matched.length === 0 ? (
+                  <p className="text-[11px] text-rose-300/80">No major tracked Parva on this civil date</p>
+                ) : (
+                  dayData.festivalObservances.matched.map((fest) => (
+                    <p key={fest.id} className="text-[11px] text-amber-200">
+                      <strong>{fest.name}</strong> ({fest.observanceWindow12Hr}) — <span className="font-mono text-[10px] text-rose-300">{dayData.festivalObservances.approvalStatus}</span>
+                    </p>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-amber-700/40 bg-amber-950/20 px-3.5 py-2.5 text-[11px] text-rose-200/90 flex flex-wrap items-center justify-between gap-2">
+              <span>
+                <strong>Scoring Provenance ({SCORING_WEIGHT_GOVERNANCE.ruleVersion} · {SCORING_WEIGHT_GOVERNANCE.approvalStatus}):</strong>{' '}
+                {SCORING_WEIGHT_GOVERNANCE.disclaimer}
+              </span>
+              <span className="font-mono text-[10px] text-amber-300">
+                {SCORING_WEIGHT_GOVERNANCE.citations.length} Shastric citations logged
+              </span>
+            </div>
+          </section>
+
+          {/* ========================================================================= */}
+          {/* ALL 10 INTERACTIVE SOLAR & LUNAR KAALA WINDOWS (OPENS MODAL + INLINE)     */}
+          {/* ========================================================================= */}
           <section className="rounded-2xl border border-rose-950 bg-[#160408] p-5 sm:p-6 space-y-5 shadow-xl scroll-mt-28">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-950 pb-3">
               <div>
@@ -635,6 +1214,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </span>
             </div>
 
+            {/* 8 Interactive Window Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {allKaalaCards.map((card) => {
                 const isSelected = selectedWindowName.toLowerCase().includes(card.key.toLowerCase().slice(0, 5));
@@ -680,6 +1260,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               })}
             </div>
 
+            {/* Inline Do's, Don'ts & Shastric Mitigation Panel */}
             <div className="mt-4 rounded-xl border border-amber-500/50 bg-[#1a050d] p-4 sm:p-5 space-y-4 shadow-2xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-950 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -755,7 +1336,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
-      {activeTab === 'planner' && (
+      {/* ========================================================================= */}
+      {/* SCREEN 2: MULTI-HORIZON PLANNER (DAY, WEEK, MONTH, YEAR)                  */}
+      {/* ========================================================================= */}
+      {!enforceBackendReleaseGate && activeTab === 'planner' && (
         <div className="space-y-6 animate-fade-in scroll-mt-28">
           <div className="rounded-2xl border border-rose-950 bg-[#160408] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -792,13 +1376,14 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </div>
           </div>
 
+          {/* DAY VIEW: Consecutive-midnight clickable 15-minute rows (92 / 96 / 100 samples) */}
           {horizon === 'DAY' && (
             <div className="rounded-2xl border border-rose-950 bg-[#160408] p-5 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h3 className="font-serif text-base font-bold text-amber-300">
-                  96 Intraday 15-Minute Windows for {dayData.date} ({locCoords.cityName})
+                  {timeline.length} Intraday 15-Minute Windows ({dayData.localDayBounds.elapsedHours}h Local Day{dayData.localDayBounds.isDstTransition ? ` · DST ${dayData.localDayBounds.startOffsetLabel} → ${dayData.localDayBounds.endOffsetLabel}` : ` · ${dayData.localDayBounds.startOffsetLabel}`}) for {dayData.date} ({locCoords.cityName})
                 </h3>
-                <span className="text-[11px] text-rose-300">Click any row to set evaluation clock</span>
+                <span className="text-[11px] text-rose-300">Click any row to set exact evaluation instant</span>
               </div>
               <div className="max-h-96 overflow-y-auto rounded-xl border border-rose-950 bg-[#110307]">
                 <table className="w-full text-left border-collapse text-xs">
@@ -809,34 +1394,41 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                       <th className="py-2 px-3">Tier</th>
                       <th className="py-2 px-3">Choghadiya</th>
                       <th className="py-2 px-3">Hora</th>
-                      <th className="py-2 px-3">Executive Recommendation</th>
+                      <th className="py-2 px-3">Analytical Preview Note</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-rose-950/60 text-rose-200">
-                    {timeline.map((s, idx) => (
-                      <tr
-                        key={idx}
-                        onClick={() => setCurrentMinutesOfDay(idx * 15)}
-                        className="hover:bg-amber-950/30 cursor-pointer transition-colors"
-                      >
-                        <td className="py-2 px-3 font-mono font-semibold text-amber-200 whitespace-nowrap">{s.localTime12Hr}</td>
-                        <td className="py-2 px-3 font-bold" style={{ color: s.colorHex }}>{s.auspiciousnessScore}%</td>
-                        <td className="py-2 px-3">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: `${s.colorHex}22`, color: s.colorHex }}>
-                            {s.tier}
-                          </span>
-                        </td>
-                        <td className="py-2 px-3 text-rose-300">{s.activeChoghadiya}</td>
-                        <td className="py-2 px-3 text-rose-300">{s.activeHora}</td>
-                        <td className="py-2 px-3 text-rose-100 text-[11px]">{s.executiveAdvice}</td>
-                      </tr>
-                    ))}
+                    {timeline.map((s, idx) => {
+                      const [sh, sm] = s.localTimeStr.split(':').map(Number);
+                      const rowWallMins = (Number.isFinite(sh) ? sh : 0) * 60 + (Number.isFinite(sm) ? sm : 0);
+                      return (
+                        <tr
+                          key={idx}
+                          onClick={() => handleSelectExactEpoch(s.epochMs, rowWallMins)}
+                          className={`hover:bg-amber-950/30 cursor-pointer transition-colors ${
+                            currentSample.epochMs === s.epochMs ? 'bg-amber-950/40 ring-1 ring-inset ring-amber-500/60' : ''
+                          }`}
+                        >
+                          <td className="py-2 px-3 font-mono font-semibold text-amber-200 whitespace-nowrap">{s.localTime12Hr}</td>
+                          <td className="py-2 px-3 font-bold" style={{ color: s.colorHex }}>{s.auspiciousnessScore}%</td>
+                          <td className="py-2 px-3">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: `${s.colorHex}22`, color: s.colorHex }}>
+                              {s.tier}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-rose-300">{s.activeChoghadiya}</td>
+                          <td className="py-2 px-3 text-rose-300">{s.activeHora}</td>
+                          <td className="py-2 px-3 text-rose-100 text-[11px]">{s.executiveAdvice}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             </div>
           )}
 
+          {/* WEEK VIEW: 7-Day UTC-safe comparative matrix */}
           {horizon === 'WEEK' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3 text-xs">
               {weekDays.map((w) => (
@@ -875,6 +1467,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </div>
           )}
 
+          {/* MONTH VIEW: Lunar Phase & Personal Synastry Heatmap */}
           {horizon === 'MONTH' && (
             <div className="rounded-2xl border border-rose-950 bg-[#160408] p-5 space-y-4">
               <h3 className="font-serif text-base font-bold text-amber-300">
@@ -915,6 +1508,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </div>
           )}
 
+          {/* YEAR VIEW: 12 Astronomical Sidereal Solar Sankrantis */}
           {horizon === 'YEAR' && (
             <div className="rounded-2xl border border-rose-950 bg-[#160408] p-5 space-y-4">
               <h3 className="font-serif text-base font-bold text-amber-300">
@@ -954,7 +1548,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
-      {activeTab === 'remedies-attire' && (
+      {/* ========================================================================= */}
+      {/* SCREEN 3: ACTIONS, REMEDIES, ATTIRE & FOOTWEAR MATRIX                     */}
+      {/* ========================================================================= */}
+      {!enforceBackendReleaseGate && activeTab === 'remedies-attire' && (
         <div className="space-y-6 animate-fade-in scroll-mt-28">
           <section className="rounded-2xl border border-amber-800/80 bg-gradient-to-br from-[#21060f] to-[#120308] p-6 space-y-4 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-rose-950 pb-3">
@@ -977,6 +1574,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </span>
             </div>
 
+            {/* Quick Window Selector Strip */}
             <div className="flex flex-wrap gap-1.5">
               {[
                 'Abhijit Muhurta',
@@ -1039,6 +1637,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </div>
           </section>
 
+          {/* Daily Attire, Live Hora Accent, Lagna-Safe Gemstones & Footwear */}
           <section className="rounded-2xl border border-amber-900/60 bg-[#18040a] p-6 space-y-6">
             <div className="border-b border-rose-950 pb-3 space-y-1">
               <h2 className="font-serif text-xl font-bold text-amber-300 flex items-center gap-2">
@@ -1126,6 +1725,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </div>
             </div>
 
+            {/* Footwear Shastric Comparative Matrix */}
             <div className="rounded-xl border border-rose-950 bg-[#1b050d] p-4 overflow-x-auto text-xs">
               <h4 className="font-serif font-bold text-amber-300 mb-3 text-sm">
                 Shastric Footwear Comparative Matrix (Why &amp; When to Wear Each)
@@ -1157,7 +1757,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
-      {activeTab === 'ai-muhurat' && (
+      {/* ========================================================================= */}
+      {/* SCREEN 4: AI MUHURAT ASSISTANT & ASTRONOMICAL WINDOW SCANNER              */}
+      {/* ========================================================================= */}
+      {!enforceBackendReleaseGate && activeTab === 'ai-muhurat' && (
         <div className="space-y-6 animate-fade-in scroll-mt-28">
           <section className="rounded-2xl border border-amber-800/70 bg-[#1a050c] p-6 space-y-5 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-950 pb-3">
@@ -1174,6 +1777,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </span>
             </div>
 
+            {/* 1-Click Preset Buttons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {[
                 { id: 'INTERVIEW', label: '💼 Job Interview', desc: 'Vijaya & Budha/Guru' },
@@ -1195,6 +1799,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               ))}
             </div>
 
+            {/* Custom Natural-Language Form (Preserves User Input!) */}
             <form onSubmit={handleCustomAiSubmit} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
@@ -1212,6 +1817,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
               </button>
             </form>
 
+            {/* Consultation Result Box */}
             {chatResponse && (
               <div className="rounded-xl border border-amber-600/60 bg-gradient-to-br from-[#250711] to-[#160309] p-5 text-xs space-y-3.5 animate-fade-in shadow-xl">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-950 pb-2.5">
@@ -1254,6 +1860,9 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* SCREEN 5: SCIENCE OF SHUBHA MUHURAT CALCULATION                           */}
+      {/* ========================================================================= */}
       {activeTab === 'science-audit' && (
         <div className="space-y-6 animate-fade-in">
           <MuhuratCalculationExplainer
@@ -1263,6 +1872,9 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* POP-UP MODAL: INTERACTIVE WINDOW DO'S, DON'TS & SHASTRIC MITIGATION       */}
+      {/* ========================================================================= */}
       {isWindowDialogOpen && (
         <div
           role="dialog"
@@ -1306,6 +1918,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
             </div>
 
             <div className="p-4 sm:p-6 space-y-4 max-h-[72vh] overflow-y-auto text-xs">
+              {/* Quick Switcher inside Modal across all 8 Kaalas */}
               <div className="flex flex-wrap gap-1.5 pb-2 border-b border-rose-950">
                 {allKaalaCards.map((c) => (
                   <button
@@ -1385,6 +1998,7 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
         </div>
       )}
 
+      {/* Personalized Profile Setup & Non-Technical Wizard Modal */}
       <PersonalProfileModal
         isOpen={isProfileModalOpen}
         initialTab={profileModalInitialTab}

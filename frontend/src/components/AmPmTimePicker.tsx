@@ -8,19 +8,22 @@
  */
 
 import React, { useState } from 'react';
+import { HighPrecisionAstroEngine } from '../engine/zeroCostAstroEngine';
 
 interface AmPmTimePickerProps {
   currentMinutes: number; // 0 to 1439
   onChangeMinutes: (mins: number) => void;
   timezoneLabel?: string;
   timezoneOffset?: number;
+  ianaTimezone?: string;
 }
 
 export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
   currentMinutes,
   onChangeMinutes,
   timezoneLabel = 'Local Time',
-  timezoneOffset
+  timezoneOffset,
+  ianaTimezone
 }) => {
   const totalMins = Math.max(0, Math.min(1439, Math.floor(currentMinutes)));
   const hour24 = Math.floor(totalMins / 60);
@@ -31,13 +34,13 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
 
   const [isInteractive, setIsInteractive] = useState<boolean>(false);
 
+  // Snap to Selected Observer City's Current Local Wall-Clock Minute (IANA DST-aware)
   const handleSnapToNow = () => {
     const offsetHrs = typeof timezoneOffset === 'number' && Number.isFinite(timezoneOffset)
       ? timezoneOffset
       : -new Date().getTimezoneOffset() / 60.0;
-    const observerNow = new Date(Date.now() + Math.round(offsetHrs * 3600000));
-    const mins = observerNow.getUTCHours() * 60 + observerNow.getUTCMinutes();
-    onChangeMinutes(mins);
+    const wall = HighPrecisionAstroEngine.getWallTimeInZone(Date.now(), ianaTimezone, offsetHrs, false);
+    onChangeMinutes(wall.minutesOfDay);
   };
 
   const handleHourChange = (newH12: number) => {
@@ -69,6 +72,7 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
 
   return (
     <div className="rounded-2xl border border-rose-950 bg-[#160408] p-4 text-xs space-y-3 shadow-md h-full flex flex-col justify-between">
+      {/* Header & Main 12-Hour Clock Face */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
         <div>
           <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 block">
@@ -84,6 +88,7 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
           </div>
         </div>
 
+        {/* AM/PM, Now & Adjust Controls */}
         <div className="flex flex-wrap items-center gap-1.5">
           <div className="flex rounded-lg border border-rose-900 bg-[#250711] p-0.5">
             <button
@@ -127,6 +132,7 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
         </div>
       </div>
 
+      {/* Quick Interval Chips */}
       <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-rose-950/80">
         <span className="text-[10px] text-rose-400 font-semibold mr-0.5">Slots:</span>
         {[
@@ -153,6 +159,7 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
         ))}
       </div>
 
+      {/* Interactive Hour & Minute Selectors */}
       {isInteractive && (
         <div className="rounded-xl border border-rose-900 bg-[#1c050d] p-3 text-xs space-y-3 animate-fade-in">
           <div>

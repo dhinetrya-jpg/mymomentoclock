@@ -46,6 +46,10 @@ export interface WindowActionGuidance {
     | 'AMRIT_KAAL'
     | 'VIJAYA_MUHURTA'
     | 'GODHULI'
+    | 'VARJYAM'
+    | 'VISHTI'
+    | 'PANCHAK'
+    | 'PRADOSH_KAAL'
     | 'SHUBH_CHOGHADIYA'
     | 'LABH_CHOGHADIYA'
     | 'AMRIT_CHOGHADIYA'
@@ -423,6 +427,70 @@ export class RemedialLifestyleEngine {
           'Check that Rahu Kaalam does not overlap on your chosen weekday before signing legal deeds.'
         ],
         emergencyMitigation: 'Blessed lunar nectar span—begin with gratitude and clean Sankalpa (intention).'
+      };
+    }
+
+    if (norm.includes('VARJYA') || norm.includes('TYAJYA')) {
+      return {
+        windowType: 'VARJYAM',
+        title: 'Varjyam / Tyajya (4-Ghati Nakshatra Vishaghati Exclusion)',
+        auspiciousness: 'INAUSPICIOUS',
+        recommendedActions: [
+          'Routine desk tasks, code reviews, housekeeping, and quiet reflection.',
+          'Mantra japa and completing already-started ongoing work.'
+        ],
+        prohibitedActions: [
+          'Initiating Samskaras, marriages, Griha Pravesh, or major financial contracts.',
+          'Commencing long-distance journeys or elective medical procedures.'
+        ],
+        emergencyMitigation: 'Varjyam lasts 4 Ghatis (1/15th of the active Nakshatra span). Wait until the exact end time or perform Ganesha & Nakshatra-devata smarana before time-bound obligations.'
+      };
+    }
+
+    if (norm.includes('VISHTI') || norm.includes('BHADRA')) {
+      return {
+        windowType: 'VISHTI',
+        title: 'Vishti (Bhadra) Karana — Cautionary Half-Tithi Window',
+        auspiciousness: 'INAUSPICIOUS',
+        recommendedActions: [
+          'Auditing, competitive defense, technical troubleshooting, and disciplined study.',
+          'Completing pending administrative tasks.'
+        ],
+        prohibitedActions: [
+          'Signing new deeds, marriages, inaugurations, and auspicious beginnings.'
+        ],
+        emergencyMitigation: 'Recite the 12 names of Bhadra or invoke Lord Ganesha and wait for the half-tithi boundary to pass whenever scheduling permits.'
+      };
+    }
+
+    if (norm.includes('PANCHAK')) {
+      return {
+        windowType: 'PANCHAK',
+        title: 'Panchak (Dhanishta Pada 3–4 through Revati 5-Nakshatra Span)',
+        auspiciousness: 'NEUTRAL',
+        recommendedActions: [
+          'Constructive repeatable milestones: investments, education, software releases, and spiritual sadhana.'
+        ],
+        prohibitedActions: [
+          'Traditional Panchak cautions: southward travel, roofing a house, buying/storing combustible fuel, and crafting beds/cots.'
+        ],
+        emergencyMitigation: 'General auspicious work remains permissible when Tithi/Tara/Hora are strong; for unavoidable southward travel, step back 3 paces inside and offer fruit/sweets to Lord Hanuman.'
+      };
+    }
+
+    if (norm.includes('PRADOSH')) {
+      return {
+        windowType: 'PRADOSH_KAAL',
+        title: 'Pradosh Kaal (Post-Sunset 6-Ghati Shiva & Lakshmi Twilight)',
+        auspiciousness: 'AUSPICIOUS',
+        recommendedActions: [
+          'Shiva Pradosh Archana, Deepa-daana (lighting lamps), and Diwali Lakshmi Puja on Kartika Amavasya.',
+          'Meditation, forgiveness, and household devotional harmony.'
+        ],
+        prohibitedActions: [
+          'Harsh speech, arguments, or sleeping during the post-sunset Sandhya span.'
+        ],
+        emergencyMitigation: 'Light a sesame or cow-ghee diya facing East or North and chant "Om Namah Shivaya".'
       };
     }
 

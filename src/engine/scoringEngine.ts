@@ -3,11 +3,79 @@
  * MIT License
  *
  * Composite Personal Auspiciousness Scoring Engine (0 - 100%)
- * Combines Universal Astrological Factors (8 Kaalas, Epoch-matched Choghadiya & Hora, Vishti Karana)
- * with Personal Natal Factors (Exact Tara Bala, Drik Sidereal Moon Chandra Bala, Ashtama Shuddhi, Lagna Harmony).
+ * - Uses the unified 60-term Meeus Ch. 47 Moon + VSOP87 Sun core at the exact event instant.
+ * - Supports explicit Chandra Bala conventions (`CLASSICAL_STRICT` vs `SHUKLA_WAXING_RELAXED`)
+ *   accounting for waxing (Shukla Paksha) vs waning (Krishna Paksha) lunar strength.
+ * - Documents classical Shastric citations for every weight (`SCORING_WEIGHT_GOVERNANCE`),
+ *   marked explicitly as `PROVISIONAL_UNAPPROVED` pending formal Jyotishi sign-off.
  */
 
 import { DayAnalysisResult, HighPrecisionAstroEngine } from './zeroCostAstroEngine';
+
+export type ChandraBalaConvention = 'CLASSICAL_STRICT' | 'SHUKLA_WAXING_RELAXED';
+
+export interface ScoringOptions {
+  chandraBalaConvention?: ChandraBalaConvention;
+}
+
+export interface WeightCitationRecord {
+  factorId: string;
+  weightRange: string;
+  classicalSource: string;
+  textualBasis: string;
+  approvalStatus: 'PROVISIONAL_UNAPPROVED';
+}
+
+export const SCORING_WEIGHT_GOVERNANCE: {
+  ruleVersion: 'scoring-weights-v1-provisional';
+  approvalStatus: 'PROVISIONAL_UNAPPROVED';
+  requiresJyotishiSignOff: true;
+  disclaimer: string;
+  citations: WeightCitationRecord[];
+} = {
+  ruleVersion: 'scoring-weights-v1-provisional',
+  approvalStatus: 'PROVISIONAL_UNAPPROVED',
+  requiresJyotishiSignOff: true,
+  disclaimer:
+    'Numeric weights convert qualitative Shastric categories (Shubha / Madhyama / Varjya) into a 0–100 index for visual comparison; exact numeric magnitudes are provisional engineering heuristics awaiting formal Jyotishi sign-off.',
+  citations: [
+    {
+      factorId: 'tara_bala',
+      weightRange: '+25 (Sadhana), +20 (Sampat/Parama Mitra), +15 (Kshema/Mitra), -5 (Janma), -20 (Vipat/Pratyak), -30 (Naidhana)',
+      classicalSource: 'Muhurta Chintamani (Ch. 2, Nakshatra Prakarana) & Kalaprakashika',
+      textualBasis: '9-fold Janma-to-Parama-Mitra Nakshatra triads; 3rd (Vipat), 5th (Pratyak), and 7th (Naidhana/Vadha) excluded for auspicious commencements.',
+      approvalStatus: 'PROVISIONAL_UNAPPROVED',
+    },
+    {
+      factorId: 'chandra_bala',
+      weightRange: '+25 (11th), +20 (3rd/10th), +15 (1st/6th/7th), -5/+5 (2nd/5th/9th in Shukla Paksha), -15 (12th), -35 (8th Ashtama)',
+      classicalSource: 'Muhurta Chintamani (Ch. 11, Gochara Prakarana, v. 22–25) & Brihat Samhita',
+      textualBasis: 'Moon favorable in 1, 3, 6, 7, 10, 11 from Janma Rashi; 8th (Ashtama Chandra) strictly avoided; Shukla Paksha waxing Moon mitigates 2nd, 5th, and 9th houses.',
+      approvalStatus: 'PROVISIONAL_UNAPPROVED',
+    },
+    {
+      factorId: 'ashtabhaga_kaalas',
+      weightRange: '-30 (Rahu Kaal), -20 (Yamaghanta), -10 (Gulika), -22 (Varjyam/Tyajya), -15 (Vishti/Bhadra), -8 (Panchak)',
+      classicalSource: 'Muhurta Chintamani (Ch. 1–3) & South/North Indian Panchanga Sampradaya',
+      textualBasis: '8-fold diurnal solar division for Rahu/Yamaghanta/Gulika; 4-Ghati Nakshatra Vishaghati (Varjyam); Karana Vishti; Dhanishta-to-Revati 5-star Panchak.',
+      approvalStatus: 'PROVISIONAL_UNAPPROVED',
+    },
+    {
+      factorId: 'choghadiya_and_hora',
+      weightRange: '+25 (Amrit), +20 (Shubh), +15 (Labh), +8 (Char), -20 (Rog/Kaal/Udveg); ±10 (Chaldean Hora)',
+      classicalSource: 'Jyotirnibandha & Brihat Parashara Hora Shastra (Kala Chakra / Hora)',
+      textualBasis: '8-fold diurnal/nocturnal Choghadiya and 24 Chaldean Horas anchored to local sunrise Vaaraesha.',
+      approvalStatus: 'PROVISIONAL_UNAPPROVED',
+    },
+    {
+      factorId: 'abhijit_vijaya_amrit',
+      weightRange: '+25 (Abhijit, non-Wednesday), +15 (Vijaya), +14 (Amrit Kalam), +18 (Brahma Muhurta)',
+      classicalSource: 'Muhurta Chintamani (Ch. 4, Dinamana Muhurtas)',
+      textualBasis: '8th of 15 diurnal Muhurtas centered on local apparent solar noon (excluded on Wednesdays for South travel / general commencements).',
+      approvalStatus: 'PROVISIONAL_UNAPPROVED',
+    },
+  ],
+};
 
 export interface NatalProfile {
   natalMoonNakshatraIndex: number; // 1 to 27 (Ashwini = 1)
@@ -19,9 +87,11 @@ export interface NatalProfile {
 export interface IntradayScoringSample {
   timestampIso: string;
   epochMs: number;
-  localTimeStr: string;  // HH:MM (24h canonical)
-  localTime12Hr: string; // hh:mm AM/PM
-  auspiciousnessScore: number; // 5 to 98
+  localTimeStr: string;
+  localTime12Hr: string;
+  utcOffsetHours: number;
+  utcOffsetLabel: string;
+  auspiciousnessScore: number;
   tier: 'AMRITHAM' | 'SHUBHA' | 'MADHYAMA' | 'VARJYA';
   colorHex: string;
   activeChoghadiya: string;
@@ -30,9 +100,14 @@ export interface IntradayScoringSample {
   activeHoraPlanet: string;
   isRahuKaalActive: boolean;
   isYamaghantaActive: boolean;
+  isVarjyamActive: boolean;
+  isVishtiActive: boolean;
+  isPanchakActive: boolean;
   isAbhijitActive: boolean;
   taraBalaCategory: string;
   chandraBalaHouse: number;
+  chandraBalaConvention: ChandraBalaConvention;
+  lunarPakshaAtInstant: 'Shukla' | 'Krishna';
   isAshtamaChandra: boolean;
   executiveAdvice: string;
 }
@@ -50,9 +125,6 @@ export class PersonalAuspiciousnessScoringEngine {
     'Parama Mitra (Supreme Ally)'
   ];
 
-  /**
-   * Computes Tara Bala (1 to 9) from 1-indexed Natal Moon Nakshatra (1..27) to 1-indexed Transit Moon Nakshatra (1..27)
-   */
   public static calculateTaraBala(natalNakshatra: number, transitNakshatra: number): {
     taraIndex: number;
     name: string;
@@ -68,39 +140,39 @@ export class PersonalAuspiciousnessScoringEngine {
     let scoreWeight = 0;
 
     switch (taraIndex) {
-      case 2: // Sampat
+      case 2:
         isAuspicious = true;
         scoreWeight = 20;
         break;
-      case 4: // Kshema
+      case 4:
         isAuspicious = true;
         scoreWeight = 15;
         break;
-      case 6: // Sadhana
+      case 6:
         isAuspicious = true;
         scoreWeight = 25;
         break;
-      case 8: // Mitra
+      case 8:
         isAuspicious = true;
         scoreWeight = 15;
         break;
-      case 9: // Parama Mitra
+      case 9:
         isAuspicious = true;
         scoreWeight = 20;
         break;
-      case 1: // Janma
+      case 1:
         isAuspicious = false;
         scoreWeight = -5;
         break;
-      case 3: // Vipat
+      case 3:
         isAuspicious = false;
         scoreWeight = -20;
         break;
-      case 5: // Pratyak
+      case 5:
         isAuspicious = false;
         scoreWeight = -20;
         break;
-      case 7: // Naidhana / Vadha
+      case 7:
         isAuspicious = false;
         scoreWeight = -30;
         break;
@@ -115,9 +187,18 @@ export class PersonalAuspiciousnessScoringEngine {
   }
 
   /**
-   * Computes Chandra Bala (Transit Moon sign 0..11 offset from Natal Moon sign 0..11)
+   * Computes Chandra Bala at the event instant, honoring explicit waxing (`Shukla`) vs waning (`Krishna`)
+   * Moon conventions per Muhurta Chintamani Ch. 11:
+   * - `CLASSICAL_STRICT`: Houses 1, 3, 6, 7, 10, 11 favorable regardless of Paksha; 8th (Ashtama) severely malefic.
+   * - `SHUKLA_WAXING_RELAXED`: During Shukla Paksha (waxing Moon), houses 2, 5, and 9 gain benefic lunar strength (+5),
+   *   whereas during Krishna Paksha (waning Moon) only 1, 3, 6, 7, 10, 11 remain favorable.
    */
-  public static calculateChandraBala(natalMoonSign: number, transitMoonSign: number): {
+  public static calculateChandraBala(
+    natalMoonSign: number,
+    transitMoonSign: number,
+    paksha: 'Shukla' | 'Krishna' = 'Shukla',
+    convention: ChandraBalaConvention = 'CLASSICAL_STRICT'
+  ): {
     houseFromNatal: number;
     isAuspicious: boolean;
     scoreWeight: number;
@@ -127,77 +208,74 @@ export class PersonalAuspiciousnessScoringEngine {
     const safeTransit = ((Math.floor(transitMoonSign) % 12) + 12) % 12;
     const houseFromNatal = ((safeTransit - safeNatal + 12) % 12) + 1;
 
-    let isAuspicious = false;
-    let scoreWeight = 0;
-    let description = '';
-
     switch (houseFromNatal) {
       case 1:
-        isAuspicious = true;
-        scoreWeight = 15;
-        description = 'Good health and personal energy';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 15, description: 'Good health and personal energy' };
       case 3:
-        isAuspicious = true;
-        scoreWeight = 20;
-        description = 'High courage, valor and victory in endeavors';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 20, description: 'High courage, valor and victory in endeavors' };
       case 6:
-        isAuspicious = true;
-        scoreWeight = 15;
-        description = 'Overcoming obstacles, disputes and competition';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 15, description: 'Overcoming obstacles, disputes and competition' };
       case 7:
-        isAuspicious = true;
-        scoreWeight = 15;
-        description = 'Supportive partnerships, negotiations and public favor';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 15, description: 'Supportive partnerships, negotiations and public favor' };
       case 10:
-        isAuspicious = true;
-        scoreWeight = 20;
-        description = 'Career authority, managerial leadership, prestige';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 20, description: 'Career authority, managerial leadership, prestige' };
       case 11:
-        isAuspicious = true;
-        scoreWeight = 25;
-        description = 'Maximum gains, revenue expansion, goal fruition';
-        break;
+        return { houseFromNatal, isAuspicious: true, scoreWeight: 25, description: 'Maximum gains, revenue expansion, goal fruition' };
       case 8:
-        isAuspicious = false;
-        scoreWeight = -35;
-        description = 'Ashtama Chandra: Vulnerability, unexpected delays. Avoid major new commitments.';
-        break;
+        return {
+          houseFromNatal,
+          isAuspicious: false,
+          scoreWeight: -35,
+          description: 'Ashtama Chandra: Vulnerability, unexpected delays. Avoid major new commitments.'
+        };
       case 12:
-        isAuspicious = false;
-        scoreWeight = -15;
-        description = 'Expenditure and scattered attention';
-        break;
-      default:
-        isAuspicious = false;
-        scoreWeight = -5;
-        description = 'Moderate or mixed lunar support';
-        break;
+        return {
+          houseFromNatal,
+          isAuspicious: false,
+          scoreWeight: paksha === 'Krishna' ? -18 : -15,
+          description: 'Expenditure and scattered attention'
+        };
+      case 2:
+      case 5:
+      case 9:
+        if (convention === 'SHUKLA_WAXING_RELAXED' && paksha === 'Shukla') {
+          return {
+            houseFromNatal,
+            isAuspicious: true,
+            scoreWeight: 5,
+            description: `Shukla Paksha waxing Moon supports House ${houseFromNatal} (Muhurta Chintamani Shukla-mitigation convention)`
+          };
+        }
+        return {
+          houseFromNatal,
+          isAuspicious: false,
+          scoreWeight: -5,
+          description: `House ${houseFromNatal} lunar transit (${paksha} Paksha · ${convention})`
+        };
+      default: // House 4
+        return {
+          houseFromNatal,
+          isAuspicious: false,
+          scoreWeight: paksha === 'Krishna' ? -10 : -5,
+          description: 'Chaturtha Chandra: Domestic caution; verify Tara Bala support'
+        };
     }
-
-    return { houseFromNatal, isAuspicious, scoreWeight, description };
   }
 
-  /**
-   * Evaluates the unified score for a specific instant of time
-   */
   public static evaluateInstant(
     instantDate: Date,
     dayData: DayAnalysisResult,
-    natal?: NatalProfile
+    natal?: NatalProfile,
+    options?: ScoringOptions
   ): IntradayScoringSample {
     const rawMs = instantDate?.getTime?.();
     const instantMs = Number.isFinite(rawMs) ? rawMs : dayData.solarMetrics.sunriseMs;
     const safeDate = new Date(instantMs);
+    const convention: ChandraBalaConvention = options?.chandraBalaConvention || 'CLASSICAL_STRICT';
     let baseScore = 50;
 
-    // 1. All 8 Solar/Lunar Kaala Windows (Epoch-accurate)
     const k = dayData.fixedKaalas;
-    const inWindow = (w?: { startMs?: number; endMs?: number; startIso: string; endIso: string }) => {
+    const inWindow = (w?: { startMs?: number; endMs?: number; startIso: string; endIso: string } | null) => {
       if (!w) return false;
       const s = Number.isFinite(w.startMs) ? (w.startMs as number) : new Date(w.startIso).getTime();
       const e = Number.isFinite(w.endMs) ? (w.endMs as number) : new Date(w.endIso).getTime();
@@ -207,39 +285,44 @@ export class PersonalAuspiciousnessScoringEngine {
     const isRahuKaalActive = inWindow(k.rahuKaal);
     const isYamaghantaActive = inWindow(k.yamaghanta);
     const isGulikaActive = inWindow(k.gulikaKaal);
+    const isVarjyamActive = inWindow(k.varjyam);
     const isAbhijitActive = inWindow(k.abhijitMuhurta) && k.abhijitMuhurta.isValidOnThisDay;
     const isBrahmaActive = inWindow(k.brahmaMuhurta);
     const isVijayaActive = inWindow(k.vijayaMuhurta);
-    const isAmritKaalActive = inWindow(k.amritKaal) && !isRahuKaalActive && !isYamaghantaActive;
+    const isAmritKaalActive = inWindow(k.amritKaal) && !isRahuKaalActive && !isYamaghantaActive && !isVarjyamActive;
     const isGodhuliActive = inWindow(k.godhuliKaal) && !isRahuKaalActive;
 
-    if (isRahuKaalActive) baseScore += k.rahuKaal.scoreImpact;       // -30
-    if (isYamaghantaActive) baseScore += k.yamaghanta.scoreImpact;   // -20
-    if (isGulikaActive) baseScore += k.gulikaKaal.scoreImpact;       // -10
-    if (isAbhijitActive) baseScore += k.abhijitMuhurta.scoreImpact;  // +25
+    if (isRahuKaalActive) baseScore += k.rahuKaal.scoreImpact;
+    if (isYamaghantaActive) baseScore += k.yamaghanta.scoreImpact;
+    if (isGulikaActive) baseScore += k.gulikaKaal.scoreImpact;
+    if (isVarjyamActive) baseScore += k.varjyam.scoreImpact;
+    if (isAbhijitActive) baseScore += k.abhijitMuhurta.scoreImpact;
     if (isBrahmaActive) baseScore += 18;
     if (isVijayaActive && !isRahuKaalActive) baseScore += 15;
     if (isAmritKaalActive) baseScore += 14;
     if (isGodhuliActive) baseScore += 10;
 
-    // 2. Instantaneous Lunar Position & Vishti (Bhadra) Karana Check
-    const jdInstant = HighPrecisionAstroEngine.julianDayFromEpochMs(instantMs);
-    const ayanamsa = HighPrecisionAstroEngine.getTrueLahiriAyanamsa(jdInstant);
-    const sidSun = HighPrecisionAstroEngine.normalizeDegrees(
-      HighPrecisionAstroEngine.calculateSunLongitude(jdInstant).longitude - ayanamsa
-    );
-    const sidMoon = HighPrecisionAstroEngine.normalizeDegrees(
-      HighPrecisionAstroEngine.calculateMoonLongitude(jdInstant) - ayanamsa
-    );
+    // Exact Event-Moment Sidereal Sun & 60-Term Moon
+    const { siderealSun: sidSun, siderealMoon: sidMoon } = HighPrecisionAstroEngine.siderealSunMoonAtMs(instantMs);
     const lunarSep = HighPrecisionAstroEngine.normalizeDegrees(sidMoon - sidSun);
+    const lunarPakshaAtInstant: 'Shukla' | 'Krishna' = lunarSep < 180.0 ? 'Shukla' : 'Krishna';
     const instantKaranaIdx = Math.min(60, Math.floor(lunarSep / 6.0) + 1);
     const isVishtiActive = HighPrecisionAstroEngine.getKaranaNameByIndex(instantKaranaIdx).includes('Vishti');
-    if (isVishtiActive) baseScore -= 12;
+    const isPanchakActive = sidMoon >= 300.0;
 
-    // 3. Epoch-Backed Active Choghadiya (handles midnight 23:xx -> 00:xx & pre-sunrise 00:00..Sunrise)
-    const tz = dayData.location?.timezoneOffset ?? 5.5;
-    const localTimeStr = new Date(instantMs + Math.round(tz * 3600000)).toISOString().substring(11, 16);
-    const localTime12Hr = HighPrecisionAstroEngine.format24To12Hr(localTimeStr);
+    if (isVishtiActive) baseScore -= 15;
+    if (isPanchakActive) baseScore -= 8;
+
+    const tz = dayData.location.timezoneOffset;
+    const wall = HighPrecisionAstroEngine.getWallTimeInZone(
+      instantMs,
+      dayData.location.timezone,
+      tz,
+      false
+    );
+    const localTimeStr = wall.hhmm24;
+    const isDstDay = Boolean(dayData.localDayBounds?.isDstTransition);
+    const localTime12Hr = isDstDay ? `${wall.hhmm12} (${wall.offsetLabel})` : wall.hhmm12;
 
     const allChoghadiyas = [
       ...(dayData.choghadiya.preSunriseChoghadiya || []),
@@ -251,7 +334,6 @@ export class PersonalAuspiciousnessScoringEngine {
       dayData.choghadiya.dayChoghadiya[0];
     baseScore += activeChog.scoreImpact;
 
-    // 4. Epoch-Backed Active Planetary Hora (handles midnight & pre-sunrise accurately)
     const allHoras = [
       ...(dayData.preSunriseHoras || []),
       ...dayData.horas
@@ -261,7 +343,6 @@ export class PersonalAuspiciousnessScoringEngine {
       dayData.horas[0];
     baseScore += activeHora.isAuspicious ? 10 : -10;
 
-    // 5. Personal Natal Synastry (Tara Bala + Exact Drik Moon Chandra Bala + Live Lagna Harmony)
     let taraCategory = 'General Timing (Non-Personalized)';
     let chandraHouse = 1;
     let isAshtamaChandra = false;
@@ -273,16 +354,20 @@ export class PersonalAuspiciousnessScoringEngine {
       baseScore += tara.scoreWeight;
 
       const transitMoonSign = Math.floor(sidMoon / 30.0) % 12;
-      const chandra = this.calculateChandraBala(natal.natalMoonSignIndex, transitMoonSign);
+      const chandra = this.calculateChandraBala(
+        natal.natalMoonSignIndex,
+        transitMoonSign,
+        lunarPakshaAtInstant,
+        convention
+      );
       chandraHouse = chandra.houseFromNatal;
       isAshtamaChandra = chandraHouse === 8;
       baseScore += chandra.scoreWeight;
 
-      // Live Transit Ascendant (Lagna) vs Natal Ascendant Harmony
       const liveAngles = HighPrecisionAstroEngine.calculateLiveAngles(
         instantMs,
-        dayData.location?.latitude ?? 28.6139,
-        dayData.location?.longitude ?? 77.2090
+        dayData.location.latitude,
+        dayData.location.longitude
       );
       const transitAscSign = Math.floor(liveAngles.siderealAscendant / 30.0) % 12;
       const lagnaHouse = ((transitAscSign - natal.natalAscendantSignIndex + 12) % 12) + 1;
@@ -299,11 +384,11 @@ export class PersonalAuspiciousnessScoringEngine {
     let colorHex: string;
     let executiveAdvice: string;
 
-    if (finalScore >= 75 && !isRahuKaalActive && !isAshtamaChandra) {
+    if (finalScore >= 75 && !isRahuKaalActive && !isVarjyamActive && !isVishtiActive && !isAshtamaChandra) {
       tier = 'AMRITHAM';
       colorHex = '#10B981';
       executiveAdvice = 'Supreme golden window. Highly favorable for contract signatures, purchases, and major decisions.';
-    } else if (finalScore >= 55 && !isRahuKaalActive) {
+    } else if (finalScore >= 55 && !isRahuKaalActive && !isVarjyamActive) {
       tier = 'SHUBHA';
       colorHex = '#3B82F6';
       executiveAdvice = 'Supportive window. Suitable for productive meetings, negotiations, and scheduled initiatives.';
@@ -316,6 +401,10 @@ export class PersonalAuspiciousnessScoringEngine {
       colorHex = '#EF4444';
       executiveAdvice = isRahuKaalActive
         ? `Rahu Kaal active (${k.rahuKaal.start12Hr} – ${k.rahuKaal.end12Hr}). Postpone new contracts, investments, and departures.`
+        : isVarjyamActive
+        ? `Nakshatra Varjyam (Tyajya) active (${k.varjyam.start12Hr} – ${k.varjyam.end12Hr}). Defer auspicious initiations.`
+        : isVishtiActive
+        ? 'Vishti (Bhadra) Karana active. Avoid commencing new ventures during this half-tithi.'
         : isAshtamaChandra
         ? 'Ashtama Chandra (8th-house Moon transit) active for your profile. Prioritize caution and routine tasks.'
         : isYamaghantaActive
@@ -328,6 +417,8 @@ export class PersonalAuspiciousnessScoringEngine {
       epochMs: instantMs,
       localTimeStr,
       localTime12Hr,
+      utcOffsetHours: wall.offsetHours,
+      utcOffsetLabel: wall.offsetLabel,
       auspiciousnessScore: finalScore,
       tier,
       colorHex,
@@ -337,32 +428,34 @@ export class PersonalAuspiciousnessScoringEngine {
       activeHoraPlanet: activeHora.rulingPlanet,
       isRahuKaalActive,
       isYamaghantaActive,
+      isVarjyamActive,
+      isVishtiActive,
+      isPanchakActive,
       isAbhijitActive,
       taraBalaCategory: taraCategory,
       chandraBalaHouse: chandraHouse,
+      chandraBalaConvention: convention,
+      lunarPakshaAtInstant,
       isAshtamaChandra,
       executiveAdvice
     };
   }
 
-  /**
-   * Generates a 24-hour timeline at 15-minute intervals for the Chrono-Dial UI
-   */
   public static generate24HourTimeline(
     dayData: DayAnalysisResult,
-    natal?: NatalProfile
+    natal?: NatalProfile,
+    options?: ScoringOptions
   ): IntradayScoringSample[] {
     const samples: IntradayScoringSample[] = [];
-    const safeDateStr = /^\d{4}-\d{2}-\d{2}$/.test(dayData.date)
-      ? dayData.date
-      : HighPrecisionAstroEngine.getObserverDateString(dayData.location?.timezoneOffset ?? 5.5);
-    const [y, m, d] = safeDateStr.split('-').map(Number);
+    const tz = dayData.location.timezoneOffset;
+    const ianaTz = dayData.location.timezone;
+    const bounds = dayData.localDayBounds?.date === dayData.date && dayData.localDayBounds?.timezone === ianaTz
+      ? dayData.localDayBounds
+      : HighPrecisionAstroEngine.getLocalDayUtcBounds(dayData.date, ianaTz, tz);
 
-    const tz = dayData.location?.timezoneOffset ?? 5.5;
-    for (let minuteOfDay = 0; minuteOfDay < 1440; minuteOfDay += 15) {
-      const totalUtcMinutes = minuteOfDay - Math.round(tz * 60);
-      const sampleDate = new Date(Date.UTC(y, m - 1, d, 0, totalUtcMinutes));
-      samples.push(this.evaluateInstant(sampleDate, dayData, natal));
+    const stepMs = 15 * 60 * 1000;
+    for (let sampleMs = bounds.startUtcMs; sampleMs < bounds.endUtcMs; sampleMs += stepMs) {
+      samples.push(this.evaluateInstant(new Date(sampleMs), dayData, natal, options));
     }
 
     return samples;

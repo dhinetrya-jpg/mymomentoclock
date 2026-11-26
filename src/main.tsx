@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { PwaStatus } from './pwa/PwaStatus';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';

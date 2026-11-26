@@ -22,7 +22,6 @@ interface DiwaliProsperityKitProps {
 }
 
 export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
-  chart,
   onOpenQuickCheckout,
 }) => {
   const [selectedCity, setSelectedCity] = useState<string>('');

@@ -154,7 +154,6 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
 
-  const isCelebrationNow = diffMs === 0;
 
   // Static festival data cannot establish natal timing alignment.
   const lagnaMatchNote = chart ? 'Unverified static festival preview. Natal timing alignment is unavailable for this chart.' : 'Unverified static festival preview. No natal chart supplied.';
@@ -167,7 +166,7 @@ export const DiwaliCountdown: React.FC<DiwaliCountdownProps> = ({
       `Nakshatra: ${activeEvent.nakshatra}\n` +
       `Fixed Lagna: ${activeEvent.lagna}\n` +
       `Deity: ${activeEvent.deity}\n` +
-      `Calculated via Swiss Ephemeris MymomentOclock`;
+      `MyMomentOclock Unverified Static Festival Preview`;
     navigator.clipboard.writeText(text);
     setCopiedSuccess(true);
     setTimeout(() => setCopiedSuccess(false), 2500);

@@ -9,7 +9,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { HighPrecisionAstroEngine, LocationCoordinates, DayAnalysisResult, BhavaCusp } from '../engine/zeroCostAstroEngine';
-import { PersonalAuspiciousnessScoringEngine, NatalProfile, IntradayScoringSample } from '../engine/scoringEngine';
+import { PersonalAuspiciousnessScoringEngine, NatalProfile } from '../engine/scoringEngine';
 import { OfflineGeoResolver, OFFLINE_CITIES_CATALOG } from '../engine/offlineGeoData';
 import { MultimodalCalendarEngine } from '../engine/calendarEngine';
 import { runZeroCostEngineTests } from '../engine/__tests__/zeroCostEngine.test';

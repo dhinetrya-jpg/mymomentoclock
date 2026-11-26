@@ -12,6 +12,8 @@
  */
 
 import { calculateFullChart, AyanamsaType } from './astroMath';
+import { CalculationInputError } from './calculationValidation';
+import { resolveIanaTimezone } from './timezoneResolver';
 import { HighPrecisionAstroEngine, NAKSHATRA_NAMES, ZODIAC_SIGNS } from './zeroCostAstroEngine';
 
 export interface UserProfile {
@@ -376,6 +378,7 @@ export class PersonalProfileEngine {
     longitude: number;
     timezoneOffset: number;
     timezone?: string;
+    explicitOffsetOverride?: boolean;
   }): UserProfile {
     if (!params.birthDate || !/^\d{4}-\d{2}-\d{2}$/.test(params.birthDate)) {
       throw new Error('Please select a valid Date of Birth (YYYY-MM-DD).');
@@ -391,13 +394,44 @@ export class PersonalProfileEngine {
     }
 
     const normalizedTime = params.birthTime.length === 5 ? `${params.birthTime}:00` : params.birthTime;
+    const time12Hr = HighPrecisionAstroEngine.format24To12Hr(normalizedTime.slice(0, 5));
+
+    // Resolve exact historical/DST UTC offset at the birth instant (detecting spring-forward gaps & fall-back folds)
+    let effectiveOffset = params.timezoneOffset;
+    if (params.timezone && HighPrecisionAstroEngine.isValidIanaTimezone(params.timezone)) {
+      try {
+        const resolved = resolveIanaTimezone(
+          params.birthDate,
+          normalizedTime,
+          params.timezone,
+          params.explicitOffsetOverride ? params.timezoneOffset : undefined
+        );
+        effectiveOffset = resolved.offsetHours;
+      } catch (err) {
+        if (err instanceof CalculationInputError) {
+          if (err.code === 'NONEXISTENT_LOCAL_TIME') {
+            throw new Error(
+              `The local birth time ${time12Hr} did not exist in ${params.timezone} on ${params.birthDate} due to the Daylight Saving Time spring-forward jump. Please verify the recorded clock time.`
+            );
+          }
+          if (err.code === 'AMBIGUOUS_LOCAL_TIME') {
+            throw new Error(
+              `The local birth time ${time12Hr} occurred twice in ${params.timezone} on ${params.birthDate} during the Daylight Saving Time fall-back hour. Open "⚙️ Edit Exact Lat / Lon" and confirm the exact UTC offset (e.g., -4 for EDT or -5 for EST).`
+            );
+          }
+          throw new Error(err.message);
+        }
+        throw err;
+      }
+    }
+
     const chart = calculateFullChart(
       params.birthDate,
       normalizedTime,
       params.latitude,
       params.longitude,
       params.birthCityName,
-      params.timezoneOffset,
+      effectiveOffset,
       AyanamsaType.TRUE_LAHIRI
     );
 
@@ -415,7 +449,7 @@ export class PersonalProfileEngine {
     // Exact top-level ascendantSignIndex & ascendantDegree from ChartCalculationResult
     const ascIdx = chart.ascendantSignIndex;
     const ascDeg = Number(chart.ascendantDegree.toFixed(2));
-    const time12Hr = HighPrecisionAstroEngine.format24To12Hr(normalizedTime.slice(0, 5));
+    const utcLabel = HighPrecisionAstroEngine.formatUtcOffsetLabel(Math.round(effectiveOffset * 60));
 
     return {
       name: params.fullName.trim() || 'Native',
@@ -433,9 +467,9 @@ export class PersonalProfileEngine {
       pob: params.birthCityName,
       birthLat: params.latitude,
       birthLon: params.longitude,
-      birthTzOffset: params.timezoneOffset,
+      birthTzOffset: effectiveOffset,
       birthTimezone: params.timezone,
-      derivationSummary: `Drik Birth Kundali (${params.birthDate}, ${time12Hr} · ${params.birthCityName}): Natal Moon in ${NAKSHATRA_NAMES[nakIdx]} Pada ${nakPada} (${ZODIAC_SIGNS[moonSignIdx]}), ${ZODIAC_SIGNS[ascIdx]} Lagna (${ascDeg}°).`
+      derivationSummary: `Drik Birth Kundali (${params.birthDate}, ${time12Hr} ${utcLabel} · ${params.birthCityName}): Natal Moon in ${NAKSHATRA_NAMES[nakIdx]} Pada ${nakPada} (${ZODIAC_SIGNS[moonSignIdx]}), ${ZODIAC_SIGNS[ascIdx]} Lagna (${ascDeg}°).`
     };
   }
 

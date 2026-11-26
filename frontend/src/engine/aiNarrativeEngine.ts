@@ -335,9 +335,13 @@ export class AiNarrativeEngine {
 
     // Current instant score on selectedDate for honest transparency
     const todayData = HighPrecisionAstroEngine.analyzeFullDay(params.selectedDate, params.location);
-    const [sy, sm, sd] = todayData.date.split('-').map(Number);
-    const curInstant = new Date(Date.UTC(sy, sm - 1, sd, 0, params.currentMinutesOfDay - Math.round(tz * 60)));
-    const curSample = PersonalAuspiciousnessScoringEngine.evaluateInstant(curInstant, todayData, params.natal);
+    const curEpochMs = HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+      todayData.date,
+      params.currentMinutesOfDay,
+      params.location?.timezone,
+      tz
+    );
+    const curSample = PersonalAuspiciousnessScoringEngine.evaluateInstant(new Date(curEpochMs), todayData, params.natal);
 
     let bestCandidate: {
       date: string;
@@ -360,7 +364,7 @@ export class AiNarrativeEngine {
 
       for (let i = 0; i < timeline.length; i++) {
         const s = timeline[i];
-        const hourLocal = Math.floor((i * 15) / 60);
+        const hourLocal = Number(s.localTimeStr.split(':')[0] || 0);
         if (hourLocal < rule.minHourLocal || hourLocal >= rule.maxHourLocal) continue;
         if (s.isRahuKaalActive || s.isYamaghantaActive || s.isAshtamaChandra) continue;
 
@@ -390,14 +394,22 @@ export class AiNarrativeEngine {
           ) {
             endIdx++;
           }
-          const endMins = ((endIdx + 1) * 15) % 1440;
-          const end24 = `${Math.floor(endMins / 60).toString().padStart(2, '0')}:${(endMins % 60).toString().padStart(2, '0')}`;
+          const endEpochMs = timeline[endIdx].epochMs + 15 * 60 * 1000;
+          const endWall = HighPrecisionAstroEngine.getWallTimeInZone(
+            endEpochMs,
+            params.location?.timezone,
+            tz,
+            false
+          );
+          const end12Label = dData.localDayBounds?.isDstTransition
+            ? `${endWall.hhmm12} (${endWall.offsetLabel})`
+            : endWall.hhmm12;
 
           bestCandidate = {
             date: dData.date,
             dayName: dData.panchanga.vaara.name,
             start12Hr: s.localTime12Hr,
-            end12Hr: HighPrecisionAstroEngine.format24To12Hr(end24),
+            end12Hr: end12Label,
             rawScore: s.auspiciousnessScore,
             domainRank,
             chog: s.activeChoghadiyaName,

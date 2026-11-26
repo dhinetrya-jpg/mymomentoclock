@@ -12,6 +12,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { PersonalProfileEngine, UserProfile } from '../engine/personalProfileEngine';
 import { OfflineGeoResolver, OfflineCityRecord } from '../engine/offlineGeoData';
 import { LocationCoordinates } from '../engine/zeroCostAstroEngine';
+import { resolveIanaTimezone } from '../engine/timezoneResolver';
 
 export type ProfileModalTab = 'WIZARD' | 'EXACT' | 'UNIVERSAL';
 
@@ -181,19 +182,29 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
     };
   }, [isOpen, isCitySearching, onClose]);
 
-  // Automatically update historical / DST birth timezone offset when birthDate changes (unless user typed a manual override)
+  // Automatically update historical / DST birth timezone offset when birthDate or birthTime changes (unless user typed a manual override)
   useEffect(() => {
     if (!isOpen || hasCustomOffset) return;
     if (selectedBirthCity.timezone && /^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
-      const resolved = OfflineGeoResolver.resolveTimezoneOffsetForDate(
+      let hour24 = birthHour12 % 12;
+      if (birthAmPm === 'PM') hour24 += 12;
+      const wallTime = `${hour24.toString().padStart(2, '0')}:${birthMinute.toString().padStart(2, '0')}:00`;
+      let resolved = OfflineGeoResolver.resolveTimezoneOffsetForDate(
         selectedBirthCity.timezone,
         birthDate,
         selectedBirthCity.defaultOffset
       );
+      if (selectedBirthCity.timezone !== 'UTC_OFFSET' && selectedBirthCity.timezone !== 'Local') {
+        try {
+          resolved = resolveIanaTimezone(birthDate, wallTime, selectedBirthCity.timezone).offsetHours;
+        } catch {
+          // Spring-forward gap or fall-back fold will be caught explicitly on form submit
+        }
+      }
       setSelectedBirthCity(prev => ({ ...prev, timezoneOffset: resolved }));
       setManualOffset(resolved.toString());
     }
-  }, [isOpen, birthDate, selectedBirthCity.timezone, selectedBirthCity.defaultOffset, hasCustomOffset]);
+  }, [isOpen, birthDate, birthHour12, birthMinute, birthAmPm, selectedBirthCity.timezone, selectedBirthCity.defaultOffset, hasCustomOffset]);
 
   // Google Maps-style 3+ character Place of Birth autocomplete (0ms local + CSP-safe /api/geo/search)
   useEffect(() => {
@@ -313,12 +324,16 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
         latitude: parsedLat,
         longitude: parsedLon,
         timezoneOffset: parsedOffset,
-        timezone: selectedBirthCity.timezone
+        timezone: selectedBirthCity.timezone,
+        explicitOffsetOverride: hasCustomOffset
       });
       onSaveProfile(finalProfile);
       onClose();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unable to compute birth Kundali. Please verify birth date, time, and coordinates.';
+      if (/occurred twice|UTC offset/i.test(msg)) {
+        setIsManualCoordsOpen(true);
+      }
       setExactValidationError(msg);
     }
   };

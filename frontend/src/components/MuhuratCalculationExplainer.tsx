@@ -139,6 +139,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
         </p>
       </div>
 
+      {/* Step Pill Selectors */}
       <div className="flex gap-2 overflow-x-auto pb-2 border-b border-rose-950">
         {steps.map((s) => (
           <button
@@ -157,6 +158,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
         ))}
       </div>
 
+      {/* Active Step Deep-Dive Card */}
       <div className="rounded-xl border border-rose-900 bg-[#1a050d] p-5 space-y-4 animate-fade-in">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-950 pb-3">
           <h3 className="font-serif text-lg font-bold text-amber-200 flex items-center gap-2">
@@ -192,6 +194,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
         </div>
       </div>
 
+      {/* Why Coordinates Matter Callout */}
       <div className="rounded-xl border border-amber-700/50 bg-gradient-to-r from-amber-950/40 via-[#260810] to-amber-950/30 p-4 text-xs space-y-2">
         <strong className="text-amber-300 font-serif text-sm flex items-center gap-2">
           <span>💡</span> Why Exact Latitude, Longitude &amp; DST Offset Matter:

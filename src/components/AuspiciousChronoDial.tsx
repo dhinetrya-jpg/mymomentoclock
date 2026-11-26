@@ -29,7 +29,9 @@ interface AuspiciousChronoDialProps {
   location?: LocationCoordinates;
   natal?: NatalProfile;
   currentMinutesOfDay?: number;
+  activeEpochMs?: number;
   onMinutesChange?: (mins: number) => void;
+  onSelectEpochMs?: (epochMs: number, wallMinutes: number) => void;
   onSelectWindow?: (windowName: string, timeSpan?: string) => void;
 }
 
@@ -38,7 +40,9 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
   location: propLocation,
   natal: propNatal,
   currentMinutesOfDay: propMinutes,
+  activeEpochMs,
   onMinutesChange,
+  onSelectEpochMs,
   onSelectWindow
 }) => {
   const [selectedCityKey, setSelectedCityKey] = useState<string>('New Delhi');
@@ -86,6 +90,8 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     epochMs: Date.now(),
     localTimeStr: '12:00',
     localTime12Hr: '12:00 PM',
+    utcOffsetHours: 5.5,
+    utcOffsetLabel: 'GMT+5:30',
     auspiciousnessScore: 75,
     tier: 'SHUBHA',
     colorHex: '#3B82F6',
@@ -95,24 +101,34 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     activeHoraPlanet: 'Jupiter',
     isRahuKaalActive: false,
     isYamaghantaActive: false,
+    isVarjyamActive: false,
+    isVishtiActive: false,
+    isPanchakActive: false,
     isAbhijitActive: true,
     taraBalaCategory: 'Universal Mode',
     chandraBalaHouse: 1,
+    chandraBalaConvention: 'CLASSICAL_STRICT',
+    lunarPakshaAtInstant: 'Shukla',
     isAshtamaChandra: false,
     executiveAdvice: 'Constructive planetary alignment. Favorable for daily initiatives.'
   };
 
-  // Exact evaluation at activeMinutes (supports minute-level resolution when slider/clock changes)
+  // Exact evaluation at activeEpochMs (for DST fold disambiguation) or IANA-resolved activeMinutes
   const activeSample: IntradayScoringSample = useMemo(() => {
     try {
-      const [y, m, d] = dayData.date.split('-').map(Number);
-      const tz = city.timezoneOffset ?? 5.5;
-      const evalInstant = new Date(Date.UTC(y, m - 1, d, 0, activeMinutes - Math.round(tz * 60)));
-      return PersonalAuspiciousnessScoringEngine.evaluateInstant(evalInstant, dayData, activeNatal);
+      const targetMs = activeEpochMs !== undefined && Number.isFinite(activeEpochMs)
+        ? activeEpochMs
+        : HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+            dayData.date,
+            activeMinutes,
+            city.timezone,
+            city.timezoneOffset ?? 5.5
+          );
+      return PersonalAuspiciousnessScoringEngine.evaluateInstant(new Date(targetMs), dayData, activeNatal);
     } catch {
       return timeline[Math.min(timeline.length - 1, Math.max(0, Math.floor(activeMinutes / 15)))] || fallbackSample;
     }
-  }, [dayData, city.timezoneOffset, activeMinutes, activeNatal, timeline]);
+  }, [dayData, city.timezone, city.timezoneOffset, activeEpochMs, activeMinutes, activeNatal, timeline]);
 
   // Live Topocentric Sidereal Ascendant & Midheaven -> 12 Sripati Bhava Chalit Cusps
   const liveAngles = useMemo(() => {
@@ -142,7 +158,8 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
     return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y}`;
   };
 
-  const needleAngle = (activeMinutes / 1440.0) * 360.0;
+  const daySpanMs = Math.max(3600000, dayData.localDayBounds.endUtcMs - dayData.localDayBounds.startUtcMs);
+  const needleAngle = Math.max(0, Math.min(360, ((activeSample.epochMs - dayData.localDayBounds.startUtcMs) / daySpanMs) * 360.0));
   const needleCoords = polarToCartesian(center, center, radius - 15, needleAngle);
   const isAbhijitValid = dayData.fixedKaalas.abhijitMuhurta.isValidOnThisDay;
 
@@ -152,13 +169,13 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-rose-950 pb-4">
         <div>
           <h2 className="font-serif text-2xl text-amber-300 flex flex-wrap items-center gap-2">
-            <span>⏱️</span> Auspicious 24-Hour Chrono-Dial
+            <span>⏱️</span> Auspicious Local-Day Chrono-Dial
             <span className="text-xs px-2.5 py-0.5 rounded-full border border-emerald-500/50 bg-emerald-950/60 text-emerald-300 font-sans">
-              Click Any Ring Segment to Jump Time
+              {timeline.length} × 15m Samples ({dayData.localDayBounds.elapsedHours}h{dayData.localDayBounds.isDstTransition ? ` · DST ${dayData.localDayBounds.startOffsetLabel} → ${dayData.localDayBounds.endOffsetLabel}` : ` · ${dayData.localDayBounds.startOffsetLabel}`})
             </span>
           </h2>
           <p className="text-xs text-rose-300/80 mt-1">
-            Meeus VSOP87 + ELP2000 Engine · Topocentric Refraction Corrected · Live {bhavaCusps[0]?.rashiName || 'Aries'} Lagna ({liveAngles.siderealAscendant.toFixed(1)}°)
+            Analytical Meeus VSOP87 + ELP2000 Preview · Consecutive IANA Midnights · Live {bhavaCusps[0]?.rashiName || 'Aries'} Lagna ({liveAngles.siderealAscendant.toFixed(1)}°)
           </p>
         </div>
 
@@ -214,7 +231,7 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
         {/* Left: SVG 24-Hour Circular Chrono-Dial */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center p-2">
           <div className="relative w-72 h-72 sm:w-80 sm:h-80">
-            <svg viewBox="0 0 320 320" className="w-full h-full transform -rotate-90" role="img" aria-label="24-hour auspicious timing dial">
+            <svg viewBox="0 0 320 320" className="w-full h-full transform -rotate-90" role="img" aria-label={`Local-day auspicious timing dial, ${dayData.localDayBounds.elapsedHours} elapsed hours, ${timeline.length} 15-minute windows`}>
               <circle
                 cx={center}
                 cy={center}
@@ -224,10 +241,12 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                 strokeWidth={strokeWidth}
               />
 
-              {/* 96 Clickable Timeline Arcs (15-min segments) */}
+              {/* Clickable Local-Day Timeline Arcs (92 / 96 / 100 15-min segments) */}
               {timeline.map((sample, idx) => {
                 const startAngle = (idx / timeline.length) * 360.0;
                 const endAngle = ((idx + 1) / timeline.length) * 360.0;
+                const [sh, sm] = sample.localTimeStr.split(':').map(Number);
+                const wallMins = (Number.isFinite(sh) ? sh : 0) * 60 + (Number.isFinite(sm) ? sm : 0);
                 return (
                   <path
                     key={idx}
@@ -237,8 +256,9 @@ export const AuspiciousChronoDial: React.FC<AuspiciousChronoDialProps> = ({
                     strokeWidth={strokeWidth}
                     opacity={0.88}
                     onClick={() => {
-                      if (onMinutesChange) onMinutesChange(idx * 15);
-                      else setInternalMinutesOfDay(idx * 15);
+                      if (onSelectEpochMs) onSelectEpochMs(sample.epochMs, wallMins);
+                      else if (onMinutesChange) onMinutesChange(wallMins);
+                      else setInternalMinutesOfDay(wallMins);
                     }}
                     className="cursor-pointer hover:opacity-100 transition-opacity"
                   >

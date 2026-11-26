@@ -237,7 +237,8 @@ export class OfflineGeoResolver {
     dateStr: string | undefined,
     fallbackOffset: number = 5.5
   ): number {
-    if (!timezone || timezone === 'UTC') return fallbackOffset;
+    if (!timezone || timezone === 'UTC_OFFSET' || timezone === 'Local') return fallbackOffset;
+    if (timezone === 'UTC' || timezone === 'Etc/UTC') return 0;
     try {
       const target = dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
         ? new Date(`${dateStr}T12:00:00Z`)
@@ -293,7 +294,7 @@ export class OfflineGeoResolver {
 
     // Integer hour zone fallback (never inventing fake half-hour solar zones)
     const wholeHourOffset = Math.max(-12, Math.min(14, Math.round(lon / 15.0)));
-    return { timezone: 'UTC', utcOffset: wholeHourOffset };
+    return { timezone: 'UTC_OFFSET', utcOffset: wholeHourOffset };
   }
 
   /**

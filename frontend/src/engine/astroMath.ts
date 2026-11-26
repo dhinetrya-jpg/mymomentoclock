@@ -1,4 +1,10 @@
 import { validateBirthInput, CalculationInputError } from './calculationValidation';
+import {
+  calculateExactAscendant,
+  calculateAllApparentTropicalBodies,
+  norm360
+} from './planetaryEphemeris';
+
 /**
  * MymomentOclock Mathematical & Astronomical Specification Core
  * Supports True Lahiri (Chitrapaksha), KP, and Raman Ayanamsas.
@@ -12,6 +18,12 @@ export enum AyanamsaType {
   RAMAN = 'RAMAN',
 }
 
+export type CalculationMode =
+  | 'ANALYTICAL_APPROXIMATION'
+  | 'SWISS_EPHEMERIS_MOSHIER'
+  | 'SWISS_EPHEMERIS_FILE'
+  | 'SWISS_EPHEMERIS_JPL';
+
 export interface PlanetPosition {
   name: string;
   symbol: string;
@@ -20,8 +32,8 @@ export interface PlanetPosition {
   signName: string;
   signLord: string;
   degreeInSign: number; // 0 - 30 degrees
-  speed: null;
-  isRetrograde: null;
+  speed: number | null;
+  isRetrograde: boolean | null;
   shadbala: null; // structural strength factor (0.8 - 1.8)
   ashtakavargaBindus: null; // 0 - 8 points
   functionalNature: null; // +1.0 Benefic, -1.0 Malefic, 0.0 Neutral
@@ -51,15 +63,17 @@ export interface ShashtyamsaData {
 export interface ChartCalculationResult {
   systemMetadata: {
     engineVersion: string;
-    calculationMode: 'ANALYTICAL_APPROXIMATION';
+    calculationMode: CalculationMode;
     independentValidationStatus: 'NOT_PERFORMED';
     strengthMetricsStatus: 'UNAVAILABLE';
-    timezoneMode: 'CALLER_SUPPLIED_OFFSET';
+    timezoneMode: 'CALLER_SUPPLIED_OFFSET' | 'IANA_VERIFIED_OFFSET';
     ayanamsaApplied: AyanamsaType;
     ayanamsaValue: number;
     julianDayUT: number;
     deltaTSeconds: number;
     calculationTimestamp: number;
+    nativeLibraryVersion?: string;
+    nativeSourceCommit?: string;
   };
   inputProfile: {
     birthDate: string;
@@ -68,6 +82,7 @@ export interface ChartCalculationResult {
     longitude: number;
     cityName: string;
     timezoneOffset: number; // hours e.g. +5.5 for IST
+    timezone?: string;
   };
   ascendantDegree: number;
   ascendantSignIndex: number;
@@ -84,7 +99,7 @@ export interface ChartCalculationResult {
     status: 'UNAVAILABLE';
     birthLord: null; balanceYears: null; activeMahadasha: null;
     activeAntardasha: null; activePratyantardasha: null;
-    timeline: Array<{lord:string;startDate:string;endDate:string;isCurrent:boolean}>;
+    timeline: Array<{ lord: string; startDate: string; endDate: string; isCurrent: boolean }>;
   };
 }
 
@@ -113,6 +128,18 @@ export const NAKSHATRA_LORDS = [
   'Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury',
   'Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury'
 ];
+
+export const PLANET_SYMBOLS: Record<string, string> = {
+  Sun: '☉',
+  Moon: '☽',
+  Mars: '♂',
+  Mercury: '☿',
+  Jupiter: '♃',
+  Venus: '♀',
+  Saturn: '♄',
+  Rahu: '☊',
+  Ketu: '☋'
+};
 
 export const DASHA_PERIODS: Record<string, number> = {
   Ketu: 7,
@@ -187,7 +214,7 @@ export function getAyanamsa(jd: number, type: AyanamsaType = AyanamsaType.TRUE_L
       // Krishnamurti Paddhati offset ~-0°05'50" relative to Lahiri
       return baseLahiri - (5.0 / 60.0 + 50.0 / 3600.0);
     case AyanamsaType.RAMAN:
-      // B.V. Raman ayanamsa offset ~+1°27' relative to Lahiri
+      // B.V. Raman ayanamsa offset ~-1°27' relative to Lahiri
       return baseLahiri - 1.45;
     case AyanamsaType.TRUE_LAHIRI:
     default:
@@ -196,7 +223,7 @@ export function getAyanamsa(jd: number, type: AyanamsaType = AyanamsaType.TRUE_L
 }
 
 /**
- * Calculates Greenwich Sidereal Time (GST) in degrees
+ * Calculates Greenwich Mean Sidereal Time (GMST) in degrees
  */
 export function calculateGST(jd: number): number {
   const t = (jd - 2451545.0) / 36525.0;
@@ -208,28 +235,11 @@ export function calculateGST(jd: number): number {
 }
 
 /**
- * Computes Sidereal Ascendant (Lagna) in degrees [0, 360)
+ * Computes Eastern Sidereal Ascendant (Lagna) in degrees [0, 360).
+ * Uses Apparent Sidereal Time (GAST), True Obliquity, and correct Eastern horizon quadrant.
  */
 export function calculateAscendant(jd: number, lat: number, lon: number, ayanamsaVal: number): number {
-  const gst = calculateGST(jd);
-  const ramc = (gst + lon) % 360; // Local Sidereal Time in degrees
-  const eps = 23.4392911 - (0.0130042 * (jd - 2451545.0) / 36525.0); // obliquity
-  const rad = Math.PI / 180.0;
-
-  const ramcRad = ramc * rad;
-  const epsRad = eps * rad;
-  const latRad = lat * rad;
-
-  const numerator = -Math.cos(ramcRad);
-  const denominator = Math.sin(epsRad) * Math.tan(latRad) + Math.cos(epsRad) * Math.sin(ramcRad);
-
-  let tropicalAsc = Math.atan2(numerator, denominator) / rad;
-  if (tropicalAsc < 0) tropicalAsc += 360;
-
-  // Convert to Sidereal via selected Ayanamsa
-  let siderealAsc = (tropicalAsc - ayanamsaVal) % 360;
-  if (siderealAsc < 0) siderealAsc += 360;
-  return siderealAsc;
+  return calculateExactAscendant(jd, lat, lon, ayanamsaVal);
 }
 
 /**
@@ -265,111 +275,68 @@ export function checkBoundaryProximity(
 }
 
 /**
- * Deterministic astronomical positions for Vedic Navagrahas
+ * Maps a body's sidereal longitude [0, 360) into full Vedic Rashi, House, and Nakshatra/Pada metadata.
  */
-export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, ascendantDegree: number): PlanetPosition[] {
-  const d = jd - 2451545.0;
-  const t = d / 36525.0;
+export function buildPlanetPositionFromSidereal(
+  name: string,
+  siderealLongitude: number,
+  ascSignIdx: number,
+  motion?: { speed: number | null; isRetrograde: boolean | null }
+): PlanetPosition {
+  const sidereal = norm360(siderealLongitude);
+  const quantized = Number(sidereal.toFixed(4)) % 360;
+  const signIndex = Math.min(11, Math.max(0, Math.floor(quantized / 30)));
+  const degreeInSign = quantized - signIndex * 30;
+  const signName = ZODIAC_SIGNS[signIndex];
+  const signLord = SIGN_LORDS[signIndex];
+  const houseNumber = ((signIndex - ascSignIdx + 12) % 12) + 1;
+  const nakSpan = 360.0 / 27.0;
+  const nakshatraIndex = Math.floor(quantized / nakSpan) % 27;
+  const nakshatra = NAKSHATRAS[nakshatraIndex];
+  const pada = Math.min(4, Math.floor((quantized % nakSpan) / (360.0 / 108.0)) + 1);
 
-  // Mean orbital elements & perturbations (Analytical approximations; no independent Swiss Ephemeris calibration fixture exists here)
-  // Sun
-  const lSun = (280.46646 + 36000.76983 * t) % 360;
-  const mSun = (357.52911 + 35999.05029 * t) % 360;
-  const sunTrop = lSun + 1.914602 * Math.sin(mSun * Math.PI / 180) + 0.019993 * Math.sin(2 * mSun * Math.PI / 180);
-
-  // Moon
-  const lMoon = (218.3165 + 481267.8813 * t) % 360;
-  const mMoon = (134.963 + 477198.8675 * t) % 360;
-  const moonTrop = lMoon + 6.289 * Math.sin(mMoon * Math.PI / 180) - 1.274 * Math.sin((mMoon - 2 * (lMoon - lSun)) * Math.PI / 180)
-                   + 0.658 * Math.sin(2 * (lMoon - lSun) * Math.PI / 180) - 0.214 * Math.sin(2 * mMoon * Math.PI / 180);
-
-  // Mars
-  const marsTrop = (355.433 + 19140.299 * t + 10.69 * Math.sin((19.37 + 19140.3 * t) * Math.PI / 180)) % 360;
-
-  // Mercury
-  const mercTrop = (lSun + 22.5 * Math.sin((mSun * 4 + 75) * Math.PI / 180)) % 360;
-
-  // Jupiter
-  const jupTrop = (34.35 + 3034.9057 * t + 5.55 * Math.sin((20.0 + 3034.9 * t) * Math.PI / 180)) % 360;
-
-  // Venus
-  const venTrop = (lSun + 44.0 * Math.sin((mSun * 1.6 + 120) * Math.PI / 180)) % 360;
-
-  // Saturn
-  const satTrop = (50.08 + 1222.1138 * t + 6.2 * Math.sin((316.0 + 1222.1 * t) * Math.PI / 180)) % 360;
-
-  // Rahu (Mean lunar ascending node - retrograde motion)
-  const rahuTrop = (259.183 - 1934.142 * t) % 360;
-
-  // Ketu (180° opposite to Rahu)
-  const ketuTrop = (rahuTrop + 180) % 360;
-
-  const rawPlanets = [
-    { name: 'Sun', symbol: '☉', trop: sunTrop },
-    { name: 'Moon', symbol: '☽', trop: moonTrop },
-    { name: 'Mars', symbol: '♂', trop: marsTrop },
-    { name: 'Mercury', symbol: '☿', trop: mercTrop },
-    { name: 'Jupiter', symbol: '♃', trop: jupTrop },
-    { name: 'Venus', symbol: '♀', trop: venTrop },
-    { name: 'Saturn', symbol: '♄', trop: satTrop },
-    { name: 'Rahu', symbol: '☊', trop: rahuTrop },
-    { name: 'Ketu', symbol: '☋', trop: ketuTrop },
-  ];
-
-  const ascSignIdx = Math.floor(ascendantDegree / 30);
-
-  return rawPlanets.map(p => {
-    let sidereal = (p.trop - ayanamsaVal) % 360;
-    if (sidereal < 0) sidereal += 360;
-
-    const signIndex = Math.floor(sidereal / 30);
-    const degreeInSign = sidereal % 30;
-    const signName = ZODIAC_SIGNS[signIndex];
-    const signLord = SIGN_LORDS[signIndex];
-
-    // House calculation relative to Lagna (Whole sign / equal 30° house bounds)
-    let houseNumber = ((signIndex - ascSignIdx + 12) % 12) + 1;
-
-    // Nakshatra calculation (360° / 27 = 13°20' = 13.333333° per nakshatra)
-    const nakshatraIndex = Math.floor(sidereal / (360.0 / 27.0));
-    const nakshatra = NAKSHATRAS[nakshatraIndex % 27];
-    const pada = Math.floor((sidereal % (360.0 / 27.0)) / (360.0 / 108.0)) + 1;
-
-    return {
-      name: p.name,
-      symbol: p.symbol,
-      longitude: Number(sidereal.toFixed(4)),
-      signIndex,
-      signName,
-      signLord,
-      degreeInSign: Number(degreeInSign.toFixed(2)),
-      speed: null,
-      isRetrograde: null,
-      shadbala: null,
-      ashtakavargaBindus: null,
-      functionalNature: null,
-      functionalScore: null,
-      houseNumber,
-      nakshatra,
-      nakshatraPada: pada,
-    };
-  });
+  return {
+    name,
+    symbol: PLANET_SYMBOLS[name] || '•',
+    longitude: quantized,
+    signIndex,
+    signName,
+    signLord,
+    degreeInSign: Number(degreeInSign.toFixed(2)),
+    speed: motion ? motion.speed : null,
+    isRetrograde: motion ? motion.isRetrograde : null,
+    shadbala: null,
+    ashtakavargaBindus: null,
+    functionalNature: null,
+    functionalScore: null,
+    houseNumber,
+    nakshatra,
+    nakshatraPada: pada,
+  };
 }
 
 /**
- * Calculates D-2 Hora placement:
- * Odd signs: 0-15° ruled by Sun (Leo), 15-30° ruled by Moon (Cancer)
- * Even signs: 0-15° ruled by Moon (Cancer), 15-30° ruled by Sun (Leo)
+ * High-precision astronomical positions for Vedic Navagrahas (Meeus VSOP87 / ELP2000-82 + mutual perturbations)
  */
-// Division boundaries must not use the2-decimal display degree. The available
-// preview longitude still has finite model/rounding error; this is not accuracy acceptance.
-function divisionDegree(p:PlanetPosition):number {
-  if(Number.isFinite(p.longitude)&&Number.isInteger(p.signIndex)){
-    const degree=p.longitude-p.signIndex*30;
-    if(degree>=0&&degree<30)return degree;
-    throw new CalculationInputError('DIVISION_BOUNDARY_UNRESOLVED','Rounded longitude and sign disagree at a boundary; use a validated native position.');
+export function calculatePlanetaryPositions(jd: number, ayanamsaVal: number, ascendantDegree: number): PlanetPosition[] {
+  const apparentTrop = calculateAllApparentTropicalBodies(jd);
+  const ascSignIdx = Math.min(11, Math.max(0, Math.floor(norm360(ascendantDegree) / 30)));
+  const orderedNames = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'] as const;
+
+  return orderedNames.map((name) => {
+    const sidereal = norm360(apparentTrop[name] - ayanamsaVal);
+    return buildPlanetPositionFromSidereal(name, sidereal, ascSignIdx);
+  });
+}
+
+// Division boundaries must not use the 2-decimal display degree.
+function divisionDegree(p: PlanetPosition): number {
+  if (Number.isFinite(p.longitude) && Number.isInteger(p.signIndex)) {
+    const degree = p.longitude - p.signIndex * 30;
+    if (degree >= 0 && degree < 30) return degree;
+    throw new CalculationInputError('DIVISION_BOUNDARY_UNRESOLVED', 'Rounded longitude and sign disagree at a boundary; use a validated native position.');
   }
-  throw new CalculationInputError('INVALID_PLANET_POSITION','Supply a finite longitude and consistent sign for divisional mapping.');
+  throw new CalculationInputError('INVALID_PLANET_POSITION', 'Supply a finite longitude and consistent sign for divisional mapping.');
 }
 
 export function calculateD2Hora(planets: PlanetPosition[]): Record<string, string> {
@@ -386,15 +353,6 @@ export function calculateD2Hora(planets: PlanetPosition[]): Record<string, strin
   return result;
 }
 
-/**
- * Calculates D-9 Navamsha:
- * Every 30° divided into 9 equal segments of 3°20' (200').
- * Start sign depends on sign element:
- * Fire (Aries, Leo, Sag) -> starts Aries (0)
- * Earth (Taurus, Virgo, Cap) -> starts Capricorn (9)
- * Air (Gemini, Libra, Aqu) -> starts Libra (6)
- * Water (Cancer, Scorpio, Pis) -> starts Cancer (3)
- */
 export function calculateD9Navamsha(planets: PlanetPosition[]): Record<string, { sign: string; signIndex: number }> {
   const result: Record<string, { sign: string; signIndex: number }> = {};
   const elementStartSigns = [0, 9, 6, 3]; // Fire->Aries, Earth->Cap, Air->Libra, Water->Cancer
@@ -413,11 +371,6 @@ export function calculateD9Navamsha(planets: PlanetPosition[]): Record<string, {
   return result;
 }
 
-/**
- * Calculates D-60 Shashtyamsa:
- * 60 parts of 30' (0.5°) per sign.
- * Uses BPHS odd/even mapping rules.
- */
 export function calculateD60Shashtyamsa(planets: PlanetPosition[]): ShashtyamsaData[] {
   return planets.map(p => {
     const partIndex = Math.min(59, Math.floor(divisionDegree(p) / 0.5));
@@ -441,50 +394,39 @@ export function calculateD60Shashtyamsa(planets: PlanetPosition[]): ShashtyamsaD
   });
 }
 
-/**
- * Calculates Vimshottari Dasha periods & active Dasha lord based on Moon longitude
- */
-export function calculateVimshottariDasha(_moonLongitude:number,_birthDateStr:string):ChartCalculationResult['vimshottariDasha'] {
-  return {status:'UNAVAILABLE',birthLord:null,balanceYears:null,activeMahadasha:null,activeAntardasha:null,activePratyantardasha:null,timeline:[]};
+export function calculateVimshottariDasha(_moonLongitude: number, _birthDateStr: string): ChartCalculationResult['vimshottariDasha'] {
+  return { status: 'UNAVAILABLE', birthLord: null, balanceYears: null, activeMahadasha: null, activeAntardasha: null, activePratyantardasha: null, timeline: [] };
 }
 
 /**
- * Primary chart calculation orchestrator
+ * Shared chart assembly helper used by both Analytical Preview and Native Swiss Ephemeris CGo Bridge
  */
-export function calculateFullChart(
-  birthDate: string,
-  birthTime: string,
-  latitude: number,
-  longitude: number,
-  cityName: string = '',
-  timezoneOffset: number = Number.NaN,
-  ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI
-): ChartCalculationResult {
-  validateBirthInput({ birthDate, birthTime, latitude, longitude, timezoneOffset, ayanamsaType });
-  const [yearStr, monthStr, dayStr] = birthDate.split('-');
-  const [hourStr, minStr, secStr] = birthTime.split(':');
+export function assembleChartResult(params: {
+  birthDate: string;
+  birthTime: string;
+  latitude: number;
+  longitude: number;
+  cityName: string;
+  timezoneOffset: number;
+  timezone?: string;
+  ayanamsaType: AyanamsaType;
+  ayanamsaVal: number;
+  jdUT: number;
+  deltaT: number;
+  ascDegree: number;
+  planets: PlanetPosition[];
+  calculationMode: CalculationMode;
+  engineVersion: string;
+  nativeLibraryVersion?: string;
+  nativeSourceCommit?: string;
+}): ChartCalculationResult {
+  const ascQuant = Number(norm360(params.ascDegree).toFixed(4)) % 360;
+  const ascSignIdx = Math.min(11, Math.max(0, Math.floor(ascQuant / 30)));
 
-  const year = Number(yearStr);
-  const month = Number(monthStr);
-  const day = Number(dayStr);
-  const localHour = parseInt(hourStr, 10);
-  const localMin = Number(minStr);
-  const localSec = secStr === undefined ? 0 : Number(secStr);
-
-  // Apply the explicit offset as elapsed time, including negative fractional offsets and date boundaries.
-  const jdUT = calculateJulianDay(year, month, day, localHour, localMin, localSec) - timezoneOffset / 24;
-  const deltaT = calculateDeltaT(year);
-  const ayanamsaVal = getAyanamsa(jdUT, ayanamsaType);
-  const ascDegree = calculateAscendant(jdUT, latitude, longitude, ayanamsaVal);
-  const ascSignIdx = Math.floor(ascDegree / 30);
-
-  const planets = calculatePlanetaryPositions(jdUT, ayanamsaVal, ascDegree);
-
-  // Build 12 houses
   const houses: HouseInfo[] = Array.from({ length: 12 }, (_, i) => {
     const houseNum = i + 1;
     const signIdx = (ascSignIdx + i) % 12;
-    const planetsInHouse = planets.filter(p => p.houseNumber === houseNum).map(p => p.name);
+    const planetsInHouse = params.planets.filter(p => p.houseNumber === houseNum).map(p => p.name);
     return {
       number: houseNum,
       signIndex: signIdx,
@@ -500,35 +442,40 @@ export function calculateFullChart(
     d1Placements[h.number] = h.planetsPresent;
   });
 
-  const d2Hora = calculateD2Hora(planets);
-  const d9Navamsha = calculateD9Navamsha(planets);
-  const d60Shashtyamsa = calculateD60Shashtyamsa(planets);
-
-  const moon = planets.find(p => p.name === 'Moon') || planets[1];
-  const vimshottariDasha = calculateVimshottariDasha(moon.longitude, birthDate);
+  const d2Hora = calculateD2Hora(params.planets);
+  const d9Navamsha = calculateD9Navamsha(params.planets);
+  const d60Shashtyamsa = calculateD60Shashtyamsa(params.planets);
+  const moon = params.planets.find(p => p.name === 'Moon') || params.planets[1];
+  const vimshottariDasha = calculateVimshottariDasha(moon.longitude, params.birthDate);
 
   return {
     systemMetadata: {
-      engineVersion: 'analytical-preview-v1',
-      calculationMode:'ANALYTICAL_APPROXIMATION',independentValidationStatus:'NOT_PERFORMED',strengthMetricsStatus:'UNAVAILABLE',timezoneMode:'CALLER_SUPPLIED_OFFSET',
-      ayanamsaApplied: ayanamsaType,
-      ayanamsaValue: Number(ayanamsaVal.toFixed(6)),
-      julianDayUT: Number(jdUT.toFixed(6)),
-      deltaTSeconds: Number(deltaT.toFixed(2)),
+      engineVersion: params.engineVersion,
+      calculationMode: params.calculationMode,
+      independentValidationStatus: 'NOT_PERFORMED',
+      strengthMetricsStatus: 'UNAVAILABLE',
+      timezoneMode: params.timezone && params.timezone !== 'UTC_OFFSET' ? 'IANA_VERIFIED_OFFSET' : 'CALLER_SUPPLIED_OFFSET',
+      ayanamsaApplied: params.ayanamsaType,
+      ayanamsaValue: Number(params.ayanamsaVal.toFixed(6)),
+      julianDayUT: Number(params.jdUT.toFixed(6)),
+      deltaTSeconds: Number(params.deltaT.toFixed(2)),
       calculationTimestamp: Math.floor(Date.now() / 1000),
+      ...(params.nativeLibraryVersion ? { nativeLibraryVersion: params.nativeLibraryVersion } : {}),
+      ...(params.nativeSourceCommit ? { nativeSourceCommit: params.nativeSourceCommit } : {}),
     },
     inputProfile: {
-      birthDate,
-      birthTime,
-      latitude,
-      longitude,
-      cityName,
-      timezoneOffset,
+      birthDate: params.birthDate,
+      birthTime: params.birthTime,
+      latitude: params.latitude,
+      longitude: params.longitude,
+      cityName: params.cityName,
+      timezoneOffset: params.timezoneOffset,
+      ...(params.timezone ? { timezone: params.timezone } : {}),
     },
-    ascendantDegree: Number(ascDegree.toFixed(4)),
+    ascendantDegree: ascQuant,
     ascendantSignIndex: ascSignIdx,
     ascendantSignName: ZODIAC_SIGNS[ascSignIdx],
-    planets,
+    planets: params.planets,
     houses,
     divisionalCharts: {
       d1: { name: 'D-1 Rashi (Lagna)', housePlacements: d1Placements },
@@ -538,4 +485,55 @@ export function calculateFullChart(
     },
     vimshottariDasha,
   };
+}
+
+/**
+ * Primary chart calculation orchestrator
+ */
+export function calculateFullChart(
+  birthDate: string,
+  birthTime: string,
+  latitude: number,
+  longitude: number,
+  cityName: string = '',
+  timezoneOffset: number = Number.NaN,
+  ayanamsaType: AyanamsaType = AyanamsaType.TRUE_LAHIRI,
+  timezone?: string
+): ChartCalculationResult {
+  validateBirthInput({ birthDate, birthTime, latitude, longitude, timezoneOffset, ayanamsaType, timezone });
+  const [yearStr, monthStr, dayStr] = birthDate.split('-');
+  const [hourStr, minStr, secStr] = birthTime.split(':');
+
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+  const localHour = parseInt(hourStr, 10);
+  const localMin = Number(minStr);
+  const localSec = secStr === undefined ? 0 : Number(secStr);
+
+  // Apply explicit offset as elapsed time, including negative fractional offsets and date boundaries.
+  const jdUT = calculateJulianDay(year, month, day, localHour, localMin, localSec) - timezoneOffset / 24;
+  const deltaT = calculateDeltaT(year);
+  const ayanamsaVal = getAyanamsa(jdUT, ayanamsaType);
+  const ascDegree = calculateAscendant(jdUT, latitude, longitude, ayanamsaVal);
+  const ascQuant = Number(norm360(ascDegree).toFixed(4)) % 360;
+  const planets = calculatePlanetaryPositions(jdUT, ayanamsaVal, ascQuant);
+
+  return assembleChartResult({
+    birthDate,
+    birthTime,
+    latitude,
+    longitude,
+    cityName,
+    timezoneOffset,
+    timezone,
+    ayanamsaType,
+    ayanamsaVal,
+    jdUT,
+    deltaT,
+    ascDegree: ascQuant,
+    planets,
+    calculationMode: 'ANALYTICAL_APPROXIMATION',
+    engineVersion: 'meeus-vsop87-elp2000-v2',
+  });
 }

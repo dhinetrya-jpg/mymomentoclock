@@ -1,16 +1,18 @@
 /**
  * Onboarding Wizard Component (View 1 from UX Wireframes)
  * Supports:
- * - Geolocated city search with auto-coordinate filling
- * - Birth date and birth time entry
+ * - Global place search (120+ offline cities + `/api/geo/search` autocomplete + custom Lat/Lon)
+ * - Automatic historical & DST IANA timezone resolution (`resolveIanaTimezone`) with spring-gap rejection & fall-fold disambiguation
+ * - Birth date (1900..present) and birth time entry
  * - Ayanamsa selection (True Lahiri, KP, Raman)
- * - Quick switch between Full Astrology Edition and Festival & Reflection Edition
  */
 
-import React, { useId, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import { AyanamsaType } from '../engine/astroMath';
-import { validateBirthInput } from '../engine/calculationValidation';
+import { CalculationInputError, validateBirthInput } from '../engine/calculationValidation';
 import { MAJOR_CITIES_MUHURAT } from '../engine/diwaliData';
+import { OfflineCityRecord, OfflineGeoResolver } from '../engine/offlineGeoData';
+import { resolveIanaTimezone } from '../engine/timezoneResolver';
 
 interface OnboardingWizardProps {
   onCalculate: (params: {
@@ -21,8 +23,19 @@ interface OnboardingWizardProps {
     cityName: string;
     ayanamsaType: AyanamsaType;
     timezoneOffset: number;
+    timezone?: string;
   }) => void;
   onOpenQuickFestival: () => void;
+}
+
+interface PlaceOption {
+  key: string;
+  label: string;
+  cityName: string;
+  latitude: number;
+  longitude: number;
+  timezone: string;
+  defaultOffset: number;
 }
 
 export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
@@ -31,32 +44,197 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 }) => {
   const formId = useId();
   const [cityName, setCityName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [geoSuggestions, setGeoSuggestions] = useState<OfflineCityRecord[]>([]);
+  const [customPlace, setCustomPlace] = useState<PlaceOption | null>(null);
+  const [isManualCoords, setIsManualCoords] = useState(false);
+  const [manualLat, setManualLat] = useState('');
+  const [manualLon, setManualLon] = useState('');
+  const [manualZone, setManualZone] = useState('');
+
   const [birthDate, setBirthDate] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [ayanamsa, setAyanamsa] = useState<AyanamsaType>(AyanamsaType.TRUE_LAHIRI);
 
   const [offset, setOffset] = useState('');
-  const [certainty,setCertainty]=useState('');
+  const [offsetAutoResolved, setOffsetAutoResolved] = useState<string>('');
+  const [foldCandidates, setFoldCandidates] = useState<number[]>([]);
+  const [certainty, setCertainty] = useState('');
   const [error, setError] = useState('');
 
-  const handleCityChange = (newCity: string) => {
-    setCityName(newCity);
+  // Merge MAJOR_CITIES_MUHURAT (preserving exact option values like "Kolkata") with global catalog
+  const catalogOptions: PlaceOption[] = useMemo(() => {
+    const seen = new Set<string>();
+    const list: PlaceOption[] = [];
+    for (const [key, meta] of Object.entries(MAJOR_CITIES_MUHURAT)) {
+      seen.add(key.toLowerCase());
+      list.push({
+        key,
+        label: `${key} (${meta.stateCountry})`,
+        cityName: key,
+        latitude: meta.lat,
+        longitude: meta.lon,
+        timezone: meta.timezone,
+        defaultOffset: meta.utcOffset,
+      });
+    }
+    for (const rec of OfflineGeoResolver.searchCities('', 150)) {
+      if (seen.has(rec.name.toLowerCase())) continue;
+      seen.add(rec.name.toLowerCase());
+      list.push({
+        key: rec.name,
+        label: `${rec.name} (${rec.state ? `${rec.state}, ` : ''}${rec.country} · ${rec.timezone})`,
+        cityName: `${rec.name}, ${rec.country}`,
+        latitude: rec.latitude,
+        longitude: rec.longitude,
+        timezone: rec.timezone,
+        defaultOffset: rec.defaultUtcOffset,
+      });
+    }
+    return list;
+  }, []);
+
+  const activePlace: PlaceOption | null = useMemo(() => {
+    if (isManualCoords) {
+      const lat = Number(manualLat);
+      const lon = Number(manualLon);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+      return {
+        key: 'CUSTOM',
+        label: cityName || 'Custom Coordinates',
+        cityName: cityName || 'Custom Coordinates',
+        latitude: lat,
+        longitude: lon,
+        timezone: manualZone.trim(),
+        defaultOffset: Number(offset) || 0,
+      };
+    }
+    if (customPlace && customPlace.key === cityName) return customPlace;
+    return catalogOptions.find((o) => o.key === cityName) || null;
+  }, [isManualCoords, manualLat, manualLon, manualZone, cityName, customPlace, catalogOptions, offset]);
+
+  // Global place autocomplete (`OfflineGeoResolver` + `/api/geo/search` when >= 3 chars)
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setGeoSuggestions([]);
+      return undefined;
+    }
+    let cancelled = false;
+    setGeoSuggestions(OfflineGeoResolver.searchCities(q, 8, birthDate || undefined));
+    if (q.length >= 3) {
+      const timer = setTimeout(async () => {
+        try {
+          const unified = await OfflineGeoResolver.searchUnifiedPlaces(q, 8, birthDate || undefined);
+          if (!cancelled) setGeoSuggestions(unified);
+        } catch {
+          // Offline catalog remains active
+        }
+      }, 180);
+      return () => {
+        cancelled = true;
+        clearTimeout(timer);
+      };
+    }
+    return undefined;
+  }, [searchQuery, birthDate]);
+
+  // Automatic historical & DST IANA timezone resolution whenever place + date + time are known
+  useEffect(() => {
+    setFoldCandidates([]);
+    setOffsetAutoResolved('');
+    if (!activePlace?.timezone || !birthDate || !birthTime || certainty === 'UNKNOWN') return;
+    try {
+      const res = resolveIanaTimezone(birthDate, birthTime, activePlace.timezone);
+      setOffset(String(res.offsetHours));
+      setOffsetAutoResolved(`Auto-resolved from ${activePlace.timezone} (${res.isoUtc})`);
+      setError('');
+    } catch (err) {
+      if (err instanceof CalculationInputError) {
+        if (err.code === 'NONEXISTENT_LOCAL_TIME') {
+          setOffset('');
+          setError(`The local time ${birthTime} did not exist in ${activePlace.timezone} on ${birthDate} due to a Daylight Saving Time spring-forward jump.`);
+        } else if (err.code === 'AMBIGUOUS_LOCAL_TIME') {
+          // Probe standard vs daylight offsets (-1h/+1h around defaultOffset) to present explicit disambiguation buttons
+          const candidates: number[] = [];
+          for (let cand = -12; cand <= 14; cand += 0.25) {
+            try {
+              resolveIanaTimezone(birthDate, birthTime, activePlace.timezone, cand);
+              candidates.push(cand);
+            } catch {
+              // Ignore non-matching offsets
+            }
+          }
+          setFoldCandidates(candidates);
+          setOffset('');
+          setError(`The local time ${birthTime} occurred twice in ${activePlace.timezone} on ${birthDate} (DST fall-back fold). Select the applicable UTC offset below.`);
+        }
+      }
+    }
+  }, [activePlace?.timezone, birthDate, birthTime, certainty]);
+
+  const handleSelectGeoSuggestion = (rec: OfflineCityRecord) => {
+    const picked: PlaceOption = {
+      key: `${rec.name}, ${rec.country}`,
+      label: `${rec.name}, ${rec.country} (${rec.timezone})`,
+      cityName: `${rec.name}, ${rec.country}`,
+      latitude: rec.latitude,
+      longitude: rec.longitude,
+      timezone: rec.timezone,
+      defaultOffset: rec.defaultUtcOffset,
+    };
+    setIsManualCoords(false);
+    setCustomPlace(picked);
+    setCityName(picked.key);
+    setSearchQuery('');
+    setGeoSuggestions([]);
+    if (!birthDate || !birthTime) {
+      setOffset(String(rec.defaultUtcOffset));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (certainty === 'UNKNOWN') { setError('An exact chart is unavailable without a known birth time. Birth-time rectification is unavailable; no time is substituted.'); return; }
-    const cityMeta = MAJOR_CITIES_MUHURAT[cityName];
-    if (!cityMeta) { setError('Select your birth city.'); return; }
-    try { validateBirthInput({birthDate, birthTime, latitude: cityMeta.lat, longitude: cityMeta.lon, birthTimeCertainty:certainty||undefined, timezoneOffset: offset === '' ? undefined : Number(offset), ayanamsaType: ayanamsa}); } catch (e) { setError((e as Error).message); return; }
+    setError('');
+    if (certainty === 'UNKNOWN') {
+      setError('An exact chart is unavailable without a known birth time. Birth-time rectification is unavailable; no time is substituted.');
+      return;
+    }
+    if (!activePlace) {
+      setError('Select your birth city or enter exact birth coordinates.');
+      return;
+    }
+
+    const parsedOffset = offset === '' ? undefined : Number(offset);
+    try {
+      if (activePlace.timezone && parsedOffset === undefined) {
+        // Trigger specific NONEXISTENT_LOCAL_TIME or AMBIGUOUS_LOCAL_TIME message if offset was left blank
+        resolveIanaTimezone(birthDate, birthTime, activePlace.timezone);
+      }
+      validateBirthInput({
+        birthDate,
+        birthTime,
+        latitude: activePlace.latitude,
+        longitude: activePlace.longitude,
+        birthTimeCertainty: certainty || undefined,
+        timezoneOffset: parsedOffset,
+        timezone: activePlace.timezone || undefined,
+        ayanamsaType: ayanamsa,
+      });
+    } catch (err) {
+      setError((err as Error).message);
+      return;
+    }
+
     onCalculate({
       birthDate,
       birthTime,
-      latitude: cityMeta.lat,
-      longitude: cityMeta.lon,
-      cityName,
+      latitude: activePlace.latitude,
+      longitude: activePlace.longitude,
+      cityName: activePlace.cityName,
       ayanamsaType: ayanamsa,
       timezoneOffset: Number(offset),
+      timezone: activePlace.timezone || undefined,
     });
   };
 
@@ -70,7 +248,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           Initialize Your Vedic Natal Profile
         </h2>
         <p className="text-xs text-rose-300/60 max-w-md mx-auto">
-          Calculates Julian Day, Ephemeris Delta-T, Ascendant degree, and sub-divisional charts.
+          Calculates Julian Day, Ephemeris Delta-T, Ascendant degree, and sub-divisional charts (supported birth years: 1900 to present).
         </p>
       </div>
 
@@ -81,6 +259,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             <input
               id={`${formId}-date`}
               type="date"
+              min="1900-01-01"
+              max={new Date().toISOString().slice(0, 10)}
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               required
@@ -107,46 +287,157 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor={`${formId}-city`} className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
-            <select
-              id={`${formId}-city`}
-              value={cityName}
-              onChange={(e) => handleCityChange(e.target.value)}
-              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor={`${formId}-place-search`} className="text-xs font-semibold text-rose-100">
+              Search Worldwide Birth Place (or choose from catalog below)
+            </label>
+            <button
+              type="button"
+              onClick={() => setIsManualCoords(!isManualCoords)}
+              className="text-[11px] text-amber-300 hover:underline"
             >
-              <option value="">Select birth city</option>
-              {Object.keys(MAJOR_CITIES_MUHURAT).map((c) => (
-                <option key={c} value={c}>{c} ({MAJOR_CITIES_MUHURAT[c].stateCountry})</option>
-              ))}
-            </select>
+              {isManualCoords ? 'Use City Selector' : 'Enter Exact Lat/Lon'}
+            </button>
           </div>
-
-          <div>
-            <label htmlFor={`${formId}-ayanamsa`} className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
-            <select
-              id={`${formId}-ayanamsa`}
-              value={ayanamsa}
-              onChange={(e) => setAyanamsa(e.target.value as AyanamsaType)}
-              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
-            >
-              <option value={AyanamsaType.TRUE_LAHIRI}>True Lahiri (Chitrapaksha) - Global Baseline</option>
-              <option value={AyanamsaType.KP}>KP (Krishnamurti Paddhati)</option>
-              <option value={AyanamsaType.RAMAN}>B.V. Raman Ayanamsa</option>
-            </select>
-          </div>
+          {!isManualCoords && (
+            <div className="relative">
+              <input
+                id={`${formId}-place-search`}
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Type any town, city, or postal code worldwide (e.g. Varanasi, Boston, Toronto)..."
+                className="w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2 text-xs text-rose-100 placeholder-rose-300/40 focus:border-amber-400 focus:outline-none"
+              />
+              {geoSuggestions.length > 0 && (
+                <div role="listbox" aria-label="Birthplace search suggestions" className="mt-1 max-h-48 overflow-y-auto rounded-lg border border-amber-600/60 bg-[#140308] p-1 space-y-0.5 shadow-xl">
+                  {geoSuggestions.map((rec) => (
+                    <button
+                      key={rec.id || `${rec.name}-${rec.latitude}-${rec.longitude}`}
+                      type="button"
+                      onClick={() => handleSelectGeoSuggestion(rec)}
+                      className="w-full text-left rounded px-2.5 py-1.5 text-xs text-rose-100 hover:bg-amber-950/60 flex items-center justify-between gap-2"
+                    >
+                      <span>{rec.name}{rec.state ? `, ${rec.state}` : ''}, {rec.country}</span>
+                      <span className="font-mono text-[10px] text-amber-300">{rec.timezone}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
+        {isManualCoords ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-lg border border-rose-900/60 bg-[#22060f] p-3 text-xs">
+            <label className="block">Birth Latitude (-90..90)
+              <input type="number" step="any" min="-89.9999" max="89.9999" required value={manualLat} onChange={(e) => setManualLat(e.target.value)} className="mt-1 block w-full rounded bg-rose-950 p-2 font-mono" />
+            </label>
+            <label className="block">Birth Longitude (-180..180)
+              <input type="number" step="any" min="-180" max="180" required value={manualLon} onChange={(e) => setManualLon(e.target.value)} className="mt-1 block w-full rounded bg-rose-950 p-2 font-mono" />
+            </label>
+            <label className="block">IANA Timezone (optional)
+              <input type="text" placeholder="e.g. Asia/Kolkata" value={manualZone} onChange={(e) => setManualZone(e.target.value)} className="mt-1 block w-full rounded bg-rose-950 p-2 font-mono" />
+            </label>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor={`${formId}-city`} className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
+              <select
+                id={`${formId}-city`}
+                value={cityName}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setCityName(val);
+                  const found = catalogOptions.find((o) => o.key === val);
+                  if (found && (!birthDate || !birthTime)) {
+                    setOffset(String(found.defaultOffset));
+                  }
+                }}
+                className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+              >
+                <option value="">Select birth city</option>
+                {customPlace && !catalogOptions.some((o) => o.key === customPlace.key) && (
+                  <option value={customPlace.key}>{customPlace.label}</option>
+                )}
+                {catalogOptions.map((c) => (
+                  <option key={c.key} value={c.key}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor={`${formId}-ayanamsa`} className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
+              <select
+                id={`${formId}-ayanamsa`}
+                value={ayanamsa}
+                onChange={(e) => setAyanamsa(e.target.value as AyanamsaType)}
+                className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+              >
+                <option value={AyanamsaType.TRUE_LAHIRI}>True Lahiri (Chitrapaksha) - Global Baseline</option>
+                <option value={AyanamsaType.KP}>KP (Krishnamurti Paddhati)</option>
+                <option value={AyanamsaType.RAMAN}>B.V. Raman Ayanamsa</option>
+              </select>
+            </div>
+          </div>
+        )}
+
         <label className="block text-xs">UTC offset at birth (hours)
-          <input aria-label="UTC offset at birth" type="number" min="-12" max="14" step="any" required value={offset} onChange={e => setOffset(e.target.value)} className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2" />
-          Historical timezone/DST conversion is unavailable. Supply the offset applicable at birth.
+          <input
+            aria-label="UTC offset at birth"
+            type="number"
+            min="-12"
+            max="14"
+            step="any"
+            required
+            value={offset}
+            onChange={(e) => setOffset(e.target.value)}
+            className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2 font-mono"
+          />
+          <span className="text-[11px] text-rose-300/80 block">
+            {offsetAutoResolved || 'Automatically populated from the selected city’s historical IANA timezone when date and time are entered; verify or disambiguate if born during a DST transition.'}
+          </span>
         </label>
-        {error && <p role="alert">{error}</p>}
+
+        {foldCandidates.length > 1 && (
+          <div className="rounded-lg border border-amber-500/60 bg-amber-950/30 p-3 text-xs space-y-2">
+            <p className="font-semibold text-amber-200">Disambiguate Repeated Fall-Back Birth Time:</p>
+            <div className="flex flex-wrap gap-2">
+              {foldCandidates.map((cand) => (
+                <button
+                  key={cand}
+                  type="button"
+                  onClick={() => {
+                    setOffset(String(cand));
+                    setError('');
+                  }}
+                  className="rounded bg-amber-500 px-3 py-1 font-mono font-bold text-neutral-950 hover:bg-amber-400"
+                >
+                  Use UTC{cand >= 0 ? `+${cand}` : cand}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {error && <p role="alert" className="rounded-lg border border-rose-500/70 bg-rose-950/60 p-3 text-xs text-rose-100">{error}</p>}
+
         <label className="block text-xs">Birth time certainty
-          <select aria-label="Birth time certainty" required value={certainty} onChange={e=>setCertainty(e.target.value)} className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2"><option value="">Choose certainty</option><option value="EXACT">Recorded time</option><option value="APPROXIMATE">Approximate time</option><option value="UNKNOWN">Unknown time (chart unavailable)</option></select>
+          <select aria-label="Birth time certainty" required value={certainty} onChange={(e) => setCertainty(e.target.value)} className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2">
+            <option value="">Choose certainty</option>
+            <option value="EXACT">Recorded time</option>
+            <option value="APPROXIMATE">Approximate time</option>
+            <option value="UNKNOWN">Unknown time (chart unavailable)</option>
+          </select>
         </label>
-        {certainty === 'UNKNOWN' && <p role="status" className="text-sm text-amber-200">An exact chart is unavailable without a known birth time. Use the Birth-Time Uncertainty Explorer to inspect the whole local date without selecting an actual birth time.</p>}
+        {certainty === 'UNKNOWN' && (
+          <p role="status" className="text-sm text-amber-200">
+            An exact chart is unavailable without a known birth time. Use the Birth-Time Uncertainty Explorer to inspect the whole local date without selecting an actual birth time.
+          </p>
+        )}
+
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
           <button
             type="submit"

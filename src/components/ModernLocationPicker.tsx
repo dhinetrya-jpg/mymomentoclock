@@ -162,7 +162,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
       cityName: label
     };
     onLocationChange(newLoc);
-    // Keep chosen city visible in search input like Google Maps so user sees autofilled place + Lat/Lon!
     setSearchQuery(label);
     setIsSearching(false);
     setManualError('');
@@ -207,7 +206,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
 
   return (
     <div className="rounded-2xl border border-rose-950 bg-[#160408] p-4 text-xs space-y-3 shadow-md h-full flex flex-col justify-between" ref={dropdownRef}>
-      {/* Top Header & Active Location Coordinates Badge */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
         <div className="min-w-0">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 block">
@@ -223,7 +221,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
           </div>
         </div>
 
-        {/* GPS & Custom Lat/Lon Controls */}
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             type="button"
@@ -249,7 +246,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
         </div>
       </div>
 
-      {/* GPS Status Feedback */}
       {gpsStatus === 'SUCCESS' && (
         <div className="rounded-lg bg-emerald-950/80 border border-emerald-500/60 px-3 py-1.5 text-emerald-200 text-[11px] flex items-center gap-2 animate-fade-in">
           <span>✓</span>
@@ -263,7 +259,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
         </div>
       )}
 
-      {/* Google Maps-Style Autocomplete Search Input */}
       <div className="relative">
         <div className="relative">
           <input
@@ -314,7 +309,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
           )}
         </div>
 
-        {/* Autocomplete Suggestions Dropdown */}
         {isSearching && (
           <div
             role="listbox"
@@ -362,7 +356,6 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
         )}
       </div>
 
-      {/* Collapsible Custom Latitude/Longitude Override Form */}
       {isCustomCoordsOpen && (
         <form onSubmit={handleApplyManualCoords} noValidate className="rounded-xl border border-rose-900 bg-[#1e060f] p-3 text-xs space-y-3 animate-fade-in">
           <div className="flex justify-between items-center border-b border-rose-950 pb-2">

@@ -79,9 +79,14 @@ export class MultimodalCalendarEngine {
       const isPurnima = tithiIdx === 15;
       const isAmavasya = tithiIdx === 30;
 
-      // Evaluate local 10:30 AM daytime window for genuine daily & personal synastry score
-      const midMorningUtc = new Date(Date.UTC(year, month - 1, d, 0, 10 * 60 + 30 - Math.round(tz * 60)));
-      const sample = PersonalAuspiciousnessScoringEngine.evaluateInstant(midMorningUtc, dayAnalysis, natal);
+      // Evaluate local 10:30 AM daytime window in the city's IANA timezone
+      const midMorningMs = HighPrecisionAstroEngine.resolveLocalMinutesToUtcMs(
+        dateStr,
+        10 * 60 + 30,
+        loc?.timezone,
+        tz
+      );
+      const sample = PersonalAuspiciousnessScoringEngine.evaluateInstant(new Date(midMorningMs), dayAnalysis, natal);
 
       let score = sample.auspiciousnessScore;
       if (isPurnima || isEkadashi) score = Math.min(96, score + 8);
@@ -188,16 +193,14 @@ export class MultimodalCalendarEngine {
       }
 
       const ingressMs = Math.round(0.5 * (loMs + hiMs));
-      const localShiftMs = Math.round(tz * 3600000);
-      const localIngress = new Date(ingressMs + localShiftMs);
-      const ingressDate = localIngress.toISOString().split('T')[0];
-      const ingress24 = localIngress.toISOString().substring(11, 16);
-      const ingressLocal12Hr = HighPrecisionAstroEngine.format24To12Hr(ingress24);
+      const ingressWall = HighPrecisionAstroEngine.getWallTimeInZone(ingressMs, loc?.timezone, tz, true);
+      const ingressDate = ingressWall.dateStr;
+      const ingressLocal12Hr = ingressWall.hhmm12;
 
       // Classical Punya Kaal window (~16 Ghatis = 6h 24m centered/bounded around solar ingress)
-      const pStart = new Date(ingressMs - 192 * 60000 + localShiftMs).toISOString().substring(11, 16);
-      const pEnd = new Date(ingressMs + 192 * 60000 + localShiftMs).toISOString().substring(11, 16);
-      const punyaSpan = `${HighPrecisionAstroEngine.format24To12Hr(pStart)} – ${HighPrecisionAstroEngine.format24To12Hr(pEnd)}`;
+      const pStartWall = HighPrecisionAstroEngine.getWallTimeInZone(ingressMs - 192 * 60000, loc?.timezone, tz, true);
+      const pEndWall = HighPrecisionAstroEngine.getWallTimeInZone(ingressMs + 192 * 60000, loc?.timezone, tz, true);
+      const punyaSpan = `${pStartWall.hhmm12} – ${pEndWall.hhmm12}`;
 
       const meta = SANKRANTI_SIGNIFICANCE[rashiIdx] || {
         label: ZODIAC_SIGNS[rashiIdx],

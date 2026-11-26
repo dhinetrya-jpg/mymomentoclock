@@ -8,19 +8,22 @@
  */
 
 import React, { useState } from 'react';
+import { HighPrecisionAstroEngine } from '../engine/zeroCostAstroEngine';
 
 interface AmPmTimePickerProps {
   currentMinutes: number; // 0 to 1439
   onChangeMinutes: (mins: number) => void;
   timezoneLabel?: string;
   timezoneOffset?: number;
+  ianaTimezone?: string;
 }
 
 export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
   currentMinutes,
   onChangeMinutes,
   timezoneLabel = 'Local Time',
-  timezoneOffset
+  timezoneOffset,
+  ianaTimezone
 }) => {
   const totalMins = Math.max(0, Math.min(1439, Math.floor(currentMinutes)));
   const hour24 = Math.floor(totalMins / 60);
@@ -31,14 +34,13 @@ export const AmPmTimePicker: React.FC<AmPmTimePickerProps> = ({
 
   const [isInteractive, setIsInteractive] = useState<boolean>(false);
 
-  // Snap to Selected Observer City's Current Local Wall-Clock Minute
+  // Snap to Selected Observer City's Current Local Wall-Clock Minute (IANA DST-aware)
   const handleSnapToNow = () => {
     const offsetHrs = typeof timezoneOffset === 'number' && Number.isFinite(timezoneOffset)
       ? timezoneOffset
       : -new Date().getTimezoneOffset() / 60.0;
-    const observerNow = new Date(Date.now() + Math.round(offsetHrs * 3600000));
-    const mins = observerNow.getUTCHours() * 60 + observerNow.getUTCMinutes();
-    onChangeMinutes(mins);
+    const wall = HighPrecisionAstroEngine.getWallTimeInZone(Date.now(), ianaTimezone, offsetHrs, false);
+    onChangeMinutes(wall.minutesOfDay);
   };
 
   const handleHourChange = (newH12: number) => {

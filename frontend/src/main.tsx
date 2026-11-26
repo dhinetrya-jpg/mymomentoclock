@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { PwaStatus } from './pwa/PwaStatus';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
@@ -54,18 +54,18 @@ class RootErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState
               </button>
               <button
                 onClick={() => {
-                  localStorage.clear();
-                  window.location.reload();
+                  this.setState({ hasError: false, error: null });
                 }}
-                className="rounded-lg border border-rose-700 px-4 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950"
+                className="rounded-lg border border-rose-700 bg-rose-950 px-4 py-2 text-xs text-rose-200"
               >
-                Clear Local Storage & Reload
+                Try Again
               </button>
             </div>
           </div>
         </div>
       );
     }
+
     return this.props.children;
   }
 }
