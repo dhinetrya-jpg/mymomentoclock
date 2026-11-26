@@ -41,6 +41,14 @@ try{
    const direct=await check('Check availability');
    await page.getByRole('button',{name:'Guided chat',exact:true}).click();
    assert.equal(await page.getByLabel('City',{exact:true}).isVisible(),false);
+   const intent=page.getByLabel('Describe the activity (optional)',{exact:true});
+   await intent.fill('buy a house or sell my house');
+   await page.getByText('Choose one activity from the list below.').waitFor();
+   await page.getByRole('button',{name:'Next',exact:true}).click();
+   assert.equal(await page.getByLabel('City',{exact:true}).isVisible(),false);
+   await intent.fill('Sell my house.');
+   await page.getByRole('button',{name:'Use Property sale',exact:true}).click();
+   assert.equal(await page.getByLabel('Activity',{exact:true}).inputValue(),'property_sale');
    await page.getByRole('button',{name:'Next',exact:true}).click();
    await page.getByLabel('City',{exact:true}).waitFor();
    await page.getByRole('button',{name:'Next',exact:true}).click();

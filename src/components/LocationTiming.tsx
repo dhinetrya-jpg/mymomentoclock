@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  checkLocationTiming, LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES,
+  checkLocationTiming, suggestLocationActivity, LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES,
   type LocationActivity, type LocationTimingResult,
 } from '../engine/locationTiming';
 
@@ -13,7 +13,11 @@ export function LocationTiming() {
   const [city, setCity] = useState('');
   const [cityQuery, setCityQuery] = useState('');
   const [date, setDate] = useState('');
-  const [activity, setActivity] = useState<LocationActivity>('general');
+  const [activity, setActivity] = useState<LocationActivity | ''>('general');
+  const [activityText, setActivityText] = useState('');
+  const suggestedActivity = LOCATION_TIMING_ACTIVITIES.find(
+    option => option.id === suggestLocationActivity(activityText),
+  );
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<LocationTimingResult | null>(null);
   const [error, setError] = useState(false);
@@ -27,7 +31,7 @@ export function LocationTiming() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending.current) return;
+    if (pending.current || !activity) return;
     if (guided && step < prompts.length - 1) {
       setStep(step + 1);
       return;
@@ -59,9 +63,9 @@ export function LocationTiming() {
   return <section aria-labelledby="location-timing-title" className="space-y-5 text-rose-100">
     <h2 id="location-timing-title" className="font-serif text-2xl text-amber-300">Daily timing by location</h2>
     <div role="group" aria-label="Location timing input style" className="flex flex-wrap gap-2">
-      <button type="button" aria-pressed={!guided} disabled={busy} onClick={() => { setGuided(false); clearResult(); }}
+      <button type="button" aria-pressed={!guided} disabled={busy} onClick={() => { setGuided(false); setActivity(activity || 'general'); setActivityText(''); clearResult(); }}
         className="rounded border border-rose-700 px-3 py-2 aria-pressed:border-amber-300">Direct form</button>
-      <button type="button" aria-pressed={guided} disabled={busy} onClick={() => { setGuided(true); setStep(0); clearResult(); }}
+      <button type="button" aria-pressed={guided} disabled={busy} onClick={() => { setGuided(true); setStep(0); setActivity(''); setActivityText(''); clearResult(); }}
         className="rounded border border-rose-700 px-3 py-2 aria-pressed:border-amber-300">Guided chat</button>
     </div>
     {guided && <div className="space-y-1">
@@ -95,9 +99,20 @@ export function LocationTiming() {
             value={date} onChange={event => setDate(event.target.value)}/>
         </div>
         <div hidden={guided && step !== 0}>
+          {guided && step === 0 && <div className="mb-3 space-y-2">
+            <label htmlFor="location-timing-intent" className="block">Describe the activity (optional)</label>
+            <input id="location-timing-intent" type="text" maxLength={100} autoComplete="off"
+              className={control} value={activityText}
+              onChange={event => { setActivityText(event.target.value); setActivity(''); }}/>
+            {suggestedActivity
+              ? <button type="button" className="rounded border border-rose-700 px-3 py-2"
+                  onClick={() => setActivity(suggestedActivity.id)}>Use {suggestedActivity.label}</button>
+              : activityText.trim() && <p role="status">Choose one activity from the list below.</p>}
+          </div>}
           <label htmlFor="location-timing-activity" className="mb-1 block">Activity</label>
-          <select id="location-timing-activity" disabled={guided && step !== 0} name="activity"
+          <select id="location-timing-activity" required disabled={guided && step !== 0} name="activity"
             className={control} value={activity} onChange={event => setActivity(event.target.value as LocationActivity)}>
+            {guided && <option value="">Choose an activity</option>}
             {LOCATION_TIMING_ACTIVITIES.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
           </select>
         </div>

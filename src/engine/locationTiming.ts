@@ -16,6 +16,34 @@ export const LOCATION_TIMING_ACTIVITIES = [
 
 export type LocationActivity = typeof LOCATION_TIMING_ACTIVITIES[number]['id'];
 
+// Match complete phrases so mixed requests and negated activities require a choice.
+const guidedActivityPhrases: Partial<Record<string, LocationActivity>> = {
+  'interview': 'interview',
+  'job interview': 'interview',
+  'i have a job interview': 'interview',
+  'shop opening': 'shop_opening',
+  'open a shop': 'shop_opening',
+  'open my shop': 'shop_opening',
+  'proposal': 'proposal',
+  'marriage proposal': 'proposal',
+  'propose marriage': 'proposal',
+  'trading': 'trading',
+  'stock trading': 'trading',
+  'trade stocks': 'trading',
+  'property purchase': 'property_purchase',
+  'buy a property': 'property_purchase',
+  'buy a house': 'property_purchase',
+  'property sale': 'property_sale',
+  'sell a property': 'property_sale',
+  'sell my property': 'property_sale',
+  'sell my house': 'property_sale',
+};
+
+export function suggestLocationActivity(text: string): LocationActivity | undefined {
+  const phrase = text.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+  return Object.prototype.hasOwnProperty.call(guidedActivityPhrases, phrase) ? guidedActivityPhrases[phrase] : undefined;
+}
+
 export interface LocationTimingRequest {
   schema_version: 1;
   city: string;
