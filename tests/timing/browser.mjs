@@ -106,8 +106,28 @@ try{
    assert.equal(await page.getByLabel('Local date',{exact:true}).inputValue(),'2026-11-01');
    assert.equal(requests.length,2);
    assert.deepEqual(await check('Send selections'),direct);
+   for (const [phrase, missing] of [
+    ['Sell my house in New York.', 'date'],
+    ['Sell my house on 2026-11-01.', 'city'],
+   ]) {
+    await page.getByRole('button',{name:'Guided chat',exact:true}).click();
+    await intent.fill(phrase);
+    await page.getByRole('button',{name:'Review suggested details',exact:true}).click();
+    await focused(missing==='date'?'location-timing-date':'location-timing-search');
+    const before=requests.length;
+    await page.getByRole('button',{name:'Send selections',exact:true}).click();
+    assert.equal(requests.length,before);
+    if (missing==='date') {
+     assert.equal(await page.getByLabel('Local date',{exact:true}).inputValue(),'');
+     await page.getByLabel('Local date',{exact:true}).fill('2026-11-01');
+    } else {
+     assert.equal(await page.getByLabel('City',{exact:true}).inputValue(),'');
+     await page.getByLabel('City',{exact:true}).selectOption('New York');
+    }
+    assert.deepEqual(await check('Send selections'),direct);
+   }
    const payload={schema_version:1,city:'New York',date:'2026-11-01',activity:'property_sale'};
-   assert.deepEqual(requests.map(request=>request.postDataJSON()),[payload,payload,payload]);
+   assert.deepEqual(requests.map(request=>request.postDataJSON()),[payload,payload,payload,payload,payload]);
    assert.ok(requests.every(request=>request.method()==='POST' && !new URL(request.url()).search));
    assert.deepEqual(await page.evaluate(()=>[localStorage.length,sessionStorage.length]),[0,0]);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));

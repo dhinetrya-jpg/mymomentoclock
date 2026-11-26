@@ -63,14 +63,26 @@ export function validLocationTimingDate(value: unknown): value is string {
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-export function suggestLocationTimingDetails(text: string): Omit<LocationTimingRequest, 'schema_version'> | undefined {
+type SuggestedTimingDetails = Pick<LocationTimingRequest, 'activity'> &
+  Partial<Pick<LocationTimingRequest, 'city' | 'date'>>;
+
+export function suggestLocationTimingDetails(text: string): SuggestedTimingDetails | undefined {
   const phrase = normalizeGuidedText(text);
-  const match = /^(.+?) in (.+?) on ([0-9]{4}-[0-9]{2}-[0-9]{2})$/.exec(phrase);
-  if (!match) return undefined;
-  const [, activityText, cityText, date] = match;
+  const withCity = /^(.+?) in (.+?)(?: on ([0-9]{4}-[0-9]{2}-[0-9]{2}))?$/.exec(phrase);
+  if (withCity) {
+    const [, activityText, cityText, date] = withCity;
+    const activity = suggestLocationActivity(activityText);
+    const city = LOCATION_TIMING_CITIES.find(option => option.city.toLowerCase() === cityText)?.city;
+    if (activity && city && (date === undefined || validLocationTimingDate(date))) {
+      return date ? {activity, city, date} : {activity, city};
+    }
+    return undefined;
+  }
+  const withDate = /^(.+?) on ([0-9]{4}-[0-9]{2}-[0-9]{2})$/.exec(phrase);
+  if (!withDate) return undefined;
+  const [, activityText, date] = withDate;
   const activity = suggestLocationActivity(activityText);
-  const city = LOCATION_TIMING_CITIES.find(option => option.city.toLowerCase() === cityText)?.city;
-  if (activity && city && validLocationTimingDate(date)) return {activity, city, date};
+  if (activity && validLocationTimingDate(date)) return {activity, date};
 }
 
 export interface LocationTimingResult {

@@ -31,6 +31,10 @@ test('guided timing details require one known activity, catalog city and real lo
     {activity:'property_purchase',city:'New York',date:'2028-02-29'});
   assert.deepEqual(suggestLocationTimingDetails('sell my house in London on 2100-12-31'),
     {activity:'property_sale',city:'London',date:'2100-12-31'});
+  assert.deepEqual(suggestLocationTimingDetails('buy a house in New York'),
+    {activity:'property_purchase',city:'New York'});
+  assert.deepEqual(suggestLocationTimingDetails('sell my house on 2028-02-29'),
+    {activity:'property_sale',date:'2028-02-29'});
   for (const phrase of [
     'sell my house in London on 2026-02-29', 'sell my house in London on 2100-02-29',
     'sell my house in London on 2101-01-01', 'sell my house in Tokyo on 2026-11-01',

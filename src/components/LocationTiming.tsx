@@ -26,6 +26,7 @@ export function LocationTiming() {
   const [result, setResult] = useState<LocationTimingResult | null>(null);
   const [error, setError] = useState(false);
   const intentControl = useRef<HTMLInputElement>(null);
+  const cityControl = useRef<HTMLSelectElement>(null);
   const citySearch = useRef<HTMLInputElement>(null);
   const dateControl = useRef<HTMLInputElement>(null);
   const pending = useRef<AbortController | null>(null);
@@ -37,7 +38,9 @@ export function LocationTiming() {
   useEffect(() => () => pending.current?.abort(), []);
 
   useEffect(() => {
-    if (guided) [intentControl, citySearch, dateControl, citySearch][step].current?.focus();
+    if (!guided) return;
+    const reviewFocus = cityControl.current?.value && !dateControl.current?.value ? dateControl : citySearch;
+    [intentControl, citySearch, dateControl, reviewFocus][step].current?.focus();
   }, [guided, step]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -96,7 +99,7 @@ export function LocationTiming() {
               if (!city.toLowerCase().includes(query.trim().toLowerCase())) setCity('');
             }}/>
           <label htmlFor="location-timing-city" className="mt-3 mb-1 block">City</label>
-          <select id="location-timing-city" required disabled={stepByStep && step !== 1} name="city"
+          <select ref={cityControl} id="location-timing-city" required disabled={stepByStep && step !== 1} name="city"
             className={control} value={city} onChange={event => setCity(event.target.value)}>
             <option value="">Choose a city</option>
             {visibleCities.map(option => <option key={option.city}>{option.city}</option>)}
@@ -118,12 +121,15 @@ export function LocationTiming() {
               onChange={event => { setActivityText(event.target.value); setActivity(''); }}/>
             {suggestedDetails && <>
               <p>{LOCATION_TIMING_ACTIVITIES.find(option => option.id === suggestedDetails.activity)?.label}
-                {' · '}{suggestedDetails.city}{' · '}{suggestedDetails.date}</p>
+                {suggestedDetails.city && (' · ' + suggestedDetails.city)}
+                {suggestedDetails.date && (' · ' + suggestedDetails.date)}</p>
+              {!suggestedDetails.city && <p>Choose a city to continue.</p>}
+              {!suggestedDetails.date && <p>Choose the local date to continue.</p>}
               <button type="button" className="rounded border border-rose-700 px-3 py-2" onClick={() => {
                 setActivity(suggestedDetails.activity);
-                setCity(suggestedDetails.city);
+                setCity(suggestedDetails.city ?? '');
                 setCityQuery('');
-                setDate(suggestedDetails.date);
+                setDate(suggestedDetails.date ?? '');
                 setStep(3);
                 clearResult();
               }}>Review suggested details</button>
