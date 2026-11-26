@@ -46,6 +46,12 @@ A sunrise-defined local weekday, verified tithi and a policy for
 uncertain overlaps must be approved before activation.
 [Variant discussion](https://jainqq.org/explore/002342/50)
 
+The offline fixture, run with `python3 tests/timing/siddha_marker_test.py`,
+checks 210 supplied combinations across both lunar halves, with 30 matches
+and 180 cases where the pairing is absent. It also exercises missing or
+uncertain evidence and a synthetic half-open tithi transition. It supplies
+the weekday explicitly and has no connection to the runtime provider.
+
 ## L12 independent astronomy evaluation
 
 A separate agent ran five checked-in linked-native tests and a
