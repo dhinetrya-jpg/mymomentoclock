@@ -71,10 +71,10 @@ async function scenario(label,folder,nextFolder,base){
   const cached=await page.evaluate(async prefix=>{const entries=[];for(const name of (await caches.keys()).filter(name=>name.startsWith(prefix))){for(const request of await(await caches.open(name)).keys()){entries.push({name,url:request.url,text:await(await(await caches.open(name)).match(request)).text()});}}return entries;},ownedPrefix);
   assert.ok(cached.length>=5);assert.ok(cached.every(entry=>entry.name.startsWith('mymomentoclock-shell-')));
   for(const entry of cached){assert.equal(new URL(entry.url).search,'');assert.ok(new URL(entry.url).pathname.startsWith(base));assert.doesNotMatch(entry.url,/\/api\//);assert.doesNotMatch(entry.text,/SYNTHETIC_PRIVATE_BIRTH_AND_CHECKOUT/);}
-  await page.getByRole('button',{name:'Daily Timing',exact:true}).click();
+  await page.getByRole('button',{name:'Daily Timing',exact:true}).click();await page.getByRole('button',{name:'Use personal timing',exact:true}).click();
   await page.getByLabel('Birth date',{exact:true}).fill('2000-01-01');
   const other=await context.newPage();await other.goto(url);
-  await other.getByRole('button',{name:'Daily Timing',exact:true}).click();await other.getByLabel('Birth date',{exact:true}).fill('1999-12-31');
+  await other.getByRole('button',{name:'Daily Timing',exact:true}).click();await other.getByRole('button',{name:'Use personal timing',exact:true}).click();await other.getByLabel('Birth date',{exact:true}).fill('1999-12-31');
   const oldNames=await page.evaluate(()=>caches.keys());
   release='failed';
   await page.evaluate(async()=>{
@@ -109,7 +109,7 @@ async function scenario(label,folder,nextFolder,base){
   await context.setOffline(true);
   await page.reload();
   await page.getByRole('status').filter({hasText:'You are offline.'}).waitFor();
-  await page.getByRole('button',{name:'Daily Timing',exact:true}).click();
+  await page.getByRole('button',{name:'Daily Timing',exact:true}).click();await page.getByRole('button',{name:'Use personal timing',exact:true}).click();
   assert.equal(await page.getByLabel('Birth date',{exact:true}).inputValue(),'','no persisted personal birth details');
   assert.equal(await page.evaluate(async()=>{try{await fetch('/api/private-profile');return false;}catch{return true;}}),true,'offline API is not a cached success');
   assert.equal(await page.evaluate(async()=>{try{await fetch(new URL('pwa-clock.svg?personal=synthetic',location.href));return false;}catch{return true;}}),true,'query-bearing requests are not served from cache');

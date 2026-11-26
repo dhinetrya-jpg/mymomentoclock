@@ -2,8 +2,12 @@ import type {RequestHandler} from 'express';
 import https from 'node:https';
 import {readFileSync} from 'node:fs';
 import {TIMING_ACTIVITIES,TIMING_RULE_VERSION,TIMING_VERSION,type TimingRequest} from '../src/engine/timingClient';
+import {
+ LOCATION_TIMING_ACTIVITIES, LOCATION_TIMING_CITIES, LOCATION_TIMING_PATH,
+ type LocationTimingResult,
+} from '../src/engine/locationTiming';
 export type TimingTransport=(method:string,path:string,body?:TimingRequest)=>Promise<{status:number;body:any}>;
-const paths=['/api/v1/timing/activities','/api/v1/timing/capability','/api/v1/timing/daily'];
+const paths=[LOCATION_TIMING_PATH,'/api/v1/timing/activities','/api/v1/timing/capability','/api/v1/timing/daily'];
 const unavailable={schema_version:1,status:'UNAVAILABLE',code:'CORE_P0_01_NOT_VERIFIED',windows:[],limitations:['Personalized guidance requires independently verified native/Panchang inputs and owner-approved timing rules and release.','Traditional timing is not a scientific prediction or a guarantee of success or investment returns.']};
 function keys(value:any,required:string[],optional:string[]=[]){return value&&typeof value==='object'&&!Array.isArray(value)&&required.every(k=>Object.hasOwn(value,k))&&Object.keys(value).every(k=>required.includes(k)||optional.includes(k));}
 function date(value:unknown,min:number,max:number){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T00:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value&&d.getUTCFullYear()>=min&&d.getUTCFullYear()<=max;}
@@ -27,6 +31,19 @@ export function createTimingGateway(transport?:TimingTransport):RequestHandler{r
  if(path.endsWith('/capability')){if(req.method!=='GET')return void fail(405,'METHOD_NOT_ALLOWED');return void res.json({schema_version:1,status:'UNAVAILABLE',calculation_version:TIMING_VERSION,rule_version:TIMING_RULE_VERSION,accuracy_status:'NOT_VERIFIED',release_authorized:false,missing_dependencies:['CORE_P0_01_NATIVE_REFERENCE_ACCEPTANCE','VERIFIED_PANCHANG_AND_SOLAR_EVENTS','OWNER_APPROVED_ACTIVITY_RULES','PERSONAL_TIMING_RELEASE_AUTHORIZATION']});}
  if(req.method!=='POST')return void fail(405,'METHOD_NOT_ALLOWED');
  if(Buffer.byteLength(JSON.stringify(req.body??null))>16384)return void fail(413,'REQUEST_TOO_LARGE');
+ if(path===LOCATION_TIMING_PATH){
+  const body=req.body;
+  if(!keys(body,['schema_version','city','date','activity'])||body.schema_version!==1||
+    !date(body.date,2000,2100)||!LOCATION_TIMING_ACTIVITIES.some(option=>option.id===body.activity)){
+   return void fail(422,'INVALID_LOCATION_TIMING_REQUEST');
+  }
+  const location=LOCATION_TIMING_CITIES.find(option=>option.city===body.city);
+  if(!location)return void fail(422,'UNSUPPORTED_LOCATION');
+  const result:LocationTimingResult={schema_version:1,mode:'LOCATION_ONLY',status:'UNAVAILABLE',
+   code:'LOCATION_RULES_UNAVAILABLE',city:location.city,date:body.date,timezone:location.timezone,
+   activity:body.activity,windows:[]};
+  return void res.status(503).json(result);
+ }
  if(!validTimingRequest(req.body))return void fail(422,'INVALID_TIMING_REQUEST');
  const provenance={calculation_version:TIMING_VERSION,rule_version:TIMING_RULE_VERSION,ephemeris_mode:'UNAVAILABLE',requested_ephemeris_mode:req.body.ephemeris_mode,source:'NATIVE_SWISS_CONTRACT_UNAVAILABLE',calculated_at:new Date().toISOString(),accuracy_status:'NOT_VERIFIED',release_authorized:false};
  if(!transport)return void res.status(503).json({...unavailable,...(req.body.birth.certainty!=='EXACT'?{status:'INSUFFICIENT_EVIDENCE',code:'BIRTH_TIME_EVIDENCE_INSUFFICIENT'}:{}),activity:req.body.activity,provenance});

@@ -1,4 +1,5 @@
 import {DailyTiming} from './components/DailyTiming';
+import {LocationTiming} from './components/LocationTiming';
 import {BirthTimeExplorer} from './components/BirthTimeExplorer';
 /**
  * @license
@@ -23,7 +24,8 @@ import { resolvePillarConflict, ConflictResolutionResult } from './engine/confli
 import { RvmEvaluationResult } from './engine/rvmEngine';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('daily-timing');
+  const [personalTiming, setPersonalTiming] = useState(false);
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
   const [isBtrModalOpen, setIsBtrModalOpen] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -71,13 +73,14 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={(tab) => {
           setActiveTab(tab);
+          if (tab === 'daily-timing') setPersonalTiming(false);
           setIsOnboardingOpen(false);
         }}
         onOpenQuickCheckout={() => setIsCheckoutModalOpen(true)}
       />
 
       {/* Profile quick bar */}
-      <div className="border-b border-rose-950/60 bg-[#1a050a] px-4 py-2 text-xs">
+      {activeTab !== 'daily-timing' && <div className="border-b border-rose-950/60 bg-[#1a050a] px-4 py-2 text-xs">
         <div className="mx-auto flex min-w-0 max-w-7xl flex-wrap items-center justify-between gap-3 text-rose-200/70">
           <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
             <span className="text-amber-400 font-mono font-medium">Native Profile:</span>
@@ -95,7 +98,7 @@ export default function App() {
             {isOnboardingOpen ? 'Close Editor' : 'Edit Birth Details'}
           </button>
         </div>
-      </div>
+      </div>}
 
       {!import.meta.env?.DEV && ['funnel','devops-uat'].includes(activeTab) && <p role="status" className="p-5 text-amber-200">This demonstration is not available in production. Use Birth Details or Festival Kit to continue.</p>}
       {/* Main Container */}
@@ -114,7 +117,13 @@ export default function App() {
         ) : null}
 
         {/* Dynamic View Routing */}
-        {activeTab === 'daily-timing' && <DailyTiming/>}
+        {activeTab === 'daily-timing' && <div className="mx-auto max-w-3xl space-y-5">
+          <button type="button" onClick={() => setPersonalTiming(!personalTiming)}
+            className="rounded border border-rose-700 px-3 py-2 text-sm text-rose-100">
+            {personalTiming ? 'Use location only' : 'Use personal timing'}
+          </button>
+          {personalTiming ? <DailyTiming/> : <LocationTiming/>}
+        </div>}
         {activeTab === 'birth-time-explorer' && <BirthTimeExplorer/>}
         {!chart && ['dashboard','remediation'].includes(activeTab) && <div role="status" className="rounded-xl border border-rose-900 p-6">Enter your birth details to calculate a chart. <button className="text-amber-300 underline" onClick={() => setIsOnboardingOpen(true)}>Open birth profile</button></div>}
         {activeTab === 'funnel' && import.meta.env?.DEV && (

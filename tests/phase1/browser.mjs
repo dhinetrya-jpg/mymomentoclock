@@ -8,6 +8,7 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text());});
   page.on('request',r=>{requests.push(r.url());if(new URL(r.url()).origin!==new URL(base).origin)external.push(r.url()); /* Same-origin blob workers do not transfer data off origin. */});
   await page.goto(base,{waitUntil:'networkidle'});
+  await page.getByRole('button',{name:'Astro Dashboard',exact:true}).click();
   await page.getByRole('button',{name:'Edit Birth Details'}).click();
   await page.locator('input[type=date]').fill('1989-11-23');await page.locator('input[type=time]').fill('04:30:00');
   await page.locator('form select').nth(0).selectOption('Kolkata');await page.getByLabel('UTC offset at birth').fill('5.5');
