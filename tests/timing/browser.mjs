@@ -66,6 +66,10 @@ try{
     return {body:await response.json(),view:await status.innerText()};
    }
    const direct=await check('Check availability');
+   await page.getByRole('button',{name:'Choose another date',exact:true}).press('Enter');
+   assert.equal(await page.getByLabel('Local date',{exact:true}).evaluate(el=>el===document.activeElement),true);
+   assert.equal(await page.getByText('Timing is unavailable for this selection.',{exact:false}).count(),0);
+   assert.equal(requests.length,1);
    await page.getByRole('button',{name:'Guided chat',exact:true}).click();
    assert.equal(await page.getByLabel('City',{exact:true}).isVisible(),false);
    const intent=page.getByLabel('Describe the activity (optional)',{exact:true});
@@ -126,6 +130,9 @@ try{
     }
     assert.deepEqual(await check('Send selections'),direct);
    }
+   await page.getByRole('button',{name:'Choose another date',exact:true}).press('Enter');
+   assert.equal(await page.getByLabel('Local date',{exact:true}).evaluate(el=>el===document.activeElement),true);
+   assert.equal(requests.length,5);
    const payload={schema_version:1,city:'New York',date:'2026-11-01',activity:'property_sale'};
    assert.deepEqual(requests.map(request=>request.postDataJSON()),[payload,payload,payload,payload,payload]);
    assert.ok(requests.every(request=>request.method()==='POST' && !new URL(request.url()).search));
