@@ -176,8 +176,8 @@ test('timeline renders DST elapsed hours and escapes explanation markup', () => 
 test('mirrored timing client, engines, and UI components remain synchronized across src and frontend/src', () => {
   for (const name of ['engine/timingClient.ts', 'components/DailyTiming.tsx', 'components/AuspiciousMasterHub.tsx'])
     assert.equal(
-      readFileSync(new URL('../../src/' + name, import.meta.url), 'utf8'),
-      readFileSync(new URL('../../frontend/src/' + name, import.meta.url), 'utf8')
+      readFileSync(new URL('../../src/' + name, import.meta.url), 'utf8').replace(/\r\n/g, '\n').trimEnd(),
+      readFileSync(new URL('../../frontend/src/' + name, import.meta.url), 'utf8').replace(/\r\n/g, '\n').trimEnd()
     );
 
   const mirroredPaths = [

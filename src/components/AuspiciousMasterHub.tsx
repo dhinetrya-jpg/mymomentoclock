@@ -312,7 +312,15 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
 
   // 1. Full Day Astronomical Analysis (100% Client-Edge, Unified 60-Term Moon + RA-EoT Solar Core)
   const dayData: DayAnalysisResult = useMemo(() => {
-    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, locCoords, {
+    const strictOrExplicitLoc = locCoords.timezone
+      ? {
+          latitude: locCoords.latitude,
+          longitude: locCoords.longitude,
+          cityName: locCoords.cityName,
+          timezone: locCoords.timezone,
+        }
+      : locCoords;
+    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, strictOrExplicitLoc, {
       lunarMonthSystem,
       elevationMeters
     });
@@ -779,6 +787,21 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
           Zone: <strong className="text-amber-200">{locCoords.timezone || `UTC${locCoords.timezoneOffset}`}</strong> · Dip: {elevationMeters}m
         </span>
       </div>
+
+      {/* Timezone / DST / Input Normalization Notes Banner (`dayData.inputNotes`) */}
+      {dayData.inputNotes.length > 0 && (
+        <div
+          role="status"
+          aria-label="Timezone and input normalization notes"
+          className="rounded-xl border border-amber-600/60 bg-amber-950/35 px-4 py-2.5 text-xs text-amber-100 space-y-1"
+        >
+          {dayData.inputNotes.map((note, idx) => (
+            <p key={idx} className="leading-relaxed">
+              <strong className="text-amber-300">Timezone Note:</strong> {note}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* FAIL-CLOSED GATE PANEL FOR ALL GUIDANCE TABS WHEN RELEASE IS UNAUTHORIZED */}

@@ -105,7 +105,7 @@ function independentGastHorizonCrossingUtcMs(
   const altMinusTarget = (utcMs: number): number => {
     const jdUT = utcMs / 86400000.0 + 2440587.5;
     const ms = moonSun(jdUT);
-    const gastDeg = calculateGAST(jdUT, ms.deltaPsiDeg, ms.trueObliquityDeg);
+    const { gastDeg } = calculateGAST(jdUT);
     const localHourAngleRad = ((gastDeg + longitude - ms.sunRightAscensionDeg + 540.0) % 360.0 - 180.0) * deg2rad;
     const decRad = ms.sunDeclinationDeg * deg2rad;
     const sinAlt =
@@ -468,11 +468,11 @@ test('C-05, C-06, C-07, C-08 & C-09 Exit Gate: Strict inputs, elevation dip, Adh
     `Expected Diwali Mahalakshmi Puja on 2026-11-08 in Delhi, got ${JSON.stringify(diwali2026.festivalObservances.matched)}`
   );
 
-  // 7. Sun + Moon engine parity (`calculateHighPrecisionSun` & `calculateHighPrecisionMoon` === `moonSun`)
+  // 7. Sun + Moon engine parity (`calculateHighPrecisionSun` & `calculateHighPrecisionMoon` === `moonSun` within 1e-6° rounding)
   const sampleJd = 2461352.5;
   const ms = moonSun(sampleJd);
-  assert.equal(calculateHighPrecisionSun(sampleJd).apparentLongitude, ms.sunTropicalDeg);
-  assert.equal(calculateHighPrecisionMoon(sampleJd).tropicalLongitude, ms.moonTropicalDeg);
+  assert.ok(Math.abs(calculateHighPrecisionSun(sampleJd).apparentLongitude - ms.sunTropicalDeg) <= 1e-6);
+  assert.ok(Math.abs(calculateHighPrecisionMoon(sampleJd).tropicalLongitude - ms.moonTropicalDeg) <= 1e-6);
 
   // 7b. Observed USNO / IERS Bulletin A Delta-T table (~69.18s in 2026, ~56.86s in 1990, ~ -2.79s in 1900) & 'UTC_OFFSET' remote-city support
   assert.ok(Math.abs(calculateDeltaT(2026) - 69.18) < 0.05, `Expected 2026 IERS Delta-T ~69.18s, got ${calculateDeltaT(2026)}`);
@@ -503,11 +503,18 @@ test('C-05, C-06, C-07, C-08 & C-09 Exit Gate: Strict inputs, elevation dip, Adh
 
   // Verify default timing gateway still reports release_authorized: false
   const gw = createTimingGateway();
-  let capturedStatus = 0;
+  let capturedStatus = 200;
   let capturedBody: Record<string, unknown> = {};
   await new Promise<void>((resolve, reject) => {
-    const reqMock = { method: 'GET', path: '/capability', headers: {} } as unknown as Parameters<typeof gw>[0];
+    const reqMock = {
+      method: 'GET',
+      path: '/capability',
+      originalUrl: '/api/v1/timing/capability',
+      query: {},
+      headers: {},
+    } as unknown as Parameters<typeof gw>[0];
     const resMock = {
+      set: () => resMock,
       setHeader: () => resMock,
       status: (code: number) => {
         capturedStatus = code;

@@ -162,6 +162,7 @@ export interface DayAnalysisResult {
   date: string;
   location: LocationCoordinates;
   localDayBounds: LocalDayUtcBounds;
+  inputNotes: string[];
   solarMetrics: {
     sunrise: string;
     sunset: string;
@@ -862,70 +863,175 @@ export class HighPrecisionAstroEngine {
   }
 
   /**
-   * Strict, Zero-Silent-Default Day Panchanga, Limb End Times, Lunar Masa, Kaalas, Choghadiyas & Horas Generator
+   * Strict API / Golden-Corpus Entry Point (`analyzeFullDayStrict`):
+   * - Never substitutes any default date, city, or timezone.
+   * - Rejects impossible Gregorian dates, years outside 1900..2100, NaN/out-of-range coordinates,
+   *   missing/unknown IANA timezones, and any supplied `timezoneOffset` that disagrees with the IANA zone on `dateStr`.
+   * - Every `CalculationInputError` carries a stable `code` and `fields` naming the offending input field(s).
+   */
+  public static analyzeFullDayStrict(
+    dateStr: string,
+    loc: StrictLocationInput,
+    options?: DayAnalysisOptions
+  ): DayAnalysisResult {
+    return this.analyzeFullDayInternal(dateStr, loc, options, true);
+  }
+
+  /**
+   * Day Panchanga, Limb End Times, Lunar Masa, Kaalas, Choghadiyas & Horas Generator.
+   * Rejects invalid dates/years/coordinates/missing timezones; if a UI state supplies both an IANA `timezone`
+   * and a stale seasonal `timezoneOffset`, resolves the authoritative IANA offset and records `inputNotes`.
    */
   public static analyzeFullDay(
     dateStr: string,
     loc: StrictLocationInput,
     options?: DayAnalysisOptions
   ): DayAnalysisResult {
-    // 1. Strict Gregorian Date Validation (rejects impossible dates like '2026-02-31' or '1900-02-29')
+    return this.analyzeFullDayInternal(dateStr, loc, options, false);
+  }
+
+  private static analyzeFullDayInternal(
+    dateStr: string,
+    loc: StrictLocationInput,
+    options: DayAnalysisOptions | undefined,
+    strictOffsetAgreement: boolean
+  ): DayAnalysisResult {
+    const inputNotes: string[] = [];
+
+    // 1. Strict Gregorian Date & Year-Range Validation (1900..2100; rejects impossible dates like '2026-02-31' or '1900-02-29')
     const trimmedDate = typeof dateStr === 'string' ? dateStr.trim() : '';
     if (!validGregorianDate(trimmedDate)) {
-      throw new CalculationInputError('INVALID_DATE', `Invalid Gregorian calendar date: "${dateStr}". No fallback date is substituted.`);
+      throw new CalculationInputError(
+        'INVALID_DATE',
+        `Invalid Gregorian calendar date: "${dateStr}". No fallback date is substituted.`,
+        ['date']
+      );
+    }
+    const [y, m, d] = trimmedDate.split('-').map(Number);
+    if (y < 1900 || y > 2100) {
+      throw new CalculationInputError(
+        'DATE_OUT_OF_RANGE',
+        `Year ${y} is outside supported ephemeris range (1900–2100).`,
+        ['date']
+      );
     }
 
-    // 2. Strict Location & Timezone Validation (zero silent fallback to New Delhi or UTC+5.5)
+    // 2. Strict Location & Coordinate Validation (zero silent fallback to New Delhi or UTC+5.5)
     if (!loc || typeof loc !== 'object') {
-      throw new CalculationInputError('INVALID_LOCATION', 'Location coordinates and timezone are required; no default city is substituted.');
+      throw new CalculationInputError(
+        'INVALID_LOCATION',
+        'Location coordinates and timezone are required; no default city is substituted.',
+        ['location']
+      );
     }
-    if (
-      typeof loc.latitude !== 'number' ||
-      typeof loc.longitude !== 'number' ||
-      !Number.isFinite(loc.latitude) ||
-      !Number.isFinite(loc.longitude) ||
-      Math.abs(loc.latitude) > 90 ||
-      Math.abs(loc.longitude) > 180
-    ) {
-      throw new CalculationInputError('INVALID_LOCATION', 'Supply finite latitude (±90°) and longitude (±180°).');
+    if (typeof loc.latitude !== 'number' || !Number.isFinite(loc.latitude) || Math.abs(loc.latitude) > 90) {
+      throw new CalculationInputError(
+        'INVALID_LATITUDE',
+        'Supply finite latitude within ±90°.',
+        ['latitude']
+      );
+    }
+    if (typeof loc.longitude !== 'number' || !Number.isFinite(loc.longitude) || Math.abs(loc.longitude) > 180) {
+      throw new CalculationInputError(
+        'INVALID_LONGITUDE',
+        'Supply finite longitude within ±180°.',
+        ['longitude']
+      );
     }
 
     const elevationMeters = options?.elevationMeters ?? loc.elevationMeters ?? 0;
     if (!Number.isFinite(elevationMeters) || elevationMeters < -500 || elevationMeters > 12000) {
-      throw new CalculationInputError('INVALID_ELEVATION', 'Observer elevation must be between -500m and 12000m.');
+      throw new CalculationInputError(
+        'INVALID_ELEVATION',
+        'Observer elevation must be between -500m and 12000m.',
+        ['elevationMeters']
+      );
     }
 
-    const hasExplicitIana = loc.timezone !== undefined && loc.timezone !== '' && loc.timezone !== 'UTC_OFFSET';
-    if (loc.timezone === 'Local' || (hasExplicitIana && !this.isValidIanaTimezone(loc.timezone))) {
-      throw new CalculationInputError('INVALID_TIMEZONE', `Unsupported or invalid IANA timezone: "${loc.timezone}".`);
+    // 3. Strict IANA Timezone & Offset Agreement Validation
+    const rawTz = loc.timezone;
+    const rawOffset = (loc as { timezoneOffset?: unknown }).timezoneOffset;
+    const hasOffsetProp = rawOffset !== undefined && rawOffset !== null;
+    if (hasOffsetProp && (typeof rawOffset !== 'number' || !Number.isFinite(rawOffset) || rawOffset < -12 || rawOffset > 14)) {
+      throw new CalculationInputError(
+        'INVALID_TIMEZONE_OFFSET',
+        'Typed UTC offset must be a finite number between −12 and +14 hours.',
+        ['timezoneOffset']
+      );
+    }
+    const typedOffset = hasOffsetProp ? (rawOffset as number) : undefined;
+
+    if (rawTz !== undefined && rawTz !== '' && typeof rawTz !== 'string') {
+      throw new CalculationInputError('INVALID_TIMEZONE', 'IANA timezone must be a string.', ['timezone']);
+    }
+    if (rawTz === 'Local' || (strictOffsetAgreement && rawTz === 'UTC_OFFSET')) {
+      throw new CalculationInputError(
+        'INVALID_TIMEZONE',
+        `Unsupported or non-IANA timezone identifier: "${rawTz}".`,
+        ['timezone']
+      );
     }
 
-    const rawOffset = (loc as { timezoneOffset?: number }).timezoneOffset;
-    const hasValidNumericOffset =
-      typeof rawOffset === 'number' && Number.isFinite(rawOffset) && rawOffset >= -12 && rawOffset <= 14;
-
-    if (!hasExplicitIana && !hasValidNumericOffset) {
-      throw new CalculationInputError('INVALID_TIMEZONE', 'Supply a valid IANA timezone or explicit UTC offset (−12 to +14).');
+    const hasExplicitIana = typeof rawTz === 'string' && rawTz !== '' && rawTz !== 'UTC_OFFSET';
+    if (hasExplicitIana && !this.isValidIanaTimezone(rawTz)) {
+      throw new CalculationInputError(
+        'INVALID_TIMEZONE',
+        `Unknown or unsupported IANA timezone: "${rawTz}".`,
+        ['timezone']
+      );
     }
 
-    const initialOffset = hasValidNumericOffset ? (rawOffset as number) : 0;
+    if (!hasExplicitIana && typedOffset === undefined) {
+      throw new CalculationInputError(
+        'MISSING_TIMEZONE',
+        'Supply a valid IANA timezone or explicit UTC offset (−12 to +14).',
+        ['timezone']
+      );
+    }
+
+    const initialOffset = typedOffset !== undefined ? typedOffset : 0;
     const localDayBounds = this.getLocalDayUtcBounds(
       trimmedDate,
-      hasExplicitIana ? loc.timezone : undefined,
+      hasExplicitIana ? rawTz : undefined,
       initialOffset
     );
+
+    if (hasExplicitIana && typedOffset !== undefined) {
+      const matchesStart = Math.abs(typedOffset - localDayBounds.startOffsetHours) < 1e-6;
+      const matchesEnd = Math.abs(typedOffset - localDayBounds.endOffsetHours) < 1e-6;
+      if (!matchesStart && !matchesEnd) {
+        if (strictOffsetAgreement) {
+          throw new CalculationInputError(
+            'TIMEZONE_OFFSET_MISMATCH',
+            `Supplied timezoneOffset (${typedOffset}) disagrees with IANA zone "${rawTz}" (${localDayBounds.startOffsetLabel}) on ${trimmedDate}.`,
+            ['timezoneOffset', 'timezone']
+          );
+        }
+        inputNotes.push(
+          `Supplied UTC offset (${typedOffset >= 0 ? '+' : ''}${typedOffset}h) differed from IANA zone ${rawTz} (${localDayBounds.startOffsetLabel}) on ${trimmedDate}; applied authoritative ${rawTz} rules.`
+        );
+      }
+    } else if (!hasExplicitIana && typedOffset !== undefined) {
+      inputNotes.push(
+        `Fixed numeric UTC offset (${this.formatUtcOffsetLabel(Math.round(typedOffset * 60))}) used without an IANA timezone; historical or daylight-saving transitions are not tracked.`
+      );
+    }
+    if (localDayBounds.isDstTransition) {
+      inputNotes.push(
+        `Daylight Saving Time transition occurs on ${trimmedDate} in ${rawTz} (${localDayBounds.startOffsetLabel} → ${localDayBounds.endOffsetLabel}); each event timestamp is formatted at its exact instant offset.`
+      );
+    }
+
     const effectiveTzOffset = hasExplicitIana ? localDayBounds.startOffsetHours : initialOffset;
 
     const safeLoc: LocationCoordinates = {
       latitude: loc.latitude,
       longitude: loc.longitude,
       timezoneOffset: effectiveTzOffset,
-      timezone: hasExplicitIana ? loc.timezone : undefined,
+      timezone: hasExplicitIana ? rawTz : undefined,
       cityName: loc.cityName || `${loc.latitude.toFixed(2)}°, ${loc.longitude.toFixed(2)}°`,
       elevationMeters
     };
-
-    const [y, m, d] = trimmedDate.split('-').map(Number);
 
     const { sunriseDate, sunsetDate, solarNoonDate, isPolar, polarCondition } = this.calculateSolarTimes(
       y, m, d, safeLoc.latitude, safeLoc.longitude, effectiveTzOffset, elevationMeters
@@ -1365,6 +1471,7 @@ export class HighPrecisionAstroEngine {
       date: trimmedDate,
       location: safeLoc,
       localDayBounds,
+      inputNotes,
       solarMetrics: {
         sunrise: sunriseStr,
         sunset: sunsetStr,

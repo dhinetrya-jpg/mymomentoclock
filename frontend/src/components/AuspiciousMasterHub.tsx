@@ -312,7 +312,15 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
 
   // 1. Full Day Astronomical Analysis (100% Client-Edge, Unified 60-Term Moon + RA-EoT Solar Core)
   const dayData: DayAnalysisResult = useMemo(() => {
-    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, locCoords, {
+    const strictOrExplicitLoc = locCoords.timezone
+      ? {
+          latitude: locCoords.latitude,
+          longitude: locCoords.longitude,
+          cityName: locCoords.cityName,
+          timezone: locCoords.timezone,
+        }
+      : locCoords;
+    return HighPrecisionAstroEngine.analyzeFullDay(selectedDate, strictOrExplicitLoc, {
       lunarMonthSystem,
       elevationMeters
     });
@@ -571,28 +579,26 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
       <div
         role="status"
         aria-label="Release authorization and analytical preview scope notice"
-        className={`rounded-2xl border px-4 py-3.5 text-xs text-rose-100 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-3 ${
-          enforceBackendReleaseGate
+        className={`rounded-2xl border px-4 py-3.5 text-xs text-rose-100 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-3 ${enforceBackendReleaseGate
             ? 'border-rose-600/70 bg-[#1e050b]'
             : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
-            ? 'border-amber-400 bg-amber-950/70 ring-2 ring-amber-400/60'
-            : 'border-emerald-500/60 bg-[#0d1f17]'
-        }`}
+              ? 'border-amber-400 bg-amber-950/70 ring-2 ring-amber-400/60'
+              : 'border-emerald-500/60 bg-[#0d1f17]'
+          }`}
       >
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold border ${
-              enforceBackendReleaseGate
+            <span className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold border ${enforceBackendReleaseGate
                 ? 'bg-rose-600/25 border-rose-500/60 text-rose-200'
                 : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
-                ? 'bg-amber-400 text-neutral-950 border-amber-300'
-                : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200'
-            }`}>
+                  ? 'bg-amber-400 text-neutral-950 border-amber-300'
+                  : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200'
+              }`}>
               {enforceBackendReleaseGate
                 ? 'PRODUCTION GATE LOCKED · HTTP 503 PARITY'
                 : backendCapabilityStatus.qaPreviewUnlocked && !backendCapabilityStatus.releaseAuthorized
-                ? 'UNVALIDATED_PREVIEW · QA / STAGING BUILD ONLY — NOT PRODUCTION'
-                : 'RELEASE_AUTHORIZED · VERIFIED TIMING'}
+                  ? 'UNVALIDATED_PREVIEW · QA / STAGING BUILD ONLY — NOT PRODUCTION'
+                  : 'RELEASE_AUTHORIZED · VERIFIED TIMING'}
             </span>
             <span className="rounded bg-rose-950 border border-rose-700 px-2 py-0.5 font-mono text-[10px] text-rose-200">
               Backend /api/v1/timing/daily: {backendCapabilityStatus.code} · release_authorized: {String(backendCapabilityStatus.releaseAuthorized)}
@@ -746,11 +752,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                 key={sys}
                 type="button"
                 onClick={() => setLunarMonthSystem(sys)}
-                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${
-                  lunarMonthSystem === sys
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${lunarMonthSystem === sys
                     ? 'bg-amber-500 text-neutral-950 border-amber-400'
                     : 'bg-[#20060e] text-rose-200 border-rose-900 hover:border-amber-600'
-                }`}
+                  }`}
               >
                 {sys === 'AMANTA' ? 'Amanta' : 'Purnimanta'}
               </button>
@@ -767,11 +772,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                 key={conv.id}
                 type="button"
                 onClick={() => setChandraBalaConvention(conv.id)}
-                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${
-                  chandraBalaConvention === conv.id
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition-colors ${chandraBalaConvention === conv.id
                     ? 'bg-amber-500 text-neutral-950 border-amber-400'
                     : 'bg-[#20060e] text-rose-200 border-rose-900 hover:border-amber-600'
-                }`}
+                  }`}
               >
                 {conv.label}
               </button>
@@ -783,6 +787,21 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
           Zone: <strong className="text-amber-200">{locCoords.timezone || `UTC${locCoords.timezoneOffset}`}</strong> · Dip: {elevationMeters}m
         </span>
       </div>
+
+      {/* Timezone / DST / Input Normalization Notes Banner (`dayData.inputNotes`) */}
+      {dayData.inputNotes.length > 0 && (
+        <div
+          role="status"
+          aria-label="Timezone and input normalization notes"
+          className="rounded-xl border border-amber-600/60 bg-amber-950/35 px-4 py-2.5 text-xs text-amber-100 space-y-1"
+        >
+          {dayData.inputNotes.map((note, idx) => (
+            <p key={idx} className="leading-relaxed">
+              <strong className="text-amber-300">Timezone Note:</strong> {note}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* FAIL-CLOSED GATE PANEL FOR ALL GUIDANCE TABS WHEN RELEASE IS UNAUTHORIZED */}
@@ -1031,18 +1050,17 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                   <div className="text-sm font-bold text-amber-200">
                     House {currentSample.chandraBalaHouse} from Natal Moon
                   </div>
-                  <div className={`text-[11px] font-medium ${
-                    currentSample.isAshtamaChandra
+                  <div className={`text-[11px] font-medium ${currentSample.isAshtamaChandra
                       ? 'text-rose-400 font-bold'
                       : [1, 3, 6, 7, 10, 11].includes(currentSample.chandraBalaHouse)
-                      ? 'text-emerald-300'
-                      : 'text-amber-300'
-                  }`}>
+                        ? 'text-emerald-300'
+                        : 'text-amber-300'
+                    }`}>
                     {currentSample.isAshtamaChandra
                       ? '⚠️ Ashtama Chandra (8th House Caution)'
                       : [1, 3, 6, 7, 10, 11].includes(currentSample.chandraBalaHouse)
-                      ? '✓ Auspicious Lunar Transit'
-                      : '⚡ Moderate Lunar Transit'}
+                        ? '✓ Auspicious Lunar Transit'
+                        : '⚡ Moderate Lunar Transit'}
                   </div>
                 </div>
               </div>
@@ -1220,19 +1238,18 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                   card.tone === 'emerald'
                     ? 'border-emerald-700/60 bg-[#0d2215]/60 hover:border-emerald-400 text-emerald-100'
                     : card.tone === 'blue'
-                    ? 'border-blue-700/60 bg-[#0c182a]/60 hover:border-blue-400 text-blue-100'
-                    : card.tone === 'amber'
-                    ? 'border-amber-600/60 bg-[#291808]/60 hover:border-amber-400 text-amber-100'
-                    : 'border-rose-700/60 bg-[#2b080f]/60 hover:border-rose-400 text-rose-100';
+                      ? 'border-blue-700/60 bg-[#0c182a]/60 hover:border-blue-400 text-blue-100'
+                      : card.tone === 'amber'
+                        ? 'border-amber-600/60 bg-[#291808]/60 hover:border-amber-400 text-amber-100'
+                        : 'border-rose-700/60 bg-[#2b080f]/60 hover:border-rose-400 text-rose-100';
 
                 return (
                   <button
                     key={card.key}
                     type="button"
                     onClick={() => handleOpenWindowGuidance(card.key, card.span12Hr)}
-                    className={`text-left rounded-xl border p-3.5 space-y-1.5 transition-all cursor-pointer hover:scale-[1.01] ${toneClasses} ${
-                      isSelected ? 'ring-2 ring-amber-400 shadow-xl' : ''
-                    }`}
+                    className={`text-left rounded-xl border p-3.5 space-y-1.5 transition-all cursor-pointer hover:scale-[1.01] ${toneClasses} ${isSelected ? 'ring-2 ring-amber-400 shadow-xl' : ''
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-semibold text-amber-200 text-xs flex items-center gap-1.5">
@@ -1276,13 +1293,12 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
-                    activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
                       ? 'border-emerald-600 bg-emerald-950 text-emerald-300'
                       : activeWindowGuidance.auspiciousness === 'INAUSPICIOUS'
-                      ? 'border-rose-600 bg-rose-950 text-rose-200'
-                      : 'border-amber-600 bg-amber-950 text-amber-300'
-                  }`}>
+                        ? 'border-rose-600 bg-rose-950 text-rose-200'
+                        : 'border-amber-600 bg-amber-950 text-amber-300'
+                    }`}>
                     {activeWindowGuidance.auspiciousness}
                   </span>
                   {onTabChange && (
@@ -1361,11 +1377,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                     key={h}
                     type="button"
                     onClick={() => setHorizon(h)}
-                    className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      horizon === h
+                    className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${horizon === h
                         ? 'bg-amber-500 text-neutral-950 font-bold shadow-md'
                         : 'text-rose-200/70 hover:text-white'
-                    }`}
+                      }`}
                   >
                     {h}
                   </button>
@@ -1403,9 +1418,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                         <tr
                           key={idx}
                           onClick={() => handleSelectExactEpoch(s.epochMs, rowWallMins)}
-                          className={`hover:bg-amber-950/30 cursor-pointer transition-colors ${
-                            currentSample.epochMs === s.epochMs ? 'bg-amber-950/40 ring-1 ring-inset ring-amber-500/60' : ''
-                          }`}
+                          className={`hover:bg-amber-950/30 cursor-pointer transition-colors ${currentSample.epochMs === s.epochMs ? 'bg-amber-950/40 ring-1 ring-inset ring-amber-500/60' : ''
+                            }`}
                         >
                           <td className="py-2 px-3 font-mono font-semibold text-amber-200 whitespace-nowrap">{s.localTime12Hr}</td>
                           <td className="py-2 px-3 font-bold" style={{ color: s.colorHex }}>{s.auspiciousnessScore}%</td>
@@ -1437,15 +1451,14 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                     setSelectedDate(w.date);
                     setHorizon('DAY');
                   }}
-                  className={`text-left rounded-2xl border p-4 space-y-2.5 transition-all hover:scale-[1.02] ${
-                    w.tier === 'AMRITHAM'
+                  className={`text-left rounded-2xl border p-4 space-y-2.5 transition-all hover:scale-[1.02] ${w.tier === 'AMRITHAM'
                       ? 'border-emerald-600/50 bg-[#0c2415]/50'
                       : w.tier === 'SHUBHA'
-                      ? 'border-blue-600/50 bg-[#0d1c2d]/50'
-                      : w.tier === 'VARJYA'
-                      ? 'border-rose-700/50 bg-[#28080f]/50'
-                      : 'border-amber-700/50 bg-[#251508]/50'
-                  } ${w.date === dayData.date ? 'ring-2 ring-amber-400' : ''}`}
+                        ? 'border-blue-600/50 bg-[#0d1c2d]/50'
+                        : w.tier === 'VARJYA'
+                          ? 'border-rose-700/50 bg-[#28080f]/50'
+                          : 'border-amber-700/50 bg-[#251508]/50'
+                    } ${w.date === dayData.date ? 'ring-2 ring-amber-400' : ''}`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-amber-200 text-sm">{w.dayName}</span>
@@ -1480,9 +1493,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                       setSelectedDate(m.date);
                       setHorizon('DAY');
                     }}
-                    className={`text-left rounded-xl border p-3 space-y-1.5 transition-all hover:border-amber-400 ${
-                      m.date === dayData.date ? 'ring-2 ring-amber-400 bg-[#2a0915]' : 'border-rose-950 bg-[#220710]'
-                    }`}
+                    className={`text-left rounded-xl border p-3 space-y-1.5 transition-all hover:border-amber-400 ${m.date === dayData.date ? 'ring-2 ring-amber-400 bg-[#2a0915]' : 'border-rose-950 bg-[#220710]'
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-amber-200">Day {m.dayOfMonth}</span>
@@ -1561,13 +1573,12 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                   Select any solar Kaala or planetary Hora below to inspect its Do&apos;s, Don&apos;ts &amp; Remedy:
                 </p>
               </div>
-              <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border self-start sm:self-center ${
-                activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
+              <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border self-start sm:self-center ${activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
                   ? 'border-emerald-600 bg-emerald-950 text-emerald-300'
                   : activeWindowGuidance.auspiciousness === 'INAUSPICIOUS'
-                  ? 'border-rose-600 bg-rose-950 text-rose-200'
-                  : 'border-amber-600 bg-amber-950 text-amber-300'
-              }`}>
+                    ? 'border-rose-600 bg-rose-950 text-rose-200'
+                    : 'border-amber-600 bg-amber-950 text-amber-300'
+                }`}>
                 {activeWindowGuidance.auspiciousness}
               </span>
             </div>
@@ -1590,11 +1601,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                   key={wName}
                   type="button"
                   onClick={() => setSelectedWindowName(wName)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all ${
-                    selectedWindowName === wName
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all ${selectedWindowName === wName
                       ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
                       : 'bg-[#170409] text-rose-200 border-rose-900 hover:border-amber-600'
-                  }`}
+                    }`}
                 >
                   {wName}
                 </button>
@@ -1895,13 +1905,12 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                   <h3 id="window-guidance-modal-title" className="font-serif text-base sm:text-lg font-bold text-amber-200">
                     {activeWindowGuidance.title}
                   </h3>
-                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
-                    activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
+                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${activeWindowGuidance.auspiciousness === 'AUSPICIOUS'
                       ? 'border-emerald-500 bg-emerald-950 text-emerald-300'
                       : activeWindowGuidance.auspiciousness === 'INAUSPICIOUS'
-                      ? 'border-rose-500 bg-rose-950 text-rose-200'
-                      : 'border-amber-500 bg-amber-950 text-amber-300'
-                  }`}>
+                        ? 'border-rose-500 bg-rose-950 text-rose-200'
+                        : 'border-amber-500 bg-amber-950 text-amber-300'
+                    }`}>
                     {activeWindowGuidance.auspiciousness}
                   </span>
                 </div>
@@ -1930,11 +1939,10 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
                       setSelectedWindowName(c.key);
                       setSelectedWindowSpan(c.span12Hr);
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] transition-all border ${
-                      selectedWindowName === c.key
+                    className={`px-2.5 py-1 rounded-lg text-[11px] transition-all border ${selectedWindowName === c.key
                         ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
                         : 'bg-[#21060f] text-rose-200 border-rose-900 hover:border-amber-600'
-                    }`}
+                      }`}
                   >
                     {c.icon} {c.title}
                   </button>

@@ -246,7 +246,13 @@ export function calculateRealDailyTimingWindows(
   gate: DailyTimingGatePolicy,
   now: Date = new Date()
 ): ComputedDailyTimingOutcome {
-  const bounds = HighPrecisionAstroEngine.getLocalDayUtcBounds(req.target.date, req.target.timezone, 0);
+  // Enforce strict IANA-only validation (`analyzeFullDayStrict`) on the target date, coordinates, and IANA zone
+  const strictTargetDay = HighPrecisionAstroEngine.analyzeFullDayStrict(req.target.date, {
+    latitude: req.target.latitude,
+    longitude: req.target.longitude,
+    timezone: req.target.timezone,
+  });
+  const bounds = strictTargetDay.localDayBounds;
   const dayStartSec = Math.round(bounds.startUtcMs / 1000);
   const dayEndSec = Math.round(bounds.endUtcMs / 1000);
 

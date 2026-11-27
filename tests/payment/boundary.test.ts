@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import express from 'express';
 import https from 'node:https';
-import {mkdtempSync,readFileSync,writeFileSync,rmSync} from 'node:fs';
+import {existsSync,mkdtempSync,readFileSync,writeFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawnSync} from 'node:child_process';
 import {createPaymentBoundary,createMTLSTransport,type VerifiedSessionAdapter,type PaymentTransport} from '../../server/paymentBoundary';
 import {checkoutMessage} from '../../src/engine/paymentClient';
 import {checkoutMessage as alternateCheckoutMessage} from '../../frontend/src/engine/paymentClient';
@@ -31,9 +31,12 @@ test('transport receives verified bearer, fixed safe contract and no caller IDs'
 },async(method,path,body,token)=>{assert.equal(method,'POST');assert.equal(path,'/api/payment/orders');assert.deepEqual(body,{product_id:'p',idempotency_key:'test-idempotency-key'});assert.equal(token,'verified-test-session');return {status:200,body:{order_id:'order',product_id:'p',product_version:'v1',capability_id:'cap',status:'PENDING',currency:'INR',amount_minor:12345,customer_id:'never-forward',provider_secret:'never-forward'}};}));
 test('failures never fall back to paid',()=>boundary(async url=>{const response=await request(url,'/api/payment/orders/order');assert.equal(response.status,503);assert.equal((await response.json()).status,'UNAVAILABLE');},async()=>{throw Error('internal secret must not leak');}));
 test('entitlement response strips internal identifiers',()=>boundary(async url=>{const response=await request(url,'/api/payment/entitlements');assert.deepEqual(await response.json(),{entitlements:[{capability_id:'cap',source_order:'order'}]});},async()=>({status:200,body:{entitlements:[{capability_id:'cap',source_order:'order',customer_id:'private',provider_secret:'private'}]}})));
-test('mutual TLS transport verifies both peers and sends bounded safe requests',async()=>{
+test('mutual TLS transport verifies both peers and sends bounded safe requests',async(t)=>{
+ const candidates=[process.env.OPENSSL_BIN,'openssl','C:\\Program Files\\Git\\usr\\bin\\openssl.exe','C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe','C:\\Program Files (x86)\\Git\\usr\\bin\\openssl.exe'].filter((v):v is string=>Boolean(v));
+ const opensslBin=candidates.find(bin=>(bin==='openssl'?spawnSync(bin,['version'],{stdio:'ignore'}).status===0:existsSync(bin)));
+ if(!opensslBin){t.skip('openssl CLI not installed on host PATH');return;}
  const dir=mkdtempSync(join(tmpdir(),'pay-mtls-'));
- const openssl=(...args:string[])=>execFileSync('openssl',args,{cwd:dir,stdio:'ignore'});
+ const openssl=(...args:string[])=>execFileSync(opensslBin,args,{cwd:dir,stdio:'ignore'});
  try{
  openssl('req','-x509','-newkey','rsa:2048','-nodes','-keyout','ca.key','-out','ca.pem','-days','1','-subj','/CN=isolated-payment-test-ca');
  for(const name of ['server','client']){openssl('req','-newkey','rsa:2048','-nodes','-keyout',`${name}.key`,'-out',`${name}.csr`,'-subj',`/CN=${name}`);writeFileSync(join(dir,`${name}.ext`),`subjectAltName=DNS:${name==='server'?'localhost':'payment-web.internal'}\nextendedKeyUsage=${name==='server'?'serverAuth':'clientAuth'}\n`);openssl('x509','-req','-in',`${name}.csr`,'-CA','ca.pem','-CAkey','ca.key','-CAcreateserial','-out',`${name}.pem`,'-days','1','-extfile',`${name}.ext`);}
