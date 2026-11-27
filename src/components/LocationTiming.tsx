@@ -159,10 +159,14 @@ export function LocationTiming() {
     {!guided && validLocationTimingDate(date) &&
       <LocationCalendar date={date} busy={busy} chooseDate={day => {setDate(day); clearResult();}}/>}
     {error && <p role="alert">Could not check timing availability. Try again.</p>}
-    {result && <div role="status" className="space-y-2 rounded-lg border border-amber-600 p-4">
-      <p>{result.city} · {result.date} · {result.timezone}</p>
-      <p>{LOCATION_TIMING_ACTIVITIES.find(option => option.id === result.activity)?.label}</p>
-      <p>Timing is unavailable for this selection. Reviewed rules and verified calendar inputs are still required.</p>
+    {result && <div className="space-y-2 rounded-lg border border-amber-600 p-4">
+      <div role="status" className="space-y-2">
+        <p>{result.city} · {result.date} · {result.timezone}</p>
+        <p>{LOCATION_TIMING_ACTIVITIES.find(option => option.id === result.activity)?.label}</p>
+        <p>Timing is unavailable for this selection. Reviewed rules and verified calendar inputs are still required.</p>
+      </div>
+      <button type="button" className="rounded border border-rose-700 px-3 py-2"
+        onClick={() => {dateControl.current?.focus(); clearResult();}}>Choose another date</button>
     </div>}
   </section>;
 }
