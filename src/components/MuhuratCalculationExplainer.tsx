@@ -46,13 +46,13 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
       formula: 'Kaala Octant = (Sunset - Sunrise) / 8 ≈ ' + Math.round(dayData.solarMetrics.dayLengthMinutes / 8) + ' minutes each',
       explanation: 'Daylight (D) is partitioned into 8 temporal octants for Rahu Kaal, Yamaghanta, and Gulika. Abhijit Muhurta spans the 8th diurnal Muhurta (D/15) centered on True Solar Noon (cancelled on Wednesdays due to midday Rahu overlap), while Amrit Kaal follows the classical 27-Nakshatra Amritadi Ghati table.',
       liveData: [
-        { label: 'Rahu Kaal (-35 pts)', val: `${dayData.fixedKaalas.rahuKaal.start12Hr} – ${dayData.fixedKaalas.rahuKaal.end12Hr}` },
+        { label: 'Rahu Kaal (-30 pts)', val: `${dayData.fixedKaalas.rahuKaal.start12Hr} – ${dayData.fixedKaalas.rahuKaal.end12Hr}` },
         {
           label: dayData.fixedKaalas.abhijitMuhurta.isValidOnThisDay ? 'Abhijit Muhurta (+25 pts)' : 'Abhijit (Cancelled Wed)',
           val: `${dayData.fixedKaalas.abhijitMuhurta.start12Hr} – ${dayData.fixedKaalas.abhijitMuhurta.end12Hr}`
         },
-        { label: 'Brahma Muhurta (+15 pts)', val: `${dayData.fixedKaalas.brahmaMuhurta.start12Hr} – ${dayData.fixedKaalas.brahmaMuhurta.end12Hr}` },
-        { label: 'Lunar Amrit Kaal (+15 pts)', val: `${dayData.fixedKaalas.amritKaal.start12Hr} – ${dayData.fixedKaalas.amritKaal.end12Hr}` }
+        { label: 'Brahma Muhurta (+18 pts)', val: `${dayData.fixedKaalas.brahmaMuhurta.start12Hr} – ${dayData.fixedKaalas.brahmaMuhurta.end12Hr}` },
+        { label: 'Lunar Amrit Kaal (+14 pts)', val: `${dayData.fixedKaalas.amritKaal.start12Hr} – ${dayData.fixedKaalas.amritKaal.end12Hr}` }
       ]
     },
     {
@@ -61,7 +61,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
       short: 'Choghadiya Spans',
       icon: '☀️',
       formula: 'Day Choghadiya = D / 8 | Night Choghadiya = N / 8 (with Pre-Sunrise Vedic Continuity)',
-      explanation: 'Both daytime (Sunrise→Sunset) and nighttime (Sunset→Next Sunrise, plus Midnight→Sunrise from the preceding Vedic night) are divided into 8 spans: Amrit (+18), Shubh (+15), Labh (+14), Char (+6), Udveg (-15), Rog (-18), and Kaal (-20).',
+      explanation: 'Both daytime (Sunrise→Sunset) and nighttime (Sunset→Next Sunrise, plus Midnight→Sunrise from the preceding Vedic night) are divided into 8 spans: Amrit (+25), Shubh (+20), Labh (+15), Char (+8), and Udveg / Rog / Kaal (-20).',
       liveData: dayData.choghadiya.dayChoghadiya.slice(0, 4).map((c) => ({
         label: `${c.name} (${c.vedicLord})`,
         val: `${c.start12Hr} – ${c.end12Hr}`
@@ -73,7 +73,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
       short: '24 Planetary Horas',
       icon: '🪐',
       formula: 'Hora 1 = Vaara Lord at Sunrise → Chaldean speed order (Saturn → Jupiter → Mars → Sun → Venus → Mercury → Moon)',
-      explanation: 'Each Vedic day begins at local sunrise with the Vaara Lord and cycles through 12 diurnal and 12 nocturnal planetary hours. Jupiter (+12), Venus (+10), Mercury (+8), and Moon (+6) Horas uplift auspicious undertakings; Mars (-8) and Saturn (-10) Horas favor technical or audit work.',
+      explanation: 'Each Vedic day begins at local sunrise with the Vaara Lord and cycles through 12 diurnal and 12 nocturnal planetary hours. Benefic Jupiter, Venus, Mercury, and Moon Horas (+10) uplift auspicious undertakings; Mars and Saturn Horas (-10) favor technical or audit work.',
       liveData: dayData.horas.slice(0, 4).map((h) => ({
         label: `Hora ${h.horaNumber} (${h.rulingPlanet})`,
         val: `${h.start12Hr} – ${h.end12Hr}`
@@ -112,7 +112,7 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
       title: '7. Universal vs Personalized Composite Scoring Formula',
       short: 'Composite 5–98% Score',
       icon: '📊',
-      formula: 'Score = clamp(5..98, Base(50) + Choghadiya(-20..+18) + Hora(-10..+12) + Kaalas(-35..+25) - Vishti(12) + TaraBala(-30..+25) + ChandraBala(-35..+15) + Lagna(-10..+8))',
+      formula: 'Score = clamp(5..98, Base(50) + Choghadiya(-20..+25) + Hora(-10..+10) + Kaalas(-30..+25) - Vishti(15) + TaraBala(-30..+25) + ChandraBala(-35..+25) + Lagna(-10..+10))',
       explanation: 'In Universal Mode, scores reflect pure topocentric Panchanga, Kaalas, Choghadiya, and Hora. When personalized (via 20-Sec Quiz or Exact Birth Details), real-time transit Moon Nakshatra Tara Bala, Chandra Bala (including -35 Ashtama Chandra protection), and transit Lagna harmony modulate every 15-minute window.',
       liveData: [
         { label: 'Amritham Tier', val: 'Score ≥ 75% (Peak Golden Window for Milestones)' },
@@ -165,8 +165,8 @@ export const MuhuratCalculationExplainer: React.FC<MuhuratCalculationExplainerPr
             <span>{cur.icon}</span>
             <span>{cur.title}</span>
           </h3>
-          <span className="text-[11px] font-mono text-emerald-300 bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-800">
-            100% Client-Side Math
+          <span className="text-[11px] font-mono text-amber-300 bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-700">
+            Illustrative Analytical Preview · Provisional Unapproved
           </span>
         </div>
 

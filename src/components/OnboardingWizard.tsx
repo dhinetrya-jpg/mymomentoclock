@@ -4,7 +4,8 @@
  * - Global place search (120+ offline cities + `/api/geo/search` autocomplete + custom Lat/Lon)
  * - Automatic historical & DST IANA timezone resolution (`resolveIanaTimezone`) with spring-gap rejection & fall-fold disambiguation
  * - Birth date (1900..present) and birth time entry
- * - Ayanamsa selection (True Lahiri, KP, Raman)
+ * - Ayanamsa selection (True Lahiri, KP, Raman) visible in both catalog and manual-coordinate modes
+ * - Pre-hydrated values & Cancel action when editing an active natal profile
  */
 
 import React, { useEffect, useId, useMemo, useState } from 'react';
@@ -14,18 +15,23 @@ import { MAJOR_CITIES_MUHURAT } from '../engine/diwaliData';
 import { OfflineCityRecord, OfflineGeoResolver } from '../engine/offlineGeoData';
 import { resolveIanaTimezone } from '../engine/timezoneResolver';
 
+export interface BirthFormSubmission {
+  birthDate: string;
+  birthTime: string;
+  latitude: number;
+  longitude: number;
+  cityName: string;
+  ayanamsaType: AyanamsaType;
+  timezoneOffset: number;
+  timezone?: string;
+  certainty?: string;
+}
+
 interface OnboardingWizardProps {
-  onCalculate: (params: {
-    birthDate: string;
-    birthTime: string;
-    latitude: number;
-    longitude: number;
-    cityName: string;
-    ayanamsaType: AyanamsaType;
-    timezoneOffset: number;
-    timezone?: string;
-  }) => void;
+  onCalculate: (params: BirthFormSubmission) => void;
   onOpenQuickFestival: () => void;
+  initialValues?: BirthFormSubmission;
+  onCancel?: () => void;
 }
 
 interface PlaceOption {
@@ -41,26 +47,10 @@ interface PlaceOption {
 export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   onCalculate,
   onOpenQuickFestival,
+  initialValues,
+  onCancel,
 }) => {
   const formId = useId();
-  const [cityName, setCityName] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [geoSuggestions, setGeoSuggestions] = useState<OfflineCityRecord[]>([]);
-  const [customPlace, setCustomPlace] = useState<PlaceOption | null>(null);
-  const [isManualCoords, setIsManualCoords] = useState(false);
-  const [manualLat, setManualLat] = useState('');
-  const [manualLon, setManualLon] = useState('');
-  const [manualZone, setManualZone] = useState('');
-
-  const [birthDate, setBirthDate] = useState('');
-  const [birthTime, setBirthTime] = useState('');
-  const [ayanamsa, setAyanamsa] = useState<AyanamsaType>(AyanamsaType.TRUE_LAHIRI);
-
-  const [offset, setOffset] = useState('');
-  const [offsetAutoResolved, setOffsetAutoResolved] = useState<string>('');
-  const [foldCandidates, setFoldCandidates] = useState<number[]>([]);
-  const [certainty, setCertainty] = useState('');
-  const [error, setError] = useState('');
 
   // Merge MAJOR_CITIES_MUHURAT (preserving exact option values like "Kolkata") with global catalog
   const catalogOptions: PlaceOption[] = useMemo(() => {
@@ -94,6 +84,66 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     return list;
   }, []);
 
+  const initialCatalogMatch = useMemo(() => {
+    if (!initialValues) return null;
+    return (
+      catalogOptions.find(
+        (o) =>
+          o.key === initialValues.cityName ||
+          o.cityName === initialValues.cityName ||
+          (Math.abs(o.latitude - initialValues.latitude) < 0.005 &&
+            Math.abs(o.longitude - initialValues.longitude) < 0.005)
+      ) || null
+    );
+  }, [catalogOptions, initialValues]);
+
+  const [cityName, setCityName] = useState<string>(() => {
+    if (!initialValues) return '';
+    return initialCatalogMatch ? initialCatalogMatch.key : initialValues.cityName || 'Custom Coordinates';
+  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [geoSuggestions, setGeoSuggestions] = useState<OfflineCityRecord[]>([]);
+  const [customPlace, setCustomPlace] = useState<PlaceOption | null>(() => {
+    if (!initialValues || initialCatalogMatch) return null;
+    return {
+      key: initialValues.cityName || 'Custom Place',
+      label: `${initialValues.cityName || 'Custom Place'}${initialValues.timezone ? ` (${initialValues.timezone})` : ''}`,
+      cityName: initialValues.cityName || 'Custom Place',
+      latitude: initialValues.latitude,
+      longitude: initialValues.longitude,
+      timezone: initialValues.timezone || '',
+      defaultOffset: initialValues.timezoneOffset,
+    };
+  });
+  const [isManualCoords, setIsManualCoords] = useState<boolean>(() =>
+    Boolean(initialValues && !initialCatalogMatch && !initialValues.cityName)
+  );
+  const [manualLat, setManualLat] = useState<string>(() =>
+    initialValues ? String(initialValues.latitude) : ''
+  );
+  const [manualLon, setManualLon] = useState<string>(() =>
+    initialValues ? String(initialValues.longitude) : ''
+  );
+  const [manualZone, setManualZone] = useState<string>(() =>
+    initialValues?.timezone && initialValues.timezone !== 'UTC_OFFSET' ? initialValues.timezone : ''
+  );
+
+  const [birthDate, setBirthDate] = useState<string>(() => initialValues?.birthDate || '');
+  const [birthTime, setBirthTime] = useState<string>(() => initialValues?.birthTime || '');
+  const [ayanamsa, setAyanamsa] = useState<AyanamsaType>(
+    () => initialValues?.ayanamsaType || AyanamsaType.TRUE_LAHIRI
+  );
+
+  const [offset, setOffset] = useState<string>(() =>
+    initialValues && Number.isFinite(initialValues.timezoneOffset)
+      ? String(initialValues.timezoneOffset)
+      : ''
+  );
+  const [offsetAutoResolved, setOffsetAutoResolved] = useState<string>('');
+  const [foldCandidates, setFoldCandidates] = useState<number[]>([]);
+  const [certainty, setCertainty] = useState<string>(() => initialValues?.certainty || '');
+  const [error, setError] = useState('');
+
   const activePlace: PlaceOption | null = useMemo(() => {
     if (isManualCoords) {
       const lat = Number(manualLat);
@@ -112,6 +162,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     if (customPlace && customPlace.key === cityName) return customPlace;
     return catalogOptions.find((o) => o.key === cityName) || null;
   }, [isManualCoords, manualLat, manualLon, manualZone, cityName, customPlace, catalogOptions, offset]);
+
+  const effectiveIana =
+    activePlace?.timezone && activePlace.timezone !== 'UTC_OFFSET' && activePlace.timezone !== 'Local'
+      ? activePlace.timezone
+      : '';
 
   // Global place autocomplete (`OfflineGeoResolver` + `/api/geo/search` when >= 3 chars)
   useEffect(() => {
@@ -139,27 +194,26 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     return undefined;
   }, [searchQuery, birthDate]);
 
-  // Automatic historical & DST IANA timezone resolution whenever place + date + time are known
+  // Automatic historical & DST IANA timezone resolution whenever valid IANA place + date + time are known
   useEffect(() => {
     setFoldCandidates([]);
     setOffsetAutoResolved('');
-    if (!activePlace?.timezone || !birthDate || !birthTime || certainty === 'UNKNOWN') return;
+    if (!effectiveIana || !birthDate || !birthTime || certainty === 'UNKNOWN') return;
     try {
-      const res = resolveIanaTimezone(birthDate, birthTime, activePlace.timezone);
+      const res = resolveIanaTimezone(birthDate, birthTime, effectiveIana);
       setOffset(String(res.offsetHours));
-      setOffsetAutoResolved(`Auto-resolved from ${activePlace.timezone} (${res.isoUtc})`);
+      setOffsetAutoResolved(`Auto-resolved from ${effectiveIana} (${res.isoUtc})`);
       setError('');
     } catch (err) {
       if (err instanceof CalculationInputError) {
         if (err.code === 'NONEXISTENT_LOCAL_TIME') {
           setOffset('');
-          setError(`The local time ${birthTime} did not exist in ${activePlace.timezone} on ${birthDate} due to a Daylight Saving Time spring-forward jump.`);
+          setError(`The local time ${birthTime} did not exist in ${effectiveIana} on ${birthDate} due to a Daylight Saving Time spring-forward jump.`);
         } else if (err.code === 'AMBIGUOUS_LOCAL_TIME') {
-          // Probe standard vs daylight offsets (-1h/+1h around defaultOffset) to present explicit disambiguation buttons
           const candidates: number[] = [];
           for (let cand = -12; cand <= 14; cand += 0.25) {
             try {
-              resolveIanaTimezone(birthDate, birthTime, activePlace.timezone, cand);
+              resolveIanaTimezone(birthDate, birthTime, effectiveIana, cand);
               candidates.push(cand);
             } catch {
               // Ignore non-matching offsets
@@ -167,20 +221,21 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           }
           setFoldCandidates(candidates);
           setOffset('');
-          setError(`The local time ${birthTime} occurred twice in ${activePlace.timezone} on ${birthDate} (DST fall-back fold). Select the applicable UTC offset below.`);
+          setError(`The local time ${birthTime} occurred twice in ${effectiveIana} on ${birthDate} (DST fall-back fold). Select the applicable UTC offset below.`);
         }
       }
     }
-  }, [activePlace?.timezone, birthDate, birthTime, certainty]);
+  }, [effectiveIana, birthDate, birthTime, certainty]);
 
   const handleSelectGeoSuggestion = (rec: OfflineCityRecord) => {
+    const cleanZone = rec.timezone && rec.timezone !== 'UTC_OFFSET' ? rec.timezone : '';
     const picked: PlaceOption = {
       key: `${rec.name}, ${rec.country}`,
-      label: `${rec.name}, ${rec.country} (${rec.timezone})`,
+      label: `${rec.name}, ${rec.country} (${cleanZone || `UTC${rec.defaultUtcOffset >= 0 ? `+${rec.defaultUtcOffset}` : rec.defaultUtcOffset}`})`,
       cityName: `${rec.name}, ${rec.country}`,
       latitude: rec.latitude,
       longitude: rec.longitude,
-      timezone: rec.timezone,
+      timezone: cleanZone,
       defaultOffset: rec.defaultUtcOffset,
     };
     setIsManualCoords(false);
@@ -188,7 +243,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     setCityName(picked.key);
     setSearchQuery('');
     setGeoSuggestions([]);
-    if (!birthDate || !birthTime) {
+    if (!cleanZone || !birthDate || !birthTime) {
       setOffset(String(rec.defaultUtcOffset));
     }
   };
@@ -207,9 +262,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
     const parsedOffset = offset === '' ? undefined : Number(offset);
     try {
-      if (activePlace.timezone && parsedOffset === undefined) {
-        // Trigger specific NONEXISTENT_LOCAL_TIME or AMBIGUOUS_LOCAL_TIME message if offset was left blank
-        resolveIanaTimezone(birthDate, birthTime, activePlace.timezone);
+      if (effectiveIana && parsedOffset === undefined) {
+        resolveIanaTimezone(birthDate, birthTime, effectiveIana);
       }
       validateBirthInput({
         birthDate,
@@ -218,7 +272,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         longitude: activePlace.longitude,
         birthTimeCertainty: certainty || undefined,
         timezoneOffset: parsedOffset,
-        timezone: activePlace.timezone || undefined,
+        timezone: effectiveIana || undefined,
         ayanamsaType: ayanamsa,
       });
     } catch (err) {
@@ -234,7 +288,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       cityName: activePlace.cityName,
       ayanamsaType: ayanamsa,
       timezoneOffset: Number(offset),
-      timezone: activePlace.timezone || undefined,
+      timezone: effectiveIana || undefined,
+      certainty: certainty || undefined,
     });
   };
 
@@ -320,7 +375,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                       className="w-full text-left rounded px-2.5 py-1.5 text-xs text-rose-100 hover:bg-amber-950/60 flex items-center justify-between gap-2"
                     >
                       <span>{rec.name}{rec.state ? `, ${rec.state}` : ''}, {rec.country}</span>
-                      <span className="font-mono text-[10px] text-amber-300">{rec.timezone}</span>
+                      <span className="font-mono text-[10px] text-amber-300">
+                        {rec.timezone && rec.timezone !== 'UTC_OFFSET'
+                          ? rec.timezone
+                          : `UTC${rec.defaultUtcOffset >= 0 ? `+${rec.defaultUtcOffset}` : rec.defaultUtcOffset}`}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -342,47 +401,45 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             </label>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor={`${formId}-city`} className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
-              <select
-                id={`${formId}-city`}
-                value={cityName}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setCityName(val);
-                  const found = catalogOptions.find((o) => o.key === val);
-                  if (found && (!birthDate || !birthTime)) {
-                    setOffset(String(found.defaultOffset));
-                  }
-                }}
-                className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
-              >
-                <option value="">Select birth city</option>
-                {customPlace && !catalogOptions.some((o) => o.key === customPlace.key) && (
-                  <option value={customPlace.key}>{customPlace.label}</option>
-                )}
-                {catalogOptions.map((c) => (
-                  <option key={c.key} value={c.key}>{c.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor={`${formId}-ayanamsa`} className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
-              <select
-                id={`${formId}-ayanamsa`}
-                value={ayanamsa}
-                onChange={(e) => setAyanamsa(e.target.value as AyanamsaType)}
-                className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
-              >
-                <option value={AyanamsaType.TRUE_LAHIRI}>True Lahiri (Chitrapaksha) - Global Baseline</option>
-                <option value={AyanamsaType.KP}>KP (Krishnamurti Paddhati)</option>
-                <option value={AyanamsaType.RAMAN}>B.V. Raman Ayanamsa</option>
-              </select>
-            </div>
+          <div>
+            <label htmlFor={`${formId}-city`} className="text-xs font-semibold text-rose-100">City / Geographic Longitude</label>
+            <select
+              id={`${formId}-city`}
+              value={cityName}
+              onChange={(e) => {
+                const val = e.target.value;
+                setCityName(val);
+                const found = catalogOptions.find((o) => o.key === val);
+                if (found && (!birthDate || !birthTime || !found.timezone)) {
+                  setOffset(String(found.defaultOffset));
+                }
+              }}
+              className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+            >
+              <option value="">Select birth city</option>
+              {customPlace && !catalogOptions.some((o) => o.key === customPlace.key) && (
+                <option value={customPlace.key}>{customPlace.label}</option>
+              )}
+              {catalogOptions.map((c) => (
+                <option key={c.key} value={c.key}>{c.label}</option>
+              ))}
+            </select>
           </div>
         )}
+
+        <div>
+          <label htmlFor={`${formId}-ayanamsa`} className="text-xs font-semibold text-rose-100">Ayanamsa Reference System</label>
+          <select
+            id={`${formId}-ayanamsa`}
+            value={ayanamsa}
+            onChange={(e) => setAyanamsa(e.target.value as AyanamsaType)}
+            className="mt-1.5 w-full min-w-0 max-w-full rounded-lg border border-rose-900/60 bg-[#280812] px-3.5 py-2.5 text-xs text-rose-100 focus:border-amber-400 focus:outline-none"
+          >
+            <option value={AyanamsaType.TRUE_LAHIRI}>True Lahiri (Chitrapaksha) - Global Baseline</option>
+            <option value={AyanamsaType.KP}>KP (Krishnamurti Paddhati)</option>
+            <option value={AyanamsaType.RAMAN}>B.V. Raman Ayanamsa</option>
+          </select>
+        </div>
 
         <label className="block text-xs">UTC offset at birth (hours)
           <input
@@ -397,7 +454,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             className="my-2 block w-full min-w-0 max-w-full bg-rose-950 p-2 font-mono"
           />
           <span className="text-[11px] text-rose-300/80 block">
-            {offsetAutoResolved || 'Automatically populated from the selected city’s historical IANA timezone when date and time are entered; verify or disambiguate if born during a DST transition.'}
+            {offsetAutoResolved || 'Automatically populated from the selected city’s historical IANA timezone when date and time are entered; verify manually when using approximate longitude offsets or born during a DST transition.'}
           </span>
         </label>
 
@@ -438,13 +495,23 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           </p>
         )}
 
-        <div className="pt-2 flex flex-col sm:flex-row gap-3">
+        <div className="pt-2 flex flex-col sm:flex-row flex-wrap gap-3">
           <button
             type="submit"
-            className="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-neutral-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-950/50"
+            className="flex-1 rounded-xl bg-amber-500 py-3 px-5 text-xs font-bold text-neutral-950 hover:bg-amber-400 transition-colors shadow-lg shadow-amber-950/50"
           >
             Compute chart preview
           </button>
+
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="rounded-xl border border-amber-500/50 bg-[#260812] px-4 py-3 text-xs font-semibold text-amber-200 hover:bg-amber-950/60 transition-colors"
+            >
+              Cancel · Return to Chart
+            </button>
+          )}
 
           <button
             type="button"

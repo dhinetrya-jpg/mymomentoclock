@@ -32,23 +32,37 @@ export const LivingRoomTvDashboard: React.FC = () => {
     };
   }, [isAutoPlay]);
 
+  const stopAmbientDrone = () => {
+    droneNodesRef.current.forEach(osc => {
+      try {
+        osc.stop();
+        osc.disconnect();
+      } catch {
+        // ignore
+      }
+    });
+    droneNodesRef.current = [];
+    if (audioCtxRef.current) {
+      audioCtxRef.current.close().catch(() => {});
+      audioCtxRef.current = null;
+    }
+  };
+
+  // Clean up Web Audio oscillators & AudioContext on unmount (tab switch)
+  useEffect(() => {
+    return () => {
+      stopAmbientDrone();
+    };
+  }, []);
+
   // Ambient Sitar / Tanpura Harmonic Drone Synthesizer
   const toggleAmbientDrone = () => {
     if (isAmbientAudioActive) {
-      droneNodesRef.current.forEach(osc => {
-        try {
-          osc.stop();
-          osc.disconnect();
-        } catch {
-          // ignore
-        }
-      });
-      droneNodesRef.current = [];
-      audioCtxRef.current?.close();
-      audioCtxRef.current = null;
+      stopAmbientDrone();
       setIsAmbientAudioActive(false);
     } else {
       try {
+        stopAmbientDrone();
         const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
         const ctx = new AudioCtx();
         audioCtxRef.current = ctx;
@@ -177,6 +191,9 @@ export const LivingRoomTvDashboard: React.FC = () => {
           {AARTI_VERSES.map((_, idx) => (
             <button
               key={idx}
+              type="button"
+              aria-label={`Select Aarti verse ${idx + 1} of ${AARTI_VERSES.length}`}
+              aria-current={currentVerseIndex === idx ? 'step' : undefined}
               onClick={() => setCurrentVerseIndex(idx)}
               className={`h-2 rounded-full transition-all ${
                 currentVerseIndex === idx ? 'w-6 bg-amber-400' : 'w-2 bg-rose-900/80 hover:bg-rose-700'

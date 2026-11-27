@@ -12,6 +12,8 @@ import (
 	"astroengine-core/backend/internal/uncertainty"
 	"context"
 	"crypto/rand"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -164,7 +166,7 @@ func newHandlerWithPayment(pay *payment.Service, serviceDNS string) http.Handler
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		failure(w, 404, "NOT_FOUND", "This operation is unavailable.")
 	})
-	slots := make(chan struct{}, 8)
+	slots := make(chan struct{}, 32)
 	var mu sync.Mutex
 	window := time.Now()
 	count := 0
@@ -258,7 +260,32 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	server := &http.Server{Addr: ":" + port, Handler: newHandler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+	handler := newHandler()
+	server := &http.Server{Addr: ":" + port, Handler: handler, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+	if tlsAddr := os.Getenv("INTERNAL_TLS_ADDR"); tlsAddr != "" {
+		caBytes, caErr := os.ReadFile(os.Getenv("INTERNAL_TLS_CA_FILE"))
+		certPair, certErr := tls.LoadX509KeyPair(os.Getenv("INTERNAL_TLS_CERT_FILE"), os.Getenv("INTERNAL_TLS_KEY_FILE"))
+		pool := x509.NewCertPool()
+		if caErr != nil || certErr != nil || !pool.AppendCertsFromPEM(caBytes) {
+			log.Fatal("INTERNAL_TLS_CONFIGURATION_INVALID")
+		}
+		internalTLS := &http.Server{
+			Addr:              tlsAddr,
+			Handler:           handler,
+			TLSConfig:         &tls.Config{Certificates: []tls.Certificate{certPair}, ClientCAs: pool, ClientAuth: tls.RequireAndVerifyClientCert, MinVersion: tls.VersionTLS13},
+			ReadHeaderTimeout: 5 * time.Second,
+			ReadTimeout:       10 * time.Second,
+			WriteTimeout:      15 * time.Second,
+			IdleTimeout:       30 * time.Second,
+			MaxHeaderBytes:    16 << 10,
+		}
+		paymentServers = append(paymentServers, internalTLS)
+		go func() {
+			if err := internalTLS.ListenAndServeTLS("", ""); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				log.Print("INTERNAL_TLS_LISTENER_FAILED")
+			}
+		}()
+	}
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 	go func() {

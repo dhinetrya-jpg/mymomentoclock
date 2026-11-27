@@ -1,5 +1,4 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { PwaStatus } from './pwa/PwaStatus';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
@@ -73,6 +72,5 @@ class RootErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState
 createRoot(document.getElementById('root')!).render(
   <RootErrorBoundary>
     <App />
-    <PwaStatus />
   </RootErrorBoundary>
 );

@@ -13,6 +13,7 @@ import { PersonalProfileEngine, UserProfile } from '../engine/personalProfileEng
 import { OfflineGeoResolver, OfflineCityRecord } from '../engine/offlineGeoData';
 import { LocationCoordinates } from '../engine/zeroCostAstroEngine';
 import { resolveIanaTimezone } from '../engine/timezoneResolver';
+import { useModalFocus } from './useModalFocus';
 
 export type ProfileModalTab = 'WIZARD' | 'EXACT' | 'UNIVERSAL';
 
@@ -63,6 +64,7 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
 
   // ALL React hooks MUST execute unconditionally before any early return!
   const [activeTab, setActiveTab] = useState<ProfileModalTab>(() => deriveTab(currentProfile, initialTab));
+  const dialogRef = useModalFocus(isOpen, onClose);
 
   // Tab 1: 20-Sec Non-Technical Quiz State
   const [wizardName, setWizardName] = useState<string>(() =>
@@ -349,15 +351,19 @@ export const PersonalProfileModal: React.FC<PersonalProfileModalProps> = ({
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="personal-profile-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-3xl rounded-2xl border border-amber-600/50 bg-[#160409] text-rose-100 shadow-2xl overflow-hidden my-6">
+      <div
+        ref={dialogRef as React.RefObject<HTMLDivElement>}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="personal-profile-modal-title"
+        tabIndex={-1}
+        className="relative w-full max-w-3xl rounded-2xl border border-amber-600/50 bg-[#160409] text-rose-100 shadow-2xl overflow-hidden my-6 focus:outline-none"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-amber-900/60 bg-gradient-to-r from-[#2a0713] via-[#1a040b] to-[#2a0713] p-4 sm:p-5">
           <div className="flex items-center gap-3">

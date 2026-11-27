@@ -17,7 +17,7 @@ extern "C" {
  PlanetCoordinate result{};
  swe_version(result.library_version);
  result.requested_flags=SEFLG_SWIEPH|SEFLG_SIDEREAL|SEFLG_SPEED;
- if(!std::isfinite(jd) || (id!=0&&id!=1&&id!=4&&id!=6)) {result.error_code=-1;return result;}
+ if(!std::isfinite(jd) || (id!=0&&id!=1&&id!=2&&id!=3&&id!=4&&id!=5&&id!=6&&id!=10&&id!=11)) {result.error_code=-1;return result;}
  double xx[6]{};
  swe_set_sid_mode(SE_SIDM_LAHIRI,0,0);
  result.returned_flags=swe_calc_ut(jd,id,result.requested_flags,xx,result.warning);

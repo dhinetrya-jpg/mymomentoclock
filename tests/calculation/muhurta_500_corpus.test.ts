@@ -21,7 +21,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { AyanamsaType, getAyanamsa } from '../../src/engine/astroMath';
+import { AyanamsaType, calculateDeltaT, getAyanamsa } from '../../src/engine/astroMath';
 import { CalculationInputError } from '../../src/engine/calculationValidation';
 import {
   calculateApparentMoonTropical,
@@ -473,6 +473,21 @@ test('C-05, C-06, C-07, C-08 & C-09 Exit Gate: Strict inputs, elevation dip, Adh
   const ms = moonSun(sampleJd);
   assert.equal(calculateHighPrecisionSun(sampleJd).apparentLongitude, ms.sunTropicalDeg);
   assert.equal(calculateHighPrecisionMoon(sampleJd).tropicalLongitude, ms.moonTropicalDeg);
+
+  // 7b. Observed USNO / IERS Bulletin A Delta-T table (~69.18s in 2026, ~56.86s in 1990, ~ -2.79s in 1900) & 'UTC_OFFSET' remote-city support
+  assert.ok(Math.abs(calculateDeltaT(2026) - 69.18) < 0.05, `Expected 2026 IERS Delta-T ~69.18s, got ${calculateDeltaT(2026)}`);
+  assert.ok(Math.abs(calculateDeltaT(1990) - 56.86) < 0.1, `Expected 1990 IERS Delta-T ~56.86s, got ${calculateDeltaT(1990)}`);
+  assert.ok(Math.abs(calculateDeltaT(1900) - -2.79) < 0.2, `Expected 1900 Delta-T ~ -2.79s (not +92s), got ${calculateDeltaT(1900)}`);
+  const perthUtcOffset = HighPrecisionAstroEngine.analyzeFullDay('2026-11-08', {
+    latitude: -31.9505,
+    longitude: 115.8605,
+    cityName: 'Perth, Australia',
+    timezone: 'UTC_OFFSET',
+    timezoneOffset: 8,
+  });
+  assert.equal(perthUtcOffset.location.timezone, undefined);
+  assert.equal(perthUtcOffset.location.timezoneOffset, 8);
+  assert.equal(perthUtcOffset.solarMetrics.isPolar, false);
 
   // 8. Scoring Weight Governance & Production Release Gate Remain Strictly Fail-Closed
   assert.equal(SCORING_WEIGHT_GOVERNANCE.approvalStatus, 'PROVISIONAL_UNAPPROVED');

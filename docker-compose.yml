@@ -8,6 +8,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
+      # Opt-in native CGo bridge: set NATIVE_ENGINE_URL="http://api:8080" only when `api` mounts a reviewed ASTRONOMY_NATIVE_CONFIG_FILE.
+      NATIVE_ENGINE_URL: "${NATIVE_ENGINE_URL:-}"
     read_only: true
     tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
     cap_drop: [ALL]
@@ -15,6 +17,12 @@ services:
   api:
     build: .
     ports: ["127.0.0.1:8080:8080"]
+    environment:
+      ASTRONOMY_NATIVE_CONFIG_FILE: "${ASTRONOMY_NATIVE_CONFIG_FILE:-}"
+      INTERNAL_TLS_ADDR: "${INTERNAL_TLS_ADDR:-}"
+      INTERNAL_TLS_CA_FILE: "${INTERNAL_TLS_CA_FILE:-}"
+      INTERNAL_TLS_CERT_FILE: "${INTERNAL_TLS_CERT_FILE:-}"
+      INTERNAL_TLS_KEY_FILE: "${INTERNAL_TLS_KEY_FILE:-}"
     read_only: true
     tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
     cap_drop: [ALL]

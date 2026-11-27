@@ -1,5 +1,6 @@
 import { validateBirthInput, CalculationInputError } from './calculationValidation';
 import {
+  calculateAccurateDeltaTSeconds,
   calculateExactAscendant,
   calculateAllApparentTropicalBodies,
   norm360
@@ -187,17 +188,11 @@ export function calculateJulianDay(year: number, month: number, day: number, hou
 }
 
 /**
- * Ephemeris Delta-T approximation (polynomial fit based on JPL / NASA ephemerides)
+ * Ephemeris Delta-T (TT - UT) in seconds — delegates to the unified IERS/USNO + Espenak-Meeus model.
  */
 export function calculateDeltaT(year: number): number {
-  const t = (year - 2000) / 100;
-  if (year >= 2005 && year <= 2050) {
-    return 62.92 + 0.32217 * (year - 2000) + 0.005589 * Math.pow(year - 2000, 2);
-  }
-  if (year >= 1986 && year < 2005) {
-    return 64.69 + 0.28 * (year - 2000);
-  }
-  return 60.0 + 32.0 * t * t;
+  const approxJdUt = 2451545.0 + (year - 2000.0) * 365.25;
+  return calculateAccurateDeltaTSeconds(approxJdUt);
 }
 
 /**
@@ -513,7 +508,7 @@ export function calculateFullChart(
 
   // Apply explicit offset as elapsed time, including negative fractional offsets and date boundaries.
   const jdUT = calculateJulianDay(year, month, day, localHour, localMin, localSec) - timezoneOffset / 24;
-  const deltaT = calculateDeltaT(year);
+  const deltaT = calculateAccurateDeltaTSeconds(jdUT);
   const ayanamsaVal = getAyanamsa(jdUT, ayanamsaType);
   const ascDegree = calculateAscendant(jdUT, latitude, longitude, ayanamsaVal);
   const ascQuant = Number(norm360(ascDegree).toFixed(4)) % 360;

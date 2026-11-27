@@ -173,12 +173,40 @@ test('timeline renders DST elapsed hours and escapes explanation markup', () => 
   assert.match(html, /&lt;img/);
 });
 
-test('mirrored timing client and UI are identical', () => {
+test('mirrored timing client, engines, and UI components remain synchronized across src and frontend/src', () => {
   for (const name of ['engine/timingClient.ts', 'components/DailyTiming.tsx', 'components/AuspiciousMasterHub.tsx'])
     assert.equal(
       readFileSync(new URL('../../src/' + name, import.meta.url), 'utf8'),
       readFileSync(new URL('../../frontend/src/' + name, import.meta.url), 'utf8')
     );
+
+  const mirroredPaths = [
+    'App.tsx',
+    'main.tsx',
+    'pwa/PwaStatus.tsx',
+    'engine/planetaryEphemeris.ts',
+    'engine/astroMath.ts',
+    'engine/zeroCostAstroEngine.ts',
+    'engine/scoringEngine.ts',
+    'engine/offlineGeoData.ts',
+    'engine/aiNarrativeEngine.ts',
+    'engine/personalProfileEngine.ts',
+    'engine/uatAndStress.ts',
+    'components/DiwaliProsperityKit.tsx',
+    'components/LivingRoomTvDashboard.tsx',
+    'components/ModernLocationPicker.tsx',
+    'components/MuhuratCalculationExplainer.tsx',
+    'components/OnboardingWizard.tsx',
+    'components/PersonalProfileModal.tsx',
+    'components/CustomerCheckout.tsx',
+    'components/SandboxCheckout.tsx',
+    'components/ConversionFunnelView.tsx',
+  ];
+  for (const rel of mirroredPaths) {
+    const primary = readFileSync(new URL('../../src/' + rel, import.meta.url), 'utf8').replace(/\r\n/g, '\n').trimEnd();
+    const mirrored = readFileSync(new URL('../../frontend/src/' + rel, import.meta.url), 'utf8').replace(/\r\n/g, '\n').trimEnd();
+    assert.equal(primary, mirrored, `Mirror drift detected between src/${rel} and frontend/src/${rel}`);
+  }
 });
 
 test('remote public URLs cannot become personal-data transport', () => {

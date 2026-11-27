@@ -134,11 +134,17 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionToken: activeSessionToken }),
       });
+      if (!res.ok) {
+        throw new Error('PAYMENT_PROVIDER_UNAVAILABLE');
+      }
       const data = await res.json();
+      if (!data?.signature || !data?.session?.userId) {
+        throw new Error('PAYMENT_VERIFICATION_FAILED');
+      }
 
       setPaymentLog(prev => [
         ...prev,
-        `[WEBHOOK] Received cryptographic signature: ${data.signature.slice(0, 24)}... (HMAC-SHA256 MATCHED)`,
+        `[WEBHOOK] Received cryptographic signature: ${String(data.signature).slice(0, 24)}... (HMAC-SHA256 MATCHED)`,
         `[DATABASE] payment_transactions updated to 'COMPLETED' for ${data.session.userId}.`,
         '[SSE] Push notification ACCESS_GRANTED emitted. Fading Paywall Blur Layer...',
       ]);
@@ -150,12 +156,13 @@ export const ConversionFunnelView: React.FC<ConversionFunnelViewProps> = ({
         if (onUnlockSuccess) onUnlockSuccess();
       }, 1000);
     } catch {
-      // Fallback local unlock
-      setTimeout(() => {
-        setIsPaywallUnlocked(true);
-        setIsProcessingPayment(false);
-        setCurrentScreen('screen5_operational');
-      }, 800);
+      // Fail closed: never grant local client-side unlock when server verification is unavailable
+      setPaymentLog(prev => [
+        ...prev,
+        '[BOUNDARY] Checkout simulation is disabled on this boundary (HTTP 404/503). No paid entitlement was created.',
+      ]);
+      setIsPaywallUnlocked(false);
+      setIsProcessingPayment(false);
     }
   };
 

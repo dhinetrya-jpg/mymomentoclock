@@ -5,11 +5,11 @@
  * MymomentOclock Production Application Root
  */
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigation, ActiveTab } from './components/Navigation';
 import { AuspiciousMasterHub } from './components/AuspiciousMasterHub';
 import { DailyTiming } from './components/DailyTiming';
-import { OnboardingWizard } from './components/OnboardingWizard';
+import { OnboardingWizard, BirthFormSubmission } from './components/OnboardingWizard';
 import { DashboardView } from './components/DashboardView';
 import { BirthTimeExplorer } from './components/BirthTimeExplorer';
 import { DiwaliProsperityKit } from './components/DiwaliProsperityKit';
@@ -18,39 +18,54 @@ import { BtrModal } from './components/BtrModal';
 import { ConflictResolverModal } from './components/ConflictResolverModal';
 import { CheckoutModal } from './components/CheckoutModal';
 import { PwaStatus } from './pwa/PwaStatus';
-import { AyanamsaType, ChartCalculationResult, calculateFullChart } from './engine/astroMath';
+import { ChartCalculationResult, calculateFullChart } from './engine/astroMath';
 import { resolvePillarConflict } from './engine/conflictResolver';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('auspicious-hub');
   const [natalChart, setNatalChart] = useState<ChartCalculationResult | null>(null);
+  const [lastBirthInput, setLastBirthInput] = useState<BirthFormSubmission | undefined>(undefined);
   const [showBirthForm, setShowBirthForm] = useState<boolean>(true);
   const [isBtrOpen, setIsBtrOpen] = useState<boolean>(false);
   const [isConflictOpen, setIsConflictOpen] = useState<boolean>(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
+
+  // Reset scroll position above sticky header when switching tabs or opening/closing the birth form
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+  }, [activeTab, showBirthForm]);
+
+  const conflictResolution = useMemo(
+    () => (natalChart ? resolvePillarConflict(natalChart, 'Wealth') : null),
+    [natalChart]
+  );
 
   const handleEditBirthDetails = () => {
     setShowBirthForm(true);
     setActiveTab('natal-chart');
   };
 
-  const handleCalculateBirthChart = async (params: {
-    birthDate: string;
-    birthTime: string;
-    latitude: number;
-    longitude: number;
-    cityName: string;
-    ayanamsaType: AyanamsaType;
-    timezoneOffset: number;
-    timezone?: string;
-  }) => {
-    // Prefer server `/api/astro/calculate` so Native Swiss Ephemeris CGo (`NATIVE_ENGINE_URL`) is used automatically when active,
-    // falling back cleanly to the client high-precision Meeus/VSOP87/ELP2000 engine in offline/static mode.
+  const handleCalculateBirthChart = async (params: BirthFormSubmission) => {
+    setLastBirthInput(params);
+    const payload = {
+      birthDate: params.birthDate,
+      birthTime: params.birthTime,
+      latitude: params.latitude,
+      longitude: params.longitude,
+      cityName: params.cityName,
+      ayanamsaType: params.ayanamsaType,
+      timezoneOffset: params.timezoneOffset,
+      timezone: params.timezone,
+      birthTimeCertainty: params.certainty,
+    };
+
     try {
       const resp = await fetch('/api/astro/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(params),
+        body: JSON.stringify(payload),
       });
       if (resp.ok) {
         const serverChart = (await resp.json()) as ChartCalculationResult;
@@ -79,7 +94,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0206] text-rose-100 flex flex-col font-sans selection:bg-amber-500 selection:text-neutral-950">
+    <div className="min-h-screen scroll-pt-28 bg-[#0d0206] text-rose-100 flex flex-col font-sans selection:bg-amber-500 selection:text-neutral-950">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-amber-500 focus:px-4 focus:py-2 focus:text-xs focus:font-bold text-neutral-950"
@@ -118,12 +133,14 @@ export default function App() {
               <OnboardingWizard
                 onCalculate={handleCalculateBirthChart}
                 onOpenQuickFestival={() => setActiveTab('prosperity-kit')}
+                initialValues={lastBirthInput}
+                onCancel={natalChart ? () => setShowBirthForm(false) : undefined}
               />
             </div>
           ) : (
             <DashboardView
               chart={natalChart}
-              resolution={resolvePillarConflict(natalChart, 'Wealth')}
+              resolution={conflictResolution!}
               onOpenConflictModal={() => setIsConflictOpen(true)}
               onOpenBtrModal={() => setIsBtrOpen(true)}
               onNavigateToProsperityKit={() => setActiveTab('prosperity-kit')}
@@ -137,7 +154,7 @@ export default function App() {
         )}
       </main>
 
-      {natalChart && (
+      {natalChart && conflictResolution && (
         <>
           <BtrModal
             isOpen={isBtrOpen}
@@ -148,7 +165,7 @@ export default function App() {
           <ConflictResolverModal
             isOpen={isConflictOpen}
             onClose={() => setIsConflictOpen(false)}
-            resolution={resolvePillarConflict(natalChart, 'Wealth')}
+            resolution={conflictResolution}
           />
         </>
       )}

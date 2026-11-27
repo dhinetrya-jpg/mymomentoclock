@@ -154,10 +154,11 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
       baseOffset
     );
     const label = `${c.name}, ${c.country}`;
+    const validIana = c.timezone && c.timezone !== 'UTC_OFFSET' ? c.timezone : undefined;
     const newLoc: LocationCoordinates = {
       latitude: c.latitude,
       longitude: c.longitude,
-      timezone: c.timezone,
+      timezone: validIana,
       timezoneOffset: resolvedOffset,
       cityName: label
     };
@@ -262,6 +263,8 @@ export const ModernLocationPicker: React.FC<ModernLocationPickerProps> = ({
       <div className="relative">
         <div className="relative">
           <input
+            id="hub-location-search"
+            name="hubLocationSearch"
             type="text"
             aria-label="Search observer city or location"
             placeholder="Type 3+ letters to autofill city, Lat & Lon (e.g. Mum, New York, Sydney, Kathmandu)..."

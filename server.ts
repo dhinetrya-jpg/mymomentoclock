@@ -12,7 +12,9 @@ import { calculateFullChart, AyanamsaType } from './src/engine/astroMath';
 import { executeBirthTimeRectification } from './src/engine/btrProcessor';
 import { MAJOR_CITIES_MUHURAT, calculatePersonalGoldenWindow } from './src/engine/diwaliData';
 import { CalculationInputError, validateBirthInput, TIMEZONE_LIMITATION } from './src/engine/calculationValidation';
+import { resolveIanaTimezone } from './src/engine/timezoneResolver';
 import { runEngineUatSuite } from './src/engine/uatAndStress';
+import { computeChartWithNativeBridge, resolveConfiguredNativeEngineUrl } from './server/nativeChartBridge';
 dotenv.config({quiet:true});
 export const app = express();
 app.disable('x-powered-by');
@@ -28,9 +30,10 @@ app.use((req,res,next)=>{
     const api=sandbox?' https://api.razorpay.com':'';
     res.set('Content-Security-Policy',`default-src 'self'; script-src 'self'${sdk}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self'${api}; frame-src 'self'${api}${sdk}; frame-ancestors 'none'`);
   }
-  if(req.path.startsWith('/api')){
+  const isApiOrProbe=req.path.startsWith('/api')||req.path==='/health'||req.path==='/ready';
+  if(isApiOrProbe){
     if(Date.now()-windowStart>60000){windowStart=Date.now();windowCount=0;}
-    if(++windowCount>600 || active>=8) return res.status(429).json({error:'RATE_LIMITED',message:'Please try again shortly.',request_id:requestId});
+    if(++windowCount>600 || active>=32) return res.status(429).json({error:'RATE_LIMITED',message:'Please try again shortly.',request_id:requestId});
     active++;let released=false;const release=()=>{if(!released){active--;released=true;}};res.once('finish',release);res.once('close',release);
   }
   next();
@@ -59,10 +62,20 @@ function birth(raw:any){
   if(raw && ['profileId','profile_id','birth_profile_id','chart_id','userId','user_id'].some(k=>raw[k]!==undefined)) throw new CalculationInputError('PROFILE_AUTHENTICATION_UNAVAILABLE','Stored profiles require secure sign-in and ownership checks.');
   validateBirthInput(raw);return raw;
 }
-app.post('/api/astro/calculate',(req,res,next)=>{try{
+app.post('/api/astro/resolve-timezone',(req,res,next)=>{try{
+  const b=req.body||{};
+  const resolved=resolveIanaTimezone(b.birthDate,b.birthTime,b.timezone,b.callerOffset);
+  res.json({offsetHours:resolved.offsetHours,timezone:resolved.timezone,isoUtc:resolved.isoUtc,julianDayUT:resolved.julianDayUT});
+}catch(e){next(e);}});
+app.post('/api/astro/calculate',async(req,res,next)=>{try{
   const p=birth(req.body);
-  const chart=calculateFullChart(p.birthDate,p.birthTime,p.latitude,p.longitude,p.cityName||'',p.timezoneOffset,p.ayanamsaType||AyanamsaType.TRUE_LAHIRI);
-  res.json({...chart,schema_version:3,scope_metadata:{method:'ANALYTICAL_APPROXIMATION',status:'UNVALIDATED_PREVIEW',natal_data_used:true,independent_validation_status:'NOT_PERFORMED',birth_time_certainty:p.birthTimeCertainty||'UNSPECIFIED',limitations:[TIMEZONE_LIMITATION,'Browser analytical positions are not Swiss Ephemeris results or independently validated predictions.']}});
+  const {chart,nativeUsed}=await computeChartWithNativeBridge({birthDate:p.birthDate,birthTime:p.birthTime,latitude:p.latitude,longitude:p.longitude,cityName:p.cityName||'',timezoneOffset:p.timezoneOffset,timezone:p.timezone,ayanamsaType:p.ayanamsaType||AyanamsaType.TRUE_LAHIRI});
+  const method=nativeUsed?chart.systemMetadata.calculationMode:'ANALYTICAL_APPROXIMATION';
+  const validIana=Boolean(p.timezone&&p.timezone!=='UTC_OFFSET'&&p.timezone!=='Local');
+  const limits=nativeUsed
+    ?[validIana?'IANA historical/DST offset verified at birth instant.':TIMEZONE_LIMITATION,'Native Swiss Ephemeris positions computed; traditional predictive rules and Dasha remain unverified.']
+    :[validIana?'IANA historical/DST offset verified at birth instant.':TIMEZONE_LIMITATION,'Browser analytical positions are not Swiss Ephemeris results or independently validated predictions.'];
+  res.json({...chart,schema_version:3,scope_metadata:{method,status:'UNVALIDATED_PREVIEW',natal_data_used:true,native_swiss_configured:Boolean(resolveConfiguredNativeEngineUrl()),native_swiss_active:nativeUsed,independent_validation_status:'NOT_PERFORMED',birth_time_certainty:p.birthTimeCertainty||'UNSPECIFIED',limitations:limits}});
 }catch(e){next(e);}});
 function rectify(req:express.Request,res:express.Response,next:express.NextFunction){try{
   const legacy=req.path==='/api/v1/btr/rectify';const raw=req.body||{};const bp=legacy?raw.base_payload:raw;

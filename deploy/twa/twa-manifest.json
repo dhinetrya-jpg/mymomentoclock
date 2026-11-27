@@ -1,0 +1,35 @@
+{
+  "packageId": "com.mymomentoclock.app",
+  "host": "mymomentoclock.app",
+  "name": "MyMomentOclock - Vedic Timing & Precision Panchang",
+  "launcherName": "MomentOclock",
+  "themeColor": "#160408",
+  "navigationColor": "#160408",
+  "backgroundColor": "#160408",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://mymomentoclock.app/pwa-clock-512.png",
+  "maskableIconUrl": "https://mymomentoclock.app/pwa-clock.svg",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Today's Auspicious Dial",
+      "short_name": "ChronoDial",
+      "url": "/#dial",
+      "icon": "https://mymomentoclock.app/pwa-clock-192.png"
+    },
+    {
+      "name": "Ask My Day",
+      "short_name": "AskDay",
+      "url": "/#ask",
+      "icon": "https://mymomentoclock.app/pwa-clock-192.png"
+    }
+  ],
+  "webManifestUrl": "https://mymomentoclock.app/manifest.webmanifest",
+  "signingKey": {
+    "alias": "mymomentoclock-key",
+    "sha256Fingerprint": "00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF"
+  },
+  "generatorVersion": "bubblewrap-cli:1.18.0"
+}

@@ -180,7 +180,7 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
               </h2>
               <p className="text-xs text-rose-300/60 mt-0.5 font-mono">{cityData.stateCountry}</p>
             </div>
-            <span className="font-mono text-xs text-amber-400">Drik Verified</span>
+            <span className="font-mono text-xs text-amber-300/80">Static Preview · Unverified</span>
           </div>
 
           <div className="mt-4 space-y-3 text-xs">
@@ -260,6 +260,8 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
 
           <div className="flex items-center gap-1 rounded-lg border border-rose-950/70 bg-[#250810] p-1 text-xs">
             <button
+              type="button"
+              aria-pressed={activeEdition === 'ASTROLOGY'}
               onClick={() => setActiveEdition('ASTROLOGY')}
               className={`rounded px-3 py-1 font-medium transition-colors ${
                 activeEdition === 'ASTROLOGY' ? 'bg-amber-500 text-neutral-950 font-semibold' : 'text-rose-200/70'
@@ -268,12 +270,14 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
               Astrology Preview (limited)
             </button>
             <button
+              type="button"
+              aria-pressed={activeEdition === 'FESTIVAL'}
               onClick={() => setActiveEdition('FESTIVAL')}
               className={`rounded px-3 py-1 font-medium transition-colors ${
                 activeEdition === 'FESTIVAL' ? 'bg-amber-500 text-neutral-950 font-semibold' : 'text-rose-200/70'
               }`}
             >
-              Festival & Reflection Edition
+              Festival &amp; Reflection Edition
             </button>
           </div>
         </div>
@@ -344,7 +348,11 @@ export const DiwaliProsperityKit: React.FC<DiwaliProsperityKitProps> = ({
               </div>
 
               <div className="mt-4 pt-3 border-t border-rose-950/60 flex justify-between text-[11px] font-mono text-rose-300/60">
-                <span>Diwali 2026 · Samvat 2083</span>
+                <span>
+                  {activeEdition === 'ASTROLOGY'
+                    ? `Pradosh Preview: ${cityData.pradoshKaalWindow}`
+                    : 'Diwali 2026 · Family Reflection'}
+                </span>
                 <span>{cityData.cityName}</span>
               </div>
             </div>

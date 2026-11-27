@@ -25,6 +25,7 @@ import { PersonalProfileEngine, UserProfile } from '../engine/personalProfileEng
 import { PersonalProfileModal, ProfileModalTab } from './PersonalProfileModal';
 import { OfflineGeoResolver } from '../engine/offlineGeoData';
 import { ActiveTab } from './Navigation';
+import { useModalFocus } from './useModalFocus';
 
 export type TimeHorizon = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
 
@@ -242,15 +243,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
     }
   }, [selectedDate, locCoords.timezone, locCoords.timezoneOffset]);
 
-  // Close Window Do's & Don'ts modal on Escape
-  useEffect(() => {
-    if (!isWindowDialogOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsWindowDialogOpen(false);
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [isWindowDialogOpen]);
+  // WAI-ARIA modal keyboard trap, Escape handler & inert background management
+  const windowDialogRef = useModalFocus(isWindowDialogOpen, () => setIsWindowDialogOpen(false));
 
   const handlePersistProfile = (nextProfile: UserProfile) => {
     setUserProfile(nextProfile);
@@ -674,6 +668,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
           </div>
 
           <input
+            id="hub-evaluation-date"
+            name="hubEvaluationDate"
             type="date"
             aria-label="Global evaluation date"
             value={dayData.date}
@@ -727,6 +723,8 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
           <label className="flex items-center gap-2 text-rose-200">
             <span className="font-semibold text-amber-300">🏔️ Elevation (m):</span>
             <input
+              id="hub-elevation-meters"
+              name="hubElevationMeters"
               type="number"
               min={-400}
               max={8849}
@@ -1877,15 +1875,19 @@ export const AuspiciousMasterHub: React.FC<AuspiciousMasterHubProps> = ({
       {/* ========================================================================= */}
       {isWindowDialogOpen && (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="window-guidance-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto"
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsWindowDialogOpen(false);
           }}
         >
-          <div className="relative w-full max-w-2xl rounded-2xl border border-amber-500/60 bg-[#160409] text-rose-100 shadow-2xl overflow-hidden my-6">
+          <div
+            ref={windowDialogRef as React.RefObject<HTMLDivElement>}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="window-guidance-modal-title"
+            tabIndex={-1}
+            className="relative w-full max-w-2xl rounded-2xl border border-amber-500/60 bg-[#160409] text-rose-100 shadow-2xl overflow-hidden my-6 focus:outline-none"
+          >
             <div className="flex items-start justify-between gap-3 border-b border-amber-900/60 bg-gradient-to-r from-[#2a0713] via-[#1a040b] to-[#2a0713] p-4 sm:p-5">
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">

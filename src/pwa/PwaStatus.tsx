@@ -98,8 +98,8 @@ export function PwaStatus() {
       <div className="mx-auto max-w-7xl space-y-2">
         <p role="status" aria-live="polite">
           {online
-            ? '🟢 Client-Edge Astronomical Engine Active — 100% of Panchanga, Muhurta, Choghadiya, Hora & Personal Synastry calculations execute locally on your device.'
-            : '🟡 Offline Mode Active — All 165+ catalog cities, solar Kaalas, Choghadiyas, Horas, and personal Tara/Chandra Bala calculations continue working 100% offline.'}
+            ? '🟢 Application Shell Ready — Static assets & 165+ catalog cities work offline; personalized timing windows strictly follow server release authorization (/api/v1/timing/capability).'
+            : '🟡 Offline Mode Active — Static shell, 165+ catalog cities, and unvalidated natal chart previews remain available locally; gated server APIs remain fail-closed.'}
         </p>
         {waiting && (
           <div className="space-y-2">
