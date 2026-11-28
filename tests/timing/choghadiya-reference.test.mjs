@@ -77,3 +77,18 @@ test('missing, reversed or off-date solar events yield no fixture windows', () =
     assert.deepEqual(windows(...pair), []);
   }
 });
+
+test('uncertainty crossing a category boundary requires abstention', () => {
+  // Synthetic ±2 s endpoint bounds exercise the rule. No production guard
+  // band is inferred from the retrospective comparison.
+  const earliest = windows(sunrise - 2000, sunset - 2000);
+  const latest = windows(sunrise + 2000, sunset + 2000);
+  const classification = instant => earliest.find((window, index) =>
+    latest[index].start <= instant && instant < window.end)?.classification ?? 'UNAVAILABLE';
+  for (const window of windows(sunrise, sunset).slice(1)) {
+    assert.equal(classification(window.start), 'UNAVAILABLE');
+    assert.equal(classification(window.start + 2001), window.classification);
+  }
+  assert.equal(classification(sunrise), 'UNAVAILABLE');
+  assert.equal(classification(sunset), 'UNAVAILABLE');
+});
